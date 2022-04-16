@@ -36,3 +36,5 @@ cmake-build-relwithdebinfo
 cmake-build-debug
 cmake-build-release
 main.cpp
+.vs
+.idea
