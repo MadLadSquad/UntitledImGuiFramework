@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+build/
+cmake-build-relwithdebinfo
+cmake-build-debug
+cmake-build-release
+main.cpp

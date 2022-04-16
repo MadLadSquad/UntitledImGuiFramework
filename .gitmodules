@@ -1,0 +1,15 @@
+[submodule "ThirdParty/glew"]
+	path = ThirdParty/glew
+	url = https://github.com/MadLadSquad/glew-cmake.git
+[submodule "ThirdParty/glfw"]
+	path = ThirdParty/glfw
+	url = https://github.com/MadLadSquad/glfw.git
+[submodule "ThirdParty/imgui"]
+	path = ThirdParty/imgui
+	url = https://github.com/MadLadSquad/imgui.git
+[submodule "Modules/Plotting/ThirdParty/implot"]
+	path = Modules/Plotting/ThirdParty/implot
+	url = https://github.com/MadLadSquad/implot.git
+[submodule "Modules/Audio/ThirdParty/openal"]
+	path = Modules/Audio/ThirdParty/openal
+	url = https://github.com/MadLadSquad/openal-soft.git
