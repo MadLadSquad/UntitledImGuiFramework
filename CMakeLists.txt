@@ -8,6 +8,13 @@ set(CMAKE_CXX_STANDARD 20)
 add_subdirectory(ThirdParty/glfw)
 add_subdirectory(ThirdParty/glew)
 
+option(UGUI_USE_AUDIO_MODULE "Use the audio module" OFF)
+option(UGUI_USE_LOCALE_MODULE "Use the locale module" OFF)
+option(UGUI_USE_NETWORKING_MODULE "Use the networking module" OFF)
+option(UGUI_USE_PLOTTING_MODULE "Use the plotting module" OFF)
+option(UGUI_USE_UNDO_MODULE "Use the Undo/Redo module" OFF)
+option(UGUI_USE_VIDEO_MODULE "Use the video module" OFF)
+
 include_directories(ThirdParty/glfw/include)
 include_directories(ThirdParty/glew/include)
 include_directories(ThirdParty/imgui/backends/everything)
