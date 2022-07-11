@@ -28,6 +28,8 @@ jobs:
           with:
             lfs: true
             submodules: true
+        - name: Set MSBuild env
+          uses: microsoft/setup-msbuild@master
         - name: Checkout submodules
           shell: bash
           run: |
