@@ -41,3 +41,6 @@ main.cpp
 Projects/
 Generated/
 Source/
+
+uvproj.yaml
+CMakeLists.txt

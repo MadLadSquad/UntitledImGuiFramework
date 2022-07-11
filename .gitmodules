@@ -1,12 +1,3 @@
-[submodule "Framework/ThirdParty/glew"]
-	path = Framework/ThirdParty/glew
-	url = https://github.com/MadLadSquad/glew-cmake.git
-[submodule "Framework/ThirdParty/glfw"]
-	path = Framework/ThirdParty/glfw
-	url = https://github.com/MadLadSquad/glfw.git
-[submodule "Framework/ThirdParty/imgui"]
-	path = Framework/ThirdParty/imgui
-	url = https://github.com/MadLadSquad/imgui.git
 [submodule "Framework/Modules/Plotting/ThirdParty/implot"]
 	path = Framework/Modules/Plotting/ThirdParty/implot
 	url = https://github.com/MadLadSquad/implot.git
