@@ -1,15 +1,24 @@
-[submodule "ThirdParty/glew"]
-	path = ThirdParty/glew
+[submodule "Framework/ThirdParty/glew"]
+	path = Framework/ThirdParty/glew
 	url = https://github.com/MadLadSquad/glew-cmake.git
-[submodule "ThirdParty/glfw"]
-	path = ThirdParty/glfw
+[submodule "Framework/ThirdParty/glfw"]
+	path = Framework/ThirdParty/glfw
 	url = https://github.com/MadLadSquad/glfw.git
-[submodule "ThirdParty/imgui"]
-	path = ThirdParty/imgui
+[submodule "Framework/ThirdParty/imgui"]
+	path = Framework/ThirdParty/imgui
 	url = https://github.com/MadLadSquad/imgui.git
-[submodule "Modules/Plotting/ThirdParty/implot"]
-	path = Modules/Plotting/ThirdParty/implot
+[submodule "Framework/Modules/Plotting/ThirdParty/implot"]
+	path = Framework/Modules/Plotting/ThirdParty/implot
 	url = https://github.com/MadLadSquad/implot.git
-[submodule "Modules/Audio/ThirdParty/openal"]
-	path = Modules/Audio/ThirdParty/openal
+[submodule "Framework/Modules/Audio/ThirdParty/openal"]
+	path = Framework/Modules/Audio/ThirdParty/openal
 	url = https://github.com/MadLadSquad/openal-soft.git
+[submodule "UVKBuildTool"]
+	path = UVKBuildTool
+	url = https://github.com/MadLadSquad/UVKBuildTool.git
+[submodule "Framework/ThirdParty/logger"]
+	path = Framework/ThirdParty/logger
+	url = https://github.com/MadLadSquad/UntitledLog.git
+[submodule "Framework/ThirdParty/yaml-cpp"]
+	path = Framework/ThirdParty/yaml-cpp
+	url = https://github.com/MadLadSquad/yaml-cpp.git

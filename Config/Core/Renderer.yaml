@@ -1,0 +1,5 @@
+vulkan: false                 # The Vulkan renderer is not yet implemented
+v-sync: false                 # To run or not to run in V-Sync mode
+msaa-samples: 8               # Multisampling sample count
+sample-rate-shading: false    # Enable or disable sample rate shading(vulkan only feature)
+sample-rate-shading-mult: 0.1 # Sample rate shading multiplier

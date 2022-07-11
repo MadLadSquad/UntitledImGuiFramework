@@ -32,9 +32,12 @@
 *.app
 
 build/
-cmake-build-relwithdebinfo
-cmake-build-debug
-cmake-build-release
+cmake-build-relwithdebinfo/
+cmake-build-debug/
+cmake-build-release/
 main.cpp
-.vs
-.idea
+.vs/
+.idea/
+Projects/
+Generated/
+Source/

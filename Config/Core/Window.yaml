@@ -1,0 +1,6 @@
+editor-layout-location: "DefaultLayout"         # The location of the layout file ImGui writes to
+icon: "example-icon.png"                        # The location of the window icon image
+width: 800                                      # Width of the window in pixels
+height: 600                                     # Height of the window in pixels
+fullscreen: false                               # Enable or disable fullscreen mode
+window-name: UntitledImGuiFramework Application # The name of the window

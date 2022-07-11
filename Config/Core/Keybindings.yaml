@@ -1,0 +1,3 @@
+bindings:
+  - key: empty-binding
+    val: 1
