@@ -1,9 +1,3 @@
-[submodule "Framework/Modules/Plotting/ThirdParty/implot"]
-	path = Framework/Modules/Plotting/ThirdParty/implot
-	url = https://github.com/MadLadSquad/implot.git
-[submodule "Framework/Modules/Audio/ThirdParty/openal"]
-	path = Framework/Modules/Audio/ThirdParty/openal
-	url = https://github.com/MadLadSquad/openal-soft.git
 [submodule "UVKBuildTool"]
 	path = UVKBuildTool
 	url = https://github.com/MadLadSquad/UVKBuildTool.git
