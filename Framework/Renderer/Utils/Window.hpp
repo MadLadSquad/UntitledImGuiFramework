@@ -2,7 +2,7 @@
 #include <Core/Events/Input.hpp>
 #include <array>
 
-class GLFWwindow;
+struct GLFWwindow;
 namespace UImGui
 {
     struct UIMGUI_PUBLIC_API WindowData
