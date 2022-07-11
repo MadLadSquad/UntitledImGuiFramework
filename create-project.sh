@@ -69,6 +69,7 @@ function generate_files()
 
 function compile()
 {
+  cd build || exit
   if [ "$2" == "ci" ]; then
     cmake .. || exit
   else
