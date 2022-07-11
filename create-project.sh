@@ -46,7 +46,6 @@ function create_folders()
   # Create symbolic links
   ln -rs "../../Framework/" Framework 2> /dev/null || cp ../../Engine/ . -r
   ln -rs "../../UVKBuildTool/" UVKBuildTool 2> /dev/null || cp ../../UVKBuildTool/ . -r
-  ln -rs "../../UVKShaderCompiler/" UVKShaderCompiler 2> /dev/null || cp ../../UVKShaderCompiler/ . -r
 }
 
 function post_process_files()
