@@ -23,8 +23,8 @@ function find_visual_studio_directory()
 function create_folders()
 {
   cd Projects/ || exit
-  mkdir "${prjname}" || echo "Project already exists!"
-  cd "${prjname}" || exit
+  mkdir "$1" || echo "Project already exists!"
+  cd "$1" || exit
 
   # Create folders and files to be used as configs
   mkdir Source || echo "Project already exists!"
@@ -39,7 +39,7 @@ function create_folders()
 
   # We create a project file which will be used to configure our generated files
   touch uvproj.yaml && echo "\
-  name: \"${prjname}\"
+  name: \"$1\"
   version: \"1.0.0.0\"
   engine-version: \"1.0.0\"" > uvproj.yaml
 
@@ -56,15 +56,15 @@ function post_process_files()
   # cp sndfile.dll ../../../build/ &> /dev/null
   # cd ../../../build/ || exit # Go back to the build folder
   # cp sndfile.dll Release/ &> /dev/null
-  cp Release/"${prjname}".exe . &> /dev/null
+  cp Release/"$1".exe . &> /dev/null
   cp ../UVKBuildTool/build/Release/UVKBuildToolLib.dll .
 }
 
 function generate_files()
 {
   cd ../../UVKBuildTool/build || exit
-  ./UVKBuildTool.exe --install "../../Projects/${prjname}" || ./UVKBuildTool --install "../../Projects/${prjname}" || exit
-  cd "../../Projects/${prjname}" || exit
+  ./UVKBuildTool.exe --install "../../Projects/$1" || ./UVKBuildTool --install "../../Projects/1" || exit
+  cd "../../Projects/$1" || exit
 }
 
 function compile()
@@ -75,7 +75,7 @@ function compile()
   else
     cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" || cmake .. -G "Unix Makefiles" || exit # Generate build files for the project
   fi
-  MSBuild.exe "${prjname}".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || make -j "${cpus}" || exit
+  MSBuild.exe "$1".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || make -j "${cpus}" || exit
 }
 
 if [ "$1" != "" ]; then
@@ -86,9 +86,9 @@ fi
 prjname=${prjname/ /} # Remove any spaces if the name contains them
 cpus=$(grep -c processor /proc/cpuinfo) ## get the cpu threads for maximum performance when compiling
 echo -e "\x1B[32mCopiling with ${cpus} compute jobs!\033[0m"
-create_folders
-generate_files
+create_folders "${prjname}"
+generate_files "${prjname}"
 compile "${prjname}" "$2"
-post_process_files
+post_process_files "${prjname}"
 
 echo -e "\x1B[32mFramework and project successfully installed! \033[0m"
