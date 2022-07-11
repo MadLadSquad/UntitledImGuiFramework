@@ -16,3 +16,9 @@
 [submodule "Framework/ThirdParty/glfw"]
 	path = Framework/ThirdParty/glfw
 	url = https://github.com/MadLadSquad/glfw.git
+[submodule "Framework/Modules/Audio/ThirdParty/openal"]
+	path = Framework/Modules/Audio/ThirdParty/openal
+	url = https://github.com/MadLadSquad/openal-soft.git
+[submodule "Framework/Modules/Plotting/ThirdParty/implot"]
+	path = Framework/Modules/Plotting/ThirdParty/implot
+	url = https://github.com/MadLadSquad/implot.git
