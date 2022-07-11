@@ -63,7 +63,7 @@ function post_process_files()
 function generate_files()
 {
   cd ../../UVKBuildTool/build || exit
-  ./UVKBuildTool.exe --install "../../Projects/$1" || ./UVKBuildTool --install "../../Projects/1" || exit
+  ./UVKBuildTool.exe --install "../../Projects/$1" || ./UVKBuildTool --install "../../Projects/$1" || exit
   cd "../../Projects/$1" || exit
 }
 
