@@ -32,7 +32,7 @@ function install_build_tool()
   cd build || exit
 
   if [ "$1" == "ci" ]; then
-    cmake .. || exit
+    cmake .. -DUBT_COMPILING_FOR_ENGINE=OFF || exit
   else
     cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DUBT_COMPILING_FOR_ENGINE=OFF || cmake .. -G "Unix Makefiles" -DUBT_COMPILING_FOR_ENGINE=OFF || exit
   fi
