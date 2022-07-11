@@ -1,4 +1,7 @@
 #include "Global.hpp"
+#ifdef _WIN32
+    #include <windows.h>
+#endif
 
 UImGui::Global::Global() noexcept
 {
