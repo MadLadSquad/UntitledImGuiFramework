@@ -23,8 +23,8 @@ function find_visual_studio_directory()
 function create_folders()
 {
   cd Projects/ || exit
-  mkdir "$1" || echo "Project already exists!"
-  cd "$1" || exit
+  mkdir "${prjname}" || echo "Project already exists!"
+  cd "${prjname}" || exit
 
   # Create folders and files to be used as configs
   mkdir Source || echo "Project already exists!"
@@ -39,7 +39,7 @@ function create_folders()
 
   # We create a project file which will be used to configure our generated files
   touch uvproj.yaml && echo "\
-  name: \"$1\"
+  name: \"${prjname}\"
   version: \"1.0.0.0\"
   engine-version: \"1.0.0\"" > uvproj.yaml
 
@@ -56,15 +56,15 @@ function post_process_files()
   # cp sndfile.dll ../../../build/ &> /dev/null
   # cd ../../../build/ || exit # Go back to the build folder
   # cp sndfile.dll Release/ &> /dev/null
-  cp Release/"$1".exe . &> /dev/null
+  cp Release/"${prjname}".exe . &> /dev/null
   cp ../UVKBuildTool/build/Release/UVKBuildToolLib.dll .
 }
 
 function generate_files()
 {
   cd ../../UVKBuildTool/build || exit
-  ./UVKBuildTool.exe --install ../../Projects/"$1" || ./UVKBuildTool --install ../../Projects/"$1" || exit
-  cd ../../Projects/"$1" || exit
+  ./UVKBuildTool.exe --install ../../Projects/"${prjname}" || ./UVKBuildTool --install ../../Projects/"${prjname}" || exit
+  cd ../../Projects/"${prjname}" || exit
 }
 
 function compile()
@@ -75,7 +75,7 @@ function compile()
   else
     cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" || cmake .. -G "Unix Makefiles" || exit # Generate build files for the project
   fi
-  MSBuild.exe "$1".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || make -j "${cpus}" || exit
+  MSBuild.exe "${prjname}".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || make -j "${cpus}" || exit
 }
 
 if [ "$1" != "" ]; then
