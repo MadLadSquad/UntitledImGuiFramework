@@ -5,7 +5,7 @@
 namespace UImGui
 {
     class RendererInternal;
-    class Global
+    class UIMGUI_PUBLIC_API Global
     {
     public:
         Global() noexcept;
