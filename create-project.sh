@@ -41,7 +41,7 @@ function create_folders()
   touch uvproj.yaml && echo "\
 name: \"${prjname}\"
 version: \"1.0.0.0\"
-engine-version: \"1.0.0\"" > uvproj.yaml
+engine-version: \"1.0.0.0\"" > uvproj.yaml
 
   # Create symbolic links
   ln -rs "../../Framework/" Framework 2> /dev/null || cp ../../Engine/ . -r
