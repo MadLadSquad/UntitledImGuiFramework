@@ -9,7 +9,7 @@ function find_visual_studio_directory()
 
   VSVer=$(find "2022" -maxdepth 0 2> /dev/null) || VSVer=$(find "2019" -maxdepth 0 2> /dev/null) || VSVer=$(find "2017" -maxdepth 0 2> /dev/null) || (echo -e "\x1b[31mError: Couldn't find a compatible Visual Studio version! Please note that we only support Visual Studio 2017, 2019, 2022 or newer versions! Exiting!\x1b[0m" && exit)
   cd "${VSVer}" &> /dev/null || exit
-  VSType=$(find "Community" -maxdepth 0 2> /dev/null) || VSType=$(find "Enterprise" -maxdepth 0 2> /dev/null) || VSType=$(find "Professional" -maxdepth 0 2> /dev/null) || (echo -e "'x1b[31mError: Couldn't find a compatible Visual Studio Version Type! Exiting!\x1b[0m" && exit)
+  VSType=$(find "Community" -maxdepth 0 2> /dev/null) || VSType=$(find "Enterprise" -maxdepth 0 2> /dev/null) || VSType=$(find "Professional" -maxdepth 0 2> /dev/null) || (echo -e "\x1b[31mError: Couldn't find a compatible Visual Studio Version Type! Exiting!\x1b[0m" && exit)
   cd "${wdir}" || exit
 
   if [ "$VSVer" == "2022" ]; then VSShortVer="17"
