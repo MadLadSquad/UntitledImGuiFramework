@@ -1,6 +1,6 @@
 #include "Renderer.hpp"
 #include <yaml.h>
-#include <Global.hpp>
+#include <Core/Components/Instance.hpp>
 #include <Renderer/ImGui/ImGui.hpp>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

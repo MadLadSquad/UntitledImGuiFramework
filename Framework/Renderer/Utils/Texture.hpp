@@ -14,6 +14,8 @@ namespace UImGui
         void load() noexcept;
         void loadImGui() noexcept;
 
+        [[nodiscard]] const uint32_t& get() const noexcept;
+
         void use() const noexcept;
         [[nodiscard]] const FVector2& size() const noexcept;
         void clear() noexcept;

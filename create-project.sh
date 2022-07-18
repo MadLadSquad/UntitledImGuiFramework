@@ -57,13 +57,13 @@ function post_process_files()
   # cd ../../../build/ || exit # Go back to the build folder
   # cp sndfile.dll Release/ &> /dev/null
   cp Release/"${prjname}".exe . &> /dev/null
-  cp ../UVKBuildTool/build/Release/UVKBuildToolLib.dll .
+  cp ../UVKBuildTool/build/Release/UVKBuildToolLib.dll . &> /dev/null
 }
 
 function generate_files()
 {
   cd ../../UVKBuildTool/build || exit
-  ./UVKBuildTool.exe --install ../../Projects/"${prjname}" || ./UVKBuildTool --install ../../Projects/"${prjname}" || exit
+  ./UVKBuildTool.exe --install ../../Projects/"${prjname}" 2> /dev/null || ./UVKBuildTool --install ../../Projects/"${prjname}" || exit
   cd ../../Projects/"${prjname}" || exit
 }
 
@@ -75,7 +75,7 @@ function compile()
   else
     cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" || cmake .. -G "Unix Makefiles" || exit # Generate build files for the project
   fi
-  MSBuild.exe "${prjname}".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || make -j "${cpus}" || exit
+  MSBuild.exe "${prjname}".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" 2> /dev/null || make -j "${cpus}" || exit
 }
 
 if [ "$1" != "" ]; then

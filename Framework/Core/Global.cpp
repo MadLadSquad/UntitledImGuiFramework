@@ -1,4 +1,5 @@
 #include "Global.hpp"
+#include <Instance.hpp>
 #ifdef _WIN32
     #include <windows.h>
 #endif

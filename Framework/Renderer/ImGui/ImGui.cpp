@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <Utils/Window.hpp>
 #include "ImGui.hpp"
+#include <Core/Components/Instance.hpp>
 
 void UImGui::GUIRenderer::beginFrame()
 {
@@ -17,11 +18,14 @@ void UImGui::GUIRenderer::beginFrame()
 void UImGui::GUIRenderer::shutdown()
 {
     for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
-        a->begin();
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->begin();
     for (auto& a : internalGlobal.instance->initInfo.windowComponents)
-        a->begin();
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->begin();
     for (auto& a : internalGlobal.instance->initInfo.inlineComponents)
-        a->begin();
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->begin();
     ImGui::SaveIniSettingsToMemory();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -47,11 +51,14 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const std::string& ini)
     ImGui_ImplGlfw_InitForOpenGL(glfwwindow, true);
     ImGui_ImplOpenGL3_Init("#version 330");
     for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
-        a->begin();
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->begin();
     for (auto& a : internalGlobal.instance->initInfo.windowComponents)
-        a->begin();
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->begin();
     for (auto& a : internalGlobal.instance->initInfo.inlineComponents)
-        a->begin();
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->begin();
 }
 
 void UImGui::GUIRenderer::beginUI(float deltaTime)
@@ -88,9 +95,11 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
     ImGui::Begin("DockSpace Demo", &bIsOpen, window_flags | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
     ImGui::PopStyleVar();
     for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
-        a->tick(deltaTime);
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->tick(deltaTime);
     for (auto& a : internalGlobal.instance->initInfo.inlineComponents)
-        a->tick(deltaTime);
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->tick(deltaTime);
 
     if (opt_fullscreen)
         ImGui::PopStyleVar(2);
@@ -104,7 +113,8 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
     for (auto& a : internalGlobal.instance->initInfo.windowComponents)
-        a->tick(deltaTime);
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->tick(deltaTime);
 
     ImGui::End();
     ImGui::Render();

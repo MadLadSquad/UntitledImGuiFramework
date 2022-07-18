@@ -1,10 +1,11 @@
 #pragma once
-#include <Components/Instance.hpp>
+//#include <Components/Instance.hpp>
 #include <Renderer/Utils/Window.hpp>
 
 namespace UImGui
 {
     class RendererInternal;
+    class Instance;
     class UIMGUI_PUBLIC_API Global
     {
     public:

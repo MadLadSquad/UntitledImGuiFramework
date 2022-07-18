@@ -11,9 +11,18 @@ namespace UImGui
         virtual void tick(float deltaTime) = 0;
         virtual void end() = 0;
 
+        template<typename T>
+        static TitlebarComponent* make() noexcept
+        {
+            T* n = new T();
+            return n;
+        }
+
         void beginAutohandle() noexcept;
         void tickAutohandle(float deltaTime) noexcept;
         void endAutohandle() noexcept;
+
+        ComponentState state = UIMGUI_COMPONENT_STATE_RUNNING;
 
         virtual ~TitlebarComponent() = default;
     private:

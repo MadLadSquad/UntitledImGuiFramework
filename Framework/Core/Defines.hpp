@@ -30,3 +30,21 @@
 #else
     #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x))
 #endif
+
+namespace UImGui
+{
+    /**
+     * @brief The ComponentState enum defines 3 fields that represent the event state of the given component, the given
+     * component can then check its own state(if in PAUSED or RUNNING state) and call specific components of its event
+     * functions. The OFF state is there to make it easy to fully shut down a component until the program closes
+     */
+    enum ComponentState
+    {
+        // The component is running
+        UIMGUI_COMPONENT_STATE_RUNNING,
+        // The component is not running but its events are still running
+        UIMGUI_COMPONENT_STATE_PAUSED,
+        // The component is not running and its events are not running, only the constructor and destructor are called
+        UIMGUI_COMPONENT_STATE_OFF,
+    };
+}

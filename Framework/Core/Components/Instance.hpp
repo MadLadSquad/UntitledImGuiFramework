@@ -6,6 +6,7 @@
 #include <Components/WindowComponent.hpp>
 #include <imgui.h>
 #include <imgui_internal.h>
+#include <Global.hpp>
 
 namespace UImGui
 {
@@ -14,6 +15,9 @@ namespace UImGui
         std::vector<InlineComponent*> inlineComponents;
         std::vector<TitlebarComponent*> titlebarComponents;
         std::vector<WindowComponent*> windowComponents;
+
+        // Provide a global data struct to be shared with all components
+        void* globalData = nullptr;
     };
 
     class UIMGUI_PUBLIC_API Instance
@@ -26,6 +30,13 @@ namespace UImGui
         virtual ~Instance() noexcept;
 
         virtual void onEventConfigureStyle(ImGuiStyle& style, ImGuiIO& io) = 0;
+        static void* getGlobal() noexcept;
+
+        template<typename T>
+        static T* cast()
+        {
+            return static_cast<T*>(internalGlobal.instance);
+        }
 
         InitInfo initInfo;
 

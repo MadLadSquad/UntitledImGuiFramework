@@ -87,3 +87,8 @@ const UImGui::FVector2& UImGui::Texture::size() const noexcept
 {
     return sz;
 }
+
+const uint32_t& UImGui::Texture::get() const noexcept
+{
+    return id;
+}
