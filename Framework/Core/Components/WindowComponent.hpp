@@ -1,5 +1,6 @@
 #pragma once
 #include <Defines.hpp>
+#include <Types.hpp>
 
 namespace UImGui
 {
@@ -23,6 +24,8 @@ namespace UImGui
         void endAutohandle() noexcept;
 
         ComponentState state = UIMGUI_COMPONENT_STATE_RUNNING;
+        FString name{};
+        uint64_t id{};
 
         virtual ~WindowComponent() = default;
     private:

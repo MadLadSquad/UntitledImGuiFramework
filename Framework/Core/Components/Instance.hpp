@@ -20,6 +20,13 @@ namespace UImGui
         void* globalData = nullptr;
     };
 
+    enum ComponentType
+    {
+        UIMGUI_COMPONENT_TYPE_INLINE,
+        UIMGUI_COMPONENT_TYPE_TITLEBAR,
+        UIMGUI_COMPONENT_TYPE_WINDOW
+    };
+
     class UIMGUI_PUBLIC_API Instance
     {
     public:
@@ -31,6 +38,34 @@ namespace UImGui
 
         virtual void onEventConfigureStyle(ImGuiStyle& style, ImGuiIO& io) = 0;
         static void* getGlobal() noexcept;
+
+        template<ComponentType cmpType>
+        static auto* getComponentByIDs(const FString& name, uint64_t id)
+        {
+            if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_INLINE)
+            {
+                for (auto& a : internalGlobal.instance->initInfo.inlineComponents)
+                    if (a->name == name && a->id == id)
+                        return a;
+            }
+            else if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_TITLEBAR)
+            {
+                for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
+                    if (a->name == name && a->id == id)
+                        return a;
+            }
+            else if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_WINDOW)
+            {
+                for (auto& a : internalGlobal.instance->initInfo.windowComponents)
+                    if (a->name == name && a->id == id)
+                        return a;
+            }
+            else
+            {
+                logger.consoleLog("Invalid UI component type provided for the getComponentByIDs function!", UVK_LOG_TYPE_ERROR);
+                std::terminate();
+            }
+        }
 
         template<typename T>
         static T* cast()
