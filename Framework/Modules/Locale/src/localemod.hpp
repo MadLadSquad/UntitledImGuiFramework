@@ -14,9 +14,8 @@ namespace UImGui
         void openLocaleConfig() noexcept;
     private:
         friend class Locale;
-        using Container = std::vector<std::pair<std::string, std::string>>;
 
-        std::array<Container, static_cast<int>(LocaleTypes::pirate) + 1> translations{};
+        std::array<std::vector<std::pair<std::string, std::string>>, static_cast<int>(LocaleTypes::pirate) + 1> translations{};
 
         LocaleTypes defaultLayout = LocaleTypes::en_US;
         LocaleTypes currentLayout = LocaleTypes::en_US;
