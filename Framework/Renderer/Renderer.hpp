@@ -28,4 +28,5 @@ namespace UImGui
 
         RendererData data{};
     };
+
 }

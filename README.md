@@ -31,7 +31,7 @@ The library is divided into multiple modules compiled statically into your progr
 - Undo/Redo Module ✅
   - Adds Undo/Redo operation support
 - Networking module 🚧
-  - Adds basic networking using [curl]()
+  - Adds basic networking using [curl](https://curl.se/)
 - OS Module for core OS interaction 🚧
   - OS menu and bar interactions 🚧
   - OS accent colours and theme config loading 🚧
@@ -40,7 +40,14 @@ The library is divided into multiple modules compiled statically into your progr
   - Dependency and program verification and repair 🚧
   - In-app updates and autoupdates 🚧
   - Native window decorations 🚧
+  - Unix: 🚧
+    - XDG, [X](http://www.x.org/) and [Wayland](https://wayland.freedesktop.org/) integration
+    - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration
+    - [polkit](https://www.freedesktop.org/wiki/Software/PolicyKit/) integration
+    - [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) integration
+
 ## Learn
 You can find the documentation in the [wiki](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki)
+
 ## Showcase and Progress
 Coming soon, follow our [youtube channel](https://www.youtube.com/channel/UCWKEvueStyfeMGnkvVJuGxQ) and the [UntitledDesktopEnvironment wiki](https://trello.com/b/HmfuRY2K/untitleddesktop) for updates and some feature highlights soon!

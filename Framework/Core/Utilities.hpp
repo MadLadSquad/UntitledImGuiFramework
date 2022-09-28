@@ -26,6 +26,5 @@ namespace UImGui
         static FString toUpper(String str) noexcept;
         static void toUpper(FString& str) noexcept;
     private:
-
     };
 }
