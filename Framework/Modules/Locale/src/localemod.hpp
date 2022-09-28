@@ -2,7 +2,7 @@
 #ifdef UIMGUI_LOCALE_MODULE_ENABLED
 #include <Defines.hpp>
 #include "LocaleConstants.hpp"
-#include <vector>
+#include <array>
 
 namespace UImGui
 {
