@@ -21,3 +21,10 @@ UImGui::Global::~Global() noexcept
     ExitProcess(0);
 #endif
 }
+
+void UImGui::Global::init() noexcept
+{
+    window.createWindow();
+
+    modulesManager.init();
+}

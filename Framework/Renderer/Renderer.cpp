@@ -8,7 +8,7 @@
 void UImGui::RendererInternal::start() noexcept
 {
     internalGlobal.renderer = this;
-    internalGlobal.window.createWindow();
+    internalGlobal.init();
     GUIRenderer::init(internalGlobal.window.windowMain, "../Config/DefaultLayout.ini");
 
     double lastTime = 0.0f;
@@ -75,7 +75,7 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     out << YAML::Key << "sample-rate-shading" << YAML::Value << data.bSampleRateShading;
     out << YAML::Key << "sample-rate-shading-mult" << YAML::Value << data.sampleRateShadingMult;
 
-    std::ofstream fout("../Config/Settings/Renderer.yaml");
+    std::ofstream fout("../Config/Core/Renderer.yaml");
     fout << out.c_str();
     fout.close();
 }

@@ -74,6 +74,7 @@ void UImGui::LocaleManager::openLocaleConfig() noexcept
                             translations[static_cast<int>(id)].push_back({ f["string"].as<std::string>(), f["translation"].as<std::string>() });
             }
         }
+        logger.consoleLog("Successfully loaded translations!", UVK_LOG_TYPE_SUCCESS);
     }
     else
         logger.consoleLog("Couldn't open the Config/Translations directory, no translations were loaded, make sure you at least provide an empty translation file or your program will crash in production!", UVK_LOG_TYPE_ERROR);
@@ -106,7 +107,7 @@ UImGui::LocaleTypes UImGui::Locale::getLocaleID(const UImGui::FString& str) noex
 
 const UImGui::FString& UImGui::Locale::getLocaleString(const UImGui::FString& original, UImGui::LocaleTypes locale) noexcept
 {
-    for (auto& a : internalGlobal.localeManager.translations[static_cast<size_t>(locale)])
+    for (auto& a : internalGlobal.modulesManager.localeManager.translations[static_cast<size_t>(locale)])
         if (a.first == original)
             return a.second;
     logger.consoleLog("Couldn't find the provided localization string, using the default one! Please fix this in the near future!", UVK_LOG_TYPE_WARNING);
@@ -115,11 +116,11 @@ const UImGui::FString& UImGui::Locale::getLocaleString(const UImGui::FString& or
 
 UImGui::LocaleTypes& UImGui::Locale::getCurrentLayout() noexcept
 {
-    return internalGlobal.localeManager.currentLayout;
+    return internalGlobal.modulesManager.localeManager.currentLayout;
 }
 
 UImGui::LocaleTypes& UImGui::Locale::getFallbackLayout() noexcept
 {
-    return internalGlobal.localeManager.defaultLayout;
+    return internalGlobal.modulesManager.localeManager.defaultLayout;
 }
 #endif
