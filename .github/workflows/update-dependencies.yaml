@@ -20,6 +20,7 @@ jobs:
           submodules: true
           clean: false
           fetch-depth: 0
+          #persist-credentials: false
       - name: "Import bot's GPG key for signing commits"
         id: import-gpg
         uses: crazy-max/ghaction-import-gpg@v5
@@ -29,6 +30,7 @@ jobs:
           git_config_global: true
           git_user_signingkey: true
           git_commit_gpgsign: true
+
       - name: Extract commit data
         uses: rlespinasse/git-commit-data-action@v1.x
       - name: Update submodules
@@ -38,12 +40,13 @@ jobs:
           git config --global user.email "contact@madladsquad.com"
           git fetch --all
           git checkout auto || git checkout -b auto
-          echo "::set-output name=out::$(git submodule update --remote --merge)?"
+          o=$(git submodule update --remote --merge)
+          echo "out=${o:0:1}?" >> $GITHUB_OUTPUT
       - name: Commit
         if: "steps.mod.outputs.out != '?'"
         id: commit
         run: |
-          (git add . && git commit -m "auto" && git push origin auto && echo '::set-output name=com::+') || echo "::set-output name=com::?"
+          (git add . && git commit -m "auto" && git push origin auto && echo "com=+" >> $GITHUB_OUTPUT) || echo "com=?" >> $GITHUB_OUTPUT
       - name: Test
         run: "echo '${{ steps.mod.outputs.out }} ${{ steps.commits.outputs.com }}!'"
       - name: Create PR
