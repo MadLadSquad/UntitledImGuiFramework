@@ -21,7 +21,7 @@ const UImGui::InputAction& UImGui::Input::getAction(const UImGui::FString& name)
     for (auto& a : internalGlobal.window.inputActionList)
         if (a.name == name)
             return a;
-    logger.consoleLog("Input action with name: ", UVK_LOG_TYPE_ERROR, name, ", does not exist!");
+    Logger::log("Input action with name: ", UVK_LOG_TYPE_ERROR, name, ", does not exist!");
     std::terminate();
 }
 

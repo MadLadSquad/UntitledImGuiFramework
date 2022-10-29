@@ -2,7 +2,8 @@
 #include <iostream>
 #include <vector>
 #include <Core/Defines.hpp>
-#include <ThirdParty/logger/src/UVKLogImGui.h>
+#include <ThirdParty/logger/src/UVKLog.h>
+using namespace UVKLog;
 
 namespace UImGui
 {

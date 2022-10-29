@@ -18,7 +18,7 @@ void UImGui::Texture::load() noexcept
     unsigned char* texData = stbi_load(filename.c_str(), &x, &y, nullptr, 0);
     if (texData == nullptr)
     {
-        logger.consoleLog("Failed to load a texture with the following location: ", UVK_LOG_TYPE_ERROR, filename);
+        Logger::log("Failed to load a texture with the following location: ", UVK_LOG_TYPE_ERROR, filename);
         return;
     }
 
@@ -44,7 +44,7 @@ void UImGui::Texture::loadImGui() noexcept
     unsigned char* image_data = stbi_load(filename.c_str(), &x, &y, nullptr, 4);
     if (image_data == nullptr)
     {
-        logger.consoleLog("Failed to load a texture with the following location: ", UVK_LOG_TYPE_ERROR, filename);
+        Logger::log("Failed to load a texture with the following location: ", UVK_LOG_TYPE_ERROR, filename);
         return;
     }
 

@@ -26,7 +26,7 @@ void UImGui::LocaleManager::openLocaleConfig() noexcept
     }
     catch (YAML::BadFile&)
     {
-        logger.consoleLog("Couldn't open the translation base file!", UVK_LOG_TYPE_WARNING);
+        Logger::log("Couldn't open the translation base file!", UVK_LOG_TYPE_WARNING);
         return;
     }
 
@@ -40,7 +40,7 @@ void UImGui::LocaleManager::openLocaleConfig() noexcept
         defaultLayout = UImGui::Locale::getLocaleID(str);
         if (defaultLayout == static_cast<UImGui::LocaleTypes>(-1))
         {
-            logger.consoleLog("A non-valid default layout string was submitted! The layout will not be used until the error is fixed! String: ", UVK_LOG_TYPE_WARNING, str);
+            Logger::log("A non-valid default layout string was submitted! The layout will not be used until the error is fixed! String: ", UVK_LOG_TYPE_WARNING, str);
             return;
         }
         currentLayout = defaultLayout;
@@ -74,10 +74,10 @@ void UImGui::LocaleManager::openLocaleConfig() noexcept
                             translations[static_cast<int>(id)].push_back({ f["string"].as<std::string>(), f["translation"].as<std::string>() });
             }
         }
-        logger.consoleLog("Successfully loaded translations!", UVK_LOG_TYPE_SUCCESS);
+        Logger::log("Successfully loaded translations!", UVK_LOG_TYPE_SUCCESS);
     }
     else
-        logger.consoleLog("Couldn't open the Config/Translations directory, no translations were loaded, make sure you at least provide an empty translation file or your program will crash in production!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't open the Config/Translations directory, no translations were loaded, make sure you at least provide an empty translation file or your program will crash in production!", UVK_LOG_TYPE_ERROR);
 }
 
 UImGui::FString& UImGui::LocaleManager::getLocaleString(UImGui::String original, UImGui::LocaleTypes locale) noexcept
@@ -86,7 +86,7 @@ UImGui::FString& UImGui::LocaleManager::getLocaleString(UImGui::String original,
     for (auto& a : arr)
         if (a.first == original)
             return a.second;
-    logger.consoleLog("Couldn't find the translated string for locale ", UVK_LOG_TYPE_WARNING, Locale::getLocaleName(locale, true), ". Reverting to default layout ", Locale::getLocaleName(defaultLayout, true), "!");
+    Logger::log("Couldn't find the translated string for locale ", UVK_LOG_TYPE_WARNING, Locale::getLocaleName(locale, true), ". Reverting to default layout ", Locale::getLocaleName(defaultLayout, true), "!");
     return emptyString;
 }
 
@@ -110,7 +110,7 @@ const UImGui::FString& UImGui::Locale::getLocaleString(const UImGui::FString& or
     for (auto& a : internalGlobal.modulesManager.localeManager.translations[static_cast<size_t>(locale)])
         if (a.first == original)
             return a.second;
-    logger.consoleLog("Couldn't find the provided localization string, using the default one! Please fix this in the near future!", UVK_LOG_TYPE_WARNING);
+    Logger::log("Couldn't find the provided localization string, using the default one! Please fix this in the near future!", UVK_LOG_TYPE_WARNING);
     return original;
 }
 

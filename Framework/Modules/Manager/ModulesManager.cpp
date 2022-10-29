@@ -11,7 +11,7 @@ void UImGui::ModulesManager::init()
     }
     catch (YAML::BadFile&)
     {
-        logger.consoleLog("No Modules.yaml config file found, using the default configuration!", UVK_LOG_TYPE_WARNING);
+        Logger::log("No Modules.yaml config file found, using the default configuration!", UVK_LOG_TYPE_WARNING);
         return;
     }
 

@@ -17,4 +17,4 @@ cp Release/UVKBuildToolLib.lib . 2> /dev/null || cp Release/libUVKBuildToolLib.l
 cp yaml-cpp/Release/yaml-cpp.dll . 2> /dev/null || cp yaml-cpp/Release/libyaml-cpp.dll . 2> /dev/null || echo " "
 
 cd ../../ || exit
-echo -e "\x1b[32mSuccessfully updated the game engine!\x1b[0m"
+echo -e "\x1b[32mSuccessfully updated the framework!\x1b[0m"

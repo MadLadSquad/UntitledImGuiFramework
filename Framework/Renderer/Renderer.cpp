@@ -48,7 +48,7 @@ void UImGui::RendererInternal::loadConfig()
     }
     catch (YAML::BadFile&)
     {
-        logger.consoleLog("Invalid renderer config file, please fix this error before publishing for production! Because of the missing data we're using the default settings!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Invalid renderer config file, please fix this error before publishing for production! Because of the missing data we're using the default settings!", UVK_LOG_TYPE_ERROR);
         return;
     }
 

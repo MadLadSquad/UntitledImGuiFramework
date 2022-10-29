@@ -91,11 +91,11 @@ void UImGui::WindowInternal::createWindow() noexcept
 
     if (!glfwInit())
     {
-        logger.consoleLog("GLFW initialisation failed!", UVK_LOG_TYPE_ERROR);
+        Logger::log("GLFW initialisation failed!", UVK_LOG_TYPE_ERROR);
         glfwTerminate();
         return;
     }
-    logger.consoleLog("Setting up the window", UVK_LOG_TYPE_NOTE);
+    Logger::log("Setting up the window", UVK_LOG_TYPE_NOTE);
     glewExperimental = GL_TRUE;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
@@ -103,16 +103,16 @@ void UImGui::WindowInternal::createWindow() noexcept
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_SAMPLES, 16);
 
-    logger.consoleLog("Window settings configured", UVK_LOG_TYPE_NOTE);
+    Logger::log("Window settings configured", UVK_LOG_TYPE_NOTE);
     if (windowData.fullscreen)
     {
         windowMain = glfwCreateWindow((int)windowSize.x, (int)windowSize.y, windowData.name.c_str(), glfwGetPrimaryMonitor(), nullptr);
-        logger.consoleLog("Created window", UVK_LOG_TYPE_NOTE);
+        Logger::log("Created window", UVK_LOG_TYPE_NOTE);
     }
     else
     {
         windowMain = glfwCreateWindow((int)windowSize.x, (int)windowSize.y, windowData.name.c_str(), nullptr, nullptr);
-        logger.consoleLog("Created window", UVK_LOG_TYPE_NOTE);
+        Logger::log("Created window", UVK_LOG_TYPE_NOTE);
     }
 
     GLFWimage images[1];
@@ -122,11 +122,11 @@ void UImGui::WindowInternal::createWindow() noexcept
 
     if (!windowMain)
     {
-        logger.consoleLog("GLFW window creation failed!", UVK_LOG_TYPE_ERROR);
+        Logger::log("GLFW window creation failed!", UVK_LOG_TYPE_ERROR);
         glfwTerminate();
         return;
     }
-    logger.consoleLog("Window was created successfully", UVK_LOG_TYPE_SUCCESS);
+    Logger::log("Window was created successfully", UVK_LOG_TYPE_SUCCESS);
 
     int tempx = static_cast<int>(windowSize.x);
     int tempy = static_cast<int>(windowSize.y);
@@ -141,7 +141,7 @@ void UImGui::WindowInternal::createWindow() noexcept
     {
         glfwDestroyWindow(windowMain);
         glfwTerminate();
-        logger.consoleLog("GLEW initialisation failed!", UVK_LOG_TYPE_ERROR);
+        Logger::log("GLEW initialisation failed!", UVK_LOG_TYPE_ERROR);
         return;
     }
     glViewport(0, 0, tempx, tempy);
@@ -264,7 +264,7 @@ void UImGui::WindowInternal::openConfig()
     }
     catch (YAML::BadFile&)
     {
-        logger.consoleLog("Couldn't open the Window.yaml config file, please fix this error before shipping for production! Starting with default settings!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't open the Window.yaml config file, please fix this error before shipping for production! Starting with default settings!", UVK_LOG_TYPE_ERROR);
         goto skip_window_config;
     }
 
@@ -287,7 +287,7 @@ skip_window_config:
     }
     catch (YAML::BadFile&)
     {
-        logger.consoleLog("Couldn't open the Keybindings.yaml config file, please fix this error before shipping for production! Starting with default settings!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't open the Keybindings.yaml config file, please fix this error before shipping for production! Starting with default settings!", UVK_LOG_TYPE_ERROR);
         return;
     }
 
