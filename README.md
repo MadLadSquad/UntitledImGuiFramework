@@ -58,4 +58,4 @@ Coming soon, follow our [youtube channel](https://www.youtube.com/channel/UCWKEv
 [UntitledDesktopEnvironment wiki](https://trello.com/b/HmfuRY2K/untitleddesktop) for updates and some feature highlights soon!
 
 The organization board can be found [in this trello board](https://trello.com/b/HmfuRY2K/untitleddesktop), it contains organization information 
-on all projects releated to UDE and what features, we have on the list. You can find the framework in its corresponding card
+on all projects releated to UDE and what features, we have on the list. You can find the framework in its corresponding card.
