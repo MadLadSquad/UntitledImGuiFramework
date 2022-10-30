@@ -3,24 +3,42 @@ VSVer=" "
 VSShortVer="1"
 VSType=" "
 cpus=" "
+windows=false
+
+download_vswhere() {
+  # Get the raw JSON code for the releases from Github, get the lines that have the browser download URL and truncate the string in the front and back
+  # to get the URL, then we use the URL to download the application, this only happens if we cannot find
+  line=$(curl https://api.github.com/repos/microsoft/vswhere/releases 2> /dev/null | grep "https://github.com/microsoft/vswhere/releases/download/")
+  line="${line:33}"
+  line="${line%\"*}"
+
+  # Set a fake user agent string here so that we evade being blocked by GitHub
+  curl "${line}" -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0" -o vswhere.exe
+}
+
 
 # Used to automatically find and add the Visual Studio MSBuild.exe directory to the environment variables!
 function find_visual_studio_directory()
 {
-  wdir=$(pwd)
-  cd "C:/Program Files (x86)/Microsoft Visual Studio/" &> /dev/null || cd "C:/Program Files/Microsoft Visual Studio/" &> /dev/null || return
-  VSVer=$(find "2022" -maxdepth 0 2> /dev/null) || VSVer=$(find "2019" -maxdepth 0 2> /dev/null) || VSVer=$(find "2017" -maxdepth 0 2> /dev/null) || (echo -e "\x1b[31mError: Couldn't find a compatible Visual Studio version! Please note that we only support Visual Studio 2017, 2019, 2022 or newer versions! Exiting!\x1b[0m" && exit)
-  cd "${VSVer}" &> /dev/null || exit
-  VSType=$(find "Community" -maxdepth 0 2> /dev/null) || VSType=$(find "Enterprise" -maxdepth 0 2> /dev/null) || VSType=$(find "Professional" -maxdepth 0 2> /dev/null) || (echo -e "'x1b[31mError: Couldn't find a compatible Visual Studio Version Type! Exiting!\x1b[0m" && exit)
-  vspath=$(pwd)
-  cd "${wdir}" || exit
+  env | grep "OS=Windows" > /dev/null && windows=true
 
-  setx PATH "${vspath}/${VSType}/MSBuild/Current/Bin/amd64/;%PATH%" 2> /dev/null || (echo -e "\x1b[31mError: Couldn't set the path to the MSBuild.exe binary using setx! Try to set it yourself and try again without running the find Visual Studio option!\x1b[0m" && exit)
-  if [ "$VSVer" == "2022" ]; then VSShortVer="17"
-  elif [ "$VSVer" == "2019" ]; then VSShortVer="16"
-  elif [ "$VSVer" == "2017" ]; then VSShortVer="15"
-  else VSShortVer="1"
+  if [ "${windows}" = true ]; then
+    wd=$(pwd)
+    cd "C:/Program Files (x86)/Microsoft Visual Studio/Installer/"
+    find "vswhere.exe" -maxdepth 0 &> /dev/null || (cd "${wd}" && download_vswhere)
+    vs_path=$(./vswhere.exe | grep "installationPath")
+    vs_path="${vs_path:18}"
+
+    VSShortVer=$(./vswhere.exe | grep "catalog_productLine: Dev17")
+    VSShortVer="${VSShortVer:24}"
+
+    VSVer=$(./vswhere.exe | grep "catalog_productLineVersion:")
+    VSVer="${VSVer:28}"
+
+    setx PATH "${vs_path}/MSBuild/Current/Bin/amd64/;%PATH%" 2> /dev/null
+    cd "${wd}"
   fi
+
   return
 }
 
@@ -31,53 +49,41 @@ function install_build_tool()
   mkdir build || exit
   cd build || exit
 
-  if [ "$1" == "ci" ]; then
-    cmake .. -DUBT_COMPILING_FOR_ENGINE=OFF || exit
+  if [ "${windows}" == true ]; then
+    cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DUBT_COMPILING_FOR_ENGINE=OFF -DCMAKE_BUILD_TYPE=RELEASE || exit
+    MSBuild.exe UVKBuildTool.sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || exit
+
+    cp Release/UVKBuildTool.exe . || exit
+    cp Release/UVKBuildToolLib.dll . || cp Release/libUVKBuildToolLib.dll . || exit
+    cp Release/UVKBuildToolLib.lib . || cp Release/libUVKBuildToolLib.lib . || exit
+    cp yaml-cpp/Release/yaml-cpp.dll . || cp yaml-cpp/Release/libyaml-cpp.dll . || exit
   else
-    cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DUBT_COMPILING_FOR_ENGINE=OFF || cmake .. -G "Unix Makefiles" -DUBT_COMPILING_FOR_ENGINE=OFF || exit
+    cmake .. -G "Unix Makefiles" -DUBT_COMPILING_FOR_ENGINE=OFF -DCMAKE_BUILD_TYPE=RELEASE || exit
+    make -j "${cpus}" || exit
   fi
 
-  MSBuild.exe UVKBuildTool.sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || make -j "${cpus}" || exit
-
-  cp Release/UVKBuildTool.exe . 2> /dev/null
-  cp Release/UVKBuildToolLib.dll . 2> /dev/null || cp Release/libUVKBuildToolLib.dll . 2> /dev/null
-  cp Release/UVKBuildToolLib.lib . 2> /dev/null || cp Release/libUVKBuildToolLib.lib . 2> /dev/null
-  cp yaml-cpp/Release/yaml-cpp.dll . 2> /dev/null || cp yaml-cpp/Release/libyaml-cpp.dll . 2> /dev/null
   cd ../../ || exit
   return
 }
 
 if [ "$1" == "" ]; then
-  if find "C:/Program Files (x86)/Microsoft Visual Studio/" -maxdepth 0 2> /dev/null || find "C:/Program Files/Microsoft Visual Studio/" -maxdepth 0 2> /dev/null || which MSBuild.exe &> /dev/null; then
-    while true; do
-      read -rp "Are you running this script on a Windows system? Y(Yes)/N(No): " yn
-      case $yn in
-        [Yy]* ) echo -e "\x1b[31mWe couldn't find Visual Studio in the default installation under C:/Program Files/ or C:/Program Files (x86) and we couldn't find MSBuild.exe in the path.\nInstall the location of MSBuild.exe into your path environment variable, reopen your terminal and run the script again!\nMost of the times it's located under your visual-studio-install-directory/<year>/<type>/MSBuild/Current/Bin/amd64" && exit;;
-        [Nn]* ) break;;
-        * ) echo "Please answer with Y(Yes) or N(No)!";;
-      esac
-    done
-  fi
-
-	while true; do
+  while true; do
     read -rp "Start installation? Y(Yes)/N(No): " yn
     case $yn in
        	[Yy]* ) break;;
        	[Nn]* ) exit;;
        	* ) echo "Please answer with Y(Yes) or N(No)!";;
     esac
-	done
+  done
 
-	while true; do
+  while true; do
     read -rp "Do you want to download offline documentation Y(Yes)/N(No): " yn
     case $yn in
        	[Yy]* ) git clone https://github.com/MadLadSquad/UntitledImGuiFramework.wiki.git docs/; break;;
        	[Nn]* ) break;;
        	* ) echo "Please answer with Y(Yes) or N(No)!";;
     esac
-	done
-
-
+  done
 fi
 cpus=$(grep -c processor /proc/cpuinfo) ## get the cpu threads for maximum performance when compiling
 echo -e "\x1B[32mCopiling with ${cpus} compute jobs!\033[0m"
