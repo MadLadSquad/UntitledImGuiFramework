@@ -95,10 +95,10 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
     ImGui::Begin("DockSpace Demo", &bIsOpen, window_flags | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
     ImGui::PopStyleVar();
     for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
-        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+        if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
     for (auto& a : internalGlobal.instance->initInfo.inlineComponents)
-        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+        if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
 
     if (opt_fullscreen)
@@ -113,7 +113,7 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
     for (auto& a : internalGlobal.instance->initInfo.windowComponents)
-        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+        if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
 
     ImGui::End();

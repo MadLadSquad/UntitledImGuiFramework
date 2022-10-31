@@ -16,7 +16,6 @@ UImGui::Global::Global() noexcept
 
 UImGui::Global::~Global() noexcept
 {
-    delete instance;
 #ifdef _WIN32
     ExitProcess(0);
 #endif

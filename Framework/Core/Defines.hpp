@@ -40,10 +40,10 @@ namespace UImGui
      */
     enum ComponentState
     {
-        // The component is running
-        UIMGUI_COMPONENT_STATE_RUNNING,
         // The component is not running but its events are still running
         UIMGUI_COMPONENT_STATE_PAUSED,
+        // The component is running
+        UIMGUI_COMPONENT_STATE_RUNNING,
         // The component is not running and its events are not running, only the constructor and destructor are called
         UIMGUI_COMPONENT_STATE_OFF,
     };
