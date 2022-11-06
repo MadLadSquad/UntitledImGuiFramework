@@ -57,5 +57,15 @@ You can find the documentation in the [wiki](https://github.com/MadLadSquad/Unti
 Coming soon, follow our [youtube channel](https://www.youtube.com/channel/UCWKEvueStyfeMGnkvVJuGxQ) and the 
 [UntitledDesktopEnvironment wiki](https://trello.com/b/HmfuRY2K/untitleddesktop) for updates and some feature highlights soon!
 
-The organization board can be found [in this trello board](https://trello.com/b/HmfuRY2K/untitleddesktop), it contains organization information 
-on all projects releated to UDE and what features, we have on the list. You can find the framework in its corresponding card. 
+There are many applications currently in production using the framework:
+1. [UntitledDEPolkitAgent](https://github.com/MadLadSquad/UntitledDEPolkitAgent)
+1. [UntitledImageViewer](https://github.com/MadLadSquad/UntitledImageViewer)
+1. [UntitledMarkdownViewer](https://github.com/MadLadSquad/UntitledMarkdownViewer)
+1. [UntitledLinuxGameManager](https://github.com/MadLadSquad/UntitledLinuxGameManager)
+1. [UntitledTextEditor](https://github.com/MadLadSquad/UntitledTextEditor)
+1. [UntitledCalculator](https://github.com/MadLadSquad/UntitledCalculator)
+
+Generally there are many more, but they are going to be developed soon!
+
+The organization trello board can be found [in this trello board](https://trello.com/b/HmfuRY2K/untitleddesktop), it contains organization information 
+on all projects releated to UDE. The framework can be found in its corresponding cards
