@@ -3,7 +3,6 @@
 #include <Core/Types.hpp>
 #include "Renderer.hpp"
 
-
 namespace UImGui
 {
     class RendererData;

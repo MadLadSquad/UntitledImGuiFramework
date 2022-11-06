@@ -25,5 +25,7 @@ namespace UImGui
         static FString& iconLocation() noexcept;
 
         static void saveSettings(bool bSaveKeybinds) noexcept;
+
+        static void close() noexcept;
     };
 }

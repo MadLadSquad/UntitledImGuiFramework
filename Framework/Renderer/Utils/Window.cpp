@@ -303,3 +303,8 @@ skip_window_config:
         }
     }
 }
+
+void UImGui::WindowInternal::close() noexcept
+{
+    glfwSetWindowShouldClose(windowMain, true);
+}

@@ -127,6 +127,9 @@ namespace UImGui
          * @brief Used to automatically handle downstream end events
          */
         void endAutohandle() noexcept;
+
+        // Closes the application
+        static void shutdown() noexcept;
     private:
 
     };

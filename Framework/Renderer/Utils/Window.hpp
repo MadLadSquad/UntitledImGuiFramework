@@ -21,6 +21,8 @@ namespace UImGui
 
         [[nodiscard]] GLFWwindow* data() const noexcept;
         bool& resized() noexcept;
+
+        void close() noexcept;
     private:
         friend class Window;
         friend class Input;

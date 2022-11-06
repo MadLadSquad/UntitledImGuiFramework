@@ -34,3 +34,8 @@ void* UImGui::Instance::getGlobal() noexcept
 {
     return internalGlobal.instance->initInfo.globalData;
 }
+
+void UImGui::Instance::shutdown() noexcept
+{
+    internalGlobal.window.close();
+}

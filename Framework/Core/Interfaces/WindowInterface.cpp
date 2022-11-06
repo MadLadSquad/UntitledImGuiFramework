@@ -40,3 +40,8 @@ void UImGui::Window::saveSettings(bool bSaveKeybinds) noexcept
 {
     internalGlobal.window.saveConfig(bSaveKeybinds);
 }
+
+void UImGui::Window::close() noexcept
+{
+    internalGlobal.window.close();
+}
