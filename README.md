@@ -7,7 +7,7 @@
 A desktop software development framework that uses Dear imgui as its UI and Rendering library
 
 ## Motivation
-Desktop UI frameworks and libraries like QT and GTK are very bloated, complicated to use and rigid. [Dear imgui](https://github.com/ocornut/imgui) provides a GUI layer which provides the following benefits:
+Desktop UI frameworks and libraries like QT and GTK are bloated, complicated and rigid. [Dear imgui](https://github.com/ocornut/imgui) provides a GUI layer which provides the following benefits:
 - Light
 - Fast(graphically acceletrated)
 - Immediate(rendering is done in the source code using function calls)
