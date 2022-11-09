@@ -22,3 +22,6 @@
 [submodule "Framework/Modules/Plotting/ThirdParty/implot"]
 	path = Framework/Modules/Plotting/ThirdParty/implot
 	url = https://github.com/MadLadSquad/implot.git
+[submodule "Framework/ThirdParty/source-libraries/urll"]
+	path = Framework/ThirdParty/source-libraries/urll
+	url = https://github.com/MadLadSquad/UntitledRuntimeLibraryLoader.git
