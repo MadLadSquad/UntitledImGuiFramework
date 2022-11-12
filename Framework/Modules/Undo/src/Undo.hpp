@@ -7,15 +7,15 @@ namespace UImGui
 {
     struct UIMGUI_PUBLIC_API TransactionPayload
     {
-        void* payload;
-        size_t size;
+        void* payload = nullptr;
+        size_t size = 0;
     };
 
     struct UIMGUI_PUBLIC_API Transaction
     {
-        std::function<void(TransactionPayload&)> undofunc;
-        std::function<void(TransactionPayload&)> redofunc;
-        TransactionPayload payload;
+        std::function<void(TransactionPayload&)> undofunc{};
+        std::function<void(TransactionPayload&)> redofunc{};
+        TransactionPayload payload{};
     };
 
     class UIMGUI_PUBLIC_API StateTracker
@@ -24,13 +24,14 @@ namespace UImGui
         StateTracker() = default;
         StateTracker(const StateTracker&) = delete;
         void operator=(StateTracker const&) = delete;
-
-        void init() noexcept;
         static void push(const Transaction& transaction) noexcept;
 
         static void undo() noexcept;
         static void redo() noexcept;
     private:
+        friend class ModulesManager;
+
+        void init() noexcept;
         void pushAction(const Transaction& transaction);
 
         void uundo() noexcept;
