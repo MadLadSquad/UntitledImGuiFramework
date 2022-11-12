@@ -29,12 +29,18 @@ void UImGui::GUIRenderer::shutdown()
     ImGui::SaveIniSettingsToMemory();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
+#ifdef UIMGUI_PLOTTING_MODULE_ENABLED
+    ImPlot::DestroyContext();
+#endif
     ImGui::DestroyContext();
 }
 
 void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const std::string& ini)
 {
     ImGui::CreateContext();
+#ifdef UIMGUI_PLOTTING_MODULE_ENABLED
+    ImPlot::CreateContext();
+#endif
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
     io.WantSaveIniSettings = false;

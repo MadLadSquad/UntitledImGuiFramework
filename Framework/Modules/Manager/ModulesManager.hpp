@@ -9,6 +9,10 @@
     #include "Modules/Undo/src/Undo.hpp"
 #endif
 
+#ifdef UIMGUI_PLOTTING_MODULE_ENABLED
+    #include "Modules/Plotting/ThirdParty/implot/implot.h"
+#endif
+
 namespace UImGui
 {
     struct UIMGUI_PUBLIC_API ModuleSettings
