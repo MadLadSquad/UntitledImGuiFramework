@@ -130,6 +130,8 @@ namespace UImGui
 
         // Closes the application
         static void shutdown() noexcept;
+
+        std::vector<FString> arguments;
     private:
 
     };

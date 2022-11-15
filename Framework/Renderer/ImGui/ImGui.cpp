@@ -19,13 +19,14 @@ void UImGui::GUIRenderer::shutdown()
 {
     for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
-            a->begin();
+            a->end();
     for (auto& a : internalGlobal.instance->initInfo.windowComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
-            a->begin();
+            a->end();
     for (auto& a : internalGlobal.instance->initInfo.inlineComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
-            a->begin();
+            a->end();
+
     ImGui::SaveIniSettingsToMemory();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -33,6 +34,7 @@ void UImGui::GUIRenderer::shutdown()
     ImPlot::DestroyContext();
 #endif
     ImGui::DestroyContext();
+    internalGlobal.instance->end();
 }
 
 void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const std::string& ini)
@@ -52,10 +54,13 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const std::string& ini)
     ImGuiStyle& style = ImGui::GetStyle();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+
     UImGui::internalGlobal.instance->onEventConfigureStyle(style, io);
 
     ImGui_ImplGlfw_InitForOpenGL(glfwwindow, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+    internalGlobal.instance->begin();
     for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
@@ -100,6 +105,7 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::Begin("DockSpace Demo", &bIsOpen, window_flags | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
     ImGui::PopStyleVar();
+    internalGlobal.instance->tick(deltaTime);
     for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);

@@ -31,8 +31,6 @@ namespace UImGui
 
         WindowInternal window{};
         ModulesManager modulesManager{};
-
-
     };
 
     inline Global internalGlobal;
