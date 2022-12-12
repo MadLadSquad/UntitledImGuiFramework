@@ -19,6 +19,12 @@ void UImGui::ModulesManager::init()
         settings.maxTransactions = node["undo-max-transactions"].as<size_t>();
 
     initModules();
+
+    // Put this one after we have initialized the locale module
+#ifdef UIMGUI_LOCALE_MODULE_ENABLED
+    if (node["current-locale"])
+        Locale::getCurrentLayout() = Locale::getLocaleID(node["current-locale"].as<std::string>());
+#endif
 }
 
 void UImGui::ModulesManager::save() const noexcept
@@ -27,7 +33,9 @@ void UImGui::ModulesManager::save() const noexcept
     out << YAML::BeginMap;
 
     out << YAML::Key << "undo-max-transactions" << YAML::Value << settings.maxTransactions;
-
+#ifdef UIMGUI_LOCALE_MODULE_ENABLED
+    out << YAML::Key << "current-locale" << YAML::Value << Locale::getLocaleName(Locale::getCurrentLayout());
+#endif
     out << YAML::EndMap;
 
     std::ofstream fout("../Config/Core/Modules.yaml");

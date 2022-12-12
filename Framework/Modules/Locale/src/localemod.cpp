@@ -57,6 +57,12 @@ void UImGui::LocaleManager::openLocaleConfig() noexcept
         {
             if (a.path().filename() != "translation-base.yaml" && (a.path().extension().string() == ".yaml" || a.path().extension().string() == ".yml"))
             {
+                auto tmp = a.path().filename().string();
+                tmp.erase(tmp.find_last_of('.'));
+                auto id = Locale::getLocaleID(Utility::toLower(tmp.c_str()));
+                if (id == static_cast<LocaleTypes>(-1))
+                    continue;
+
                 try
                 {
                     node2 = YAML::LoadFile(a.path().string());
@@ -65,9 +71,6 @@ void UImGui::LocaleManager::openLocaleConfig() noexcept
                 {
                     continue;
                 }
-                auto tmp = a.path().filename().string();
-                tmp.erase(tmp.find_last_of('.'));
-                auto id = Locale::getLocaleID(Utility::toLower(tmp.c_str()));
                 if (node2["strings"])
                     for (const auto& f : node2["strings"])
                         if (f["string"] && f["translation"])
@@ -87,10 +90,11 @@ UImGui::FString& UImGui::LocaleManager::getLocaleString(UImGui::String original,
         if (a.first == original)
             return a.second;
     Logger::log("Couldn't find the translated string for locale ", UVK_LOG_TYPE_WARNING, Locale::getLocaleName(locale, true), ". Reverting to default layout ", Locale::getLocaleName(defaultLayout, true), "!");
+
     return emptyString;
 }
 
-constexpr const char* UImGui::Locale::getLocaleName(UImGui::LocaleTypes types, bool bShort) noexcept
+const char* UImGui::Locale::getLocaleName(UImGui::LocaleTypes types, bool bShort) noexcept
 {
     if (bShort)
         return localeString[static_cast<int>(types)];
@@ -107,11 +111,7 @@ UImGui::LocaleTypes UImGui::Locale::getLocaleID(const UImGui::FString& str) noex
 
 const UImGui::FString& UImGui::Locale::getLocaleString(const UImGui::FString& original, UImGui::LocaleTypes locale) noexcept
 {
-    for (auto& a : internalGlobal.modulesManager.localeManager.translations[static_cast<size_t>(locale)])
-        if (a.first == original)
-            return a.second;
-    Logger::log("Couldn't find the provided localization string, using the default one! Please fix this in the near future!", UVK_LOG_TYPE_WARNING);
-    return original;
+    return internalGlobal.modulesManager.localeManager.getLocaleString(original.c_str(), locale);
 }
 
 UImGui::LocaleTypes& UImGui::Locale::getCurrentLayout() noexcept
@@ -123,4 +123,10 @@ UImGui::LocaleTypes& UImGui::Locale::getFallbackLayout() noexcept
 {
     return internalGlobal.modulesManager.localeManager.defaultLayout;
 }
+
+const UImGui::FString &UImGui::Locale::getLocaleString(const UImGui::FString& original) noexcept
+{
+    return getLocaleString(original, getCurrentLayout());
+}
+
 #endif

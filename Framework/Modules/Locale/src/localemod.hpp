@@ -3,6 +3,7 @@
 #include <Defines.hpp>
 #include "LocaleConstants.hpp"
 #include <array>
+#include <locale>
 
 namespace UImGui
 {
@@ -15,6 +16,7 @@ namespace UImGui
     private:
         friend class Locale;
 
+        // TODO: Refactor this, this does not make sense
         std::array<std::vector<std::pair<std::string, std::string>>, static_cast<int>(LocaleTypes::pirate) + 1> translations{};
 
         LocaleTypes defaultLayout = LocaleTypes::en_US;
@@ -27,10 +29,12 @@ namespace UImGui
     class UIMGUI_PUBLIC_API Locale
     {
     public:
-        static constexpr const char* getLocaleName(LocaleTypes types, bool bShort = true) noexcept;
+        static const char* getLocaleName(LocaleTypes types, bool bShort = true) noexcept;
         static LocaleTypes getLocaleID(const FString& str) noexcept;
 
         [[maybe_unused]] static const FString& getLocaleString(const FString& original, LocaleTypes locale) noexcept;
+        [[maybe_unused]] static const FString& getLocaleString(const FString& original) noexcept;
+
         [[maybe_unused]] static LocaleTypes& getCurrentLayout() noexcept;
         [[maybe_unused]] static LocaleTypes& getFallbackLayout() noexcept;
     };

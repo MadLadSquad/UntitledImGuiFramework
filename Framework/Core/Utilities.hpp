@@ -1,6 +1,7 @@
 #pragma once
 #include <Defines.hpp>
 #include <Types.hpp>
+#include "Events/Keys.hpp"
 
 namespace UImGui
 {
@@ -26,5 +27,7 @@ namespace UImGui
         static FString toUpper(String str) noexcept;
         static void toUpper(FString& str) noexcept;
     private:
+        typedef std::array<std::pair<FString, FString>, Keys::UnknownKey - Keys::Space + 1> KeyStringsArrType;
+        static void initializeKeyStrings(KeyStringsArrType& keyStrings) noexcept;
     };
 }
