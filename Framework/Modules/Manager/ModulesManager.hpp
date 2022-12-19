@@ -13,6 +13,10 @@
     #include "Modules/Plotting/ThirdParty/implot/implot.h"
 #endif
 
+#ifdef UIMGUI_OS_MODULE_ENABLED
+    #include "Modules/OS/src/OS.hpp"
+#endif
+
 namespace UImGui
 {
     struct UIMGUI_PUBLIC_API ModuleSettings

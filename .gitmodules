@@ -25,3 +25,6 @@
 [submodule "Framework/ThirdParty/source-libraries/urll"]
 	path = Framework/ThirdParty/source-libraries/urll
 	url = https://github.com/MadLadSquad/UntitledRuntimeLibraryLoader.git
+[submodule "Framework/Modules/OS/ThirdParty/uexec"]
+	path = Framework/Modules/OS/ThirdParty/uexec
+	url = https://github.com/MadLadSquad/UntitledExec.git
