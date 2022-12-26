@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <ThirdParty/source-libraries/stb_image.h>
 #include <yaml.h>
+#include <Interfaces/RendererInterface.hpp>
 
 UImGui::WindowInternal::WindowInternal() noexcept
 {
@@ -135,7 +136,9 @@ void UImGui::WindowInternal::createWindow() noexcept
     windowSize.y = static_cast<float>(tempy);
 
     glfwMakeContextCurrent(windowMain);
-    glfwSwapInterval(1);
+
+    if (Renderer::data().bUsingVSync)
+        glfwSwapInterval(1);
     configureCallbacks();
     if (glewInit() != GLEW_OK)
     {
@@ -161,6 +164,7 @@ void UImGui::WindowInternal::configureCallbacks() noexcept
     glfwSetCursorPosCallback(windowMain, mouseCursorPositionCallback);
     glfwSetMouseButtonCallback(windowMain, mouseKeyInputCallback);
     glfwSetScrollCallback(windowMain, scrollInputCallback);
+    glfwSetWindowPosCallback(windowMain, windowPositionCallback);
 }
 
 void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, int width, int height) noexcept
@@ -226,6 +230,17 @@ void UImGui::WindowInternal::scrollInputCallback(GLFWwindow* window, double xoff
     auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
 
     windowInst->scroll = { static_cast<float>(xoffset), static_cast<float>(yoffset) };
+}
+
+void UImGui::WindowInternal::windowPositionCallback(GLFWwindow* window, int xpos, int ypos) noexcept
+{
+    auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
+
+    windowInst->windowLastPosX = windowInst->windowCurrentPosX;
+    windowInst->windowLastPosY = windowInst->windowCurrentPosY;
+
+    windowInst->windowCurrentPosX = xpos;
+    windowInst->windowCurrentPosY = ypos;
 }
 
 float UImGui::WindowInternal::getXMousePositionChange() noexcept

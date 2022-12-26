@@ -54,6 +54,7 @@ namespace UImGui
         static void mouseKeyInputCallback(GLFWwindow* window, int button, int action, int mods) noexcept;
         static void mouseCursorPositionCallback(GLFWwindow* window, double xpos, double ypos) noexcept;
         static void scrollInputCallback(GLFWwindow* window, double xoffset, double yoffset) noexcept;
+        static void windowPositionCallback(GLFWwindow* window, int xpos, int ypos) noexcept;
 
         [[nodiscard]] float getXMousePositionChange() noexcept;
         [[nodiscard]] float getYMousePositionChange() noexcept;
@@ -72,5 +73,11 @@ namespace UImGui
         float offsetX = 0;
         float offsetY = 0;
         FVector2 scroll;
+
+        int windowLastPosX = 0;
+        int windowLastPosY = 0;
+        int windowCurrentPosX = 0;
+        int windowCurrentPosY = 0;
+
     };
 }

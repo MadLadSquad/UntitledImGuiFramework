@@ -45,3 +45,22 @@ void UImGui::Window::close() noexcept
 {
     internalGlobal.window.close();
 }
+
+UImGui::FVector2 UImGui::Window::getCurrentWindowPosition() noexcept
+{
+    return { static_cast<float>(internalGlobal.window.windowCurrentPosY), static_cast<float>(internalGlobal.window.windowCurrentPosY) };
+}
+
+UImGui::FVector2 UImGui::Window::getLastWindowPosition() noexcept
+{
+    return { static_cast<float>(internalGlobal.window.windowLastPosY), static_cast<float>(internalGlobal.window.windowLastPosY) };
+}
+
+UImGui::FVector2 UImGui::Window::getWindowPositionChange() noexcept
+{
+    return
+    {
+        static_cast<float>(internalGlobal.window.windowCurrentPosX - internalGlobal.window.windowLastPosY),
+        static_cast<float>(internalGlobal.window.windowCurrentPosX - internalGlobal.window.windowLastPosY)
+    };
+}

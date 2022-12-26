@@ -18,6 +18,10 @@ namespace UImGui
 
         static float aspectRatio() noexcept;
 
+        static FVector2 getCurrentWindowPosition() noexcept;
+        static FVector2 getLastWindowPosition() noexcept;
+        static FVector2 getWindowPositionChange() noexcept;
+
         static FVector2& windowSize() noexcept;
         static bool& fullscreen() noexcept;
 
