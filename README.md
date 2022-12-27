@@ -44,11 +44,12 @@ The library is divided into multiple modules compiled statically into your progr
   - Dependency and program verification and repair 🚧
   - In-app updates and autoupdates 🚧
   - Native window decorations 🚧
+  - Exec integration using the [UntitledExec](https://github.com/MadLadSquad/UntitledExec) library ✅
   - Unix: 🚧
-    - XDG, [X](http://www.x.org/) and [Wayland](https://wayland.freedesktop.org/) integration
-    - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration
-    - [polkit](https://www.freedesktop.org/wiki/Software/PolicyKit/) integration
-    - [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) integration
+    - XDG, [X](http://www.x.org/) and [Wayland](https://wayland.freedesktop.org/) integration 🚧
+    - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration 🚧
+    - [polkit](https://www.freedesktop.org/wiki/Software/PolicyKit/) integration 🚧
+    - [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) integration 🚧
 
 ## Learn
 You can find the documentation in the [wiki](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki)
