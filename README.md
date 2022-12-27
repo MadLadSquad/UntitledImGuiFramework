@@ -41,9 +41,6 @@ The library is divided into multiple modules compiled statically into your progr
   - OS accent colours and theme config loading 🚧
   - Notifications 🚧
   - OS system directory configuration 🚧
-  - Dependency and program verification and repair 🚧
-  - In-app updates and autoupdates 🚧
-  - Native window decorations 🚧
   - Exec integration using the [UntitledExec](https://github.com/MadLadSquad/UntitledExec) library ✅
   - Unix: 🚧
     - XDG, [X](http://www.x.org/) and [Wayland](https://wayland.freedesktop.org/) integration 🚧
