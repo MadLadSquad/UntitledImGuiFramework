@@ -68,6 +68,7 @@ Coming soon, follow our [youtube channel](https://www.youtube.com/channel/UCWKEv
 
 There are many applications currently in production using the framework:
 1. [UntitledDEPolkitAgent](https://github.com/MadLadSquad/UntitledDEPolkitAgent)
+1. [UntitledDESessionLogout](https://github.com/MadLadSquad/UntitledDESessionLogout/)
 1. [UntitledImageViewer](https://github.com/MadLadSquad/UntitledImageViewer)
 1. [UntitledMarkdownViewer](https://github.com/MadLadSquad/UntitledMarkdownViewer)
 1. [UntitledLinuxGameManager](https://github.com/MadLadSquad/UntitledLinuxGameManager)
