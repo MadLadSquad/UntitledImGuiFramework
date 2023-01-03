@@ -59,8 +59,17 @@ want to include in their application. Module list and development status below:
     - [polkit](https://www.freedesktop.org/wiki/Software/PolicyKit/) integration 🚧
     - [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) integration 🚧
 
+The framework uses C++ as its main development language, but because we want to include support for full modability and plugins in mutiple languages, the 
+user-facing API has a separate completely C version that can be used to develop applications too! Simply write the required bindings to your language or
+generate them automatically from C using a relevant tool, and as long as you have the main engine library compiled you should easily be able to write
+applications in C or any other programming language that supports C style functions.
+
 ## Learn
 You can find the documentation in the [wiki](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki)
+
+Documentation is written as pure learning material, code examples are in most cases provided and are written with both the C and C++ API in mind.
+Additionally there is specific documentation for distibuting applications including the framework on different platforms that may be used by OS maintainers
+to create packages for the framework
 
 ## Showcase and Progress
 Coming soon, follow our [youtube channel](https://www.youtube.com/channel/UCWKEvueStyfeMGnkvVJuGxQ) and the 
