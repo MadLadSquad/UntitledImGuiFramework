@@ -43,6 +43,12 @@ want to include in their application. Module list and development status below:
   - Adds [imspinner](https://github.com/dalerank/imspinner) for different spinner widgets ✅
 - Toggles Module ✅
   - Adds [imgui_toggle](https://github.com/cmdwtf/imgui_toggle) library for different types of toggle widgets ✅
+- Text Utils Module 🚧
+  - Adds the [UntitledImGuiTextUtils](https://github.com/MadLadSquad/UntitledImGuiTextUtils) library that adds additional utility functions for 
+  easily rendering bold, italic, underlined and other types of text
+- Markdown Module 🚧
+  - Adds the [UntitledImGuiMDViewerWidget](https://github.com/MadLadSquad/UntitledImGuiMDViewerWidget) library which provides full markdown parsing 
+  including of standard extensions
 - Undo/Redo Module ✅
   - Adds Undo/Redo operation support ✅
 - Networking module 🚧
@@ -53,11 +59,11 @@ want to include in their application. Module list and development status below:
   - Notifications 🚧
   - OS system directory configuration 🚧
   - Exec integration using the [UntitledExec](https://github.com/MadLadSquad/UntitledExec) library ✅
+  - Cross-platform system font interaction using the [UntitledFontUtils](https://github.com/MadLadSquad/UntitledFontUtils) library ✅
   - Unix: 🚧
     - XDG, [X](http://www.x.org/) and [Wayland](https://wayland.freedesktop.org/) integration 🚧
     - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration 🚧
     - [polkit](https://www.freedesktop.org/wiki/Software/PolicyKit/) integration 🚧
-    - [fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) integration 🚧
 
 The framework uses C++ as its main development language, but because we want to include support for full modability and plugins in mutiple languages, the 
 user-facing API has a separate completely C version that can be used to develop applications too! Simply write the required bindings to your language or
