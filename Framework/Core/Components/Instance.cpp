@@ -1,5 +1,6 @@
 #include "Instance.hpp"
 #include <Core/Global.hpp>
+#include <Interfaces/WindowInterface.hpp>
 
 UImGui::Instance::Instance() noexcept
 {
@@ -32,10 +33,15 @@ void UImGui::Instance::endAutohandle() noexcept
 
 void* UImGui::Instance::getGlobal() noexcept
 {
-    return internalGlobal.instance->initInfo.globalData;
+    return Instance::get()->initInfo.globalData;
 }
 
 void UImGui::Instance::shutdown() noexcept
 {
-    internalGlobal.window.close();
+    Window::get().close();
+}
+
+UImGui::Instance* UImGui::Instance::get() noexcept
+{
+    return internalGlobal.instance;
 }

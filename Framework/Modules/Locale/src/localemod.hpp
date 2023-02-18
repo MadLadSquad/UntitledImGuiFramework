@@ -1,7 +1,7 @@
 #pragma once
 #ifdef UIMGUI_LOCALE_MODULE_ENABLED
 #include <Defines.hpp>
-#include "LocaleConstants.hpp"
+#include "Modules/Manager/LocaleConstants.hpp"
 #include <array>
 #include <locale>
 
@@ -19,8 +19,8 @@ namespace UImGui
         // TODO: Refactor this, this does not make sense
         std::array<std::vector<std::pair<std::string, std::string>>, static_cast<int>(LocaleTypes::pirate) + 1> translations{};
 
-        LocaleTypes defaultLayout = LocaleTypes::en_US;
-        LocaleTypes currentLayout = LocaleTypes::en_US;
+        LocaleTypes defaultLayout = LocaleTypes::en;
+        LocaleTypes currentLayout = LocaleTypes::en;
         FString emptyString;
 
         FString& getLocaleString(String original, LocaleTypes locale) noexcept;

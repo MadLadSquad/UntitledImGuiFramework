@@ -17,6 +17,19 @@
     #include "Modules/OS/src/OS.hpp"
 #endif
 
+#ifdef UIMGUI_KNOBS_MODULE_ENABLED
+    #include "Modules/Knobs/ThirdParty/imgui-knobs/imgui-knobs.h"
+#endif
+
+#ifdef UIMGUI_SPINNERS_MODULE_ENABLED
+    #define IMSPINNER_DEMO
+    #include "Modules/Spinners/ThirdParty/imspinner/imspinner.h"
+#endif
+
+#ifdef UIMGUI_TOGGLES_MODULE_ENABLED
+    #include "Modules/Toggles/ThirdParty/imgui_toggle/imgui_toggle.h"
+#endif
+
 namespace UImGui
 {
     struct UIMGUI_PUBLIC_API ModuleSettings
@@ -31,9 +44,11 @@ namespace UImGui
     private:
         friend class Modules;
         friend class Global;
+
+        friend class Locale;
         friend class LocaleManager;
         friend class StateTracker;
-        friend class Locale;
+
 
         ModuleSettings settings;
 #ifdef UIMGUI_LOCALE_MODULE_ENABLED
@@ -54,5 +69,10 @@ namespace UImGui
     public:
         static ModuleSettings& data() noexcept;
         static void save() noexcept;
+    private:
+        friend class StateTracker;
+        friend class Locale;
+
+        static ModulesManager& get() noexcept;
     };
 }

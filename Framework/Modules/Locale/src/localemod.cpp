@@ -49,7 +49,7 @@ void UImGui::LocaleManager::openLocaleConfig() noexcept
     const auto& strings = node["strings"];
     if (strings)
         for (const auto& a : strings)
-            translations[static_cast<int>(currentLayout)].push_back({ a.as<std::string>(), a.as<std::string>() });
+            translations[static_cast<int>(currentLayout)].emplace_back( a.as<std::string>(), a.as<std::string>() );
     if (exists(std_filesystem::path("../Config/Translations/")))
     {
         YAML::Node node2;
@@ -74,7 +74,7 @@ void UImGui::LocaleManager::openLocaleConfig() noexcept
                 if (node2["strings"])
                     for (const auto& f : node2["strings"])
                         if (f["string"] && f["translation"])
-                            translations[static_cast<int>(id)].push_back({ f["string"].as<std::string>(), f["translation"].as<std::string>() });
+                            translations[static_cast<int>(id)].emplace_back( f["string"].as<std::string>(), f["translation"].as<std::string>() );
             }
         }
         Logger::log("Successfully loaded translations!", UVK_LOG_TYPE_SUCCESS);
@@ -97,31 +97,31 @@ UImGui::FString& UImGui::LocaleManager::getLocaleString(UImGui::String original,
 const char* UImGui::Locale::getLocaleName(UImGui::LocaleTypes types, bool bShort) noexcept
 {
     if (bShort)
-        return localeString[static_cast<int>(types)];
+        return localeStrings[static_cast<int>(types)];
     return localeStringFull[static_cast<int>(types)];
 }
 
 UImGui::LocaleTypes UImGui::Locale::getLocaleID(const UImGui::FString& str) noexcept
 {
-    for (size_t ret = 0; ret < 229; ret++)
-        if (localeString[ret] == str)
+    for (size_t ret = 0; ret < static_cast<size_t>(LocaleTypes::COUNT); ret++)
+        if (localeStrings[ret] == str)
             return static_cast<LocaleTypes>(ret);
     return static_cast<LocaleTypes>(-1);
 }
 
 const UImGui::FString& UImGui::Locale::getLocaleString(const UImGui::FString& original, UImGui::LocaleTypes locale) noexcept
 {
-    return internalGlobal.modulesManager.localeManager.getLocaleString(original.c_str(), locale);
+    return Modules::get().localeManager.getLocaleString(original.c_str(), locale);
 }
 
 UImGui::LocaleTypes& UImGui::Locale::getCurrentLayout() noexcept
 {
-    return internalGlobal.modulesManager.localeManager.currentLayout;
+    return Modules::get().localeManager.currentLayout;
 }
 
 UImGui::LocaleTypes& UImGui::Locale::getFallbackLayout() noexcept
 {
-    return internalGlobal.modulesManager.localeManager.defaultLayout;
+    return Modules::get().localeManager.defaultLayout;
 }
 
 const UImGui::FString &UImGui::Locale::getLocaleString(const UImGui::FString& original) noexcept

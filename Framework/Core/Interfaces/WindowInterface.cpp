@@ -3,64 +3,69 @@
 
 void UImGui::Window::setTitle(UImGui::String name) noexcept
 {
-    internalGlobal.window.setTitle(name);
+    Window::get().setTitle(name);
 }
 
 void UImGui::Window::setCursorVisibility(bool bVisible) noexcept
 {
-    internalGlobal.window.setCursorVisibility(bVisible);
+    Window::get().setCursorVisibility(bVisible);
 }
 
 float UImGui::Window::aspectRatio() noexcept
 {
-    return internalGlobal.window.windowSize.x / internalGlobal.window.windowSize.y;
+    return Window::get().windowSize.x / Window::get().windowSize.y;
 }
 
 UImGui::FVector2& UImGui::Window::windowSize() noexcept
 {
-    return internalGlobal.window.windowSize;
+    return Window::get().windowSize;
 }
 
 bool& UImGui::Window::fullscreen() noexcept
 {
-    return internalGlobal.window.windowData.fullscreen;
+    return Window::get().windowData.fullscreen;
 }
 
 UImGui::FString& UImGui::Window::name() noexcept
 {
-    return internalGlobal.window.windowData.name;
+    return Window::get().windowData.name;
 }
 
 UImGui::FString& UImGui::Window::iconLocation() noexcept
 {
-    return internalGlobal.window.windowData.iconLocation;
+    return Window::get().windowData.iconLocation;
 }
 
 void UImGui::Window::saveSettings(bool bSaveKeybinds) noexcept
 {
-    internalGlobal.window.saveConfig(bSaveKeybinds);
+    Window::get().saveConfig(bSaveKeybinds);
 }
 
 void UImGui::Window::close() noexcept
 {
-    internalGlobal.window.close();
+    Window::get().close();
 }
 
 UImGui::FVector2 UImGui::Window::getCurrentWindowPosition() noexcept
 {
-    return { static_cast<float>(internalGlobal.window.windowCurrentPosY), static_cast<float>(internalGlobal.window.windowCurrentPosY) };
+    return { static_cast<float>(Window::get().windowCurrentPosY), static_cast<float>(Window::get().windowCurrentPosY) };
 }
 
 UImGui::FVector2 UImGui::Window::getLastWindowPosition() noexcept
 {
-    return { static_cast<float>(internalGlobal.window.windowLastPosY), static_cast<float>(internalGlobal.window.windowLastPosY) };
+    return { static_cast<float>(Window::get().windowLastPosY), static_cast<float>(Window::get().windowLastPosY) };
 }
 
 UImGui::FVector2 UImGui::Window::getWindowPositionChange() noexcept
 {
     return
     {
-        static_cast<float>(internalGlobal.window.windowCurrentPosX - internalGlobal.window.windowLastPosY),
-        static_cast<float>(internalGlobal.window.windowCurrentPosX - internalGlobal.window.windowLastPosY)
+        static_cast<float>(Window::get().windowCurrentPosX - Window::get().windowLastPosY),
+        static_cast<float>(Window::get().windowCurrentPosX - Window::get().windowLastPosY)
     };
+}
+
+UImGui::WindowInternal& UImGui::Window::get() noexcept
+{
+    return internalGlobal.window;
 }

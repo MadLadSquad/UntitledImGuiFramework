@@ -1,5 +1,5 @@
 #include "Input.hpp"
-#include <Global.hpp>
+#include <Interfaces/WindowInterface.hpp>
 
 bool UImGui::InputAction::operator==(const uint8_t& st) const noexcept
 {
@@ -13,12 +13,12 @@ bool UImGui::InputAction::operator!=(const uint8_t& st) const noexcept
 
 uint8_t UImGui::Input::getKey(uint16_t key) noexcept
 {
-    return internalGlobal.window.getKeys()[key];
+    return Window::get().getKeys()[key];
 }
 
 const UImGui::InputAction& UImGui::Input::getAction(const UImGui::FString& name) noexcept
 {
-    for (auto& a : internalGlobal.window.inputActionList)
+    for (auto& a : Window::get().inputActionList)
         if (a.name == name)
             return a;
     Logger::log("Input action with name: ", UVK_LOG_TYPE_ERROR, name, ", does not exist!");
@@ -27,25 +27,25 @@ const UImGui::InputAction& UImGui::Input::getAction(const UImGui::FString& name)
 
 std::vector<UImGui::InputAction>& UImGui::Input::getActions() noexcept
 {
-    return internalGlobal.window.inputActionList;
+    return Window::get().inputActionList;
 }
 
 UImGui::FVector2 UImGui::Input::getMousePositionChange() noexcept
 {
-    return internalGlobal.window.getMousePositionChange();
+    return Window::get().getMousePositionChange();
 }
 
 UImGui::FVector2 UImGui::Input::getCurrentMousePosition() noexcept
 {
-    return internalGlobal.window.getCurrentMousePosition();
+    return Window::get().getCurrentMousePosition();
 }
 
 UImGui::FVector2 UImGui::Input::getLastMousePosition() noexcept
 {
-    return internalGlobal.window.getLastMousePosition();
+    return Window::get().getLastMousePosition();
 }
 
 UImGui::FVector2 UImGui::Input::getScroll() noexcept
 {
-    return internalGlobal.window.getScroll();
+    return Window::get().getScroll();
 }

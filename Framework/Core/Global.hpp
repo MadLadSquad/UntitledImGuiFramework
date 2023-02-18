@@ -18,19 +18,12 @@ namespace UImGui
         Instance* instance = nullptr;
         RendererInternal* renderer = nullptr;
     private:
-        friend class Instance;
-        friend class Input;
-        friend class GUIRenderer;
         friend class Window;
         friend class Renderer;
-        friend class RendererInternal;
-        friend class Locale;
-        friend class StateTracker;
         friend class Modules;
-        friend class ModulesManager;
 
         WindowInternal window{};
-        ModulesManager modulesManager{};
+        ModulesManager modulesManagerr{};
     };
 
     inline Global internalGlobal;

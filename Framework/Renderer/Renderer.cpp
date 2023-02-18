@@ -4,15 +4,19 @@
 #include <Renderer/ImGui/ImGui.hpp>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <Interfaces/WindowInterface.hpp>
+#include <Interfaces/RendererInterface.hpp>
 
 void UImGui::RendererInternal::start() noexcept
 {
+    // Normally we would just use the Renderer::get but since we assign a pointer here we need to avoid the SEGFAULT and
+    // other madness the normal solution entails
     internalGlobal.renderer = this;
     internalGlobal.init();
-    GUIRenderer::init(internalGlobal.window.windowMain, "../Config/DefaultLayout.ini");
+    GUIRenderer::init(Window::get().windowMain, "../Config/DefaultLayout.ini");
 
     double lastTime = 0.0f;
-    while (!glfwWindowShouldClose(internalGlobal.window.windowMain))
+    while (!glfwWindowShouldClose(Window::get().windowMain))
     {
         static double deltaTime = 0.0f;
         glfwPollEvents();
@@ -29,14 +33,14 @@ void UImGui::RendererInternal::start() noexcept
         glUseProgram(0);
 
         GUIRenderer::beginUI(static_cast<float>(deltaTime));
-        glfwSwapBuffers(internalGlobal.window.windowMain);
+        glfwSwapBuffers(Window::get().windowMain);
     }
 }
 
 void UImGui::RendererInternal::stop() noexcept
 {
     GUIRenderer::shutdown();
-    internalGlobal.window.destroyWindow();
+    Window::get().destroyWindow();
 }
 
 void UImGui::RendererInternal::loadConfig()

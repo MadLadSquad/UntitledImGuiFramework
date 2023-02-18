@@ -1,6 +1,11 @@
 #include "ModulesManager.hpp"
 #include <Core/Global.hpp>
 #include <yaml.h>
+// The imspinner devs decided to just not include imgui
+#include <imgui.h>
+#include <imgui_internal.h>
+#include "Modules/Spinners/ThirdParty/imspinner/imspinner.h"
+
 
 void UImGui::ModulesManager::init()
 {
@@ -44,12 +49,17 @@ void UImGui::ModulesManager::save() const noexcept
 
 UImGui::ModuleSettings& UImGui::Modules::data() noexcept
 {
-    return internalGlobal.modulesManager.settings;
+    return Modules::get().settings;
 }
 
 void UImGui::Modules::save() noexcept
 {
-    internalGlobal.modulesManager.save();
+    Modules::get().save();
+}
+
+UImGui::ModulesManager& UImGui::Modules::get() noexcept
+{
+    return internalGlobal.modulesManagerr;
 }
 
 void UImGui::ModulesManager::initModules()

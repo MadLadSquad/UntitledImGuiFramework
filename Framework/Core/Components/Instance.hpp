@@ -75,19 +75,19 @@ namespace UImGui
         {
             if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_INLINE)
             {
-                for (auto& a : internalGlobal.instance->initInfo.inlineComponents)
+                for (auto& a : Instance::get()->initInfo.inlineComponents)
                     if (a->name == name && a->id == id)
                         return a;
             }
             else if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_TITLEBAR)
             {
-                for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
+                for (auto& a : Instance::get()->initInfo.titlebarComponents)
                     if (a->name == name && a->id == id)
                         return a;
             }
             else if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_WINDOW)
             {
-                for (auto& a : internalGlobal.instance->initInfo.windowComponents)
+                for (auto& a : Instance::get()->initInfo.windowComponents)
                     if (a->name == name && a->id == id)
                         return a;
             }
@@ -106,7 +106,7 @@ namespace UImGui
         template<typename T>
         static T* cast()
         {
-            return static_cast<T*>(internalGlobal.instance);
+            return static_cast<T*>(Instance::get());
         }
 
         /**
@@ -133,6 +133,8 @@ namespace UImGui
 
         std::vector<FString> arguments;
     private:
+        friend class GUIRenderer;
 
+        static Instance* get() noexcept;
     };
 }

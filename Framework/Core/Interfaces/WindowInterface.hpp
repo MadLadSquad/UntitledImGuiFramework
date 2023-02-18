@@ -31,5 +31,11 @@ namespace UImGui
         static void saveSettings(bool bSaveKeybinds) noexcept;
 
         static void close() noexcept;
+    private:
+        friend class Input;
+        friend class Instance;
+        friend class RendererInternal;
+
+        static WindowInternal& get() noexcept;
     };
 }

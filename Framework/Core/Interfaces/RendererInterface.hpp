@@ -13,6 +13,8 @@ namespace UImGui
         static RendererData& data() noexcept;
         static void saveSettings() noexcept;
     private:
+        friend class RendererInternal;
 
+        static RendererInternal& get() noexcept;
     };
 }

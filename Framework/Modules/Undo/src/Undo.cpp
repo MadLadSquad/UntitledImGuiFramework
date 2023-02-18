@@ -10,17 +10,17 @@ void UImGui::StateTracker::init() noexcept
 
 void UImGui::StateTracker::push(const UImGui::Transaction& transaction) noexcept
 {
-    internalGlobal.modulesManager.stateTracker.pushAction(transaction);
+    Modules::get().stateTracker.pushAction(transaction);
 }
 
 void UImGui::StateTracker::undo() noexcept
 {
-    internalGlobal.modulesManager.stateTracker.uundo();
+    Modules::get().stateTracker.uundo();
 }
 
 void UImGui::StateTracker::redo() noexcept
 {
-    internalGlobal.modulesManager.stateTracker.rredo();
+    Modules::get().stateTracker.rredo();
 }
 
 void UImGui::StateTracker::pushAction(const UImGui::Transaction& transaction)

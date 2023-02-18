@@ -17,13 +17,13 @@ void UImGui::GUIRenderer::beginFrame()
 
 void UImGui::GUIRenderer::shutdown()
 {
-    for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
+    for (auto& a : Instance::get()->initInfo.titlebarComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->end();
-    for (auto& a : internalGlobal.instance->initInfo.windowComponents)
+    for (auto& a : Instance::get()->initInfo.windowComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->end();
-    for (auto& a : internalGlobal.instance->initInfo.inlineComponents)
+    for (auto& a : Instance::get()->initInfo.inlineComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->end();
 
@@ -34,7 +34,7 @@ void UImGui::GUIRenderer::shutdown()
     ImPlot::DestroyContext();
 #endif
     ImGui::DestroyContext();
-    internalGlobal.instance->end();
+    Instance::get()->end();
 }
 
 void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const std::string& ini)
@@ -55,19 +55,19 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const std::string& ini)
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 
-    UImGui::internalGlobal.instance->onEventConfigureStyle(style, io);
+    Instance::get()->onEventConfigureStyle(style, io);
 
     ImGui_ImplGlfw_InitForOpenGL(glfwwindow, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    internalGlobal.instance->begin();
-    for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
+    Instance::get()->begin();
+    for (auto& a : Instance::get()->initInfo.titlebarComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
-    for (auto& a : internalGlobal.instance->initInfo.windowComponents)
+    for (auto& a : Instance::get()->initInfo.windowComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
-    for (auto& a : internalGlobal.instance->initInfo.inlineComponents)
+    for (auto& a : Instance::get()->initInfo.inlineComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
 }
@@ -96,7 +96,6 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
     else
         dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
 
-
     if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
         window_flags |= ImGuiWindowFlags_NoBackground;
 
@@ -105,11 +104,13 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::Begin("DockSpace Demo", &bIsOpen, window_flags | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
     ImGui::PopStyleVar();
-    internalGlobal.instance->tick(deltaTime);
-    for (auto& a : internalGlobal.instance->initInfo.titlebarComponents)
+
+    Instance::get()->tick(deltaTime);
+
+    for (auto& a : Instance::get()->initInfo.titlebarComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
-    for (auto& a : internalGlobal.instance->initInfo.inlineComponents)
+    for (auto& a : Instance::get()->initInfo.inlineComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
 
@@ -124,7 +125,8 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
         ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
-    for (auto& a : internalGlobal.instance->initInfo.windowComponents)
+
+    for (auto& a : Instance::get()->initInfo.windowComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
 
