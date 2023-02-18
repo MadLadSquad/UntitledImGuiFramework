@@ -4,11 +4,12 @@
 #include <vector>
 #include <array>
 #include <typeinfo>
+#include <Defines.hpp>
 
 namespace UImGui
 {
 
-    class DBusUtils
+    class UIMGUI_PUBLIC_API DBusUtils
     {
     private:
         static void initTypeIDTable(std::array<size_t, 16>& typeIDTable) noexcept;
