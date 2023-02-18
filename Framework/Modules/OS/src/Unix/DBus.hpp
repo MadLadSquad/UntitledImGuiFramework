@@ -1,5 +1,6 @@
 #pragma once
 #ifdef UIMGUI_OS_MODULE_ENABLED
+#ifdef UIMGUI_DBUS_SUBMODULE_ENABLED
 #include <dbus/dbus.h>
 #include <vector>
 #include <array>
@@ -34,5 +35,5 @@ namespace UImGui
 
     };
 }
-
+#endif
 #endif
