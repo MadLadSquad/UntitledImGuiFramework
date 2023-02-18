@@ -1,3 +1,4 @@
+#ifdef UIMGUI_OS_MODULE_ENABLED
 #include "DBus.hpp"
 #include <cinttypes>
 
@@ -27,3 +28,4 @@ void UImGui::DBusUtils::initTypeIDTable(std::array<size_t, 16>& typeIDTable) noe
 
     typeIDTable[DBUS_TYPE_UNIX_FD - offset] = typeid(int).hash_code();
 }
+#endif
