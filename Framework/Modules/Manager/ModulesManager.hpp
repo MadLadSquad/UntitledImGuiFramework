@@ -18,6 +18,7 @@
 #endif
 
 #ifdef UIMGUI_KNOBS_MODULE_ENABLED
+    #define AddBezierCurve AddBezierCubic
     #include "Modules/Knobs/ThirdParty/imgui-knobs/imgui-knobs.h"
 #endif
 

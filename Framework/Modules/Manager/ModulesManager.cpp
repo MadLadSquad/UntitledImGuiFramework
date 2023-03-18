@@ -4,8 +4,14 @@
 // The imspinner devs decided to just not include imgui
 #include <imgui.h>
 #include <imgui_internal.h>
-#include "Modules/Spinners/ThirdParty/imspinner/imspinner.h"
+#ifdef UIMGUI_SPINNERS_MODULE_ENABLED
+    #include "Modules/Spinners/ThirdParty/imspinner/imspinner.h"
+#endif
 
+#ifdef UIMGUI_KNOBS_MODULE_ENABLED
+    #define AddBezierCurve AddBezierCubic
+    #include "Modules/Knobs/ThirdParty/imgui-knobs/imgui-knobs.h"
+#endif
 
 void UImGui::ModulesManager::init()
 {
