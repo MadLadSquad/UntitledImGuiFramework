@@ -7,5 +7,6 @@
 #include <Core/Utilities.hpp>
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
+#include <custom_funcs.hpp>
 #include <Renderer/Utils/Texture.hpp>
 #include <urll/urll.h>
