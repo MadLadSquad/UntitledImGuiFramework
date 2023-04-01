@@ -16,8 +16,8 @@ Desktop UI frameworks and libraries like QT and GTK are bloated, complicated and
 - Used by a multitude of high profile developers, an incomplete list can be seen [here](https://github.com/ocornut/imgui/wiki/Software-using-dear-imgui)
 
 ## Library features
-The library is divided into multiple modules compiled statically into your program. Users can fully decide which modules and submodules they want or don't 
-want to include in their application. Module list and development status below:
+The library is divided into multiple modules compiled statically into your program. Users can fully decide which modules 
+and submodules they want or don't want to include in their application. Module list and development status below:
 - Core Module ✅
   - Window ✅
   - Core ImGui rendering ✅
@@ -65,32 +65,27 @@ want to include in their application. Module list and development status below:
     - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration 🚧
     - [polkit](https://www.freedesktop.org/wiki/Software/PolicyKit/) integration 🚧
 
-The framework uses C++ as its main development language, but because we want to include support for full modability and plugins in mutiple languages, the 
-user-facing API has a separate completely C version that can be used to develop applications too! Simply write the required bindings to your language or
-generate them automatically from C using a relevant tool, and as long as you have the main engine library compiled you should easily be able to write
+The framework uses C++ as its main development language, but because we want to include support for full modability and 
+plugins in mutiple languages, the user-facing API has a separate completely C version that can be used to develop 
+applications too! Simply write the required bindings to your language or generate them automatically from C using a 
+relevant tool, and as long as you have the main engine library compiled you should easily be able to write
 applications in C or any other programming language that supports C style functions.
 
 ## Learn
 You can find the documentation in the [wiki](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki)
 
-Documentation is written as pure learning material, code examples are in most cases provided and are written with both the C and C++ API in mind.
-Additionally there is specific documentation for distibuting applications including the framework on different platforms that may be used by OS maintainers
-to create packages for the framework
+Documentation is written as pure learning material, code examples are in most cases provided and are written with both 
+the C and C++ API in mind. Additionally there is specific documentation for distibuting applications including the 
+framework on different platforms that may be used by OS maintainers to create packages for the framework
 
 ## Showcase and Progress
 Coming soon, follow our [youtube channel](https://www.youtube.com/channel/UCWKEvueStyfeMGnkvVJuGxQ) and the 
-[UntitledDesktopEnvironment wiki](https://trello.com/b/HmfuRY2K/untitleddesktop) for updates and some feature highlights soon!
+[UntitledDesktopEnvironment wiki](https://trello.com/b/HmfuRY2K/untitleddesktop) for updates and some feature highlights 
+soon!
 
-There are many applications currently in production using the framework:
-1. [UntitledDEPolkitAgent](https://github.com/MadLadSquad/UntitledDEPolkitAgent)
-1. [UntitledDESessionLogout](https://github.com/MadLadSquad/UntitledDESessionLogout/)
-1. [UntitledImageViewer](https://github.com/MadLadSquad/UntitledImageViewer)
-1. [UntitledMarkdownViewer](https://github.com/MadLadSquad/UntitledMarkdownViewer)
-1. [UntitledLinuxGameManager](https://github.com/MadLadSquad/UntitledLinuxGameManager)
-1. [UntitledTextEditor](https://github.com/MadLadSquad/UntitledTextEditor)
-1. [UntitledCalculator](https://github.com/MadLadSquad/UntitledCalculator)
+There are many applications, already in production, that use the framework. A list can be found 
+[here](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki/Applications-using-the-framework). If your application 
+uses the framework, please contribute to the list!
 
-Generally there are many more, but they are going to be developed soon!
-
-The organization trello board can be found [in this trello board](https://trello.com/b/HmfuRY2K/untitleddesktop), it contains organization information 
-on all projects releated to UDE. The framework can be found in its corresponding cards
+The organization trello board can be found [in this trello board](https://trello.com/b/HmfuRY2K/untitleddesktop), it 
+contains organization information on all projects releated to UDE. The framework can be found in its corresponding cards
