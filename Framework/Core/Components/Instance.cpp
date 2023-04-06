@@ -12,8 +12,10 @@ UImGui::Instance::~Instance() noexcept
     initInfo.titlebarComponents.clear();
     initInfo.windowComponents.clear();
     initInfo.inlineComponents.clear();
+
     // Delete doesn't work with void*
-    free(initInfo.globalData);
+    if (initInfo.bGlobalAllocatedOnHeap)
+        free(initInfo.globalData);
 }
 
 void UImGui::Instance::beginAutohandle() noexcept

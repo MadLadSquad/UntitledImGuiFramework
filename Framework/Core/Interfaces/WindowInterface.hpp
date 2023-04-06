@@ -13,23 +13,35 @@ namespace UImGui
         Window(const Window&) = delete;
         void operator=(Window const&) = delete;
 
+        // Event Safety - begin, style, post-begin
         static void setTitle(String name) noexcept;
+        // Event Safety - begin, style, post-begin
         static void setCursorVisibility(bool bVisible) noexcept;
 
+        // Event Safety - begin, style, post-begin
         static float aspectRatio() noexcept;
 
+        // Event Safety - begin, style, post-begin
         static FVector2 getCurrentWindowPosition() noexcept;
+        // Event Safety - begin, style, post-begin
         static FVector2 getLastWindowPosition() noexcept;
+        // Event Safety - begin, style, post-begin
         static FVector2 getWindowPositionChange() noexcept;
 
+        // Event Safety - begin, style, post-begin
         static FVector2& windowSize() noexcept;
+        // Event Safety - begin, style, post-begin
         static bool& fullscreen() noexcept;
 
+        // Event Safety - begin, style, post-begin
         static FString& name() noexcept;
+        // Event Safety - begin, style, post-begin
         static FString& iconLocation() noexcept;
 
+        // Event Safety - begin, style, post-begin
         static void saveSettings(bool bSaveKeybinds) noexcept;
 
+        // Event Safety - begin, style, post-begin
         static void close() noexcept;
     private:
         friend class Input;

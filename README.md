@@ -53,6 +53,8 @@ and submodules they want or don't want to include in their application. Module l
   - Adds Undo/Redo operation support ✅
 - Networking module 🚧
   - Adds basic networking using [curl](https://curl.se/)
+- CLI Args module ✅
+  - Adds a parser for CLI arguments using the [UntitledCLIParser](https://github.com/MadLadSquad/UntitledCLIParser)
 - OS Module for core OS interaction 🚧
   - OS menu and bar interactions 🚧
   - OS accent colours and theme config loading 🚧
@@ -75,11 +77,11 @@ applications in C or any other programming language that supports C style functi
 You can find the documentation in the [wiki](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki)
 
 Documentation is written as pure learning material, code examples are in most cases provided and are written with both 
-the C and C++ API in mind. Additionally there is specific documentation for distibuting applications including the 
+the C and C++ API in mind. Additionally, there is specific documentation for distibuting applications including the 
 framework on different platforms that may be used by OS maintainers to create packages for the framework
 
 ## Showcase and Progress
-Coming soon, follow our [youtube channel](https://www.youtube.com/channel/UCWKEvueStyfeMGnkvVJuGxQ) and the 
+Coming soon, follow our [YouTube channel](https://www.youtube.com/channel/UCWKEvueStyfeMGnkvVJuGxQ) and the 
 [UntitledDesktopEnvironment wiki](https://trello.com/b/HmfuRY2K/untitleddesktop) for updates and some feature highlights 
 soon!
 
@@ -88,4 +90,4 @@ There are many applications, already in production, that use the framework. A li
 uses the framework, please contribute to the list!
 
 The organization trello board can be found [in this trello board](https://trello.com/b/HmfuRY2K/untitleddesktop), it 
-contains organization information on all projects releated to UDE. The framework can be found in its corresponding cards
+contains organization information on all projects related to UDE. The framework can be found in its corresponding cards

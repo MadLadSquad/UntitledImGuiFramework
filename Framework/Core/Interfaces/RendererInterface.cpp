@@ -15,3 +15,23 @@ UImGui::RendererInternal& UImGui::Renderer::get() noexcept
 {
     return *internalGlobal.renderer;
 }
+
+const UImGui::FString& UImGui::Renderer::getVendorString() noexcept
+{
+    return get().vendorString;
+}
+
+const UImGui::FString& UImGui::Renderer::getAPIVersion() noexcept
+{
+    return get().apiVersion;
+}
+
+const UImGui::FString& UImGui::Renderer::getGPUName() noexcept
+{
+    return get().gpuName;
+}
+
+const UImGui::FString& UImGui::Renderer::getDriverVersion() noexcept
+{
+    return get().driverVersion;
+}

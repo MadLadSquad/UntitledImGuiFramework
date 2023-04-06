@@ -44,7 +44,28 @@ function create_folders()
   touch uvproj.yaml && echo "\
 name: \"${prjname}\"
 version: \"1.0.0.0\"
-engine-version: \"1.0.0.0\"" > uvproj.yaml
+engine-version: \"1.0.0.0\"
+enabled-modules:
+  os: false
+  dbus: false
+  uexec: false
+  theming: false
+  notifications: false
+  polkit: false
+  ufont: false
+  audio: false
+  locale: false
+  network: false
+  undo-redo: false
+  video: false
+  plotting: false
+  knobs: false
+  spinners: false
+  toggles: false
+  text-utils: false
+  markdown: false
+  cli-parser: false
+" > uvproj.yaml
 
   # Create symbolic links
   ln -rs "../../Framework/" Framework 2> /dev/null || cp ../../Engine/ . -r

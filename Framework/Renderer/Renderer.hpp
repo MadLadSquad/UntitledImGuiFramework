@@ -23,6 +23,11 @@ namespace UImGui
     private:
         friend class Renderer;
 
+        FString vendorString;
+        FString apiVersion;
+        FString driverVersion;
+        FString gpuName;
+
         void loadConfig();
         void saveConfig() const noexcept;
 

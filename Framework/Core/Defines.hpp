@@ -47,4 +47,17 @@ namespace UImGui
         // The component is not running and its events are not running, only the constructor and destructor are called
         UIMGUI_COMPONENT_STATE_OFF,
     };
+
+    /**
+     * @brief An enum that defines component types to be used by various functions
+     * @var UIMGUI_COMPONENT_TYPE_INLINE - Defines an inline component
+     * @var UIMGUI_COMPONENT_TYPE_TITLEBAR - Defines a titlebar component
+     * @var UIMGUI_COMPONENT_PYE_WINDOW - Defines a window component
+     */
+    enum [[maybe_unused]] ComponentType
+    {
+        UIMGUI_COMPONENT_TYPE_INLINE,
+        UIMGUI_COMPONENT_TYPE_TITLEBAR,
+        UIMGUI_COMPONENT_TYPE_WINDOW
+    };
 }

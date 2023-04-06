@@ -4,20 +4,6 @@
 
 namespace UImGui
 {
-
-    /**
-     * @brief An enum that defines component types to be used by various functions
-     * @var UIMGUI_COMPONENT_TYPE_INLINE - Defines an inline component
-     * @var UIMGUI_COMPONENT_TYPE_TITLEBAR - Defines a titlebar component
-     * @var UIMGUI_COMPONENT_PYE_WINDOW - Defines a window component
-     */
-    enum [[maybe_unused]] ComponentType
-    {
-        UIMGUI_COMPONENT_TYPE_INLINE,
-        UIMGUI_COMPONENT_TYPE_TITLEBAR,
-        UIMGUI_COMPONENT_TYPE_WINDOW
-    };
-
     /**
      * @brief A UI component that implements the standard top title bar
      * @implements TitlebarComponent - The constructor for the component
@@ -38,14 +24,18 @@ namespace UImGui
     {
     public:
         TitlebarComponent() = default;
+        // Event Safety - All instantiated
         virtual void begin() = 0;
+        // Event Safety - All instantiated
         virtual void tick(float deltaTime) = 0;
+        // Event Safety - Before destruction
         virtual void end() = 0;
 
         /**
          * @brief Easily initializes a component of a certain subclass provided as a template argument
          * @tparam T - The subclass type
          * @return A pointer to the newly created component
+         * @note Event Safety - Any time
          */
         template<typename T>
         static TitlebarComponent* make() noexcept
@@ -56,15 +46,18 @@ namespace UImGui
 
         /**
          * @brief Used to automatically handle downstream begin events
+         * @note Event Safety - Any time
          */
         void beginAutohandle() noexcept;
         /**
          * @brief Used to automatically handle downstream tick events
          * @param deltaTime - the delta time calculated in the application's render loop
+         * @note Event Safety - Any time
          */
         void tickAutohandle(float deltaTime) noexcept;
         /**
          * @brief Used to automatically handle downstream end events
+         * @note Event Safety - Any time
          */
         void endAutohandle() noexcept;
 

@@ -13,6 +13,19 @@ void UImGui::RendererInternal::start() noexcept
     // other madness the normal solution entails
     internalGlobal.renderer = this;
     internalGlobal.init();
+
+    vendorString = (char*)glGetString(GL_VENDOR);
+    if (vendorString.starts_with("NVIDIA"))
+    {
+        driverVersion = (char*)glGetString(GL_VERSION);
+        apiVersion = driverVersion;
+
+        driverVersion.erase(0, driverVersion.find("NVIDIA ") + strlen("NVIDIA "));
+        apiVersion.erase(apiVersion.find(" NVIDIA"));
+    }
+
+    gpuName = (char*)glGetString(GL_RENDERER);
+
     GUIRenderer::init(Window::get().windowMain, "../Config/DefaultLayout.ini");
 
     double lastTime = 0.0f;

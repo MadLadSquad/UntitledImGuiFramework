@@ -31,6 +31,11 @@
     #include "Modules/Toggles/ThirdParty/imgui_toggle/imgui_toggle.h"
 #endif
 
+#ifdef UIMGUI_CLI_PARSER_MODULE_ENABLED
+    #include "Modules/CLIParser/ThirdParty/UntitledCLIParser/CLIParser.hpp"
+    #include "Modules/CLIParser/ThirdParty/UntitledCLIParser/C/cucli.h"
+#endif
+
 namespace UImGui
 {
     struct UIMGUI_PUBLIC_API ModuleSettings

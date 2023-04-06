@@ -40,3 +40,6 @@
 [submodule "Framework/ThirdParty/freetype"]
 	path = Framework/ThirdParty/freetype
 	url = https://github.com/MadLadSquad/freetype.git
+[submodule "Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser"]
+	path = Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser
+	url = https://github.com/MadLadSquad/UntitledCLIParser.git
