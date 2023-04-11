@@ -3,6 +3,7 @@
 
 /**
  * @brief A namespace of keys to be used for input. Also includes mouse keys
+ * @note Event Safety - Any time
  */
 namespace Keys
 {

@@ -27,7 +27,7 @@ namespace UImGui
         virtual void begin() = 0;
         // Event Safety - All instantiated
         virtual void tick(float deltaTime) = 0;
-        // Event Safety - Before destruction
+        // Event Safety - Pre-destruct
         virtual void end() = 0;
 
         /**

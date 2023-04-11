@@ -24,9 +24,13 @@ namespace UImGui
         StateTracker() = default;
         StateTracker(const StateTracker&) = delete;
         void operator=(StateTracker const&) = delete;
+
+        // UntitledImGuiFramework Event Safety - Post-begin
         static void push(const Transaction& transaction) noexcept;
 
+        // UntitledImGuiFramework Event Safety - Post-begin
         static void undo() noexcept;
+        // UntitledImGuiFramework Event Safety - Post-begin
         static void redo() noexcept;
     private:
         friend class ModulesManager;

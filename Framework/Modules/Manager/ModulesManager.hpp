@@ -73,7 +73,9 @@ namespace UImGui
     class UIMGUI_PUBLIC_API Modules
     {
     public:
+        // Event Safety - Post-begin
         static ModuleSettings& data() noexcept;
+        // Event Safety - Post-begin
         static void save() noexcept;
     private:
         friend class StateTracker;

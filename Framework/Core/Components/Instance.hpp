@@ -59,7 +59,7 @@ namespace UImGui
          * needs to be configured
          * @param style - A reference to the internal ImGuiStyle variable that holds all style data for every ImGui widget
          * @param io - A reference to the internal ImGuiIO variable that holds all IO data for ImGui
-         * @note Event Safety - GUI not fully instantiated
+         * @note Event Safety - GUI
          */
         virtual void onEventConfigureStyle(ImGuiStyle& style, ImGuiIO& io) = 0;
         /**
@@ -74,7 +74,7 @@ namespace UImGui
          * @param name - The name of the component we're looking for
          * @param id - The numeric ID of the component we're looking for
          * @return A pointer to the component if found, or nullptr. Type depends on the provided ComponentType template parameter enum
-         * @note Event Safety - Post-Constructor
+         * @note Event Safety - Post-Startup
          */
         template<ComponentType cmpType>
         static auto* getComponentByIDs(const FString& name, uint64_t id)

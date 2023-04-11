@@ -29,13 +29,19 @@ namespace UImGui
     class UIMGUI_PUBLIC_API Locale
     {
     public:
+        // Event Safety - Post-begin
         static const char* getLocaleName(LocaleTypes types, bool bShort = true) noexcept;
+        // Event Safety - Post-begin
         static LocaleTypes getLocaleID(const FString& str) noexcept;
 
+        // Event Safety - Post-begin
         [[maybe_unused]] static const FString& getLocaleString(const FString& original, LocaleTypes locale) noexcept;
+        // Event Safety - Post-begin
         [[maybe_unused]] static const FString& getLocaleString(const FString& original) noexcept;
 
+        // Event Safety - Post-begin
         [[maybe_unused]] static LocaleTypes& getCurrentLayout() noexcept;
+        // Event Safety - Post-begin
         [[maybe_unused]] static LocaleTypes& getFallbackLayout() noexcept;
     };
 }
