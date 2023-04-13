@@ -39,6 +39,7 @@ namespace UImGui
         void saveConfig(bool bSaveKeybindings) noexcept;
         void openConfig();
         void setTitle(String title) noexcept;
+        void setIcon(String name) noexcept;
         void setCursorVisibility(bool bVisible) noexcept;
 
         FVector2 getMousePositionChange() noexcept;

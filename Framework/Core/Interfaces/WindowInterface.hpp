@@ -19,6 +19,9 @@ namespace UImGui
         static void setCursorVisibility(bool bVisible) noexcept;
 
         // Event Safety - begin, style, post-begin
+        static void setIcon(String name) noexcept;
+
+        // Event Safety - begin, style, post-begin
         static float aspectRatio() noexcept;
 
         // Event Safety - begin, style, post-begin
@@ -37,9 +40,14 @@ namespace UImGui
         static FString& name() noexcept;
         // Event Safety - begin, style, post-begin
         static FString& iconLocation() noexcept;
+        // Event Safety - begin, style, post-begin
+        static FString& layoutLocation() noexcept;
 
         // Event Safety - begin, style, post-begin
         static void saveSettings(bool bSaveKeybinds) noexcept;
+
+        // Event Safety - begin, style, post-begin
+        static void refreshSettings() noexcept;
 
         // Event Safety - begin, style, post-begin
         static void close() noexcept;

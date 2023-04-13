@@ -126,10 +126,7 @@ void UImGui::WindowInternal::createWindow() noexcept
     Logger::log("Created window", UVK_LOG_TYPE_NOTE);
 
     // Load window icon
-    GLFWimage images[1];
-    images[0].pixels = stbi_load(("../Content/" + windowData.iconLocation).c_str(), &images[0].width, &images[0].height, nullptr, 4);
-    glfwSetWindowIcon(windowMain, 1, images);
-    stbi_image_free(images[0].pixels);
+    setIcon(windowData.iconLocation.c_str());
 
     Logger::log("Window was created successfully", UVK_LOG_TYPE_SUCCESS);
 
@@ -310,4 +307,12 @@ void UImGui::WindowInternal::updateKeyState() noexcept
         }
 finish_inner_loop:;
     }
+}
+
+void UImGui::WindowInternal::setIcon(UImGui::String name) noexcept
+{
+    GLFWimage images[1];
+    images[0].pixels = stbi_load((UImGui::FString("../Content/") + name).c_str(), &images[0].width, &images[0].height, nullptr, 4);
+    glfwSetWindowIcon(windowMain, 1, images);
+    stbi_image_free(images[0].pixels);
 }

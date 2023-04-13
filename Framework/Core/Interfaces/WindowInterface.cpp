@@ -69,3 +69,20 @@ UImGui::WindowInternal& UImGui::Window::get() noexcept
 {
     return internalGlobal.window;
 }
+
+void UImGui::Window::refreshSettings() noexcept
+{
+    auto& a = Window::get().windowData;
+    setTitle(a.name.c_str());
+    setIcon(a.iconLocation.c_str());
+}
+
+void UImGui::Window::setIcon(UImGui::String name) noexcept
+{
+    Window::get().setIcon(name);
+}
+
+UImGui::FString& UImGui::Window::layoutLocation() noexcept
+{
+    return Window::get().windowData.layoutLocation;
+}
