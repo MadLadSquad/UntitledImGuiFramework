@@ -4,6 +4,9 @@
 #include <Components/WindowComponent.hpp>
 #include <Components/TitlebarComponent.hpp>
 #include <Components/Instance.hpp>
+#include <Interfaces/RendererInterface.hpp>
+#include <Interfaces/WindowInterface.hpp>
+
 #include <Core/Utilities.hpp>
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>

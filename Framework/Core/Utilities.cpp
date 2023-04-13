@@ -15,7 +15,7 @@ void UImGui::Utility::sanitiseFilepath(FString& str) noexcept
 void UImGui::Utility::keyToText(UImGui::FString& text, const uint16_t& key, bool bLong) noexcept
 {
     static bool bFirst = true;
-    static std::array<std::pair<FString, FString>, Keys::UnknownKey - Keys::Space + 1> keyStrings{};
+    static std::array<std::pair<FString, FString>, Keys::UnknownKey + 1> keyStrings{};
     if (bFirst)
     {
         initializeKeyStrings(keyStrings);
@@ -77,7 +77,6 @@ void UImGui::Utility::initializeKeyStrings(KeyStringsArrType& keyStrings) noexce
 {
     keyStrings.fill({ "Unknown Key", "Unknown" });
 
-    keyStrings[Keys::UnknownKey] = { "Unknown Key", "Unknown" };
     keyStrings[Keys::Space] = { "Space", "Space" };
     keyStrings[Keys::Apostrophe] = { "Apostrophe", "\'" };
     keyStrings[Keys::Comma] = { "Comma", "," };
@@ -218,4 +217,18 @@ void UImGui::Utility::initializeKeyStrings(KeyStringsArrType& keyStrings) noexce
     keyStrings[Keys::MouseButton8] = { "Mouse Button 8/Last", "MB8" };
 
     keyStrings[Keys::None] = { "None", "None" };
+}
+
+void UImGui::Utility::keyToText(UImGui::FString& text, const UImGui::InputAction& action, bool bLong) noexcept
+{
+    for (auto& a : action.keyCodes)
+        text += keyToText(a, bLong) + "+";
+    text.pop_back();
+}
+
+UImGui::FString UImGui::Utility::keyToText(const UImGui::InputAction& action, bool bLong) noexcept
+{
+    FString ret;
+    keyToText(ret, action, bLong);
+    return ret;
 }

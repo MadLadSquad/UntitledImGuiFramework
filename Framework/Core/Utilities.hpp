@@ -6,6 +6,7 @@
 namespace UImGui
 {
     class Global;
+    class InputAction;
 
     class UIMGUI_PUBLIC_API Utility
     {
@@ -24,6 +25,11 @@ namespace UImGui
         static FString keyToText(const uint16_t& key, bool bLong) noexcept;
 
         // Event Safety - Any time
+        static void keyToText(FString& text, const InputAction& action, bool bLong) noexcept;
+        // Event Safety - Any time
+        static FString keyToText(const InputAction& action, bool bLong) noexcept;
+
+        // Event Safety - Any time
         // DO NOT USE THIS, THIS IS ONLY HERE FOR INTERNAL REASONS!!! REALLY KNOW WHAT YOU'RE DOING WHEN USING THIS
         static Global& getGlobal() noexcept;
 
@@ -40,7 +46,7 @@ namespace UImGui
         // Event Safety - Any time
         static void toUpper(FString& str) noexcept;
     private:
-        typedef std::array<std::pair<FString, FString>, Keys::UnknownKey - Keys::Space + 1> KeyStringsArrType;
+        typedef std::array<std::pair<FString, FString>, Keys::UnknownKey + 1> KeyStringsArrType;
         static void initializeKeyStrings(KeyStringsArrType& keyStrings) noexcept;
     };
 }

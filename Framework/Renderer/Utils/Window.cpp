@@ -23,32 +23,41 @@ bool& UImGui::WindowInternal::resized() noexcept
 
 void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) noexcept
 {
-    YAML::Emitter out;
-    out << YAML::BeginMap;
-
-    out << YAML::Key << "icon" << YAML::Value << windowData.iconLocation;
-    out << YAML::Key << "width" << YAML::Value << windowSize.x;
-    out << YAML::Key << "height" << YAML::Value << windowSize.y;
-    out << YAML::Key << "fullscreen" << YAML::Value << windowData.fullscreen;
-    out << YAML::Key << "window-name" << YAML::Value << windowData.name;
-
     std::ofstream fout("../Config/Core/Window.yaml");
-    fout << out.c_str();
-    fout.close();
+    {
+        YAML::Emitter out;
+        out << YAML::BeginMap;
+
+        out << YAML::Key << "layout-location" << YAML::Value << windowData.layoutLocation;
+        out << YAML::Key << "icon" << YAML::Value << windowData.iconLocation;
+        out << YAML::Key << "width" << YAML::Value << windowSize.x;
+        out << YAML::Key << "height" << YAML::Value << windowSize.y;
+        out << YAML::Key << "fullscreen" << YAML::Value << windowData.fullscreen;
+        out << YAML::Key << "window-name" << YAML::Value << windowData.name;
+        out << YAML::EndMap;
+
+        fout << out.c_str();
+        fout.close();
+    }
 
     if (bSaveKeybindings)
     {
-        YAML::Emitter o;
-        o << YAML::BeginMap << YAML::Key << "bindings" << YAML::BeginSeq;
+        YAML::Emitter out;
+        out << YAML::BeginMap << YAML::Key << "bindings" << YAML::BeginSeq;
+
         for (auto& a : inputActionList)
         {
             out << YAML::BeginMap << YAML::Key << "key" << YAML::Value << a.name;
-            out << YAML::Key << "val" << YAML::Value << a.keyCode << YAML::EndMap;
+            out << YAML::Key << "val" << YAML::Value << YAML::Flow << YAML::BeginSeq;
+            for (auto& f : a.keyCodes)
+                out << (int)f;
+            out << YAML::EndSeq;
+            out << YAML::EndMap;
         }
         out << YAML::EndSeq << YAML::EndMap;
 
         fout = std::ofstream("../Config/Core/Keybindings.yaml");
-        fout << o.c_str();
+        fout << out.c_str();
         fout.close();
     }
 }
@@ -118,7 +127,7 @@ void UImGui::WindowInternal::createWindow() noexcept
 
     // Load window icon
     GLFWimage images[1];
-    images[0].pixels = stbi_load(windowData.iconLocation.c_str(), &images[0].width, &images[0].height, nullptr, 4);
+    images[0].pixels = stbi_load(("../Content/" + windowData.iconLocation).c_str(), &images[0].width, &images[0].height, nullptr, 4);
     glfwSetWindowIcon(windowMain, 1, images);
     stbi_image_free(images[0].pixels);
 
@@ -186,27 +195,12 @@ void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, int wid
 void UImGui::WindowInternal::keyboardInputCallback(GLFWwindow* window, int key, int scanCode, int action, int mods) noexcept
 {
     auto* wind = (WindowInternal*)glfwGetWindowUserPointer(window);
-    for (auto& a : wind->inputActionList)
-    {
-        if (a.keyCode == key)
-        {
-            a.state = action;
-        }
-    }
-
     wind->keys[key] = action;
 }
 
 void UImGui::WindowInternal::mouseKeyInputCallback(GLFWwindow* window, int button, int action, int mods) noexcept
 {
     auto* wind = (WindowInternal*)glfwGetWindowUserPointer(window);
-    for (auto& a : wind->inputActionList)
-    {
-        if (a.keyCode == button)
-        {
-            a.state = action;
-        }
-    }
     wind->keys[button] = action;
 }
 
@@ -260,8 +254,10 @@ void UImGui::WindowInternal::openConfig()
         goto skip_window_config;
     }
 
+    if (out["layout-location"])
+        windowData.layoutLocation = out["layout-location"].as<FString>();
     if (out["icon"])
-        windowData.iconLocation = "../Content/" + out["icon"].as<FString>();
+        windowData.iconLocation = out["icon"].as<FString>();
     if (out["width"] && out["height"])
     {
         windowSize.x = out["width"].as<float>();
@@ -290,7 +286,7 @@ skip_window_config:
         {
             InputAction action;
             action.name = a["key"].as<std::string>();
-            action.keyCode = a["val"].as<uint16_t>();
+            action.keyCodes = a["val"].as<std::vector<uint16_t>>();
             inputActionList.push_back(action);
         }
     }
@@ -299,4 +295,19 @@ skip_window_config:
 void UImGui::WindowInternal::close() noexcept
 {
     glfwSetWindowShouldClose(windowMain, true);
+}
+
+void UImGui::WindowInternal::updateKeyState() noexcept
+{
+    for (auto& a : inputActionList)
+    {
+        if (!a.keyCodes.empty())
+        {
+            for (auto& f : a.keyCodes)
+                if (keys[f] != keys[a.keyCodes[0]])
+                    goto finish_inner_loop;
+            a.state = keys[a.keyCodes[0]];
+        }
+finish_inner_loop:;
+    }
 }

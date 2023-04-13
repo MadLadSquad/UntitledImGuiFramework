@@ -21,6 +21,7 @@ namespace UImGui
         friend class Window;
         friend class Renderer;
         friend class Modules;
+        friend class RendererInternal;
 
         WindowInternal window{};
         ModulesManager modulesManagerr{};

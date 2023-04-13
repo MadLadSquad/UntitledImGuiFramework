@@ -15,7 +15,7 @@ void UImGui::GUIRenderer::beginFrame()
     ImGui::NewFrame();
 }
 
-void UImGui::GUIRenderer::shutdown()
+void UImGui::GUIRenderer::shutdown(const FString& ini)
 {
     for (auto& a : Instance::get()->initInfo.titlebarComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
@@ -27,7 +27,7 @@ void UImGui::GUIRenderer::shutdown()
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->end();
 
-    ImGui::SaveIniSettingsToMemory();
+    ImGui::SaveIniSettingsToDisk(("../Config/Core/" + ini + ".ini").c_str());
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
@@ -37,7 +37,7 @@ void UImGui::GUIRenderer::shutdown()
     Instance::get()->end();
 }
 
-void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const std::string& ini)
+void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
 {
     ImGui::CreateContext();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
@@ -48,7 +48,7 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const std::string& ini)
     io.WantSaveIniSettings = false;
     io.ConfigViewportsNoTaskBarIcon = true;
 
-    ImGui::LoadIniSettingsFromMemory(ini.c_str());
+    ImGui::LoadIniSettingsFromDisk(("../Config/Core/" + ini + ".ini").c_str());
     ImGui::StyleColorsDark();
     ImGui::StyleColorsClassic();
     ImGuiStyle& style = ImGui::GetStyle();

@@ -9,6 +9,7 @@ namespace UImGui
     {
         FString name = "UntitledImGuiFramework Application";
         FString iconLocation = "example-icon.png";
+        FString layoutLocation = "DefaultLayout";
         bool fullscreen = false;
     };
 
@@ -28,6 +29,8 @@ namespace UImGui
         friend class Input;
         friend class RendererInternal;
         friend class Global;
+
+        void updateKeyState() noexcept;
 
         FVector2 windowSize = { 800.0f, 600.0f };
         std::array<uint16_t, 350> keys{};

@@ -26,7 +26,7 @@ void UImGui::RendererInternal::start() noexcept
 
     gpuName = (char*)glGetString(GL_RENDERER);
 
-    GUIRenderer::init(Window::get().windowMain, "../Config/DefaultLayout.ini");
+    GUIRenderer::init(Window::get().windowMain, Window::get().windowData.layoutLocation);
 
     double lastTime = 0.0f;
     while (!glfwWindowShouldClose(Window::get().windowMain))
@@ -37,6 +37,9 @@ void UImGui::RendererInternal::start() noexcept
         double now = glfwGetTime();
         deltaTime = now - lastTime;
         lastTime = now;
+
+        // Updates the state of the keybindings
+        internalGlobal.window.updateKeyState();
 
         auto& colours = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
         glClearColor(colours.x, colours.y, colours.z, 1.0f);
@@ -52,7 +55,7 @@ void UImGui::RendererInternal::start() noexcept
 
 void UImGui::RendererInternal::stop() noexcept
 {
-    GUIRenderer::shutdown();
+    GUIRenderer::shutdown(Window::get().windowData.layoutLocation);
     Window::get().destroyWindow();
 }
 

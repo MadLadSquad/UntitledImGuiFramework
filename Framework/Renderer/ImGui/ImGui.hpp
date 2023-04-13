@@ -13,10 +13,10 @@ namespace UImGui
     public:
         GUIRenderer() = default;
 
-        static void init(GLFWwindow* glfwwindow, const std::string& ini);
+        static void init(GLFWwindow* glfwwindow, const FString& ini);
         static void beginUI(float deltaTime);
         static void beginFrame();
-        static void shutdown();
+        static void shutdown(const FString& ini);
     private:
     };
 }

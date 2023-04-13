@@ -21,7 +21,7 @@ namespace UImGui
 
         // The ID for the action
         FString name{};
-        uint16_t keyCode{};
+        std::vector<uint16_t> keyCodes;
 
         // Set by the input system, do not set this manually
         uint8_t state{};
