@@ -48,20 +48,20 @@ void UImGui::Window::close() noexcept
 
 UImGui::FVector2 UImGui::Window::getCurrentWindowPosition() noexcept
 {
-    return { static_cast<float>(Window::get().windowCurrentPosY), static_cast<float>(Window::get().windowCurrentPosY) };
+    return Window::get().windowCurrentPos;
 }
 
 UImGui::FVector2 UImGui::Window::getLastWindowPosition() noexcept
 {
-    return { static_cast<float>(Window::get().windowLastPosY), static_cast<float>(Window::get().windowLastPosY) };
+    return Window::get().windowLastPos;
 }
 
 UImGui::FVector2 UImGui::Window::getWindowPositionChange() noexcept
 {
     return
     {
-        static_cast<float>(Window::get().windowCurrentPosX - Window::get().windowLastPosY),
-        static_cast<float>(Window::get().windowCurrentPosX - Window::get().windowLastPosY)
+        Window::get().windowCurrentPos.x - Window::get().windowLastPos.x,
+        Window::get().windowCurrentPos.y - Window::get().windowLastPos.y
     };
 }
 

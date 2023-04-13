@@ -13,7 +13,7 @@ bool UImGui::InputAction::operator!=(const uint8_t& st) const noexcept
 
 uint8_t UImGui::Input::getKey(uint16_t key) noexcept
 {
-    return Window::get().getKeys()[key];
+    return Window::get().keys[key];
 }
 
 const UImGui::InputAction& UImGui::Input::getAction(const UImGui::FString& name) noexcept
@@ -37,12 +37,12 @@ UImGui::FVector2 UImGui::Input::getMousePositionChange() noexcept
 
 UImGui::FVector2 UImGui::Input::getCurrentMousePosition() noexcept
 {
-    return Window::get().getCurrentMousePosition();
+    return Window::get().mousePos;
 }
 
 UImGui::FVector2 UImGui::Input::getLastMousePosition() noexcept
 {
-    return Window::get().getLastMousePosition();
+    return Window::get().mouseLastPos;
 }
 
 UImGui::FVector2 UImGui::Input::getScroll() noexcept

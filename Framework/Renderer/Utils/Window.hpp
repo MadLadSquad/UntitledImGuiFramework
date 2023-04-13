@@ -37,13 +37,9 @@ namespace UImGui
         void openConfig();
         void setTitle(String title) noexcept;
         void setCursorVisibility(bool bVisible) noexcept;
-        [[nodiscard]] FVector2 getLastMousePosition() const noexcept;
-        [[nodiscard]] FVector2 getCurrentMousePosition() const noexcept;
+
         FVector2 getMousePositionChange() noexcept;
         FVector2 getScroll() noexcept;
-        const std::array<uint16_t, 350>& getKeys() noexcept;
-        std::vector<InputAction>& getActions() noexcept;
-
 
         void createWindow() noexcept;
         void destroyWindow() noexcept;
@@ -56,28 +52,19 @@ namespace UImGui
         static void scrollInputCallback(GLFWwindow* window, double xoffset, double yoffset) noexcept;
         static void windowPositionCallback(GLFWwindow* window, int xpos, int ypos) noexcept;
 
-        [[nodiscard]] float getXMousePositionChange() noexcept;
-        [[nodiscard]] float getYMousePositionChange() noexcept;
-
         GLFWwindow* windowMain = nullptr;
-        //InternalRendererComponents* renderer = nullptr;
         WindowData windowData;
 
         bool bFirstMove = true;
         bool bResized = false;
 
-        float posX = 0;
-        float posY = 0;
-        float lastPosX = 0;
-        float lastPosY = 0;
-        float offsetX = 0;
-        float offsetY = 0;
+        FVector2 mousePos = { 0.0f, 0.0f };
+        FVector2 mouseLastPos = { 0.0f, 0.0f };
+        FVector2 mouseOffset = { 0.0f, 0.0f };
+
         FVector2 scroll;
 
-        int windowLastPosX = 0;
-        int windowLastPosY = 0;
-        int windowCurrentPosX = 0;
-        int windowCurrentPosY = 0;
-
+        FVector2 windowLastPos = { 0.0f, 0.0f };
+        FVector2 windowCurrentPos = { 0.0f, 0.0f };
     };
 }
