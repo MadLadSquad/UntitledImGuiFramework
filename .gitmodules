@@ -43,3 +43,6 @@
 [submodule "Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser"]
 	path = Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser
 	url = https://github.com/MadLadSquad/UntitledCLIParser.git
+[submodule "Framework/ThirdParty/vulkan-headers"]
+	path = Framework/ThirdParty/vulkan-headers
+	url = https://github.com/KhronosGroup/Vulkan-Headers.git
