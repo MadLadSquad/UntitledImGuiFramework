@@ -47,6 +47,26 @@ namespace UImGui
     {
     public:
         ModulesManager() = default;
+
+        const bool os = false;
+        const bool dbus = false;
+        const bool uexec = false;
+        const bool theming = false;
+        const bool notifications = false;
+        const bool polkit = false;
+        const bool ufont = false;
+        const bool audio = false;
+        const bool locale = false;
+        const bool network = false;
+        const bool undo_redo = false;
+        const bool video = false;
+        const bool plotting = false;
+        const bool knobs = false;
+        const bool spinners = false;
+        const bool toggles = false;
+        const bool text_utils = false;
+        const bool markdown = false;
+        const bool cli_parser = false;
     private:
         friend class Modules;
         friend class Global;
@@ -77,10 +97,9 @@ namespace UImGui
         static ModuleSettings& data() noexcept;
         // Event Safety - Post-begin
         static void save() noexcept;
+        static ModulesManager& get() noexcept;
     private:
         friend class StateTracker;
         friend class Locale;
-
-        static ModulesManager& get() noexcept;
     };
 }

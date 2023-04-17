@@ -13,6 +13,13 @@
     #include "Modules/Knobs/ThirdParty/imgui-knobs/imgui-knobs.h"
 #endif
 
+#define CHECK_MODULE_ENABLED(x)     if (mod[#x])    \
+{                                                   \
+    bool* p = const_cast<bool*>(&x);                \
+    *p = mod[#x].as<bool>();                        \
+}                                                   \
+
+
 void UImGui::ModulesManager::init()
 {
     YAML::Node node;
@@ -70,10 +77,44 @@ UImGui::ModulesManager& UImGui::Modules::get() noexcept
 
 void UImGui::ModulesManager::initModules()
 {
+    YAML::Node node;
+    try
+    {
+        node = YAML::LoadFile("../uvproj.yaml");
+    }
+    catch (YAML::BadFile&)
+    {
+        Logger::log("No uvproj.yaml config file found, using the default configuration!", UVK_LOG_TYPE_WARNING);
+        return;
+    }
+    auto mod = node["enabled-modules"];
+
+    CHECK_MODULE_ENABLED(os);
+    CHECK_MODULE_ENABLED(dbus);
+    CHECK_MODULE_ENABLED(uexec);
+    CHECK_MODULE_ENABLED(theming);
+    CHECK_MODULE_ENABLED(notifications);
+    CHECK_MODULE_ENABLED(polkit);
+    CHECK_MODULE_ENABLED(ufont);
+    CHECK_MODULE_ENABLED(audio);
+    CHECK_MODULE_ENABLED(locale);
+    CHECK_MODULE_ENABLED(network);
+    CHECK_MODULE_ENABLED(undo_redo);
+    CHECK_MODULE_ENABLED(video);
+    CHECK_MODULE_ENABLED(plotting);
+    CHECK_MODULE_ENABLED(knobs);
+    CHECK_MODULE_ENABLED(spinners);
+    CHECK_MODULE_ENABLED(toggles);
+    CHECK_MODULE_ENABLED(text_utils);
+    CHECK_MODULE_ENABLED(markdown);
+    CHECK_MODULE_ENABLED(cli_parser);
+
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
-    stateTracker.init();
+    if (undo_redo)
+        stateTracker.init();
 #endif
 #ifdef UIMGUI_LOCALE_MODULE_ENABLED
-    localeManager.openLocaleConfig();
+    if (locale)
+        localeManager.openLocaleConfig();
 #endif
 }

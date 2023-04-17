@@ -31,7 +31,8 @@ void UImGui::GUIRenderer::shutdown(const FString& ini)
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
-    ImPlot::DestroyContext();
+    if (Modules::get().plotting)
+        ImPlot::DestroyContext();
 #endif
     ImGui::DestroyContext();
     Instance::get()->end();
@@ -41,7 +42,8 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
 {
     ImGui::CreateContext();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
-    ImPlot::CreateContext();
+    if (Modules::get().plotting)
+        ImPlot::CreateContext();
 #endif
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
