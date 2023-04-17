@@ -31,6 +31,8 @@
 *.out
 *.app
 
+!Framework/ThirdParty/vulkan/vulkan-1.lib
+
 build/
 cmake-build-relwithdebinfo/
 cmake-build-debug/
