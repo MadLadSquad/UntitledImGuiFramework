@@ -2,11 +2,13 @@
 //#include <Components/Instance.hpp>
 #include <Renderer/Utils/Window.hpp>
 #include "Modules/Manager/ModulesManager.hpp"
+#include "Threads/LogicThreads.hpp"
 
 namespace UImGui
 {
     class RendererInternal;
     class Instance;
+
     class UIMGUI_PUBLIC_API Global
     {
     public:
@@ -25,6 +27,7 @@ namespace UImGui
 
         WindowInternal window{};
         ModulesManager modulesManagerr{};
+        LogicThreadsManager threadsManager{};
     };
 
     inline Global internalGlobal;

@@ -23,9 +23,9 @@ namespace UImGui
     {
     public:
         WindowComponent() = default;
-        // Event Safety - All instantiated
+        // Event Safety - All ready
         virtual void begin() = 0;
-        // Event Safety - All instantiated
+        // Event Safety - All ready
         virtual void tick(float deltaTime) = 0;
         // Event Safety - Pre-destruct
         virtual void end() = 0;

@@ -1,0 +1,14 @@
+//
+// Created by i-use-gentoo-btw on 4/20/23.
+//
+
+#ifndef UNTITLEDLINUXGAMEMANAGER_CINSTANCE_HPP
+#define UNTITLEDLINUXGAMEMANAGER_CINSTANCE_HPP
+
+
+class CInstance {
+
+};
+
+
+#endif //UNTITLEDLINUXGAMEMANAGER_CINSTANCE_HPP

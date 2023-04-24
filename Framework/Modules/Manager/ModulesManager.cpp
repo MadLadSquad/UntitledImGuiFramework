@@ -15,7 +15,7 @@
 
 #define CHECK_MODULE_ENABLED(x)     if (mod[#x])    \
 {                                                   \
-    bool* p = const_cast<bool*>(&x);                \
+    bool* p = const_cast<bool*>(&Modules::x);       \
     *p = mod[#x].as<bool>();                        \
 }                                                   \
 

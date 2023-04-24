@@ -43,30 +43,10 @@ namespace UImGui
         size_t maxTransactions = 100;
     };
 
-    class ModulesManager
+    class UIMGUI_PUBLIC_API ModulesManager
     {
     public:
         ModulesManager() = default;
-
-        const bool os = false;
-        const bool dbus = false;
-        const bool uexec = false;
-        const bool theming = false;
-        const bool notifications = false;
-        const bool polkit = false;
-        const bool ufont = false;
-        const bool audio = false;
-        const bool locale = false;
-        const bool network = false;
-        const bool undo_redo = false;
-        const bool video = false;
-        const bool plotting = false;
-        const bool knobs = false;
-        const bool spinners = false;
-        const bool toggles = false;
-        const bool text_utils = false;
-        const bool markdown = false;
-        const bool cli_parser = false;
     private:
         friend class Modules;
         friend class Global;
@@ -74,7 +54,6 @@ namespace UImGui
         friend class Locale;
         friend class LocaleManager;
         friend class StateTracker;
-
 
         ModuleSettings settings;
 #ifdef UIMGUI_LOCALE_MODULE_ENABLED
@@ -97,7 +76,28 @@ namespace UImGui
         static ModuleSettings& data() noexcept;
         // Event Safety - Post-begin
         static void save() noexcept;
+        // Event Safety - Post-begin
         static ModulesManager& get() noexcept;
+
+        inline static const bool os = false;
+        inline static const bool dbus = false;
+        inline static const bool uexec = false;
+        inline static const bool theming = false;
+        inline static const bool notifications = false;
+        inline static const bool polkit = false;
+        inline static const bool ufont = false;
+        inline static const bool audio = false;
+        inline static const bool locale = false;
+        inline static const bool network = false;
+        inline static const bool undo_redo = false;
+        inline static const bool video = false;
+        inline static const bool plotting = false;
+        inline static const bool knobs = false;
+        inline static const bool spinners = false;
+        inline static const bool toggles = false;
+        inline static const bool text_utils = false;
+        inline static const bool markdown = false;
+        inline static const bool cli_parser = false;
     private:
         friend class StateTracker;
         friend class Locale;
