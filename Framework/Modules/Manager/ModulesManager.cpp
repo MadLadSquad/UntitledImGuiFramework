@@ -110,11 +110,11 @@ void UImGui::ModulesManager::initModules()
     CHECK_MODULE_ENABLED(cli_parser);
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
-    if (undo_redo)
+    if (Modules::undo_redo)
         stateTracker.init();
 #endif
 #ifdef UIMGUI_LOCALE_MODULE_ENABLED
-    if (locale)
+    if (Modules::locale)
         localeManager.openLocaleConfig();
 #endif
 }

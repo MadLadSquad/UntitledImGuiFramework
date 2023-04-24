@@ -31,7 +31,7 @@ void UImGui::GUIRenderer::shutdown(const FString& ini)
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
-    if (Modules::get().plotting)
+    if (Modules::plotting)
         ImPlot::DestroyContext();
 #endif
     ImGui::DestroyContext();
@@ -42,7 +42,7 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
 {
     ImGui::CreateContext();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
-    if (Modules::get().plotting)
+    if (Modules::plotting)
         ImPlot::CreateContext();
 #endif
     ImGuiIO& io = ImGui::GetIO(); (void)io;
