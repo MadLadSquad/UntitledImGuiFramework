@@ -12,14 +12,16 @@ void UImGui::Texture::init(UImGui::String file) noexcept
     filename = file;
 }
 
-void UImGui::Texture::load() noexcept
+void UImGui::Texture::load(void* data, uint32_t x, uint32_t y, uint32_t depth, bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
 {
-    int x, y;
-    unsigned char* texData = stbi_load(filename.c_str(), &x, &y, nullptr, 0);
-    if (texData == nullptr)
+    if (data == nullptr || (x == 0 && y == 0))
     {
-        Logger::log("Failed to load a texture with the following location: ", UVK_LOG_TYPE_ERROR, filename);
-        return;
+        data = stbi_load(filename.c_str(), (int*)&x, (int*)&y, nullptr, 0);
+        if (data == nullptr)
+        {
+            Logger::log("Failed to load a texture with the following location: ", UVK_LOG_TYPE_ERROR, filename);
+            return;
+        }
     }
 
     glGenTextures(1, &id);
@@ -30,22 +32,29 @@ void UImGui::Texture::load() noexcept
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+    uint32_t dataType = GL_UNSIGNED_BYTE;
+    if (depth > 8)
+        dataType = GL_UNSIGNED_SHORT;
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(x), static_cast<int>(y), 0, GL_RGBA, dataType, data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, 0);
     sz = { static_cast<float>(x), static_cast<float>(y) };
-    stbi_image_free(texData);
+    if (bFreeImageData)
+        freeFunc(data);
 }
 
-void UImGui::Texture::loadImGui() noexcept
+void UImGui::Texture::loadImGui(void* data, uint32_t x, uint32_t y, uint32_t depth, bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
 {
-    int x, y;
-    unsigned char* image_data = stbi_load(filename.c_str(), &x, &y, nullptr, 4);
-    if (image_data == nullptr)
+    if (data == nullptr || (x == 0 && y == 0))
     {
-        Logger::log("Failed to load a texture with the following location: ", UVK_LOG_TYPE_ERROR, filename);
-        return;
+        data = stbi_load(filename.c_str(), (int*)&x, (int*)&y, nullptr, 4);
+        if (data == nullptr)
+        {
+            Logger::log("Failed to load a texture with the following location: ", UVK_LOG_TYPE_ERROR, filename);
+            return;
+        }
     }
 
     glGenTextures(1, &id);
@@ -59,9 +68,14 @@ void UImGui::Texture::loadImGui() noexcept
 #if defined(GL_UNPACK_ROW_LENGTH) && !defined(__EMSCRIPTEN__)
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 #endif
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+    uint32_t dataType = GL_UNSIGNED_BYTE;
+    if (depth > 8)
+        dataType = GL_UNSIGNED_SHORT;
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(x), static_cast<int>(y), 0, GL_RGBA, dataType, data);
     sz = { static_cast<float>(x), static_cast<float>(y) };
-    stbi_image_free(image_data);
+    if (bFreeImageData)
+        freeFunc(data);
 }
 
 void UImGui::Texture::use() const noexcept
@@ -91,4 +105,9 @@ const UImGui::FVector2& UImGui::Texture::size() const noexcept
 const uint32_t& UImGui::Texture::get() const noexcept
 {
     return id;
+}
+
+void UImGui::Texture::defaultFreeFunc(void* data) noexcept
+{
+    stbi_image_free(data);
 }

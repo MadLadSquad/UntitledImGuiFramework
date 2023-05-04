@@ -15,9 +15,8 @@
 
 #define CHECK_MODULE_ENABLED(x)     if (mod[#x])    \
 {                                                   \
-    bool* p = const_cast<bool*>(&Modules::x);       \
-    *p = mod[#x].as<bool>();                        \
-}                                                   \
+    Modules::x = mod[#x].as<bool>();                \
+}
 
 
 void UImGui::ModulesManager::init()
@@ -88,6 +87,8 @@ void UImGui::ModulesManager::initModules()
         return;
     }
     auto mod = node["enabled-modules"];
+    if (!mod)
+        return;
 
     CHECK_MODULE_ENABLED(os);
     CHECK_MODULE_ENABLED(dbus);

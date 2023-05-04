@@ -79,25 +79,25 @@ namespace UImGui
         // Event Safety - Post-begin
         static ModulesManager& get() noexcept;
 
-        inline static const bool os = false;
-        inline static const bool dbus = false;
-        inline static const bool uexec = false;
-        inline static const bool theming = false;
-        inline static const bool notifications = false;
-        inline static const bool polkit = false;
-        inline static const bool ufont = false;
-        inline static const bool audio = false;
-        inline static const bool locale = false;
-        inline static const bool network = false;
-        inline static const bool undo_redo = false;
-        inline static const bool video = false;
-        inline static const bool plotting = false;
-        inline static const bool knobs = false;
-        inline static const bool spinners = false;
-        inline static const bool toggles = false;
-        inline static const bool text_utils = false;
-        inline static const bool markdown = false;
-        inline static const bool cli_parser = false;
+        inline static bool os = false;
+        inline static bool dbus = false;
+        inline static bool uexec = false;
+        inline static bool theming = false;
+        inline static bool notifications = false;
+        inline static bool polkit = false;
+        inline static bool ufont = false;
+        inline static bool audio = false;
+        inline static bool locale = false;
+        inline static bool network = false;
+        inline static bool undo_redo = false;
+        inline static bool video = false;
+        inline static bool plotting = false;
+        inline static bool knobs = false;
+        inline static bool spinners = false;
+        inline static bool toggles = false;
+        inline static bool text_utils = false;
+        inline static bool markdown = false;
+        inline static bool cli_parser = false;
     private:
         friend class StateTracker;
         friend class Locale;

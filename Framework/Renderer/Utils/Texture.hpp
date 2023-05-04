@@ -23,10 +23,12 @@ namespace UImGui
 
         // Loads the image for regular OpenGL/Vulkan usage.
         // Event Safety - Post-begin
-        void load() noexcept;
+        void load(void* data = nullptr, uint32_t x = 0, uint32_t y = 0, uint32_t depth = 0, bool bFreeImageData = true,
+                  const std::function<void(void*)>& freeFunc = defaultFreeFunc) noexcept;
         // Loads the image for dear imgui OpenGL/Vulkan usage
         // Event Safety - Post-begin
-        void loadImGui() noexcept;
+        void loadImGui(void* data = nullptr, uint32_t x = 0, uint32_t y = 0, uint32_t depth = 0, bool bFreeImageData = true,
+                       const std::function<void(void*)>& freeFunc = defaultFreeFunc) noexcept;
 
         // Returns the image buffer
         // Event Safety - Any time
@@ -47,6 +49,8 @@ namespace UImGui
         // Event Safety - All initiated
         ~Texture() noexcept;
     private:
+        static void defaultFreeFunc(void* data) noexcept;
+
         FString filename{};
         uint32_t id = 0;
         FVector2 sz = { 0.0f, 0.0f };
