@@ -1,6 +1,14 @@
-layout-location: "DefaultLayout"         # The location of the layout file ImGui writes to
-icon: "example-icon.png"                        # The location of the window icon image
-width: 800                                      # Width of the window in pixels
-height: 600                                     # Height of the window in pixels
-fullscreen: false                               # Enable or disable fullscreen mode
-window-name: UntitledImGuiFramework Application # The name of the window
+layout-location: "DefaultLayout"                  # The location of the layout file ImGui writes to
+icon: "example-icon.png"                          # The location of the window icon image
+width: 800                                        # Width of the window in pixels
+height: 600                                       # Height of the window in pixels
+fullscreen: false                                 # Enable or disable fullscreen mode
+window-name: UntitledImGuiFramework Application   # The name of the window
+resizeable: false                                 # Can the window be resized
+transparent-surface: true                         # Transparency for the render surface, platform dependant, ImGuiCol_WindowBg.w controls this
+hidden: false                                     # The default visibility of the window
+focused: true                                     # Default focused state
+size-limits: [ -1, -1, -1, -1 ]                   # Limit the size of the Window in vec4 format: x = min x, y = min y, z = max x, w = max y. -1 = no limit
+aspect-ratio-size-limit: [ -1, -1 ]               # Limit the size of the Window using an aspect ratio x/y. -1 = no limit
+decorated: false                                  # Enable or disable window decorations
+maximised: false                                  # Enable or disable window maximisation
