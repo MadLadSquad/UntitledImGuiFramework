@@ -10,7 +10,18 @@ namespace UImGui
         FString name = "UntitledImGuiFramework Application";
         FString iconLocation = "example-icon.png";
         FString layoutLocation = "DefaultLayout";
+
         bool fullscreen = false;
+        bool bResizeable = true;
+        bool bSurfaceTransparent = false;
+        bool bHidden = false;
+        bool bFocused = true;
+
+        FVector2 aspectRatioSizeLimit = { -1, -1 };
+        FVector4 sizeLimits = { -1, -1, -1, -1 };
+
+        bool bDecorated = true;
+        bool bMaximised = false;
     };
 
     class WindowInternal
@@ -33,6 +44,8 @@ namespace UImGui
         void updateKeyState() noexcept;
 
         FVector2 windowSize = { 800.0f, 600.0f };
+        FVector2 windowSizeInScreenCoords;
+
         std::array<uint16_t, 350> keys{};
         std::vector<InputAction> inputActionList{};
 
@@ -55,6 +68,34 @@ namespace UImGui
         static void mouseCursorPositionCallback(GLFWwindow* window, double xpos, double ypos) noexcept;
         static void scrollInputCallback(GLFWwindow* window, double xoffset, double yoffset) noexcept;
         static void windowPositionCallback(GLFWwindow* window, int xpos, int ypos) noexcept;
+
+        static void windowSizeCallback(GLFWwindow* window, int width, int height) noexcept;
+        static void windowCloseCallback(GLFWwindow* window) noexcept;
+        static void windowFocusCallback(GLFWwindow* window, int focused) noexcept;
+        static void windowIconifyCallback(GLFWwindow* window, int iconified) noexcept;
+        static void windowContentScaleCallback(GLFWwindow* window, float x, float y) noexcept;
+        static void windowRefreshCallback(GLFWwindow* window) noexcept;
+        static void windowMaximisedCallback(GLFWwindow* window, int maximised) noexcept;
+
+        // As of now, only supported in X11
+        // TODO: Port to Win32
+        // TODO: Port to Wayland
+        void setWindowAlwaysOnTop() noexcept;
+
+        // As of now, only supported in X11
+        // TODO: Port to Win32
+        // TODO: Port to Wayland
+        void setWindowAlwaysBelow() noexcept;
+
+        std::vector<std::function<void(int, int)>> windowResizeCallbackList;
+        std::vector<std::function<void(int, int)>> windowResizeInScreenCoordCallbackList;
+        std::vector<std::function<void(void)>> windowCloseCallbackList;
+        std::vector<std::function<void(bool)>> windowFocusCallbackList;
+        std::vector<std::function<void(bool)>> windowIconifiedCallbackList;
+        std::vector<std::function<void(FVector2)>> windowPositionChangeCallbackList;
+        std::vector<std::function<void(FVector2)>> windowContentScaleChangeCallbackList;
+        std::vector<std::function<void(void)>> windowRefreshCallbackList;
+        std::vector<std::function<void(bool)>> windowMaximisedCallbackList;
 
         GLFWwindow* windowMain = nullptr;
         WindowData windowData;

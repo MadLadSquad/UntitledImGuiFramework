@@ -42,7 +42,7 @@ void UImGui::RendererInternal::start() noexcept
         internalGlobal.window.updateKeyState();
 
         auto& colours = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
-        glClearColor(colours.x, colours.y, colours.z, 1.0f);
+        glClearColor(colours.x, colours.y, colours.z, colours.w);
         glClear(GL_COLOR_BUFFER_BIT);
 
         GUIRenderer::beginFrame();

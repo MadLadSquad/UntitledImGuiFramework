@@ -6,6 +6,8 @@
 
 namespace UImGui
 {
+
+
     class UIMGUI_PUBLIC_API Window
     {
     public:
@@ -32,6 +34,14 @@ namespace UImGui
         static FVector2 getWindowPositionChange() noexcept;
 
         // Event Safety - begin, style, post-begin
+        static void setCurrentWindowPosition(FVector2 pos) noexcept;
+        // Event Safety - begin, style, post-begin
+        static void pushWindowPositionChangeCallback(const std::function<void(FVector2)>& f) noexcept;
+
+        // Event safety - begin, style, post-begin
+        static void getCurrentMonitorSize() noexcept;
+
+        // Event Safety - begin, style, post-begin
         static FVector2& windowSize() noexcept;
         // Event Safety - begin, style, post-begin
         static bool& fullscreen() noexcept;
@@ -51,6 +61,129 @@ namespace UImGui
 
         // Event Safety - begin, style, post-begin
         static void close() noexcept;
+        // Event Safety - begin, style, post-begin
+        static void pushWindowCloseCallback(const std::function<void(void)>& f) noexcept;
+
+        class Platform
+        {
+        public:
+            Platform() = delete;
+            Platform(const Platform&) = delete;
+            void operator=(Platform const&) = delete;
+
+            // Event Safety - begin, style, post-begin
+            // Available for platforms - X11
+            // Platforms to be supported - Wayland, Win32
+            static void setWindowAlwaysOnTop() noexcept;
+        };
+
+        // Event safety - begin, style, post-begin
+        static void setWindowSizeInScreenCoords(FVector2 sz) noexcept;
+        // Event safety - begin, style, post-begin
+        static FVector2& getWindowSizeInScreenCoords() noexcept;
+        // Event safety - begin, style, post-begin
+        // Pushes a new callback to the event list
+        static void pushWindowResizedInScreenCoordsCallback(const std::function<void(int, int)>& f) noexcept;
+        // Event safety - begin, style, post-begin
+        // Changes resize-ability of the window, not the setting
+        static void setWindowResizeable(bool bResizeable) noexcept;
+        // Event safety - begin, style, post-begin
+        // Returns the setting, doesn't modify the window
+        static bool& getWindowResizeableSetting() noexcept;
+        // Event safety - begin, style, post-begin
+        // Returns the current resize state of the window
+        static bool getWindowCurrentlyResizeable() noexcept;
+
+        // Event safety - begin, style, post-begin
+        // Pushes a new callback to the event list
+        static void pushWindowResizeCallback(const std::function<void(int, int)>& f) noexcept;
+
+        // Event safety - begin, style, post-begin
+        // x = left; y = top; z = right; w = bottom
+        static FVector4 getWindowDecorationFrameDistances() noexcept;
+
+        // Event safety - begin, style, post-begin
+        static void requestWindowAttention() noexcept;
+
+        // Event safety - begin, style, post-begin
+        // This doesn't change the "hidden" setting, use the `getWindowHidden` function to change it
+        static void hideWindow() noexcept;
+        // Event safety - begin, style, post-begin
+        // This doesn't change the "hidden" setting, use the `getWindowHidden` function to change it
+        static void showWindow() noexcept;
+        // Event safety - begin, style, post-begin
+        // Used to change the "hidden" setting, doesn't modify the current hidden state
+        static bool& getWindowHiddenSetting() noexcept;
+        // Event safety - begin, style, post-begin
+        // Used to get the current window hidden state
+        static bool getWindowCurrentlyHidden() noexcept;
+
+        // Event safety - begin, style, post-begin
+        static bool& windowSurfaceTransparent() noexcept;
+
+        // Event safety - begin, style, post-begin
+        // This doesn't change the "focused" setting, use the `getWindowFocused` function
+        static void focusWindow() noexcept;
+        // Event safety - begin, style, post-begin
+        // Used to change the "focused" setting, doesn't modify the current focused state
+        static bool& getWindowFocusedSetting() noexcept;
+        // Event safety - begin, style, post-begin
+        // Used to get the current window focus state
+        static bool getWindowCurrentlyFocused() noexcept;
+        // Event safety - begin, style, post-begin
+        static void pushWindowFocusCallback(const std::function<void(bool)>& f) noexcept;
+
+        // Event safety - begin, style, post-begin
+        static void iconifyWindow() noexcept;
+        // Event safety - begin, style, post-begin
+        // Restores window from iconification and maximisation
+        static void restoreWindowState() noexcept;
+        // Event safety - begin, style, post-begin
+        static void pushWindowIconifyCallback(const std::function<void(bool)>& f) noexcept;
+        // Event safety - begin, style, post-begin
+        static bool getWindowIconified() noexcept;
+
+        // Event safety - begin, style, post-begin
+        static FVector2 getWindowContentScale() noexcept;
+        // Event safety - begin, style, post-begin
+        static void pushWindowContentScaleCallback(const std::function<void(FVector2)>& f) noexcept;
+
+        // Event safety - begin, style, post-begin
+        // Calling without arguments resets to the default state
+        static void setSizeLimits(FVector2 min = { -1, -1 }, FVector2 max = { -1, -1 }) noexcept;
+        // Event safety - begin, style, post-begin
+        // Calling without an argument resets to the default state
+        static void setSizeLimitByAspectRatio(FVector2 ratio = { -1, -1 }) noexcept;
+        // Event safety = begin, style, post-begin
+        // Returns the settings value for the size limits, doesn't edit them
+        static FVector4& getSizeLimits() noexcept;
+        // Event safety = begin, style, post-begin
+        // Returns the settings value for the aspect ratio size limits, doesn't edit them
+        static FVector2& getAspectRatioSizeLimits() noexcept;
+
+        // Event safety - begin, style, post-begin
+        // Returns the current state of the window, not the setting
+        static bool getCurrentWindowDecoratedState() noexcept;
+        // Event safety - begin, style, post-begin
+        // Returns the setting, not the current state of the window
+        static bool& getWindowDecoratedSetting() noexcept;
+        // Event safety - begin, style, post-begin
+        // Sets the decoration state of the window
+        static void setWindowDecorated(bool bDecorated) noexcept;
+
+        // Event safety - begin, style, post-begin
+        static void pushWindowRefreshCallback(const std::function<void(void)>& f) noexcept;
+
+        // Event safety - begin, style, post-begin
+        // This changes the current window maximisation state but doesn't change the setting
+        static void maximiseWindow() noexcept;
+        // Event Safety - begin, style, post-begin
+        // This changes the setting but doesn't change the current window maximisation state
+        static bool& getWindowMaximisedSetting() noexcept;
+        // Event safety - begin, style, post-begin
+        static void pushWindowMaximiseCallback(const std::function<void(bool)>& f) noexcept;
+        // Event safety - begin, style, post-begin
+        static bool getWindowCurrentlyMaximised() noexcept;
     private:
         friend class Input;
         friend class Instance;

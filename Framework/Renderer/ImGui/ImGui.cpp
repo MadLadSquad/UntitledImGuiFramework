@@ -47,6 +47,7 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
 #endif
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
+    io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
     io.WantSaveIniSettings = false;
     io.ConfigViewportsNoTaskBarIcon = true;
 
