@@ -232,3 +232,8 @@ UImGui::FString UImGui::Utility::keyToText(const UImGui::InputAction& action, bo
     keyToText(ret, action, bLong);
     return ret;
 }
+
+void UImGui::Utility::sleep(uint64_t milliseconds) noexcept
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+}

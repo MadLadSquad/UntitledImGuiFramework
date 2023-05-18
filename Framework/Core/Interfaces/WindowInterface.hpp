@@ -3,11 +3,8 @@
 #include <Core/Types.hpp>
 #include "Utils/Window.hpp"
 
-
 namespace UImGui
 {
-
-
     class UIMGUI_PUBLIC_API Window
     {
     public:
@@ -37,9 +34,6 @@ namespace UImGui
         static void setCurrentWindowPosition(FVector2 pos) noexcept;
         // Event Safety - begin, style, post-begin
         static void pushWindowPositionChangeCallback(const std::function<void(FVector2)>& f) noexcept;
-
-        // Event safety - begin, style, post-begin
-        static void getCurrentMonitorSize() noexcept;
 
         // Event Safety - begin, style, post-begin
         static FVector2& windowSize() noexcept;
@@ -184,10 +178,34 @@ namespace UImGui
         static void pushWindowMaximiseCallback(const std::function<void(bool)>& f) noexcept;
         // Event safety - begin, style, post-begin
         static bool getWindowCurrentlyMaximised() noexcept;
+
+        // Event safety - begin, style, post-begin
+        // Returns the monitor of the current window.
+        static Monitor getWindowMonitor() noexcept;
+
+        // Event safety - begin, style, post-begin
+        // Sets the window to the provided monitor. When moving the window, the window will be moved to coordinates
+        // (0;0) of the new monitor, while preserving the width and height and using the new monitor's refresh rate
+        static void setWindowMonitor(Monitor monitor) noexcept;
+
+        // Event safety - begin, style, post-begin
+        // Returns a list of monitors, first monitor is the primary monitor, i.e. the monitor where global UI elements
+        // like the taskbar spawns.
+        static std::vector<Monitor>& getMonitors() noexcept;
+
+        // Event safety - begin, style, post-begin
+        static void pushGlobalMonitorCallback(const std::function<void(Monitor&, MonitorState)>& f) noexcept;
+
+        // Event safety - begin, style, post-begin
+        // Returns all the strings acquired by the application when the user drags in a file or an array of files
+        static std::vector<FString>& getOSDragDropStrings() noexcept;
+        // Event safety - begin, style, post-begin
+        static void pushWindowOSDragDropCallback(const std::function<void(std::vector<FString>&)>& f) noexcept;
     private:
         friend class Input;
         friend class Instance;
         friend class RendererInternal;
+        friend class WindowInternal;
 
         static WindowInternal& get() noexcept;
     };

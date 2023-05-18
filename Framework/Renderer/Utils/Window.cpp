@@ -220,6 +220,10 @@ void UImGui::WindowInternal::configureCallbacks() noexcept
     glfwSetWindowContentScaleCallback(windowMain, windowContentScaleCallback);
     glfwSetWindowRefreshCallback(windowMain, windowRefreshCallback);
     glfwSetWindowMaximizeCallback(windowMain, windowMaximisedCallback);
+
+    glfwSetMonitorCallback(monitorCallback);
+
+    glfwSetDropCallback(windowMain, windowOSDragDropCallback);
 }
 
 void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, int width, int height) noexcept
@@ -462,4 +466,92 @@ void UImGui::WindowInternal::windowMaximisedCallback(GLFWwindow* window, int max
     auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
     for (auto& a : windowInst->windowMaximisedCallbackList)
         a(maximised);
+}
+
+void UImGui::WindowInternal::monitorCallback(GLFWmonitor* monitor, int event) noexcept
+{
+    auto dt = (Monitor*)glfwGetMonitorUserPointer(monitor);
+    for (auto& a : Window::get().windowMonitorCallbackList)
+        a(*dt, static_cast<MonitorState>(event));
+
+    for (auto& a : dt->events)
+        a(*dt, static_cast<MonitorState>(event));
+
+    // Remove current monitors
+    Window::get().monitors.clear();
+
+    // Get new monitors from glfw
+    int count;
+    GLFWmonitor** monitors = glfwGetMonitors(&count);
+
+    // Update monitors list
+    for (size_t i = 0; i < count; i++)
+        Window::get().monitors.emplace_back(monitors[i]);
+}
+
+void UImGui::WindowInternal::windowOSDragDropCallback(GLFWwindow* window, int count, const char** paths) noexcept
+{
+    auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
+    windowInst->dragDropPaths.clear();
+
+    for (int i = 0; i < count; i++)
+        windowInst->dragDropPaths.emplace_back(paths[i]);
+    for (auto& a : windowInst->dragDropPathCallbackList)
+        a(windowInst->dragDropPaths);
+}
+
+UImGui::Monitor::Monitor(GLFWmonitor* monitor) noexcept
+{
+    this->monitor = monitor;
+    glfwSetMonitorUserPointer(this->monitor, (void*)this);
+}
+
+UImGui::FVector2 UImGui::Monitor::getPhysicalSize() noexcept
+{
+    int width = 0;
+    int height = 0;
+    glfwGetMonitorPhysicalSize(monitor, &width, &height);
+
+    return UImGui::FVector2(static_cast<float>(width), static_cast<float>(height));
+}
+
+UImGui::FVector2 UImGui::Monitor::getContentScale() noexcept
+{
+    FVector2 f = {};
+    glfwGetMonitorContentScale(monitor, &f.x, &f.y);
+    return f;
+}
+
+UImGui::FVector2 UImGui::Monitor::getVirtualPosition() noexcept
+{
+    int x = 0;
+    int y = 0;
+    glfwGetMonitorPos(monitor, &x, &y);
+
+    return UImGui::FVector2(static_cast<float>(x), static_cast<float>(y));
+}
+
+UImGui::FVector4 UImGui::Monitor::getWorkArea() noexcept
+{
+    int x = 0;
+    int y = 0;
+    int width = 0;
+    int height = 0;
+
+    glfwGetMonitorWorkarea(monitor, &x, &y, &width, &height);
+    return UImGui::FVector4
+    (
+            static_cast<float>(x),static_cast<float>(y),
+            static_cast<float>(width), static_cast<float>(height)
+    );
+}
+
+UImGui::FString UImGui::Monitor::getName() noexcept
+{
+    return {glfwGetMonitorName(monitor) };
+}
+
+void UImGui::Monitor::pushEvent(const std::function<void(Monitor&, MonitorState)>& f) noexcept
+{
+    events.push_back(f);
 }

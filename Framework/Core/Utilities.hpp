@@ -45,6 +45,10 @@ namespace UImGui
         static FString toUpper(String str) noexcept;
         // Event Safety - Any time
         static void toUpper(FString& str) noexcept;
+
+        // Event Safety - Any time
+        // Sleep for X milliseconds
+        static void sleep(uint64_t milliseconds) noexcept;
     private:
         typedef std::array<std::pair<FString, FString>, Keys::UnknownKey + 1> KeyStringsArrType;
         static void initializeKeyStrings(KeyStringsArrType& keyStrings) noexcept;

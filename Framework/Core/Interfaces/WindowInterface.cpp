@@ -94,12 +94,6 @@ void UImGui::Window::setCurrentWindowPosition(UImGui::FVector2 pos) noexcept
     glfwSetWindowPos(Window::get().windowMain, (int)pos.x, (int)pos.y);
 }
 
-void UImGui::Window::getCurrentMonitorSize() noexcept
-{
-    //auto* currentMonitor = glfwGetWindowMonitor(Window::get().windowMain);
-    //currentMonitor.
-}
-
 UImGui::FVector2& UImGui::Window::getWindowSizeInScreenCoords() noexcept
 {
     return Window::get().windowSizeInScreenCoords;
@@ -293,6 +287,39 @@ void UImGui::Window::pushWindowMaximiseCallback(const std::function<void(bool)>&
 bool& UImGui::Window::getWindowMaximisedSetting() noexcept
 {
     return Window::get().windowData.bMaximised;
+}
+
+std::vector<UImGui::Monitor>& UImGui::Window::getMonitors() noexcept
+{
+    return Window::get().monitors;
+}
+
+UImGui::Monitor UImGui::Window::getWindowMonitor() noexcept
+{
+    return Monitor(glfwGetWindowMonitor(Window::get().windowMain));
+}
+
+void UImGui::Window::setWindowMonitor(UImGui::Monitor monitor) noexcept
+{
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor.monitor);
+    const GLFWvidmode* currentMode = glfwGetVideoMode(Window::getWindowMonitor().monitor);
+
+    glfwSetWindowMonitor(Window::get().windowMain, monitor.monitor, 0, 0, currentMode->width, currentMode->height, mode->refreshRate);
+}
+
+std::vector<UImGui::FString>& UImGui::Window::getOSDragDropStrings() noexcept
+{
+    return Window::get().dragDropPaths;
+}
+
+void UImGui::Window::pushWindowOSDragDropCallback(const std::function<void(std::vector<FString>&)>& f) noexcept
+{
+    Window::get().dragDropPathCallbackList.push_back(f);
+}
+
+void UImGui::Window::pushGlobalMonitorCallback(const std::function<void(Monitor&, MonitorState)>& f) noexcept
+{
+    Window::get().windowMonitorCallbackList.push_back(f);
 }
 
 void UImGui::Window::Platform::setWindowAlwaysOnTop() noexcept

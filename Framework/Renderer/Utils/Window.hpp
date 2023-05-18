@@ -3,6 +3,7 @@
 #include <array>
 
 struct GLFWwindow;
+struct GLFWmonitor;
 namespace UImGui
 {
     struct UIMGUI_PUBLIC_API WindowData
@@ -22,6 +23,48 @@ namespace UImGui
 
         bool bDecorated = true;
         bool bMaximised = false;
+    };
+
+    enum MonitorState
+    {
+        UIMGUI_MONITOR_STATE_CONNECTED = 0x00040001,
+        UIMGUI_MONITOR_STATE_DISCONNECTED = 0x00040002
+    };
+
+    struct UIMGUI_PUBLIC_API Monitor
+    {
+    public:
+        Monitor() = default;
+        explicit Monitor(GLFWmonitor* monitor) noexcept;
+
+        // Event safety - begin, style, post-begin
+        FVector2 getPhysicalSize() noexcept;
+
+        // Event safety - begin, style, post-begin
+        FVector2 getContentScale() noexcept;
+
+        // Event safety - begin, style, post-begin
+        FVector2 getVirtualPosition() noexcept;
+
+        // Event safety - begin, style, post-begin
+        // Returns work area as FVector4 where x = x position, y = y position, z = width, w = height
+        FVector4 getWorkArea() noexcept;
+
+        // Event safety - begin, style, post-begin
+        // May not be unique
+        FString getName() noexcept;
+
+        // Event safety - begin, style, post-begin
+        void pushEvent(const std::function<void(Monitor&, MonitorState)>& f) noexcept;
+
+        void* additionalData = nullptr;
+        size_t additionalDataSize = 0;
+    private:
+        friend class Window;
+        friend class WindowInternal;
+
+        std::vector<std::function<void(Monitor&, MonitorState)>> events;
+        GLFWmonitor* monitor = nullptr;
     };
 
     class WindowInternal
@@ -77,6 +120,10 @@ namespace UImGui
         static void windowRefreshCallback(GLFWwindow* window) noexcept;
         static void windowMaximisedCallback(GLFWwindow* window, int maximised) noexcept;
 
+        static void monitorCallback(GLFWmonitor* monitor, int event) noexcept;
+
+        static void windowOSDragDropCallback(GLFWwindow* window, int count, const char** paths) noexcept;
+
         // As of now, only supported in X11
         // TODO: Port to Win32
         // TODO: Port to Wayland
@@ -96,6 +143,12 @@ namespace UImGui
         std::vector<std::function<void(FVector2)>> windowContentScaleChangeCallbackList;
         std::vector<std::function<void(void)>> windowRefreshCallbackList;
         std::vector<std::function<void(bool)>> windowMaximisedCallbackList;
+        std::vector<std::function<void(Monitor&, MonitorState)>> windowMonitorCallbackList;
+        std::vector<std::function<void(std::vector<FString>&)>> dragDropPathCallbackList;
+
+        std::vector<FString> dragDropPaths;
+
+        std::vector<Monitor> monitors;
 
         GLFWwindow* windowMain = nullptr;
         WindowData windowData;
