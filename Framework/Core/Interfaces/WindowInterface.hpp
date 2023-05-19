@@ -14,8 +14,6 @@ namespace UImGui
 
         // Event Safety - begin, style, post-begin
         static void setTitle(String name) noexcept;
-        // Event Safety - begin, style, post-begin
-        static void setCursorVisibility(bool bVisible) noexcept;
 
         // Event Safety - begin, style, post-begin
         static void setIcon(String name) noexcept;

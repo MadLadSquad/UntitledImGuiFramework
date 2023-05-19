@@ -1,5 +1,6 @@
 #include "Input.hpp"
 #include <Interfaces/WindowInterface.hpp>
+#include <GLFW/glfw3.h>
 
 bool UImGui::InputAction::operator==(const uint8_t& st) const noexcept
 {
@@ -48,4 +49,47 @@ UImGui::FVector2 UImGui::Input::getLastMousePosition() noexcept
 UImGui::FVector2 UImGui::Input::getScroll() noexcept
 {
     return Window::get().getScroll();
+}
+
+void UImGui::Input::setCursorVisibility(UImGui::CursorVisibilityState visibility) noexcept
+{
+    glfwSetInputMode(Window::get().windowMain, GLFW_CURSOR, visibility);
+}
+
+UImGui::CursorVisibilityState UImGui::Input::getCurrentCursorVisibility() noexcept
+{
+    return static_cast<CursorVisibilityState>(glfwGetInputMode(Window::get().windowMain, GLFW_CURSOR));
+}
+
+void UImGui::Input::setStickyKeys(bool bEnable) noexcept
+{
+    glfwSetInputMode(Window::get().windowMain, GLFW_STICKY_KEYS, bEnable);
+    glfwSetInputMode(Window::get().windowMain, GLFW_STICKY_MOUSE_BUTTONS, bEnable);
+}
+
+bool UImGui::Input::getStickyKeys() noexcept
+{
+    // Use this since we set both anyway
+    return glfwGetInputMode(Window::get().windowMain, GLFW_STICKY_KEYS);
+}
+
+void UImGui::Input::setRawMouseMotion(bool bEnable) noexcept
+{
+    if (glfwRawMouseMotionSupported())
+        glfwSetInputMode(Window::get().windowMain, GLFW_RAW_MOUSE_MOTION, bEnable);
+}
+
+bool UImGui::Input::getRawMouseMotion() noexcept
+{
+    return glfwGetInputMode(Window::get().windowMain, GLFW_RAW_MOUSE_MOTION);
+}
+
+void UImGui::Input::setLockKeyMods(bool bEnable) noexcept
+{
+    glfwSetInputMode(Window::get().windowMain, GLFW_LOCK_KEY_MODS, bEnable);
+}
+
+bool UImGui::Input::getLockKeyMods() noexcept
+{
+    return glfwGetInputMode(Window::get().windowMain, GLFW_LOCK_KEY_MODS);
 }
