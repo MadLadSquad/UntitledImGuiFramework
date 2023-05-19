@@ -67,6 +67,34 @@ namespace UImGui
             // Available for platforms - X11
             // Platforms to be supported - Wayland, Win32
             static void setWindowAlwaysOnTop() noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for platforms - X11
+            // Platforms to be supported - Wayland, Win32
+            static void setWindowAlwaysOnBottom() noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for platforms - X11
+            // Platforms to be supported - Wayland, Win32
+            static void disableWindowMovement() noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for platforms - X11
+            // Platforms to be supported - Wayland, Win32
+            static void setWindowShowingOnPager(bool bShowInPager) noexcept;
+            // Event Safety - begin, style, post-begin
+            // Available for platforms - X11
+            // Platforms to be supported - Wayland, Win32
+            static bool getWindowShowingOnPager() noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for platforms - X11
+            // Platforms to be supported - Wayland, Win32
+            static void setWindowShowingOnTaskbar(bool bShowOnTaskbar) noexcept;
+            // Event Safety - begin, style, post-begin
+            // Available for platforms - X11
+            // Platforms to be supported - Wayland, Win32
+            static bool getWindowShowingOnTaskbar() noexcept;
         };
 
         // Event safety - begin, style, post-begin

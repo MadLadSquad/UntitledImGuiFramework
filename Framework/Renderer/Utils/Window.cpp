@@ -6,6 +6,7 @@
         #define GLFW_EXPOSE_NATIVE_WAYLAND
     #else
         #define GLFW_EXPOSE_NATIVE_X11
+        #include <X11/Xatom.h>
     #endif
 #endif
 
@@ -17,6 +18,8 @@
 #include <yaml.h>
 #include <Interfaces/RendererInterface.hpp>
 #include <Interfaces/WindowInterface.hpp>
+
+#define _NET_WM_STATE_ADD 1
 
 UImGui::WindowInternal::WindowInternal() noexcept
 {
@@ -53,11 +56,11 @@ void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) noexcept
         SAVE_CONFIG_YAML_BASIC(resizeable, bResizeable);
         SAVE_CONFIG_YAML_BASIC(transparent-surface, bSurfaceTransparent);
         SAVE_CONFIG_YAML_BASIC(hidden, bHidden);
-        SAVE_CONFIG_YAML_BASIC(focused, bFocused);
+        SAVE_CONFIG_YAML_BASIC(focusedisplay, bFocused);
         SAVE_CONFIG_YAML_BASIC(size-limits, sizeLimits);
         SAVE_CONFIG_YAML_BASIC(aspect-ratio-size-limit, aspectRatioSizeLimit);
-        SAVE_CONFIG_YAML_BASIC(decorated, bDecorated);
-        SAVE_CONFIG_YAML_BASIC(maximised, bMaximised);
+        SAVE_CONFIG_YAML_BASIC(decoratedisplay, bDecorated);
+        SAVE_CONFIG_YAML_BASIC(maximisedisplay, bMaximised);
 
         out << YAML::EndMap;
 
@@ -313,11 +316,11 @@ void UImGui::WindowInternal::openConfig()
     OPEN_CONFIG_GET_YAML_BASIC(resizeable, bResizeable, bool);
     OPEN_CONFIG_GET_YAML_BASIC(transparent-surface, bSurfaceTransparent, bool);
     OPEN_CONFIG_GET_YAML_BASIC(visible, bHidden, bool);
-    OPEN_CONFIG_GET_YAML_BASIC(focused, bFocused, bool);
+    OPEN_CONFIG_GET_YAML_BASIC(focusedisplay, bFocused, bool);
     OPEN_CONFIG_GET_YAML_BASIC(size-limits, sizeLimits, FVector4);
     OPEN_CONFIG_GET_YAML_BASIC(aspect-ratio-size-limit, aspectRatioSizeLimit, FVector2);
-    OPEN_CONFIG_GET_YAML_BASIC(decorated, bDecorated, bool);
-    OPEN_CONFIG_GET_YAML_BASIC(maximised, bMaximised, bool);
+    OPEN_CONFIG_GET_YAML_BASIC(decoratedisplay, bDecorated, bool);
+    OPEN_CONFIG_GET_YAML_BASIC(maximisedisplay, bMaximised, bool);
 skip_window_config:
 
     try
@@ -409,7 +412,184 @@ void UImGui::WindowInternal::setWindowAlwaysOnTop() noexcept
 void UImGui::WindowInternal::setWindowAlwaysBelow() noexcept
 {
 #ifdef GLFW_EXPOSE_NATIVE_X11
+    Display* display = glfwGetX11Display();
+    ::Window window = glfwGetX11Window(windowMain);
+    ::Window root = DefaultRootWindow(display);
 
+    Atom wmNetWmState = XInternAtom(display, "_NET_WM_STATE", 1);
+    if (wmNetWmState == None)
+    {
+        Logger::log("Couldn't find the \"_NET_WM_STATE\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+        return;
+    }
+
+    //Atom wmStateSkipPager;
+    //Atom wmStateSkipTaskbar;
+
+    //if (!bShowInPager)
+    //{
+    //    wmStateSkipPager = XInternAtom(display, "_NET_WM_STATE_SKIP_PAGER", 1);
+    //    if (wmStateSkipPager == None)
+    //    {
+    //        Logger::log("Couldn't find the \"_NET_WM_STATE_SKIP_PAGER\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+    //        return;
+    //    }
+    //}
+    //if (!bShowOnTaskbar)
+    //{
+    //    wmStateSkipTaskbar = XInternAtom(display, "_NET_WM_STATE_SKIP_TASKBAR", 1);
+    //    if (wmStateSkipTaskbar == None)
+    //    {
+    //        Logger::log("Couldn't find the \"NET_WM_STATE_SKIP_TASKBAR\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+    //        return;
+    //    }
+    //}
+
+    Atom wmStateSticky = XInternAtom(display, "_NET_WM_STATE_STICKY", 1);
+    if (wmStateSticky == None)
+    {
+        Logger::log("Couldn't find the \"_NET_WM_STATE_STICKY\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+        return;
+    }
+
+    Atom wmStateBelow = XInternAtom(display, "_NET_WM_STATE_BELOW", 1);
+    if (wmStateBelow == None)
+    {
+        Logger::log("Couldn't find the \"_NET_WM_STATE_BELOW\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+        return;
+    }
+
+    XClientMessageEvent xclient;
+    memset(&xclient, 0, sizeof(xclient));
+
+    xclient.type = ClientMessage;
+    xclient.window = window;
+    xclient.message_type = wmNetWmState;
+    xclient.format = 32;
+    xclient.data.l[0] = _NET_WM_STATE_ADD;
+    xclient.data.l[1] = (long)wmStateBelow;
+
+    XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
+
+    xclient.type = ClientMessage;
+    xclient.window = window;
+    xclient.message_type = wmNetWmState;
+    xclient.format = 32;
+    xclient.data.l[0] = _NET_WM_STATE_ADD;
+    xclient.data.l[1] = (long)wmStateSticky;
+
+    XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
+
+    //if (!bShowInPager)
+    //{
+    //    xclient.type = ClientMessage;
+    //    xclient.window = window;
+    //    xclient.message_type = wmNetWmState;
+    //    xclient.format = 32;
+    //    xclient.data.l[0] = _NET_WM_STATE_ADD;
+    //    xclient.data.l[1] = (long)wmStateSkipPager;
+//
+    //    XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
+    //}
+
+    //if (!bShowOnTaskbar)
+    //{
+    //    xclient.type = ClientMessage;
+    //    xclient.window = window;
+    //    xclient.message_type = wmNetWmState;
+    //    xclient.format = 32;
+    //    xclient.data.l[0] = _NET_WM_STATE_ADD;
+    //    xclient.data.l[1] = (long)wmStateSkipTaskbar;
+//
+    //    XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
+    //}
+    XFlush(display);
+#endif
+}
+
+void UImGui::WindowInternal::disableWindowMoving() noexcept
+{
+#ifdef GLFW_EXPOSE_NATIVE_X11
+
+#endif
+}
+
+void UImGui::WindowInternal::setShowWindowInPager(bool bShowInPagerr) noexcept
+{
+    bShowOnPager = bShowInPagerr;
+#ifdef GLFW_EXPOSE_NATIVE_X11
+    if (!bShowOnPager)
+    {
+        Display* display = glfwGetX11Display();
+        ::Window window = glfwGetX11Window(windowMain);
+        ::Window root = DefaultRootWindow(display);
+
+        Atom wmNetWmState = XInternAtom(display, "_NET_WM_STATE", 1);
+        if (wmNetWmState == None)
+        {
+            Logger::log("Couldn't find the \"_NET_WM_STATE\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+            return;
+        }
+
+        Atom wmStateSkipPager = XInternAtom(display, "_NET_WM_STATE_SKIP_PAGER", 1);
+        if (wmStateSkipPager == None)
+        {
+            Logger::log("Couldn't find the \"_NET_WM_STATE_SKIP_PAGER\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+            return;
+        }
+        XClientMessageEvent xclient;
+        memset(&xclient, 0, sizeof(xclient));
+
+        xclient.type = ClientMessage;
+        xclient.window = window;
+        xclient.message_type = wmNetWmState;
+        xclient.format = 32;
+        xclient.data.l[0] = _NET_WM_STATE_ADD;
+        xclient.data.l[1] = (long)wmStateSkipPager;
+
+        XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
+        XFlush(display);
+    }
+#endif
+}
+
+void UImGui::WindowInternal::setShowWindowOnTaskbar(bool bShowOnTaskbarr) noexcept
+{
+    bShowOnTaskbar = bShowOnTaskbarr;
+#ifdef GLFW_EXPOSE_NATIVE_X11
+    if (!bShowOnTaskbar)
+    {
+        Display* display = glfwGetX11Display();
+        ::Window window = glfwGetX11Window(windowMain);
+        ::Window root = DefaultRootWindow(display);
+
+        Atom wmNetWmState = XInternAtom(display, "_NET_WM_STATE", 1);
+        if (wmNetWmState == None)
+        {
+            Logger::log("Couldn't find the \"_NET_WM_STATE\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+            return;
+        }
+
+        Atom wmStateSkipTaskbar = XInternAtom(display, "_NET_WM_STATE_SKIP_TASKBAR", 1);
+        if (wmStateSkipTaskbar == None)
+        {
+            Logger::log("Couldn't find the \"NET_WM_STATE_SKIP_TASKBAR\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+            return;
+        }
+
+        XClientMessageEvent xclient;
+        memset(&xclient, 0, sizeof(xclient));
+
+        xclient.type = ClientMessage;
+        xclient.window = window;
+        xclient.message_type = wmNetWmState;
+        xclient.format = 32;
+        xclient.data.l[0] = _NET_WM_STATE_ADD;
+        xclient.data.l[1] = (long)wmStateSkipTaskbar;
+
+        XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
+        XFlush(display);
+    }
 #endif
 }
 

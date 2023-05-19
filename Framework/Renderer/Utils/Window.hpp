@@ -133,6 +133,24 @@ namespace UImGui
         // TODO: Port to Wayland
         void setWindowAlwaysBelow() noexcept;
 
+        // As of now, only supported in X11
+        // TODO: Port to Win32
+        // TODO: Port to Wayland
+        void disableWindowMoving() noexcept;
+
+        // As of now, only supported in X11
+        // TODO: Port to Win32
+        // TODO: Port to Wayland
+        void setShowWindowInPager(bool bShowInPagerr) noexcept;
+
+        // As of now, only supported in X11
+        // TODO: Port to Win32
+        // TODO: Port to Wayland
+        void setShowWindowOnTaskbar(bool bShowOnTaskbarr) noexcept;
+
+        bool bShowOnPager = true;
+        bool bShowOnTaskbar = true;
+
         std::vector<std::function<void(int, int)>> windowResizeCallbackList;
         std::vector<std::function<void(int, int)>> windowResizeInScreenCoordCallbackList;
         std::vector<std::function<void(void)>> windowCloseCallbackList;

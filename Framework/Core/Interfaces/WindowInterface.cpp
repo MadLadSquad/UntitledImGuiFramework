@@ -321,3 +321,33 @@ void UImGui::Window::Platform::setWindowAlwaysOnTop() noexcept
 {
     Window::get().setWindowAlwaysOnTop();
 }
+
+void UImGui::Window::Platform::disableWindowMovement() noexcept
+{
+    Window::get().disableWindowMoving();
+}
+
+void UImGui::Window::Platform::setWindowAlwaysOnBottom() noexcept
+{
+    Window::get().setWindowAlwaysBelow();
+}
+
+void UImGui::Window::Platform::setWindowShowingOnPager(bool bShowInPager) noexcept
+{
+    Window::get().setShowWindowInPager(bShowInPager);
+}
+
+bool UImGui::Window::Platform::getWindowShowingOnPager() noexcept
+{
+    return Window::get().bShowOnPager;
+}
+
+void UImGui::Window::Platform::setWindowShowingOnTaskbar(bool bShowOnTaskbar) noexcept
+{
+    Window::get().setShowWindowOnTaskbar(bShowOnTaskbar);
+}
+
+bool UImGui::Window::Platform::getWindowShowingOnTaskbar() noexcept
+{
+    return Window::get().bShowOnTaskbar;
+}
