@@ -93,11 +93,6 @@ void UImGui::WindowInternal::setTitle(UImGui::String title) noexcept
     windowData.name = title;
 }
 
-void UImGui::WindowInternal::setCursorVisibility(bool bVisible) noexcept
-{
-    bVisible ? glfwSetInputMode(windowMain, GLFW_CURSOR, GLFW_CURSOR_NORMAL) : glfwSetInputMode(windowMain, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-}
-
 UImGui::FVector2 UImGui::WindowInternal::getMousePositionChange() noexcept
 {
     FVector2 ret = mouseOffset;

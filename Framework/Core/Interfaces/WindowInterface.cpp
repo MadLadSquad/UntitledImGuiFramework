@@ -7,11 +7,6 @@ void UImGui::Window::setTitle(UImGui::String name) noexcept
     Window::get().setTitle(name);
 }
 
-void UImGui::Window::setCursorVisibility(bool bVisible) noexcept
-{
-    Window::get().setCursorVisibility(bVisible);
-}
-
 float UImGui::Window::aspectRatio() noexcept
 {
     return Window::get().windowSize.x / Window::get().windowSize.y;
