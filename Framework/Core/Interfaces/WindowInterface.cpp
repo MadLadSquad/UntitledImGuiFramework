@@ -317,6 +317,11 @@ void UImGui::Window::pushGlobalMonitorCallback(const std::function<void(Monitor&
     Window::get().windowMonitorCallbackList.push_back(f);
 }
 
+void UImGui::Window::pushWindowErrorCallback(const std::function<void(int, const char*)>& f) noexcept
+{
+    Window::get().windowErrorCallbackList.push_back(f);
+}
+
 void UImGui::Window::Platform::setWindowAlwaysOnTop() noexcept
 {
     Window::get().setWindowAlwaysOnTop();

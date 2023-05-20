@@ -225,6 +225,8 @@ void UImGui::WindowInternal::configureCallbacks() noexcept
     glfwSetMonitorCallback(monitorCallback);
 
     glfwSetDropCallback(windowMain, windowOSDragDropCallback);
+
+    glfwSetErrorCallback(windowErrorCallback);
 }
 
 void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, int width, int height) noexcept
@@ -655,6 +657,13 @@ void UImGui::WindowInternal::windowOSDragDropCallback(GLFWwindow* window, int co
         windowInst->dragDropPaths.emplace_back(paths[i]);
     for (auto& a : windowInst->dragDropPathCallbackList)
         a(windowInst->dragDropPaths);
+}
+
+void UImGui::WindowInternal::windowErrorCallback(int code, const char* description) noexcept
+{
+    Logger::log("Encountered GLFW window error, ", UVKLog::UVK_LOG_TYPE_ERROR, code, ": ", description);
+    for (auto& a : Window::get().windowErrorCallbackList)
+        a(code, description);
 }
 
 UImGui::Monitor::Monitor(GLFWmonitor* monitor) noexcept

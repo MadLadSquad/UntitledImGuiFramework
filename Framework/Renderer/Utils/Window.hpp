@@ -123,6 +123,8 @@ namespace UImGui
 
         static void windowOSDragDropCallback(GLFWwindow* window, int count, const char** paths) noexcept;
 
+        static void windowErrorCallback(int code, const char* description) noexcept;
+
         // As of now, only supported in X11
         // TODO: Port to Win32
         // TODO: Port to Wayland
@@ -167,6 +169,8 @@ namespace UImGui
         std::vector<std::function<void(bool)>> windowMaximisedCallbackList;
         std::vector<std::function<void(Monitor&, MonitorState)>> windowMonitorCallbackList;
         std::vector<std::function<void(std::vector<FString>&)>> dragDropPathCallbackList;
+
+        std::vector<std::function<void(int, const char*)>> windowErrorCallbackList;
 
         std::vector<FString> dragDropPaths;
 

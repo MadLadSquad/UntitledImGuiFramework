@@ -233,6 +233,9 @@ namespace UImGui
         static std::vector<FString>& getOSDragDropStrings() noexcept;
         // Event safety - begin, style, post-begin
         static void pushWindowOSDragDropCallback(const std::function<void(std::vector<FString>&)>& f) noexcept;
+
+        // Event safety - begin, style, post-begin
+        static void pushWindowErrorCallback(const std::function<void(int, const char*)>& f) noexcept;
     private:
         friend class Input;
         friend class Instance;
