@@ -294,7 +294,7 @@ UImGui::Monitor UImGui::Window::getWindowMonitor() noexcept
     return Monitor(glfwGetWindowMonitor(Window::get().windowMain));
 }
 
-void UImGui::Window::setWindowMonitor(UImGui::Monitor monitor) noexcept
+void UImGui::Window::setWindowMonitor(const UImGui::Monitor& monitor) noexcept
 {
     const GLFWvidmode* mode = glfwGetVideoMode(monitor.monitor);
     const GLFWvidmode* currentMode = glfwGetVideoMode(Window::getWindowMonitor().monitor);
@@ -350,4 +350,9 @@ void UImGui::Window::Platform::setWindowShowingOnTaskbar(bool bShowOnTaskbar) no
 bool UImGui::Window::Platform::getWindowShowingOnTaskbar() noexcept
 {
     return Window::get().bShowOnTaskbar;
+}
+
+void UImGui::Window::Platform::setWindowType(const char *type) noexcept
+{
+    Window::get().setWindowType(type);
 }

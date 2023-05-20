@@ -95,6 +95,12 @@ namespace UImGui
             // Available for platforms - X11
             // Platforms to be supported - Wayland, Win32
             static bool getWindowShowingOnTaskbar() noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for platforms - X11
+            // Platforms to be supported - Wayland, Win32
+            // Sets the X11 window type
+            static void setWindowType(const char* type) noexcept;
         };
 
         // Event safety - begin, style, post-begin
@@ -212,7 +218,7 @@ namespace UImGui
         // Event safety - begin, style, post-begin
         // Sets the window to the provided monitor. When moving the window, the window will be moved to coordinates
         // (0;0) of the new monitor, while preserving the width and height and using the new monitor's refresh rate
-        static void setWindowMonitor(Monitor monitor) noexcept;
+        static void setWindowMonitor(const Monitor& monitor) noexcept;
 
         // Event safety - begin, style, post-begin
         // Returns a list of monitors, first monitor is the primary monitor, i.e. the monitor where global UI elements

@@ -13,6 +13,9 @@
 #include "Window.hpp"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
+
+
 #include <GLFW/glfw3native.h>
 #include <ThirdParty/source-libraries/stb_image.h>
 #include <yaml.h>
@@ -423,28 +426,6 @@ void UImGui::WindowInternal::setWindowAlwaysBelow() noexcept
         return;
     }
 
-    //Atom wmStateSkipPager;
-    //Atom wmStateSkipTaskbar;
-
-    //if (!bShowInPager)
-    //{
-    //    wmStateSkipPager = XInternAtom(display, "_NET_WM_STATE_SKIP_PAGER", 1);
-    //    if (wmStateSkipPager == None)
-    //    {
-    //        Logger::log("Couldn't find the \"_NET_WM_STATE_SKIP_PAGER\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
-    //        return;
-    //    }
-    //}
-    //if (!bShowOnTaskbar)
-    //{
-    //    wmStateSkipTaskbar = XInternAtom(display, "_NET_WM_STATE_SKIP_TASKBAR", 1);
-    //    if (wmStateSkipTaskbar == None)
-    //    {
-    //        Logger::log("Couldn't find the \"NET_WM_STATE_SKIP_TASKBAR\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
-    //        return;
-    //    }
-    //}
-
     Atom wmStateSticky = XInternAtom(display, "_NET_WM_STATE_STICKY", 1);
     if (wmStateSticky == None)
     {
@@ -479,30 +460,6 @@ void UImGui::WindowInternal::setWindowAlwaysBelow() noexcept
     xclient.data.l[1] = (long)wmStateSticky;
 
     XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
-
-    //if (!bShowInPager)
-    //{
-    //    xclient.type = ClientMessage;
-    //    xclient.window = window;
-    //    xclient.message_type = wmNetWmState;
-    //    xclient.format = 32;
-    //    xclient.data.l[0] = _NET_WM_STATE_ADD;
-    //    xclient.data.l[1] = (long)wmStateSkipPager;
-//
-    //    XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
-    //}
-
-    //if (!bShowOnTaskbar)
-    //{
-    //    xclient.type = ClientMessage;
-    //    xclient.window = window;
-    //    xclient.message_type = wmNetWmState;
-    //    xclient.format = 32;
-    //    xclient.data.l[0] = _NET_WM_STATE_ADD;
-    //    xclient.data.l[1] = (long)wmStateSkipTaskbar;
-//
-    //    XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
-    //}
     XFlush(display);
 #endif
 }
@@ -511,6 +468,31 @@ void UImGui::WindowInternal::disableWindowMoving() noexcept
 {
 #ifdef GLFW_EXPOSE_NATIVE_X11
 
+#endif
+}
+
+
+void UImGui::WindowInternal::setWindowType(const char* type) noexcept
+{
+#ifdef GLFW_EXPOSE_NATIVE_X11
+    Display* display = glfwGetX11Display();
+    ::Window window = glfwGetX11Window(windowMain);
+
+    Atom windowType = XInternAtom(display, "_NET_WM_WINDOW_TYPE", 1);
+    if (windowType == None)
+    {
+        Logger::log("Couldn't find atom of type \"_NET_WM_WINDOW_TYPE\"!", UVKLog::UVK_LOG_TYPE_ERROR);
+        return;
+    }
+
+    Atom windowTypeT = XInternAtom(display, type, 1);
+    if (windowTypeT == None)
+    {
+        Logger::log("Couldn't find atom of type \"", UVKLog::UVK_LOG_TYPE_ERROR, type, "\"!");
+        return;
+    }
+
+    XChangeProperty(display, window, windowType, XA_ATOM, 32, PropModeReplace, (unsigned char*)&windowTypeT, 1);
 #endif
 }
 
