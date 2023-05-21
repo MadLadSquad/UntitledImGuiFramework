@@ -50,6 +50,7 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
     io.WantSaveIniSettings = false;
     io.ConfigViewportsNoTaskBarIcon = true;
+    io.ConfigUseDefaultMouseCursors = true;
 
     ImGui::LoadIniSettingsFromDisk(("../Config/Core/" + ini + ".ini").c_str());
     ImGui::StyleColorsDark();
