@@ -78,5 +78,5 @@ There are many applications, already in production, that use the framework. A li
 [here](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki/Applications-using-the-framework). If your application 
 uses the framework, please contribute to the list!
 
-The organization trello board can be found [in this trello board](https://trello.com/b/HmfuRY2K/untitleddesktop), it 
-contains organization information on all projects related to UDE. The framework can be found in its corresponding cards
+The organization trello board can be found [here](https://trello.com/b/HmfuRY2K/untitleddesktop). It
+contains organization information on all projects related to UDE. The framework can be found in its corresponding cards.
