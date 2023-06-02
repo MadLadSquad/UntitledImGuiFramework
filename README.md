@@ -29,12 +29,6 @@ and submodules they want or don't want to include in their application. Module l
   - Adds localization ✅
   - Adds utilities for accessing the user locale ✅
   - Adds additional utilify functions for localization ✅
-- Audio Module 🚧
-  - Adds audio playback using [OpenAL](https://www.openal.org/) 🚧
-  - Adds an audio player widget 🚧
-- Video Module 🚧
-  - Adds video playback using [ffmpeg](https://ffmpeg.org/)
-  - Adds a video player widget 🚧
 - Plotting Module ✅
   - Adds [ImPlot](https://github.com/epezent/implot) for plotting ✅
 - Knobs Module ✅
@@ -51,19 +45,17 @@ and submodules they want or don't want to include in their application. Module l
   including of standard extensions
 - Undo/Redo Module ✅
   - Adds Undo/Redo operation support ✅
-- Networking module 🚧
-  - Adds basic networking using [curl](https://curl.se/)
 - CLI Args module ✅
   - Adds a parser for CLI arguments using the [UntitledCLIParser](https://github.com/MadLadSquad/UntitledCLIParser)
 - OS Module for core OS interaction 🚧
-  - OS menu and bar interactions 🚧
-  - OS accent colours and theme config loading 🚧
+  - Native bar interactions 🚧
+  - OS theming 🚧
   - Notifications 🚧
-  - OS system directory configuration 🚧
+  - System directory configuration 🚧
   - Exec integration using the [UntitledExec](https://github.com/MadLadSquad/UntitledExec) library ✅
-  - Cross-platform system font interaction using the [UntitledFontUtils](https://github.com/MadLadSquad/UntitledFontUtils) library ✅
+  - Cross-platform system font interaction using the [UntitledFontUtils](https://github.com/MadLadSquad/UntitledFontUtils) library 🚧
   - Unix: 🚧
-    - XDG, [X](http://www.x.org/) and [Wayland](https://wayland.freedesktop.org/) integration 🚧
+    - XDG integration 🚧
     - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration 🚧
     - [polkit](https://www.freedesktop.org/wiki/Software/PolicyKit/) integration 🚧
 
