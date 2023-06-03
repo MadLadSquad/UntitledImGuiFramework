@@ -1,4 +1,4 @@
-#ifdef UIMGUI_LOCALE_MODULE_ENABLED
+#ifdef UIMGUI_I18N_MODULE_ENABLED
 #include "localemod.hpp"
 #include "yaml.h"
 #include <Utilities.hpp>

@@ -1,8 +1,8 @@
 #pragma once
 #include <Core.hpp>
 
-#ifdef UIMGUI_LOCALE_MODULE_ENABLED
-    #include "Modules/Locale/src/localemod.hpp"
+#ifdef UIMGUI_I18N_MODULE_ENABLED
+    #include "Modules/i18n/src/localemod.hpp"
 #endif
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
@@ -56,7 +56,7 @@ namespace UImGui
         friend class StateTracker;
 
         ModuleSettings settings;
-#ifdef UIMGUI_LOCALE_MODULE_ENABLED
+#ifdef UIMGUI_I18N_MODULE_ENABLED
         LocaleManager localeManager{};
 #endif
 
@@ -86,17 +86,13 @@ namespace UImGui
         inline static bool notifications = false;
         inline static bool polkit = false;
         inline static bool ufont = false;
-        inline static bool audio = false;
-        inline static bool locale = false;
-        inline static bool network = false;
+        inline static bool i18n = false;
         inline static bool undo_redo = false;
-        inline static bool video = false;
         inline static bool plotting = false;
         inline static bool knobs = false;
         inline static bool spinners = false;
         inline static bool toggles = false;
         inline static bool text_utils = false;
-        inline static bool markdown = false;
         inline static bool cli_parser = false;
     private:
         friend class StateTracker;

@@ -53,17 +53,13 @@ enabled-modules:
   notifications: false
   polkit: false
   ufont: false
-  audio: false
-  locale: false
-  network: false
+  i18n: false
   undo-redo: false
-  video: false
   plotting: false
   knobs: false
   spinners: false
   toggles: false
   text-utils: false
-  markdown: false
   cli-parser: false
 " > uvproj.yaml
 

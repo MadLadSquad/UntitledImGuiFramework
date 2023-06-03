@@ -97,25 +97,21 @@ void UImGui::ModulesManager::initModules()
     CHECK_MODULE_ENABLED(notifications);
     CHECK_MODULE_ENABLED(polkit);
     CHECK_MODULE_ENABLED(ufont);
-    CHECK_MODULE_ENABLED(audio);
-    CHECK_MODULE_ENABLED(locale);
-    CHECK_MODULE_ENABLED(network);
+    CHECK_MODULE_ENABLED(i18n);
     CHECK_MODULE_ENABLED(undo_redo);
-    CHECK_MODULE_ENABLED(video);
     CHECK_MODULE_ENABLED(plotting);
     CHECK_MODULE_ENABLED(knobs);
     CHECK_MODULE_ENABLED(spinners);
     CHECK_MODULE_ENABLED(toggles);
     CHECK_MODULE_ENABLED(text_utils);
-    CHECK_MODULE_ENABLED(markdown);
     CHECK_MODULE_ENABLED(cli_parser);
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
     if (Modules::undo_redo)
         stateTracker.init();
 #endif
-#ifdef UIMGUI_LOCALE_MODULE_ENABLED
-    if (Modules::locale)
+#ifdef UIMGUI_I18N_MODULE_ENABLED
+    if (Modules::i18n)
         localeManager.openLocaleConfig();
 #endif
 }
