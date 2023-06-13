@@ -14,11 +14,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-
-
 #include <GLFW/glfw3native.h>
 #include <ThirdParty/source-libraries/stb_image.h>
-#include <yaml.h>
+#include <yaml-cpp/yaml.h>
 #include <Interfaces/RendererInterface.hpp>
 #include <Interfaces/WindowInterface.hpp>
 

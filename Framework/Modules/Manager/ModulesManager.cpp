@@ -1,6 +1,6 @@
 #include "ModulesManager.hpp"
 #include <Core/Global.hpp>
-#include <yaml.h>
+#include <yaml-cpp/yaml.h>
 // The imspinner devs decided to just not include imgui
 #include <imgui.h>
 #include <imgui_internal.h>

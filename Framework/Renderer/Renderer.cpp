@@ -1,5 +1,5 @@
 #include "Renderer.hpp"
-#include <yaml.h>
+#include <yaml-cpp/yaml.h>
 #include <Core/Components/Instance.hpp>
 #include <Renderer/ImGui/ImGui.hpp>
 #include <GL/glew.h>
