@@ -100,7 +100,7 @@ namespace UImGui
             // Available for platforms - X11
             // Platforms to be supported - Wayland, Win32
             // Sets the X11 window type
-            static void setWindowType(const char* type) noexcept;
+            static void setWindowType(String type) noexcept;
         };
 
         // Event safety - begin, style, post-begin
@@ -235,7 +235,7 @@ namespace UImGui
         static void pushWindowOSDragDropCallback(const std::function<void(std::vector<FString>&)>& f) noexcept;
 
         // Event safety - begin, style, post-begin
-        static void pushWindowErrorCallback(const std::function<void(int, const char*)>& f) noexcept;
+        static void pushWindowErrorCallback(const std::function<void(int, String)>& f) noexcept;
     private:
         friend class Input;
         friend class Instance;

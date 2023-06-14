@@ -317,7 +317,7 @@ void UImGui::Window::pushGlobalMonitorCallback(const std::function<void(Monitor&
     Window::get().windowMonitorCallbackList.push_back(f);
 }
 
-void UImGui::Window::pushWindowErrorCallback(const std::function<void(int, const char*)>& f) noexcept
+void UImGui::Window::pushWindowErrorCallback(const std::function<void(int, String)>& f) noexcept
 {
     Window::get().windowErrorCallbackList.push_back(f);
 }
@@ -357,7 +357,7 @@ bool UImGui::Window::Platform::getWindowShowingOnTaskbar() noexcept
     return Window::get().bShowOnTaskbar;
 }
 
-void UImGui::Window::Platform::setWindowType(const char *type) noexcept
+void UImGui::Window::Platform::setWindowType(String type) noexcept
 {
     Window::get().setWindowType(type);
 }

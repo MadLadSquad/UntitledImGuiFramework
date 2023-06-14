@@ -2,6 +2,11 @@
 #include <iostream>
 #include <vector>
 #include <Core/Defines.hpp>
+
+// Types.hpp only contains C++ code. Check out the C header for more types
+#include <C/CTypes.h>
+
+// Dependencies
 #include <ThirdParty/logger/src/UVKLog.h>
 #include <yaml-cpp/yaml.h>
 
@@ -9,33 +14,18 @@ using namespace UVKLog;
 
 namespace UImGui
 {
-    struct UIMGUI_PUBLIC_API FVector2
-    {
-        float x{};
-        float y{};
-    };
+    // Redefine for C++
+    typedef UImGui_FVector2 FVector2;
+    typedef UImGui_FVector FVector;
+    typedef UImGui_FVector4 FVector4;
 
-    struct UIMGUI_PUBLIC_API FVector
-    {
-        float x{};
-        float y{};
-        float z{};
-    };
+    typedef UImGui_String String;
 
-    struct UIMGUI_PUBLIC_API FVector4
-    {
-        float x{};
-        float y{};
-        float z{};
-        float w{};
-    };
+    typedef std::string FString;
 
     YAML::Emitter& operator<<(YAML::Emitter& out, const FVector4& vect) noexcept;
     YAML::Emitter& operator<<(YAML::Emitter& out, const FVector& vect) noexcept;
     YAML::Emitter& operator<<(YAML::Emitter& out, const FVector2& vect) noexcept;
-
-    typedef std::string FString;
-    typedef const char* String;
 }
 
 namespace YAML
