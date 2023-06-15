@@ -34,13 +34,15 @@ extern "C"
      * @enum UIMGUI_CURSOR_VISIBILITY_STATE_DISABLED - Hides the cursor and locks it to the window. This is useful for
      * 3D cameras like in games.
      */                      
-    enum UImGui_CursorVisibilityState
+    enum UImGui_CursorVisibilityState_I
     {
         UIMGUI_CURSOR_VISIBILITY_STATE_NORMAL = 0x00034001,
         UIMGUI_CURSOR_VISIBILITY_STATE_HIDDEN = 0x00034002,
         UIMGUI_CURSOR_VISIBILITY_STATE_DISABLED = 0x00034003
     };
-    
+
+    typedef enum UImGui_CursorVisibilityState_I UImGui_CursorVisibilityState;
+
     // Event Safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Input_setCursorVisibility(UImGui_CursorVisibilityState visibility);
     // Event Safety - begin, style, post-begin
