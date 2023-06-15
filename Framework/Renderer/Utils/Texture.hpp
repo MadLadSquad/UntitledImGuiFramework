@@ -2,8 +2,13 @@
 #include <Defines.hpp>
 #include <Types.hpp>
 
+// Imports the C Texture API, defines the TextureData struct.
+#include <C/Rendering/CTexture.h>
+
 namespace UImGui
 {
+    typedef UImGui_TextureData TextureData;
+
     class UIMGUI_PUBLIC_API Texture
     {
     public:
@@ -24,11 +29,11 @@ namespace UImGui
         // Loads the image for regular OpenGL/Vulkan usage.
         // Event Safety - Post-begin
         void load(void* data = nullptr, uint32_t x = 0, uint32_t y = 0, uint32_t depth = 0, bool bFreeImageData = true,
-                  const std::function<void(void*)>& freeFunc = defaultFreeFunc) noexcept;
+                  const std::function<void(void*)>& freeFunc = UImGui_Texture_defaultFreeFunc) noexcept;
         // Loads the image for dear imgui OpenGL/Vulkan usage
         // Event Safety - Post-begin
         void loadImGui(void* data = nullptr, uint32_t x = 0, uint32_t y = 0, uint32_t depth = 0, bool bFreeImageData = true,
-                       const std::function<void(void*)>& freeFunc = defaultFreeFunc) noexcept;
+                       const std::function<void(void*)>& freeFunc = UImGui_Texture_defaultFreeFunc) noexcept;
 
         // Returns the image buffer
         // Event Safety - Any time
@@ -49,11 +54,6 @@ namespace UImGui
         // Event Safety - All initiated
         ~Texture() noexcept;
     private:
-        static void defaultFreeFunc(void* data) noexcept;
-
-        FString filename{};
-        uint32_t id = 0;
-        FVector2 sz = { 0.0f, 0.0f };
-        int channels = 0;
+        TextureData dt{};
     };
 }
