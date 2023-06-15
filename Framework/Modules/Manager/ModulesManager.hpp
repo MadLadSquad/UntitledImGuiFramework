@@ -1,6 +1,9 @@
 #pragma once
 #include <Core.hpp>
 
+// This imports the C API, look here for the definition of the ModuleSettings struct
+#include <C/Modules/Manager/CModulesManager.hpp>
+
 #ifdef UIMGUI_I18N_MODULE_ENABLED
     #include "Modules/i18n/src/localemod.hpp"
 #endif
@@ -38,10 +41,7 @@
 
 namespace UImGui
 {
-    struct UIMGUI_PUBLIC_API ModuleSettings
-    {
-        size_t maxTransactions = 100;
-    };
+    typedef UImGui_ModuleSettings ModuleSettings;
 
     class UIMGUI_PUBLIC_API ModulesManager
     {
@@ -55,7 +55,25 @@ namespace UImGui
         friend class LocaleManager;
         friend class StateTracker;
 
-        ModuleSettings settings;
+        ModuleSettings settings =
+        {
+            .maxTransactions = 100,
+            .os = false,
+            .dbus = false,
+            .uexec = false,
+            .theming = false,
+            .notifications = false,
+            .polkit = false,
+            .ufont = false,
+            .i18n = false,
+            .undo_redo = false,
+            .plotting = false,
+            .knobs = false,
+            .spinners = false,
+            .toggles = false,
+            .text_utils = false,
+            .cli_parser = false,
+        };
 #ifdef UIMGUI_I18N_MODULE_ENABLED
         LocaleManager localeManager{};
 #endif
@@ -78,22 +96,6 @@ namespace UImGui
         static void save() noexcept;
         // Event Safety - Post-begin
         static ModulesManager& get() noexcept;
-
-        inline static bool os = false;
-        inline static bool dbus = false;
-        inline static bool uexec = false;
-        inline static bool theming = false;
-        inline static bool notifications = false;
-        inline static bool polkit = false;
-        inline static bool ufont = false;
-        inline static bool i18n = false;
-        inline static bool undo_redo = false;
-        inline static bool plotting = false;
-        inline static bool knobs = false;
-        inline static bool spinners = false;
-        inline static bool toggles = false;
-        inline static bool text_utils = false;
-        inline static bool cli_parser = false;
     private:
         friend class StateTracker;
         friend class Locale;

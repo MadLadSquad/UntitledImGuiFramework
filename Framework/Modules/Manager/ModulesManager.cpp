@@ -15,7 +15,7 @@
 
 #define CHECK_MODULE_ENABLED(x)     if (mod[#x])    \
 {                                                   \
-    Modules::x = mod[#x].as<bool>();                \
+    Modules::data().x = mod[#x].as<bool>();         \
 }
 
 
@@ -107,11 +107,11 @@ void UImGui::ModulesManager::initModules()
     CHECK_MODULE_ENABLED(cli_parser);
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
-    if (Modules::undo_redo)
+    if (Modules::data().undo_redo)
         stateTracker.init();
 #endif
 #ifdef UIMGUI_I18N_MODULE_ENABLED
-    if (Modules::i18n)
+    if (Modules::data().i18n)
         localeManager.openLocaleConfig();
 #endif
 }

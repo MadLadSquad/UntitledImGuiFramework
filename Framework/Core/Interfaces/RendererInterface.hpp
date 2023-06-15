@@ -5,8 +5,6 @@
 
 namespace UImGui
 {
-    class RendererData;
-
     class UIMGUI_PUBLIC_API Renderer
     {
     public:

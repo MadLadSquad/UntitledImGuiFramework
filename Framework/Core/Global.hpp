@@ -3,6 +3,7 @@
 #include <Renderer/Utils/Window.hpp>
 #include "Modules/Manager/ModulesManager.hpp"
 #include "Threads/LogicThreads.hpp"
+#include "CDeallocation.hpp"
 
 namespace UImGui
 {
@@ -19,6 +20,8 @@ namespace UImGui
 
         Instance* instance = nullptr;
         RendererInternal* renderer = nullptr;
+
+        CDeallocationStruct deallocationStruct;
     private:
         friend class Window;
         friend class Renderer;

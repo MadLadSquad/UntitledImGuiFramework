@@ -2,6 +2,9 @@
 #include <Core/Defines.hpp>
 #include <Core/Types.hpp>
 
+// Imports the C API, contains definitions of the C InputAction struct and other uniform API structs and enum
+#include <C/Interfaces/CInput.h>
+
 namespace UImGui
 {
 
@@ -27,21 +30,7 @@ namespace UImGui
         uint8_t state{};
     };
 
-    /**
-     * @brief Defines the 3 visibility states of a mouse cursor
-     * @enum UIMGUI_CURSOR_VISIBILITY_STATE_NORMAL - Cursor is visible and can leave the window at any point.
-     * For normal GUI applications
-     * @enum UIMGUI_CURSOR_VISIBILITY_STATE_HIDDEN - Hides the cursor when it's over the window, but allows the user to
-     * leave the window area.
-     * @enum UIMGUI_CURSOR_VISIBILITY_STATE_DISABLED - Hides the cursor and locks it to the window. This is useful for
-     * 3D cameras like in games.
-     */
-    enum CursorVisibilityState
-    {
-        UIMGUI_CURSOR_VISIBILITY_STATE_NORMAL = 0x00034001,
-        UIMGUI_CURSOR_VISIBILITY_STATE_HIDDEN = 0x00034002,
-        UIMGUI_CURSOR_VISIBILITY_STATE_DISABLED = 0x00034003
-    };
+    typedef UImGui_CursorVisibilityState CursorVisibilityState;
 
     /**
      * @brief Implements a public interface to the Input system
