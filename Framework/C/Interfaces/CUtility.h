@@ -7,7 +7,6 @@
 extern "C"
 {
 #endif
-
     // Event Safety - Any time
     UIMGUI_PUBLIC_API UImGui_String UImGui_Utility_sanitiseFilepath(UImGui_String str);
 

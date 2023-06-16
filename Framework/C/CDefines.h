@@ -37,7 +37,7 @@ extern "C"
  * component can then check its own state(if in PAUSED or RUNNING state) and call specific components of its event
  * functions. The OFF state is there to make it easy to fully shut down a component until the program closes
  */
-enum UImGui_ComponentState
+typedef enum UImGui_ComponentState
 {
     // The component is not running but its events are still running
     UIMGUI_COMPONENT_STATE_PAUSED,
@@ -45,7 +45,7 @@ enum UImGui_ComponentState
     UIMGUI_COMPONENT_STATE_RUNNING,
     // The component is not running and its events are not running, only the constructor and destructor are called
     UIMGUI_COMPONENT_STATE_OFF,
-};
+} UImGui_ComponentState;
 
 /**
  * @brief An enum that defines component types to be used by various functions
@@ -53,12 +53,12 @@ enum UImGui_ComponentState
  * @var UIMGUI_COMPONENT_TYPE_TITLEBAR - Defines a titlebar component
  * @var UIMGUI_COMPONENT_PYE_WINDOW - Defines a window component
  */
-enum [[maybe_unused]] UImGui_ComponentType
+typedef enum [[maybe_unused]] UImGui_ComponentType
 {
     UIMGUI_COMPONENT_TYPE_INLINE,
     UIMGUI_COMPONENT_TYPE_TITLEBAR,
     UIMGUI_COMPONENT_TYPE_WINDOW
-};
+} UImGui_ComponentType;
 
 #ifdef __cplusplus
 };

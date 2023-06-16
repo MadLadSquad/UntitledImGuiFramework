@@ -1,9 +1,9 @@
 #pragma once
 #include <Core/Events/Input.hpp>
 #include <array>
+#include <C/Internal/CMonitor.h>
 
 struct GLFWwindow;
-struct GLFWmonitor;
 namespace UImGui
 {
     struct UIMGUI_PUBLIC_API WindowData
@@ -25,11 +25,7 @@ namespace UImGui
         bool bMaximised = false;
     };
 
-    enum MonitorState
-    {
-        UIMGUI_MONITOR_STATE_CONNECTED = 0x00040001,
-        UIMGUI_MONITOR_STATE_DISCONNECTED = 0x00040002
-    };
+    typedef UImGui_MonitorState MonitorState;
 
     struct UIMGUI_PUBLIC_API Monitor
     {
@@ -59,6 +55,20 @@ namespace UImGui
 
         void* additionalData = nullptr;
         size_t additionalDataSize = 0;
+
+        // This is made to circumvent the inability to access the private variables of this class by the C API. This is
+        // mostly due to header file structure constraints in our current implementation, as otherwise, friend functions
+        // would do the job.
+        class UIMGUI_PUBLIC_API CInternalGetMonitorClassDoNotTouch
+        {
+        public:
+            static UImGui_CMonitorData UImGui_Window_getWindowMonitor();
+            static void pushGlobalMonitorCallbackFun(UImGui::Monitor& monitor, UImGui::MonitorState state,
+                                                    UImGui_Window_pushGlobalMonitorCallbackFun f);
+            static void UImGui_Monitor_pushEvent(UImGui_CMonitorData* data, UImGui_Monitor_EventsFun f);
+            static void UImGui_Monitor_setWindowMonitor(UImGui_CMonitorData* monitor);
+            static UImGui_CMonitorData* UImGui_Window_getMonitors(size_t* size);
+        };
     private:
         friend class Window;
         friend class WindowInternal;
@@ -78,6 +88,8 @@ namespace UImGui
         bool& resized() noexcept;
 
         void close() noexcept;
+
+        std::vector<std::function<void(const char**, size_t size)>> dragDropPathCCallbackList;
     private:
         friend class Window;
         friend class Input;
@@ -168,6 +180,7 @@ namespace UImGui
         std::vector<std::function<void(void)>> windowRefreshCallbackList;
         std::vector<std::function<void(bool)>> windowMaximisedCallbackList;
         std::vector<std::function<void(Monitor&, MonitorState)>> windowMonitorCallbackList;
+
         std::vector<std::function<void(std::vector<FString>&)>> dragDropPathCallbackList;
 
         std::vector<std::function<void(int, const char*)>> windowErrorCallbackList;

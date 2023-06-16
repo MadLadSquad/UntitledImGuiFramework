@@ -11,6 +11,7 @@
 #endif
 
 #include "Window.hpp"
+#include "Global.hpp"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -653,8 +654,11 @@ void UImGui::WindowInternal::windowOSDragDropCallback(GLFWwindow* window, int co
 
     for (int i = 0; i < count; i++)
         windowInst->dragDropPaths.emplace_back(paths[i]);
+
     for (auto& a : windowInst->dragDropPathCallbackList)
         a(windowInst->dragDropPaths);
+    for (auto& a : windowInst->dragDropPathCCallbackList)
+        a(paths, count);
 }
 
 void UImGui::WindowInternal::windowErrorCallback(int code, const char* description) noexcept
@@ -718,4 +722,74 @@ UImGui::FString UImGui::Monitor::getName() noexcept
 void UImGui::Monitor::pushEvent(const std::function<void(Monitor&, MonitorState)>& f) noexcept
 {
     events.push_back(f);
+}
+
+UImGui_CMonitorData UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Window_getWindowMonitor()
+{
+    auto tmp = UImGui::Window::getWindowMonitor();
+    return UImGui_CMonitorData
+    {
+            .additionalData = tmp.additionalData,
+            .additionalDataSize = tmp.additionalDataSize,
+            .monitor = tmp.monitor,
+    };
+}
+
+void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::pushGlobalMonitorCallbackFun(UImGui::Monitor& monitor,
+                                                                                      UImGui::MonitorState state,
+                                                                                      UImGui_Window_pushGlobalMonitorCallbackFun f)
+{
+    UImGui_CMonitorData dt;
+    UImGui_Monitor_initWithMonitor_Internal(&dt, monitor.monitor);
+    dt.additionalData = monitor.additionalData;
+    dt.additionalDataSize = monitor.additionalDataSize;
+
+    f(&dt, state);
+}
+
+void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_pushEvent(UImGui_CMonitorData* data,
+                                                                                   UImGui_Monitor_EventsFun f)
+{
+    for (auto& a : UImGui::Window::getMonitors())
+    {
+        if (a.monitor == data->monitor)
+        {
+            a.pushEvent([&](Monitor& fMonitor, MonitorState state) -> void
+            {
+                UImGui_CMonitorData dt;
+                UImGui_Monitor_initWithMonitor_Internal(&dt, data->monitor);
+                dt.additionalData = data->additionalData;
+                dt.additionalDataSize = data->additionalDataSize;
+
+                f(&dt, state);
+            });
+            return;
+        }
+    }
+    Logger::log("Invalid internal monitor address, used when pushing a monitor-local event! Address: ", UVK_LOG_TYPE_ERROR, data->monitor);
+}
+
+void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_setWindowMonitor(UImGui_CMonitorData* monitor)
+{
+    Monitor m;
+    m.monitor = monitor->monitor;
+
+    UImGui::Window::setWindowMonitor(m);
+}
+
+UImGui_CMonitorData* UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Window_getMonitors(size_t* size)
+{
+    auto& monitors = UImGui::internalGlobal.deallocationStruct.monitors;
+    monitors.clear();
+    for (auto& a : UImGui::Window::getMonitors())
+    {
+        monitors.push_back(
+        {
+            .additionalData = a.additionalData,
+            .additionalDataSize = a.additionalDataSize,
+            .monitor = a.monitor
+        });
+    }
+    *size = monitors.size();
+    return monitors.data();
 }

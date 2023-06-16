@@ -6,7 +6,7 @@
 extern "C"
 {
 #endif
-    struct UIMGUI_PUBLIC_API UImGui_ModuleSettings_I
+    typedef struct UIMGUI_PUBLIC_API UImGui_ModuleSettings
     {
         size_t maxTransactions;
 
@@ -25,8 +25,7 @@ extern "C"
         bool toggles;
         bool text_utils;
         bool cli_parser;
-    };
-    typedef struct UImGui_ModuleSettings_I UImGui_ModuleSettings;
+    } UImGui_ModuleSettings;
 
     UIMGUI_PUBLIC_API void UImGui_Modules_save();
     UIMGUI_PUBLIC_API UImGui_ModuleSettings* UImGui_Modules_data();

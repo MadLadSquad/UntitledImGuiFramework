@@ -1,5 +1,7 @@
 #include "CWindowInterface.h"
 #include "Interfaces/WindowInterface.hpp"
+#include <Core/Utilities.hpp>
+#include <Global.hpp>
 
 void UImGui_Window_setTitle(UImGui_String name)
 {
@@ -302,40 +304,37 @@ bool UImGui_Window_getWindowCurrentlyMaximised()
     return UImGui::Window::getWindowCurrentlyMaximised();
 }
 
-//UImGui_Monitor UImGui_Window_getWindowMonitor()
-//{
-//    return UImGui::Window::getWindowMonitor();
-//}
-//
-//
-//void UImGui_Window_setWindowMonitor(const UImGui_Monitor* monitor)
-//{
-//    UImGui::Window::setWindowMonitor(*monitor);
-//}
-//
-//
-//UImGui_Monitor* UImGui_Window_getMonitors()
-//{
-//    return UImGui::Window::getMonitors().data();
-//}
-//
-//
-//void UImGui_Window_pushGlobalMonitorCallback(const std::function<void(Monitor&, MonitorState)>* f)
-//{
-//
-//}
-
-char** UImGui_Window_getOSDragDropStrings()
+UImGui_CMonitorData UImGui_Window_getWindowMonitor()
 {
-
+    return UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Window_getWindowMonitor();
 }
 
-void UImGui_Window_pushWindowOSDragDropCallback(const std::function<void(std::vector<UImGui_String>&)>* f)
+void UImGui_Window_setWindowMonitor(UImGui_CMonitorData* monitor)
 {
-
+    UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_setWindowMonitor(monitor);
 }
 
-void UImGui_Window_pushWindowErrorCallback(UImGuiWindow_pushWindowErrorCallbackFun f)
+UImGui_CMonitorData* UImGui_Window_getMonitors(size_t* size)
+{
+    return UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Window_getMonitors(size);
+}
+
+void UImGui_Window_pushGlobalMonitorCallback(UImGui_Window_pushGlobalMonitorCallbackFun f)
+{
+    UImGui::Window::pushGlobalMonitorCallback([&](UImGui::Monitor& monitor, UImGui::MonitorState state) -> void
+    {
+        // This is used so that we can circumvent private variables in the UImGui::Monitor class. Friend functions do
+        // not do the job for us in this case, due to our retarded header file structure.
+        UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::pushGlobalMonitorCallbackFun(monitor, state, f);
+    });
+}
+
+void UImGui_Window_pushWindowOSDragDropCallback(UImGui_Window_pushWindowOSDragDropCallbackFun f)
+{
+    UImGui::Window::get().dragDropPathCCallbackList.emplace_back(f);
+}
+
+void UImGui_Window_pushWindowErrorCallback(UImGui_Window_pushWindowErrorCallbackFun f)
 {
     UImGui::Window::pushWindowErrorCallback(f);
 }

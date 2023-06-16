@@ -5,6 +5,7 @@ extern "C"
 #endif
 #include <C/CTypes.h>
 #include <C/CDefines.h>
+#include <C/Internal/CMonitor.h>
     typedef void(*UImGui_Window_pushWindowPositionChangeCallbackFun)(UImGui_FVector2);
     typedef void(*UImGui_Window_pushWindowCloseCallbackFun)();
     typedef void(*UImGui_Window_pushWindowResizedInScreenCoordsCallbackFun)(int, int);
@@ -16,7 +17,9 @@ extern "C"
     typedef void(*UImGui_Window_pushWindowRefreshCallbackFun)();
     typedef void(*UImGui_Window_pushWindowMaximiseCallbackFun)(bool);
 
-    typedef void(*UImGuiWindow_pushWindowErrorCallbackFun)(int, UImGui_String);
+    typedef void(*UImGui_Window_pushWindowErrorCallbackFun)(int, UImGui_String);
+
+    typedef void(*UImGui_Window_pushWindowOSDragDropCallbackFun)(UImGui_String*, size_t);
 
     // Event Safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_setTitle(UImGui_String name);
@@ -209,31 +212,28 @@ extern "C"
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API bool UImGui_Window_getWindowCurrentlyMaximised();
 
-    // Event safety - begin, style, post-begin
-    // Returns the monitor of the current window.
-    //UIMGUI_PUBLIC_API UImGui_Monitor UImGui_Window_getWindowMonitor();
+    // A "UImGui_Window_getWindowMonitor" function should be here, but because it has to access private class variables,
+    // it's defined under the C++ interface's Monitor's private section.
+    UIMGUI_PUBLIC_API UImGui_CMonitorData UImGui_Window_getWindowMonitor();
 
     // Event safety - begin, style, post-begin
     // Sets the window to the provided monitor. When moving the window, the window will be moved to coordinates
     // (0;0) of the new monitor, while preserving the width and height and using the new monitor's refresh rate
-    //UIMGUI_PUBLIC_API void UImGui_Window_setWindowMonitor(const UImGui_Monitor* monitor);
+    UIMGUI_PUBLIC_API void UImGui_Window_setWindowMonitor(UImGui_CMonitorData* monitor);
 
     // Event safety - begin, style, post-begin
     // Returns a list of monitors, first monitor is the primary monitor, i.e. the monitor where global UI elements
     // like the taskbar spawns.
-    //UIMGUI_PUBLIC_API UImGui_Monitor* UImGui_Window_getMonitors();
+    UIMGUI_PUBLIC_API UImGui_CMonitorData* UImGui_Window_getMonitors(size_t* size);
 
     // Event safety - begin, style, post-begin
-    //UIMGUI_PUBLIC_API void UImGui_Window_pushGlobalMonitorCallback(const std::function<void(Monitor&, MonitorState)>* f);
+    UIMGUI_PUBLIC_API void UImGui_Window_pushGlobalMonitorCallback(UImGui_Window_pushGlobalMonitorCallbackFun f);
 
     // Event safety - begin, style, post-begin
-    // Returns all the strings acquired by the application when the user drags in a file or an array of files
-    //UIMGUI_PUBLIC_API char** UImGui_Window_getOSDragDropStrings();
-    // Event safety - begin, style, post-begin
-    //UIMGUI_PUBLIC_API void UImGui_Window_pushWindowOSDragDropCallback(const std::function<void(std::vector<UImGui_String>&)>* f);
+    UIMGUI_PUBLIC_API void UImGui_Window_pushWindowOSDragDropCallback(UImGui_Window_pushWindowOSDragDropCallbackFun f);
 
     // Event safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API void UImGui_Window_pushWindowErrorCallback(UImGuiWindow_pushWindowErrorCallbackFun f);
+    UIMGUI_PUBLIC_API void UImGui_Window_pushWindowErrorCallback(UImGui_Window_pushWindowErrorCallbackFun f);
 #ifdef __cplusplus
 };
 #endif

@@ -6,15 +6,14 @@
 extern "C"
 {
 #endif
-    struct UIMGUI_PUBLIC_API UImGui_RendererData_I
+    typedef struct UIMGUI_PUBLIC_API UImGui_RendererData
     {
         bool bVulkan;
         bool bUsingVSync;
         uint32_t msaaSamples;
         bool bSampleRateShading;
         float sampleRateShadingMult;
-    };
-    typedef struct UImGui_RendererData_I UImGui_RendererData;
+    } UImGui_RendererData;
 #ifdef __cplusplus
 }
 #endif

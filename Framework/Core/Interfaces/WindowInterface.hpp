@@ -2,6 +2,7 @@
 #include <Core/Defines.hpp>
 #include <Core/Types.hpp>
 #include "Utils/Window.hpp"
+#include <C/Interfaces/CWindowInterface.h>
 
 namespace UImGui
 {
@@ -236,12 +237,9 @@ namespace UImGui
 
         // Event safety - begin, style, post-begin
         static void pushWindowErrorCallback(const std::function<void(int, String)>& f) noexcept;
-    private:
-        friend class Input;
-        friend class Instance;
-        friend class RendererInternal;
-        friend class WindowInternal;
 
+        // This is the internal window instance, DO NOT TOUCH IT
         static WindowInternal& get() noexcept;
+    private:
     };
 }

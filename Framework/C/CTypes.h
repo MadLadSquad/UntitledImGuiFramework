@@ -7,32 +7,28 @@
 extern "C"
 {
 #endif
-struct UIMGUI_PUBLIC_API UImGui_FVector2_I
+typedef struct UIMGUI_PUBLIC_API UImGui_FVector2
 {
     float x;
     float y;
-};
+} UImGui_FVector2;
 
-struct UIMGUI_PUBLIC_API UImGui_FVector_I
+typedef struct UIMGUI_PUBLIC_API UImGui_FVector
 {
     float x;
     float y;
     float z;
-};
+} UImGui_FVector;
 
-struct UIMGUI_PUBLIC_API UImGui_FVector4_I
+typedef struct UIMGUI_PUBLIC_API UImGui_FVector4
 {
     float x;
     float y;
     float z;
     float w;
-};
+} UImGui_FVector4;
 
 typedef const char* UImGui_String;
-
-typedef struct UImGui_FVector2_I UImGui_FVector2;
-typedef struct UImGui_FVector_I UImGui_FVector;
-typedef struct UImGui_FVector4_I UImGui_FVector4;
 
 #ifdef __cplusplus
 };

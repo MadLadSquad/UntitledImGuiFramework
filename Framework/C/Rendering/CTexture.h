@@ -6,7 +6,7 @@
 extern "C"
 {
 #endif
-    struct UIMGUI_PUBLIC_API UImGui_TextureData_I
+    typedef struct UIMGUI_PUBLIC_API UImGui_TextureData
     {
         UImGui_String filename;
         uint32_t id;
@@ -15,9 +15,7 @@ extern "C"
 
         // This stores the string location for the internal C storage system
         size_t storageIndex;
-    };
-
-    typedef struct UImGui_TextureData_I UImGui_TextureData;
+    } UImGui_TextureData;
     typedef void(*UImGui_Texture_FreeFunctionT)(void*);
 
     // The default function for freeing texture data in textures
