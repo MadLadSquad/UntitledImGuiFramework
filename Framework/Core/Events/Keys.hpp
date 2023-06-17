@@ -1,5 +1,6 @@
 #pragma once
 #include <cinttypes>
+#include <C/Internal/Keys.h>
 
 /**
  * @brief A namespace of keys to be used for input. Also includes mouse keys

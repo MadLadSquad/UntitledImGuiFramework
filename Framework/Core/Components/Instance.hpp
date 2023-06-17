@@ -8,6 +8,9 @@
 #include <imgui_internal.h>
 #include <Global.hpp>
 
+// This includes the C API, which contains the C version of the init info struct
+#include <C/Components/CInstance.h>
+
 namespace UImGui
 {
     /**
@@ -27,6 +30,8 @@ namespace UImGui
         // Provide a global data struct to be shared with all components
         void* globalData = nullptr;
         bool bGlobalAllocatedOnHeap = true; // Set this to false if the global is a stack pointer
+
+        UImGui_CInitInfo* cInitInfo = nullptr;
     };
 
     /**
@@ -125,18 +130,18 @@ namespace UImGui
          * @brief Used to automatically handle downstream begin events
          * @note Event Safety - Any time
          */
-        void beginAutohandle() noexcept;
+        void beginAutohandle() const noexcept;
         /**
          * @brief Used to automatically handle downstream tick events
          * @param deltaTime - the delta time calculated in the application's render loop
          * @note Event Safety - Any time
          */
-        void tickAutohandle(float deltaTime) noexcept;
+        void tickAutohandle(float deltaTime) const noexcept;
         /**
          * @brief Used to automatically handle downstream end events
          * @note Event Safety - Any time
          */
-        void endAutohandle() noexcept;
+        void endAutohandle() const noexcept;
 
         /**
          * @brief Closes the application

@@ -6,7 +6,6 @@
 extern "C"
 {
 #endif
-struct GLFWmonitor;
 struct UImGui_CMonitorData;
 
 typedef enum UImGui_MonitorState
@@ -16,6 +15,7 @@ typedef enum UImGui_MonitorState
 } UImGui_MonitorState;
 
 typedef void(*UImGui_Monitor_EventsFun)(struct UImGui_CMonitorData*, UImGui_MonitorState);
+typedef struct GLFWmonitor GLFWmonitor;
 
 // Do not create this manually!!! this should be fetched using the UImGui_Window_getWindowMonitor or
 // UImGui_Window_getMonitors functions

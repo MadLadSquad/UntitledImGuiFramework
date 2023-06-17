@@ -2,14 +2,11 @@
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
 #include <Core.hpp>
 #include <deque>
+#include <C/Modules/Undo/Undo.h>
 
 namespace UImGui
 {
-    struct UIMGUI_PUBLIC_API TransactionPayload
-    {
-        void* payload = nullptr;
-        size_t size = 0;
-    };
+    typedef UImGui_TransactionPayload TransactionPayload;
 
     struct UIMGUI_PUBLIC_API Transaction
     {

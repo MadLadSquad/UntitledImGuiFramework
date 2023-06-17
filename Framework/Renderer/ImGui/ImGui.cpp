@@ -17,15 +17,47 @@ void UImGui::GUIRenderer::beginFrame()
 
 void UImGui::GUIRenderer::shutdown(const FString& ini)
 {
-    for (auto& a : Instance::get()->initInfo.titlebarComponents)
+    auto& initInfo = Instance::get()->initInfo;
+
+    for (auto& a : initInfo.titlebarComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->end();
-    for (auto& a : Instance::get()->initInfo.windowComponents)
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->titlebarComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->titlebarComponentsSize; i++)
+        {
+            auto* component = static_cast<TitlebarComponent*>(initInfo.cInitInfo->titlebarComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->end();
+        }
+    }
+
+
+    for (auto& a : initInfo.windowComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->end();
-    for (auto& a : Instance::get()->initInfo.inlineComponents)
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->windowComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->windowComponentsSize; i++)
+        {
+            auto* component = static_cast<WindowComponent*>(initInfo.cInitInfo->windowComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->end();
+        }
+    }
+
+    for (auto& a : initInfo.inlineComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->end();
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->inlineComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->inlineComponentsSize; i++)
+        {
+            auto* component = static_cast<InlineComponent*>(initInfo.cInitInfo->inlineComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->end();
+        }
+    }
 
     ImGui::SaveIniSettingsToDisk(("../Config/Core/" + ini + ".ini").c_str());
     ImGui_ImplOpenGL3_Shutdown();
@@ -65,15 +97,46 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
     ImGui_ImplOpenGL3_Init("#version 330");
 
     Instance::get()->begin();
+    auto& initInfo = Instance::get()->initInfo;
+
     for (auto& a : Instance::get()->initInfo.titlebarComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->titlebarComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->titlebarComponentsSize; i++)
+        {
+            auto* component = static_cast<TitlebarComponent*>(initInfo.cInitInfo->titlebarComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->begin();
+        }
+    }
+
     for (auto& a : Instance::get()->initInfo.windowComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->windowComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->windowComponentsSize; i++)
+        {
+            auto* component = static_cast<WindowComponent*>(initInfo.cInitInfo->windowComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->begin();
+        }
+    }
+
     for (auto& a : Instance::get()->initInfo.inlineComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->inlineComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->inlineComponentsSize; i++)
+        {
+            auto* component = static_cast<InlineComponent*>(initInfo.cInitInfo->inlineComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->begin();
+        }
+    }
 }
 
 void UImGui::GUIRenderer::beginUI(float deltaTime)
@@ -110,13 +173,33 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
     ImGui::PopStyleVar();
 
     Instance::get()->tick(deltaTime);
+    auto& initInfo = Instance::get()->initInfo;
 
     for (auto& a : Instance::get()->initInfo.titlebarComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->titlebarComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->titlebarComponentsSize; i++)
+        {
+            auto* component = static_cast<TitlebarComponent*>(initInfo.cInitInfo->titlebarComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->tick(deltaTime);
+        }
+    }
+
     for (auto& a : Instance::get()->initInfo.inlineComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->inlineComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->inlineComponentsSize; i++)
+        {
+            auto* component = static_cast<InlineComponent*>(initInfo.cInitInfo->inlineComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->tick(deltaTime);
+        }
+    }
 
     if (opt_fullscreen)
         ImGui::PopStyleVar(2);
@@ -133,6 +216,15 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
     for (auto& a : Instance::get()->initInfo.windowComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->windowComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->windowComponentsSize; i++)
+        {
+            auto* component = static_cast<WindowComponent*>(initInfo.cInitInfo->windowComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->tick(deltaTime);
+        }
+    }
 
     ImGui::End();
     ImGui::Render();

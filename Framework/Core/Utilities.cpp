@@ -1,6 +1,6 @@
 #include "Utilities.hpp"
 #include <Global.hpp>
-#include <Events/Keys.hpp>
+#include <C/Internal/Keys.h>
 #ifdef _WIN32
     #include <windows.h>
 #endif
