@@ -2,7 +2,6 @@
 //#include <Components/Instance.hpp>
 #include <Renderer/Utils/Window.hpp>
 #include "Modules/Manager/ModulesManager.hpp"
-#include "Threads/LogicThreads.hpp"
 #include "CDeallocation.hpp"
 
 namespace UImGui
@@ -30,7 +29,6 @@ namespace UImGui
 
         WindowInternal window{};
         ModulesManager modulesManagerr{};
-        LogicThreadsManager threadsManager{};
     };
 
     inline Global internalGlobal;
