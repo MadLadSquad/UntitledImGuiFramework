@@ -24,7 +24,7 @@ void UImGui::ModulesManager::init()
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile("../Config/Core/Modules.yaml");
+        node = YAML::LoadFile(UIMGUI_CONFIG_DIR"Core/Modules.yaml");
     }
     catch (YAML::BadFile&)
     {
@@ -55,7 +55,7 @@ void UImGui::ModulesManager::save() const noexcept
 #endif
     out << YAML::EndMap;
 
-    std::ofstream fout("../Config/Core/Modules.yaml");
+    std::ofstream fout(UIMGUI_CONFIG_DIR"Core/Modules.yaml");
     fout << out.c_str();
 }
 

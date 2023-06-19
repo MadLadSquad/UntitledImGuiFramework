@@ -59,7 +59,7 @@ void UImGui::GUIRenderer::shutdown(const FString& ini)
         }
     }
 
-    ImGui::SaveIniSettingsToDisk(("../Config/Core/" + ini + ".ini").c_str());
+    ImGui::SaveIniSettingsToDisk((UIMGUI_CONFIG_DIR"Core/" + ini + ".ini").c_str());
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
@@ -84,7 +84,7 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
     io.ConfigViewportsNoTaskBarIcon = true;
     io.ConfigUseDefaultMouseCursors = true;
 
-    ImGui::LoadIniSettingsFromDisk(("../Config/Core/" + ini + ".ini").c_str());
+    ImGui::LoadIniSettingsFromDisk((UIMGUI_CONFIG_DIR"Core/" + ini + ".ini").c_str());
     ImGui::StyleColorsDark();
     ImGui::StyleColorsClassic();
     ImGuiStyle& style = ImGui::GetStyle();

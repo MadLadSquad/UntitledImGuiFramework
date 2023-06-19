@@ -42,7 +42,7 @@ bool& UImGui::WindowInternal::resized() noexcept
 
 void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) noexcept
 {
-    std::ofstream fout("../Config/Core/Window.yaml");
+    std::ofstream fout(UIMGUI_CONFIG_DIR"Core/Window.yaml");
     {
         YAML::Emitter out;
         out << YAML::BeginMap;
@@ -86,7 +86,7 @@ void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) noexcept
         }
         out << YAML::EndSeq << YAML::EndMap;
 
-        fout = std::ofstream("../Config/Core/Keybindings.yaml");
+        fout = std::ofstream(UIMGUI_CONFIG_DIR"Core/Keybindings.yaml");
         fout << out.c_str();
         fout.close();
     }
@@ -299,7 +299,7 @@ void UImGui::WindowInternal::openConfig()
 
     try
     {
-        out = YAML::LoadFile("../Config/Core/Window.yaml");
+        out = YAML::LoadFile(UIMGUI_CONFIG_DIR"Core/Window.yaml");
     }
     catch (YAML::BadFile&)
     {
@@ -329,7 +329,7 @@ skip_window_config:
 
     try
     {
-        out = YAML::LoadFile("../Config/Core/Keybindings.yaml");
+        out = YAML::LoadFile(UIMGUI_CONFIG_DIR"Core/Keybindings.yaml");
     }
     catch (YAML::BadFile&)
     {
@@ -373,7 +373,7 @@ finish_inner_loop:;
 void UImGui::WindowInternal::setIcon(UImGui::String name) noexcept
 {
     GLFWimage images[1];
-    images[0].pixels = stbi_load((UImGui::FString("../Content/") + name).c_str(), &images[0].width, &images[0].height, nullptr, 4);
+    images[0].pixels = stbi_load((UImGui::FString(UIMGUI_CONTENT_DIR) + name).c_str(), &images[0].width, &images[0].height, nullptr, 4);
     glfwSetWindowIcon(windowMain, 1, images);
     stbi_image_free(images[0].pixels);
 }

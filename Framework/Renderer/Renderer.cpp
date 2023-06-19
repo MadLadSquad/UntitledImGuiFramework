@@ -64,7 +64,7 @@ void UImGui::RendererInternal::loadConfig()
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile("../Config/Core/Renderer.yaml");
+        node = YAML::LoadFile(UIMGUI_CONFIG_DIR"Core/Renderer.yaml");
     }
     catch (YAML::BadFile&)
     {
@@ -95,7 +95,7 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     out << YAML::Key << "sample-rate-shading" << YAML::Value << data.bSampleRateShading;
     out << YAML::Key << "sample-rate-shading-mult" << YAML::Value << data.sampleRateShadingMult;
 
-    std::ofstream fout("../Config/Core/Renderer.yaml");
+    std::ofstream fout(UIMGUI_CONFIG_DIR"Core/Renderer.yaml");
     fout << out.c_str();
     fout.close();
 }

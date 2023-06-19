@@ -32,6 +32,31 @@ extern "C"
 #define X11_WINDOW_TYPE_DND "_NET_WM_WINDOW_TYPE_DND"
 #define X11_WINDOW_TYPE_NORMAL "_NET_WM_WINDOW_TYPE_NORMAL"
 
+// Default defines for these directories. They will only be defined while compiling for production
+#ifndef UIMGUI_FRAMEWORK_LIBRARY_DIR
+    #define UIMGUI_FRAMEWORK_LIBRARY_DIR "."
+#endif
+
+#ifndef UIMGUI_APPLICATION_DIR
+    #define UIMGUI_APPLICATION_DIR "."
+#endif
+
+#ifndef UIMGUI_APPLICATION_LIBRARY_DIR
+    #define UIMGUI_APPLICATION_LIBRARY_DIR "."
+#endif
+
+#ifndef UIMGUI_CONFIG_DIR
+    #define UIMGUI_CONFIG_DIR "../Config/"
+#endif
+
+#ifndef UIMGUI_CONTENT_DIR
+    #define UIMGUI_CONTENT_DIR "../Content/"
+#endif
+
+#ifndef UIMGUI_INCLUDE_DIR
+    #define UIMGUI_INCLUDE_DIR "../"
+#endif
+
 /**
  * @brief The ComponentState enum defines 3 fields that represent the event state of the given component, the given
  * component can then check its own state(if in PAUSED or RUNNING state) and call specific components of its event

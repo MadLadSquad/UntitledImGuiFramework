@@ -63,12 +63,12 @@ cd Exported/ || exit
 find_visual_studio_directory
 
 if [ "${windows}" == true ]; then
-  cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE || exit
+  cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE "$2" || exit
   MSBuild.exe "$1".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${jobs}" || exit
   cp Release/"$1".exe . || exit
   cp Release/UntitledImGuiFramework.dll . || exit
 else
-  cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE || exit
+  cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE "$2" || exit
   make -j "${jobs}" || exit
 fi
 
@@ -76,3 +76,5 @@ process_files "$1"
 
 echo -e "\x1B[32m--------------------------------------------------------------------------------\033[0m"
 echo -e "\x1B[32mBuild Done!\033[0m"
+
+mv "CMakeLists.txt.old" "CMakeLists.txt"
