@@ -53,8 +53,12 @@ extern "C"
     #define UIMGUI_CONTENT_DIR "../Content/"
 #endif
 
-#ifndef UIMGUI_INCLUDE_DIR
-    #define UIMGUI_INCLUDE_DIR "../"
+#ifndef UIMGUI_FRAMEWORK_INCLUDE_DIR
+    #define UIMGUI_FRAMEWORK_INCLUDE_DIR "../Framework/"
+#endif
+
+#ifndef UIMGUI_APPLICATION_INCLUDE_DIR
+    #define UIMGUI_APPLICATION_INCLUDE_DIR "../Source/"
 #endif
 
 /**
