@@ -79,7 +79,7 @@ void UImGui::ModulesManager::initModules()
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile("../uvproj.yaml");
+        node = YAML::LoadFile(UIMGUI_PROJECT_DIR"uvproj.yaml");
     }
     catch (YAML::BadFile&)
     {

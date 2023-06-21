@@ -47,6 +47,7 @@ extern "C"
 
 #ifndef UIMGUI_CONFIG_DIR
     #define UIMGUI_CONFIG_DIR "../Config/"
+    #define UIMGUI_PROJECT_DIR "../"
 #endif
 
 #ifndef UIMGUI_CONTENT_DIR
