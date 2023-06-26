@@ -49,6 +49,27 @@ extern "C"
 
     // Event Safety - Any time
     UIMGUI_PUBLIC_API char** UImGui_Instance_getCLIArguments(int* argc);
+
+    // Event Safety - Any time
+    UIMGUI_PUBLIC_API UImGui_String UImGui_InitInfo_getFrameworkLibraryDir();
+    // Event Safety - Any time
+    UIMGUI_PUBLIC_API UImGui_String UImGui_InitInfo_getApplicationDir();
+    // Event Safety - Any time
+    UIMGUI_PUBLIC_API UImGui_String UImGui_InitInfo_getApplicationLibraryDir();
+
+    // Event Safety - Any time
+    UIMGUI_PUBLIC_API UImGui_String UImGui_InitInfo_getConfigDir();
+    // Event Safety - Any time
+    UIMGUI_PUBLIC_API UImGui_String UImGui_InitInfo_getProjectDir();
+
+    // Event Safety - Any time
+    UIMGUI_PUBLIC_API UImGui_String UImGui_InitInfo_getContentDir();
+
+    // Event Safety - Any time
+    UIMGUI_PUBLIC_API UImGui_String UImGui_InitInfo_getFrameworkIncludeDir();
+    // Event Safety - Any time
+    UIMGUI_PUBLIC_API UImGui_String UImGui_InitInfo_getApplicationIncludeDir();
+
 #ifdef __cplusplus
 };
 #endif

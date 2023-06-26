@@ -50,6 +50,7 @@ namespace UImGui
     private:
         friend class Modules;
         friend class Global;
+        friend class RendererInternal;
 
         friend class Locale;
         friend class LocaleManager;
@@ -82,9 +83,9 @@ namespace UImGui
         StateTracker stateTracker{};
 #endif
 
-        void init();
-        void initModules();
-        void save() const noexcept;
+        void init(const FString& configDir);
+        void initModules(const FString& projectDir);
+        void save(const FString& configDir) const noexcept;
     };
 
     class UIMGUI_PUBLIC_API Modules

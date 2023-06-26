@@ -18,13 +18,16 @@
     Modules::data().x = mod[#x].as<bool>();         \
 }
 
+#include <Utilities.hpp>
+#include <Components/Instance.hpp>
 
-void UImGui::ModulesManager::init()
+
+void UImGui::ModulesManager::init(const FString& configDir)
 {
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile(UIMGUI_CONFIG_DIR"Core/Modules.yaml");
+        node = YAML::LoadFile(configDir + "Core/Modules.yaml");
     }
     catch (YAML::BadFile&)
     {
@@ -35,7 +38,7 @@ void UImGui::ModulesManager::init()
     if (node["undo-max-transactions"])
         settings.maxTransactions = node["undo-max-transactions"].as<size_t>();
 
-    initModules();
+    initModules(UImGui_InitInfo_getProjectDir());
 
     // Put this one after we have initialized the locale module
 #ifdef UIMGUI_LOCALE_MODULE_ENABLED
@@ -44,7 +47,7 @@ void UImGui::ModulesManager::init()
 #endif
 }
 
-void UImGui::ModulesManager::save() const noexcept
+void UImGui::ModulesManager::save(const FString& configDir) const noexcept
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
@@ -55,7 +58,7 @@ void UImGui::ModulesManager::save() const noexcept
 #endif
     out << YAML::EndMap;
 
-    std::ofstream fout(UIMGUI_CONFIG_DIR"Core/Modules.yaml");
+    std::ofstream fout(configDir + "Core/Modules.yaml");
     fout << out.c_str();
 }
 
@@ -66,7 +69,7 @@ UImGui::ModuleSettings& UImGui::Modules::data() noexcept
 
 void UImGui::Modules::save() noexcept
 {
-    Modules::get().save();
+    Modules::get().save(UImGui::Utility::getGlobal().instance->initInfo.configDir);
 }
 
 UImGui::ModulesManager& UImGui::Modules::get() noexcept
@@ -74,12 +77,12 @@ UImGui::ModulesManager& UImGui::Modules::get() noexcept
     return internalGlobal.modulesManagerr;
 }
 
-void UImGui::ModulesManager::initModules()
+void UImGui::ModulesManager::initModules(const FString& projectDir)
 {
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile(UIMGUI_PROJECT_DIR"uvproj.yaml");
+        node = YAML::LoadFile(projectDir + "uvproj.yaml");
     }
     catch (YAML::BadFile&)
     {

@@ -9,6 +9,8 @@
 
 void UImGui::RendererInternal::start() noexcept
 {
+    loadConfig();
+
     // Normally we would just use the Renderer::get but since we assign a pointer here we need to avoid the SEGFAULT and
     // other madness the normal solution entails
     internalGlobal.renderer = this;
@@ -27,6 +29,7 @@ void UImGui::RendererInternal::start() noexcept
     gpuName = (char*)glGetString(GL_RENDERER);
 
     GUIRenderer::init(Window::get().windowMain, Window::get().windowData.layoutLocation);
+    UImGui::internalGlobal.modulesManagerr.init(UImGui::internalGlobal.instance->initInfo.configDir);
 
     double lastTime = 0.0f;
     while (!glfwWindowShouldClose(Window::get().windowMain))
@@ -64,7 +67,7 @@ void UImGui::RendererInternal::loadConfig()
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile(UIMGUI_CONFIG_DIR"Core/Renderer.yaml");
+        node = YAML::LoadFile(UImGui::internalGlobal.instance->initInfo.configDir + "Core/Renderer.yaml");
     }
     catch (YAML::BadFile&)
     {
@@ -95,7 +98,7 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     out << YAML::Key << "sample-rate-shading" << YAML::Value << data.bSampleRateShading;
     out << YAML::Key << "sample-rate-shading-mult" << YAML::Value << data.sampleRateShadingMult;
 
-    std::ofstream fout(UIMGUI_CONFIG_DIR"Core/Renderer.yaml");
+    std::ofstream fout(UImGui::internalGlobal.instance->initInfo.configDir + "Core/Renderer.yaml");
     fout << out.c_str();
     fout.close();
 }

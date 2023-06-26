@@ -15,7 +15,7 @@ namespace UImGui
         RendererInternal() = default;
 
         void start() noexcept;
-        void stop() noexcept;
+        static void stop() noexcept;
     private:
         friend class Renderer;
 

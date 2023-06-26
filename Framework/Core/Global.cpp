@@ -24,6 +24,4 @@ UImGui::Global::~Global() noexcept
 void UImGui::Global::init() noexcept
 {
     window.createWindow();
-
-    modulesManagerr.init();
 }

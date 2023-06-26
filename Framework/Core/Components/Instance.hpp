@@ -32,6 +32,18 @@ namespace UImGui
         bool bGlobalAllocatedOnHeap = true; // Set this to false if the global is a stack pointer
 
         UImGui_CInitInfo* cInitInfo = nullptr;
+
+        FString frameworkLibraryDir = ".";
+        FString applicationDir = ".";
+        FString applicationLibraryDir = ".";
+
+        FString configDir = "../Config/";
+        FString projectDir = "../";
+
+        FString contentDir = "../Content/";
+
+        FString frameworkIncludeDir = "../Framework/";
+        FString applicationIncludeDir = "../Source/";
     };
 
     /**
