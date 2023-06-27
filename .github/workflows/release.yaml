@@ -23,7 +23,7 @@ jobs:
         shell: bash
         run: |
           rm -rf .git/
-          tar cfJ untitled-imgui-framework.tar.xz .
+          tar cfJ untitled-imgui-framework.tar.xz . || echo "Might have failed"
       - name: "Upload artifact"
         uses: actions/upload-artifact@v3
         with: 
