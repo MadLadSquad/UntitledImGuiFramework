@@ -19,6 +19,16 @@ jobs:
         run: |
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: Create archive
+        shell: bash
+        run: |
+          rm -rf .git/
+          tar cfJ untitled-imgui-framework.tar.xz .
+      - name: "Upload artifact"
+        uses: actions/upload-artifact@v3
+        with: 
+          name: untitled-imgui-framework.tar.xz
+          path: untitled-imgui-framework.tar.xz
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -31,3 +41,12 @@ jobs:
             Check our discord for patch notes: https://discord.gg/4kyWu2Vu
           draft: false
           prerelease: false
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./untitled-imgui-framework.tar.xz
+          asset_name: untitled-imgui-framework.tar.xz
+          asset_content_type: application/x-xz
