@@ -27,7 +27,6 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@master
         with:
-          name: Release ${{ github.ref }}
           body: |
             Check our discord for patch notes: https://discord.gg/4kyWu2Vu
             More on what is done this month can be found on the latest newsletter entry: https://madladsquad.com/#monthly-newsletter
