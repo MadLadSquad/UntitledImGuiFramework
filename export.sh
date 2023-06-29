@@ -57,18 +57,28 @@ elif [ "$1" == "help" ] || [ "$1" == "-help" ] || [ "$1" == "--help" ] || [ "$1"
   exit
 fi
 
+function cmake_i()
+{
+  cmake "$@" || exit
+}
+
 jobs=$(grep -c processor /proc/cpuinfo)
 cd Exported/ || exit
 
 find_visual_studio_directory
 
+if [ "$3" == "--system-wide" ]; then
+  # This sets all options created with "option" in cmake to "ON". Build variant options are not affected because they are set using rules
+  sed -i 's/" OFF)/" ON)/g' ../CMakeLists.txt
+fi
+
 if [ "${windows}" == true ]; then
-  cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "$3" || exit
+  cmake_i .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "${@:4}" || exit
   MSBuild.exe "$1".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${jobs}" || exit
   cp Release/"$1".exe . || exit
   cp Release/UntitledImGuiFramework.dll . || exit
 else
-  cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "$3" || exit
+  cmake_i .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "${@:4}" || exit
   make -j "${jobs}" || exit
 fi
 
