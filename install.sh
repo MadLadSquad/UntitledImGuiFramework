@@ -1,7 +1,6 @@
 #!/bin/bash
 VSVer=" "
 VSShortVer="1"
-VSType=" "
 cpus=" "
 windows=false
 
@@ -24,7 +23,7 @@ function find_visual_studio_directory()
 
   if [ "${windows}" = true ]; then
     wd=$(pwd)
-    cd "C:/Program Files (x86)/Microsoft Visual Studio/Installer/"
+    cd "C:/Program Files (x86)/Microsoft Visual Studio/Installer/" || exit
     find "vswhere.exe" -maxdepth 0 &> /dev/null || (cd "${wd}" && download_vswhere)
     vs_path=$(./vswhere.exe | grep "installationPath")
     vs_path="${vs_path:18}"
@@ -36,7 +35,7 @@ function find_visual_studio_directory()
     VSVer="${VSVer:28}"
 
     setx PATH "${vs_path}/MSBuild/Current/Bin/amd64/;%PATH%" 2> /dev/null
-    cd "${wd}"
+    cd "${wd}" || exit
   fi
 
   return

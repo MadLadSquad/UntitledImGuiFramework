@@ -9,7 +9,7 @@ function find_visual_studio_directory()
 
   if [ "${windows}" = true ]; then
     wd=$(pwd)
-    cd "C:/Program Files (x86)/Microsoft Visual Studio/Installer/"
+    cd "C:/Program Files (x86)/Microsoft Visual Studio/Installer/" || exit
     find "vswhere.exe" -maxdepth 0 &> /dev/null || (cd "${wd}" && download_vswhere)
 
     VSShortVer=$(./vswhere.exe | grep "catalog_productLine: Dev17")
@@ -18,7 +18,7 @@ function find_visual_studio_directory()
     VSVer=$(./vswhere.exe | grep "catalog_productLineVersion:")
     VSVer="${VSVer:28}"
 
-    cd "${wd}"
+    cd "${wd}" || exit
   fi
   return
 }
