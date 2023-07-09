@@ -52,7 +52,7 @@ functions for easily rendering bold, italic, underlined and other types of text
   - Exec integration using the [UntitledExec](https://github.com/MadLadSquad/UntitledExec) library ✅
   - Cross-platform system font interaction using the [UntitledFontUtils](https://github.com/MadLadSquad/UntitledFontUtils) library 🚧
   - Unix: 🚧
-    - XDG integration 🚧
+    - [XDG Basedir](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) integration ✅
     - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration 🚧
     - [polkit](https://www.freedesktop.org/wiki/Software/PolicyKit/) integration 🚧
 
@@ -63,7 +63,7 @@ relevant tool. As long as you have the main engine library compiled you should e
 applications in C or any other programming language that supports C style functions.
 
 ## Learn
-You can find the documentation in the [wiki](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki)
+You can find the documentation in the [wiki](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki).
 
 Documentation is written as pure learning material, code examples are, in most cases, provided and are written with both 
 the C and C++ API in mind. Additionally, there is specific documentation for distibuting applications including the 
