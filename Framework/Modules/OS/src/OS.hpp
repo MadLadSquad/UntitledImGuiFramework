@@ -5,6 +5,13 @@
         #include "../ThirdParty/uexec/C/cuexec.h"
     #endif
 
+    #ifdef UIMGUI_XDG_BASEDIR_SUBMODULE_ENABLED
+        #ifndef _WIN32
+            #include "../ThirdParty/UntitledXDGBasedir/UXDGBaseDir.hpp"
+            #include "../ThirdParty/UntitledXDGBasedir/CUXDGBaseDir.h"
+        #endif
+    #endif
+
     #include "Unix/DBus.hpp"
     #include "Unix/Fontconfig.hpp"
 #endif

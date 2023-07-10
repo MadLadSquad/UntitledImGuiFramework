@@ -63,6 +63,7 @@ enabled-modules:
   toggles: false
   text-utils: false
   cli-parser: false
+  xdg: false
 " > uvproj.yaml
 
   # Create symbolic links

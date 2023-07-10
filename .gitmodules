@@ -43,3 +43,6 @@
 [submodule "Framework/ThirdParty/vulkan-headers"]
 	path = Framework/ThirdParty/vulkan-headers
 	url = https://github.com/KhronosGroup/Vulkan-Headers.git
+[submodule "Framework/Modules/OS/ThirdParty/UntitledXDGBasedir"]
+	path = Framework/Modules/OS/ThirdParty/UntitledXDGBasedir
+	url = https://github.com/MadLadSquad/UntitledXDGBasedir.git

@@ -74,6 +74,7 @@ namespace UImGui
             .toggles = false,
             .text_utils = false,
             .cli_parser = false,
+            .xdg = false
         };
 #ifdef UIMGUI_I18N_MODULE_ENABLED
         LocaleManager localeManager{};
