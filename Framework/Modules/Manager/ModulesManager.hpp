@@ -39,6 +39,10 @@
     #include "Modules/CLIParser/ThirdParty/UntitledCLIParser/C/cucli.h"
 #endif
 
+#ifdef UIMGUI_TEXT_UTILS_MODULE_ENABLED
+    #include <TextUtils/ThirdParty/UntitledImGuiTextUtils/UImGuiTextUtils.hpp>
+#endif
+
 namespace UImGui
 {
     typedef UImGui_ModuleSettings ModuleSettings;

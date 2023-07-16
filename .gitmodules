@@ -46,3 +46,6 @@
 [submodule "Framework/Modules/OS/ThirdParty/UntitledXDGBasedir"]
 	path = Framework/Modules/OS/ThirdParty/UntitledXDGBasedir
 	url = https://github.com/MadLadSquad/UntitledXDGBasedir.git
+[submodule "Framework/Modules/TextUtils/ThirdParty/UntitledImGuiTextUtils"]
+	path = Framework/Modules/TextUtils/ThirdParty/UntitledImGuiTextUtils
+	url = https://github.com/MadLadSquad/UntitledImGuiTextUtils.git
