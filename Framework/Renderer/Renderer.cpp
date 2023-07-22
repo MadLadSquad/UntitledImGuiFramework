@@ -28,8 +28,8 @@ void UImGui::RendererInternal::start() noexcept
 
     gpuName = (char*)glGetString(GL_RENDERER);
 
-    GUIRenderer::init(Window::get().windowMain, Window::get().windowData.layoutLocation);
     UImGui::internalGlobal.modulesManagerr.init(UImGui::internalGlobal.instance->initInfo.configDir);
+    GUIRenderer::init(Window::get().windowMain, Window::get().windowData.layoutLocation);
 
     double lastTime = 0.0f;
     while (!glfwWindowShouldClose(Window::get().windowMain))
