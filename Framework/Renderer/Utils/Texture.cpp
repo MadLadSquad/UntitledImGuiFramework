@@ -1,3 +1,5 @@
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+
 #include "Texture.hpp"
 #include <GL/glew.h>
 #include <stb_image.h>
@@ -20,6 +22,8 @@ void UImGui::Texture::init(UImGui::String file) noexcept
     dt.id = 0;
     dt.size = { 0.0f, 0.0f };
     dt.channels = 0;
+
+    dt.data = nullptr;
 }
 
 void UImGui::Texture::load(void* data, uint32_t x, uint32_t y, uint32_t depth, bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
@@ -84,8 +88,11 @@ void UImGui::Texture::loadImGui(void* data, uint32_t x, uint32_t y, uint32_t dep
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(x), static_cast<int>(y), 0, GL_RGBA, dataType, data);
     dt.size = { static_cast<float>(x), static_cast<float>(y) };
+
     if (bFreeImageData)
         freeFunc(data);
+    else
+        dt.data = data;
 }
 
 void UImGui::Texture::use() const noexcept
@@ -117,4 +124,9 @@ const UImGui::FVector2& UImGui::Texture::size() const noexcept
 const uint32_t& UImGui::Texture::get() const noexcept
 {
     return dt.id;
+}
+
+void UImGui::Texture::setCustomSaveFunction(UImGui::Texture::CustomSaveFunction f) noexcept
+{
+    dt.customSaveFunction = f;
 }

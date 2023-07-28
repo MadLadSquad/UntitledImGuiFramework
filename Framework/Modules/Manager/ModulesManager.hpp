@@ -43,6 +43,10 @@
     #include <TextUtils/ThirdParty/UntitledImGuiTextUtils/UImGuiTextUtils.hpp>
 #endif
 
+#ifdef UIMGUI_DBUS_SUBMODULE_ENABLED
+    #include <OS/ThirdParty/UntitledDBusUtils/DBusUtils.hpp>
+#endif
+
 namespace UImGui
 {
     typedef UImGui_ModuleSettings ModuleSettings;

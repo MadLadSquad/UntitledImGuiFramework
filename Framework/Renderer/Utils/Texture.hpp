@@ -1,6 +1,7 @@
 #pragma once
 #include <Defines.hpp>
 #include <Types.hpp>
+#include <stb_image_write.h>
 
 // Imports the C Texture API, defines the TextureData struct.
 #include <C/Rendering/CTexture.h>
@@ -8,10 +9,13 @@
 namespace UImGui
 {
     typedef UImGui_TextureData TextureData;
+    typedef UImGui_TextureFormat TextureFormat;
 
     class UIMGUI_PUBLIC_API Texture
     {
     public:
+        typedef UImGui_Texture_CustomSaveFunction CustomSaveFunction;
+
         // Event Safety - Any time
         Texture() = default;
         /**
@@ -46,6 +50,50 @@ namespace UImGui
         // Returns the size of the image
         // Event Safety - Any time
         [[nodiscard]] const FVector2& size() const noexcept;
+
+        // Outputs an image with a given format to a file. Only works if the image buffer is not freed automatically
+        // when loading the image.
+        // jpegQuality is set to 100 by default in the C++ API. 0 = lowest quality, 100 = highest quality
+        // Even Safety - Post-begin
+        template<TextureFormat format>
+        void saveToFile(String location, TextureFormat fmt = format, uint8_t jpegQuality = 100) noexcept
+        {
+            if constexpr (format == UIMGUI_TEXTURE_FORMAT_PNG)
+            {
+                Logger::log("saving to png", UVK_LOG_TYPE_NOTE);
+                if (stbi_write_png(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data, static_cast<int>(dt.size.x) * dt.channels) == 0)
+                {
+                    Logger::log("Couldn't save", UVK_LOG_TYPE_ERROR);
+                }
+            }
+            else if constexpr (format == UIMGUI_TEXTURE_FORMAT_BMP)
+                stbi_write_bmp(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data);
+            else if constexpr (format == UIMGUI_TEXTURE_FORMAT_TGA)
+                stbi_write_tga(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data);
+            else if constexpr (format == UIMGUI_TEXTURE_FORMAT_JPEG)
+                stbi_write_jpg(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data, jpegQuality);
+            else if constexpr (format == UIMGUI_TEXTURE_FORMAT_HDR)
+                stbi_write_hdr(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, (float*)dt.data);
+            else
+            {
+                if (fmt == UIMGUI_TEXTURE_FORMAT_PNG)
+                    stbi_write_png(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data, static_cast<int>(dt.size.x) * dt.channels);
+                else if (fmt == UIMGUI_TEXTURE_FORMAT_BMP)
+                    stbi_write_bmp(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data);
+                else if (fmt == UIMGUI_TEXTURE_FORMAT_TGA)
+                    stbi_write_tga(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data);
+                else if (fmt == UIMGUI_TEXTURE_FORMAT_JPEG)
+                    stbi_write_jpg(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data, jpegQuality);
+                else if (fmt == UIMGUI_TEXTURE_FORMAT_HDR)
+                    stbi_write_hdr(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, (float*)dt.data);
+                else
+                    dt.customSaveFunction(&dt, location);
+            }
+        }
+
+        // Set a function for saving custom image file formats
+        // Event Safety - All initiated
+        void setCustomSaveFunction(CustomSaveFunction f) noexcept;
 
         // Cleans up the image data
         // Event Safety - All initiated

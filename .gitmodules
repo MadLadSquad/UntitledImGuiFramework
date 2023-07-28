@@ -49,3 +49,6 @@
 [submodule "Framework/Modules/TextUtils/ThirdParty/UntitledImGuiTextUtils"]
 	path = Framework/Modules/TextUtils/ThirdParty/UntitledImGuiTextUtils
 	url = https://github.com/MadLadSquad/UntitledImGuiTextUtils.git
+[submodule "Framework/Modules/OS/ThirdParty/UntitledDBusUtils"]
+	path = Framework/Modules/OS/ThirdParty/UntitledDBusUtils
+	url = https://github.com/MadLadSquad/UntitledDBusUtils.git

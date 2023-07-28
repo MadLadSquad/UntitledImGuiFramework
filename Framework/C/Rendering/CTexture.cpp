@@ -45,3 +45,13 @@ void UImGui_Texture_clear(UImGui_TextureData* texture)
 {
     cast(texture)->clear();
 }
+
+void UImGui_Texture_saveToFile(UImGui_TextureData* texture, UImGui_String location, UImGui_TextureFormat fmt, uint8_t jpegQuality)
+{
+    cast(texture)->saveToFile<UIMGUI_TEXTURE_FORMAT_OTHER>(location, fmt, jpegQuality);
+}
+
+void UImGui_Texture_setCustomSaveFunction(UImGui_TextureData* texture, UImGui_Texture_CustomSaveFunction f)
+{
+    cast(texture)->setCustomSaveFunction(f);
+}
