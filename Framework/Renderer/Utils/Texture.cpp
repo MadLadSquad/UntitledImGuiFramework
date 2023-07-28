@@ -108,7 +108,7 @@ void UImGui::Texture::clear() noexcept
     dt.size = { 0.0f, 0.0f };
 
     auto& strings = UImGui::Utility::getGlobal().deallocationStruct.keyStrings;
-    strings.erase(strings.begin() + dt.storageIndex);
+    strings.erase(strings.begin() + static_cast<std::string::difference_type>(dt.storageIndex));
 }
 
 UImGui::Texture::~Texture() noexcept
