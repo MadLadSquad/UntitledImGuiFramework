@@ -4,7 +4,7 @@
 [![trello](https://img.shields.io/badge/Trello-UDE-blue])](https://trello.com/b/HmfuRY2K/untitleddesktop)
 [![Discord](https://img.shields.io/discord/717037253292982315.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/4wgH8ZE)
 
-A desktop software development framework that uses Dear imgui as its UI and Rendering library
+A desktop software development framework that uses Dear imgui as its UI and Rendering library.
 
 ## Motivation
 Desktop UI frameworks and libraries like QT and GTK are bloated, complicated and rigid. [Dear imgui](https://github.com/ocornut/imgui) provides a GUI layer which provides the following benefits:
@@ -46,12 +46,12 @@ functions for easily rendering bold, italic, underlined and other types of text
   - Adds a parser for CLI arguments using the [UntitledCLIParser](https://github.com/MadLadSquad/UntitledCLIParser)
 - OS Module for core OS interaction 🚧
   - OS theming 🚧
-  - Notifications 🚧
+  - Notifications ✅
   - Exec integration using the [UntitledExec](https://github.com/MadLadSquad/UntitledExec) library ✅
-  - Cross-platform system font interaction using the [UntitledFontUtils](https://github.com/MadLadSquad/UntitledFontUtils) library 🚧
+  - Cross-platform system font querying using the [UntitledFontUtils](https://github.com/MadLadSquad/UntitledFontUtils) library ✅
   - Unix: 🚧
     - [XDG Basedir](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) integration ✅
-    - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration 🚧
+    - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration ✅
     - [polkit](https://www.freedesktop.org/wiki/Software/PolicyKit/) integration 🚧
 
 The framework uses C++ as its main development language, but because we want to include support for full modability and 
