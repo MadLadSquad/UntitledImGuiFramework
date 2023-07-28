@@ -4,7 +4,7 @@
 [![trello](https://img.shields.io/badge/Trello-UDE-blue])](https://trello.com/b/HmfuRY2K/untitleddesktop)
 [![Discord](https://img.shields.io/discord/717037253292982315.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/4wgH8ZE)
 
-A desktop software development framework that uses Dear imgui as its UI and Rendering library
+A desktop software development framework that uses Dear imgui as its UI and Rendering library.
 
 ## Motivation
 Desktop UI frameworks and libraries like QT and GTK are bloated, complicated and rigid. [Dear imgui](https://github.com/ocornut/imgui) provides a GUI layer which provides the following benefits:
