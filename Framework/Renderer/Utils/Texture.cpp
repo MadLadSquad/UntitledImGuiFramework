@@ -63,7 +63,7 @@ void UImGui::Texture::loadImGui(void* data, uint32_t x, uint32_t y, uint32_t dep
 {
     if (data == nullptr || (x == 0 && y == 0))
     {
-        data = stbi_load(dt.filename, (int*)&x, (int*)&y, nullptr, 4);
+        data = stbi_load(dt.filename, (int*)&x, (int*)&y, &dt.channels, 4);
         if (data == nullptr)
         {
             Logger::log("Failed to load a texture with the following location: ", UVK_LOG_TYPE_ERROR, dt.filename);

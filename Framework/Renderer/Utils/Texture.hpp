@@ -55,40 +55,54 @@ namespace UImGui
         // when loading the image.
         // jpegQuality is set to 100 by default in the C++ API. 0 = lowest quality, 100 = highest quality
         // Even Safety - Post-begin
+
+        /**
+         * @brief Outputs an image with a given format to a file. Only works if the image buffer is not freed
+         * automatically when loading the image.
+         * @tparam format - The format of an image
+         * @param location -
+         * @param fmt - Format of the image, defaults to the value of the template argument. If template argument is set
+         * to UIMGUI_TEXTURE_FORMAT_OTHER, it will check this value. If it reaches OTHER again, the custom save function
+         * is called
+         * @param jpegQuality - Quality of the output of the JPEG image from 0(lowest) and 100(highest). Default
+         * argument sets it to 100
+         */
         template<TextureFormat format>
-        void saveToFile(String location, TextureFormat fmt = format, uint8_t jpegQuality = 100) noexcept
+        bool saveToFile(String location, TextureFormat fmt = format, uint8_t jpegQuality = 100) noexcept
         {
-            if constexpr (format == UIMGUI_TEXTURE_FORMAT_PNG)
+            if (dt.data != nullptr)
             {
-                Logger::log("saving to png", UVK_LOG_TYPE_NOTE);
-                if (stbi_write_png(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data, static_cast<int>(dt.size.x) * dt.channels) == 0)
+                if constexpr (format == UIMGUI_TEXTURE_FORMAT_PNG)
+                    return stbi_write_png(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
+                                          dt.channels, dt.data, static_cast<int>(dt.size.x) * dt.channels);
+                else if constexpr (format == UIMGUI_TEXTURE_FORMAT_BMP)
+                    return stbi_write_bmp(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
+                                          dt.channels, dt.data);
+                else if constexpr (format == UIMGUI_TEXTURE_FORMAT_TGA)
+                    return stbi_write_tga(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
+                                          dt.channels, dt.data);
+                else if constexpr (format == UIMGUI_TEXTURE_FORMAT_JPEG)
+                    return stbi_write_jpg(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
+                                          dt.channels, dt.data, jpegQuality);
+                else
                 {
-                    Logger::log("Couldn't save", UVK_LOG_TYPE_ERROR);
+                    if (fmt == UIMGUI_TEXTURE_FORMAT_PNG)
+                        return stbi_write_png(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
+                                              dt.channels, dt.data, static_cast<int>(dt.size.x) * dt.channels);
+                    else if (fmt == UIMGUI_TEXTURE_FORMAT_BMP)
+                        return stbi_write_bmp(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
+                                              dt.channels, dt.data);
+                    else if (fmt == UIMGUI_TEXTURE_FORMAT_TGA)
+                        return stbi_write_tga(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
+                                              dt.channels, dt.data);
+                    else if (fmt == UIMGUI_TEXTURE_FORMAT_JPEG)
+                        return stbi_write_jpg(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
+                                              dt.channels, dt.data, jpegQuality);
+                    else
+                        return dt.customSaveFunction(&dt, location);
                 }
             }
-            else if constexpr (format == UIMGUI_TEXTURE_FORMAT_BMP)
-                stbi_write_bmp(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data);
-            else if constexpr (format == UIMGUI_TEXTURE_FORMAT_TGA)
-                stbi_write_tga(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data);
-            else if constexpr (format == UIMGUI_TEXTURE_FORMAT_JPEG)
-                stbi_write_jpg(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data, jpegQuality);
-            else if constexpr (format == UIMGUI_TEXTURE_FORMAT_HDR)
-                stbi_write_hdr(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, (float*)dt.data);
-            else
-            {
-                if (fmt == UIMGUI_TEXTURE_FORMAT_PNG)
-                    stbi_write_png(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data, static_cast<int>(dt.size.x) * dt.channels);
-                else if (fmt == UIMGUI_TEXTURE_FORMAT_BMP)
-                    stbi_write_bmp(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data);
-                else if (fmt == UIMGUI_TEXTURE_FORMAT_TGA)
-                    stbi_write_tga(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data);
-                else if (fmt == UIMGUI_TEXTURE_FORMAT_JPEG)
-                    stbi_write_jpg(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, dt.data, jpegQuality);
-                else if (fmt == UIMGUI_TEXTURE_FORMAT_HDR)
-                    stbi_write_hdr(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y), dt.channels, (float*)dt.data);
-                else
-                    dt.customSaveFunction(&dt, location);
-            }
+            return false;
         }
 
         // Set a function for saving custom image file formats

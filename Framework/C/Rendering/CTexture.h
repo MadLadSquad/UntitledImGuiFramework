@@ -7,7 +7,7 @@ extern "C"
 {
 #endif
     typedef struct UImGui_TextureData UImGuiTextureData;
-    typedef void(*UImGui_Texture_CustomSaveFunction)(UImGui_TextureData* data, UImGui_String location);
+    typedef bool(*UImGui_Texture_CustomSaveFunction)(UImGui_TextureData* data, UImGui_String location);
 
     typedef struct UIMGUI_PUBLIC_API UImGui_TextureData
     {
@@ -30,7 +30,6 @@ extern "C"
         UIMGUI_TEXTURE_FORMAT_BMP,
         UIMGUI_TEXTURE_FORMAT_TGA,
         UIMGUI_TEXTURE_FORMAT_JPEG,
-        UIMGUI_TEXTURE_FORMAT_HDR,
         UIMGUI_TEXTURE_FORMAT_OTHER
     } UImGui_TextureFormat;
 
