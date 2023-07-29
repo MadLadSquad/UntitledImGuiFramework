@@ -12,6 +12,10 @@
         #endif
     #endif
 
+    #ifdef UIMGUI_DBUS_SUBMODULE_ENABLED
+        #include <OS/ThirdParty/UntitledDBusUtils/DBusUtils.hpp>
+    #endif
+
     #include "Unix/DBus.hpp"
     #include "Unix/Fontconfig.hpp"
 #endif
