@@ -24,13 +24,14 @@ void UImGui::Texture::init(UImGui::String file) noexcept
     dt.channels = 0;
 
     dt.data = nullptr;
+    dt.customSaveFunction = [](TextureData*, String) -> bool { return false; };
 }
 
 void UImGui::Texture::load(void* data, uint32_t x, uint32_t y, uint32_t depth, bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
 {
     if (data == nullptr || (x == 0 && y == 0))
     {
-        data = stbi_load(dt.filename, (int*)&x, (int*)&y, nullptr, 0);
+        data = stbi_load(dt.filename, (int*)&x, (int*)&y, &dt.channels, 0);
         if (data == nullptr)
         {
             Logger::log("Failed to load a texture with the following location: ", UVK_LOG_TYPE_ERROR, dt.filename);
