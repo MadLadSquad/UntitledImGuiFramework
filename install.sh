@@ -49,7 +49,7 @@ function install_build_tool()
   cd build || exit
 
   if [ "${windows}" == true ]; then
-    cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DUBT_COMPILING_FOR_ENGINE=OFF -DCMAKE_BUILD_TYPE=RELEASE || exit
+    cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DUBT_COMPILING_FOR_WEB=OFF -DCMAKE_BUILD_TYPE=RELEASE || exit
     MSBuild.exe UVKBuildTool.sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || exit
 
     cp Release/UVKBuildTool.exe . || exit
@@ -57,7 +57,7 @@ function install_build_tool()
     cp Release/UVKBuildToolLib.lib . || cp Release/libUVKBuildToolLib.lib . || exit
     cp yaml-cpp/Release/yaml-cpp.dll . || cp yaml-cpp/Release/libyaml-cpp.dll . || exit
   else
-    cmake .. -G "Unix Makefiles" -DUBT_COMPILING_FOR_ENGINE=OFF -DCMAKE_BUILD_TYPE=RELEASE || exit
+    cmake .. -G "Unix Makefiles" -DUBT_COMPILING_FOR_WEB=OFF -DCMAKE_BUILD_TYPE=RELEASE || exit
     make -j "${cpus}" || exit
   fi
 
