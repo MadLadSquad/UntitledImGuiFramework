@@ -8,7 +8,7 @@ A desktop software development framework that uses Dear imgui as its UI and Rend
 
 ## Motivation
 Desktop UI frameworks and libraries like QT and GTK are complicated and really rigid. Using them or system-specific UI libraries
-would hard-lock us into using only what they use.
+would hard-lock us into using only what they use. 
 
 We also wanted a small and light core, which provides most-minimal features. We also wanted good developer experience, as 
 QT and GTK seemed overengineered to us. [Dear imgui](https://github.com/ocornut/imgui) filled all our requirements.
