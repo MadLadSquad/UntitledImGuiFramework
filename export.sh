@@ -59,7 +59,7 @@ fi
 
 function cmake_i()
 {
-  cmake "$@" || exit
+  cmake -DUIMGUI_INSTALL=ON "$@" || exit
 }
 
 jobs=$(grep -c processor /proc/cpuinfo)
