@@ -60,7 +60,6 @@ functions for easily rendering bold, italic, underlined and other types of text
   - Unix: 🚧
     - [XDG Basedir](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) integration ✅
     - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration ✅
-    - [polkit](https://www.freedesktop.org/wiki/Software/PolicyKit/) integration 🚧
 
 The framework uses C++ as its main development language. Additionally, because we want to include support for full modability and 
 plugins in mutiple languages, the user-facing API has a separate, completely C version that can be used to develop 
