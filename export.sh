@@ -62,7 +62,7 @@ function cmake_i()
   cmake -DUIMGUI_INSTALL=ON "$@" || exit
 }
 
-jobs=$(grep -c processor /proc/cpuinfo)
+jobs=$(grep -c processor /proc/cpuinfo) || jobs=$(sysctl -n hw.ncpu)
 cd Exported/ || exit
 
 find_visual_studio_directory
