@@ -63,6 +63,11 @@ function cmake_i()
 }
 
 jobs=$(grep -c processor /proc/cpuinfo) || jobs=$(sysctl -n hw.ncpu)
+
+real_framework_path=$(realpath Framework)
+mv Framework FrameworkSym || exit
+cp "${real_framework_path}" . -r || exit
+
 cd Exported/ || exit
 
 find_visual_studio_directory
@@ -86,6 +91,9 @@ cmake --install . --prefix="$2" || exit
 
 process_files "$1"
 mv "CMakeLists.txt.old" "CMakeLists.txt"
+
+rm -rf Framework || exit
+mv FrameworkSym Framework || exit
 
 echo -e "\x1B[32m--------------------------------------------------------------------------------\033[0m"
 echo -e "\x1B[32mBuild Done!\033[0m"
