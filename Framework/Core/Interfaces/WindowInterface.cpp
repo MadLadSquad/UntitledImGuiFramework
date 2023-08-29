@@ -291,6 +291,9 @@ std::vector<UImGui::Monitor>& UImGui::Window::getMonitors() noexcept
 
 UImGui::Monitor UImGui::Window::getWindowMonitor() noexcept
 {
+    auto monitor = glfwGetWindowMonitor(Window::get().windowMain);
+    if (monitor == nullptr)
+        return {};
     return Monitor(glfwGetWindowMonitor(Window::get().windowMain));
 }
 
