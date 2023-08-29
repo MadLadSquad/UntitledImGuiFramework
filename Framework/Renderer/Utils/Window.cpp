@@ -412,6 +412,11 @@ void UImGui::WindowInternal::setWindowAlwaysOnTop() noexcept
         XSendEvent(display, root, false, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent*)&xclient);
         XFlush(display);
     }
+#else
+    #ifdef GLFW_EXPOSE_NATIVE_WIN32
+        auto window = glfwGetWin32Window(windowMain);
+        SetWindowPos(window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    #endif
 #endif
 }
 
@@ -464,6 +469,12 @@ void UImGui::WindowInternal::setWindowAlwaysBelow() noexcept
 
     XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
     XFlush(display);
+#else
+    #ifdef GLFW_EXPOSE_NATIVE_WIN32
+        auto window = glfwGetWin32Window(windowMain);
+        SetWindowPos(window, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        //DefWindowProcA(window, WM_WINDOWPOSCHANGING, 0, 0);
+    #endif
 #endif
 }
 
@@ -535,6 +546,21 @@ void UImGui::WindowInternal::setShowWindowInPager(bool bShowInPagerr) noexcept
         XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
         XFlush(display);
     }
+#else
+    #ifdef GLFW_EXPOSE_NATIVE_WIN32
+        if (!bShowOnPager)
+        {
+            auto window = glfwGetWin32Window(windowMain);
+            LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
+            SetWindowLongPtr(window, GWL_EXSTYLE, (style & ~WS_EX_APPWINDOW) | WS_EX_TOOLWINDOW);
+        }
+        else
+        {
+            auto window = glfwGetWin32Window(windowMain);
+            LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
+            SetWindowLongPtr(window, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
+        }
+    #endif
 #endif
 }
 
@@ -575,6 +601,21 @@ void UImGui::WindowInternal::setShowWindowOnTaskbar(bool bShowOnTaskbarr) noexce
         XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, (XEvent *)&xclient);
         XFlush(display);
     }
+#else
+    #ifdef GLFW_EXPOSE_NATIVE_WIN32
+        if (!bShowOnPager)
+        {
+            auto window = glfwGetWin32Window(windowMain);
+            LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
+            SetWindowLongPtr(window, GWL_EXSTYLE, (style & ~WS_EX_APPWINDOW) | WS_EX_TOOLWINDOW);
+        }
+        else
+        {
+            auto window = glfwGetWin32Window(windowMain);
+            LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
+            SetWindowLongPtr(window, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
+        }
+    #endif
 #endif
 }
 
