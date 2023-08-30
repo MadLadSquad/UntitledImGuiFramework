@@ -53,8 +53,8 @@ functions for easily rendering bold, italic, underlined and other types of text
   - Adds Undo/Redo operation support ✅
 - CLI Args module ✅
   - Adds a parser for CLI arguments using the [UntitledCLIParser](https://github.com/MadLadSquad/UntitledCLIParser)
-- Theming module
-  - Adds the [UntitledImGuiTheme](https://github.com/MadLadSquad/UntitledImGuiTheme) library for reading and writing themes
+- Theming module ✅
+  - Adds the [UntitledImGuiTheme](https://github.com/MadLadSquad/UntitledImGuiTheme) library for reading and writing themes ✅
 - OS Module for core OS interaction
   - Exec integration using the [UntitledExec](https://github.com/MadLadSquad/UntitledExec) library ✅
   - Cross-platform system font querying using the [UntitledFontUtils](https://github.com/MadLadSquad/UntitledFontUtils) library ✅
