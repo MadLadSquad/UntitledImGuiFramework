@@ -43,6 +43,10 @@
     #include <TextUtils/ThirdParty/UntitledImGuiTextUtils/UImGuiTextUtils.hpp>
 #endif
 
+#ifdef UIMGUI_THEME_MODULE_ENABLED
+    #include <Theming/ThirdParty/UntitledImGuiTheme/UTheme.hpp>
+#endif
+
 namespace UImGui
 {
     typedef UImGui_ModuleSettings ModuleSettings;

@@ -32,7 +32,6 @@ void UImGui::GUIRenderer::shutdown(const FString& ini)
         }
     }
 
-
     for (auto& a : initInfo.windowComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->end();
@@ -86,8 +85,12 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
 
     ImGui::LoadIniSettingsFromDisk((UImGui::internalGlobal.instance->initInfo.configDir + "Core/" + ini + ".ini").c_str());
     ImGui::StyleColorsDark();
-    ImGui::StyleColorsClassic();
+
     ImGuiStyle& style = ImGui::GetStyle();
+#ifdef UIMGUI_THEME_MODULE_ENABLED
+    if (Modules::data().theming)
+        UImGui::Theme::load((UImGui::internalGlobal.instance->initInfo.configDir + "Theme/default.theme.yaml").c_str());
+#endif
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 

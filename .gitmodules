@@ -52,3 +52,6 @@
 [submodule "Framework/Modules/OS/ThirdParty/UntitledDBusUtils"]
 	path = Framework/Modules/OS/ThirdParty/UntitledDBusUtils
 	url = https://github.com/MadLadSquad/UntitledDBusUtils.git
+[submodule "Framework/Modules/Theming/ThirdParty/UntitledImGuiTheme"]
+	path = Framework/Modules/Theming/ThirdParty/UntitledImGuiTheme
+	url = https://github.com/MadLadSquad/UntitledImGuiTheme.git
