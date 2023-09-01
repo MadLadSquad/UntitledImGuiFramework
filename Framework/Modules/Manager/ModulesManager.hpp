@@ -5,7 +5,8 @@
 #include <C/Modules/Manager/CModulesManager.hpp>
 
 #ifdef UIMGUI_I18N_MODULE_ENABLED
-    #include "Modules/i18n/src/localemod.hpp"
+    #include <i18n/ThirdParty/UntitledI18N/UI18N.hpp>
+    #include <i18n/ThirdParty/UntitledI18N/C/cui18n.h>
 #endif
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
@@ -85,7 +86,7 @@ namespace UImGui
             .xdg = false
         };
 #ifdef UIMGUI_I18N_MODULE_ENABLED
-        LocaleManager localeManager{};
+        UI18N::TranslationEngine translationEngine{};
 #endif
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED

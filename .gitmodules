@@ -55,3 +55,6 @@
 [submodule "Framework/Modules/Theming/ThirdParty/UntitledImGuiTheme"]
 	path = Framework/Modules/Theming/ThirdParty/UntitledImGuiTheme
 	url = https://github.com/MadLadSquad/UntitledImGuiTheme.git
+[submodule "Framework/Modules/i18n/ThirdParty/UntitledI18N"]
+	path = Framework/Modules/i18n/ThirdParty/UntitledI18N
+	url = https://github.com/MadLadSquad/UntitledI18N.git
