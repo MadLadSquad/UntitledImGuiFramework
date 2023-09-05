@@ -109,6 +109,7 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
     CHECK_MODULE_ENABLED(text_utils);
     CHECK_MODULE_ENABLED(cli_parser);
     CHECK_MODULE_ENABLED(xdg);
+    CHECK_MODULE_ENABLED(open);
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
     if (Modules::data().undo_redo)
