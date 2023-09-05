@@ -83,7 +83,8 @@ namespace UImGui
             .toggles = false,
             .text_utils = false,
             .cli_parser = false,
-            .xdg = false
+            .xdg = false,
+            .open = false,
         };
 #ifdef UIMGUI_I18N_MODULE_ENABLED
         UI18N::TranslationEngine translationEngine{};

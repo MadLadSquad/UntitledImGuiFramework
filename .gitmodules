@@ -58,3 +58,6 @@
 [submodule "Framework/Modules/i18n/ThirdParty/UntitledI18N"]
 	path = Framework/Modules/i18n/ThirdParty/UntitledI18N
 	url = https://github.com/MadLadSquad/UntitledI18N.git
+[submodule "Framework/Modules/OS/ThirdParty/UntitledOpen"]
+	path = Framework/Modules/OS/ThirdParty/UntitledOpen
+	url = https://github.com/MadLadSquad/UntitledOpen.git

@@ -26,6 +26,7 @@ extern "C"
         bool text_utils;
         bool cli_parser;
         bool xdg;
+        bool open;
     } UImGui_ModuleSettings;
 
     UIMGUI_PUBLIC_API void UImGui_Modules_save();

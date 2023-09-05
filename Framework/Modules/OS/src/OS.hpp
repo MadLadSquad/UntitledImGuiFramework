@@ -16,6 +16,10 @@
         #include <OS/ThirdParty/UntitledDBusUtils/DBusUtils.hpp>
     #endif
 
+    #ifdef UIMGUI_OPEN_SUBMODULE_ENABLED
+        #include <OS/ThirdParty/UntitledOpen/UntitledOpen.h>
+    #endif
+
     #include "Unix/DBus.hpp"
     #include "Unix/Fontconfig.hpp"
 #endif
