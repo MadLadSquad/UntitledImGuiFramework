@@ -59,6 +59,7 @@ void UImGui::RendererInternal::start() noexcept
 void UImGui::RendererInternal::stop() noexcept
 {
     GUIRenderer::shutdown(Window::get().windowData.layoutLocation);
+    UImGui::internalGlobal.modulesManagerr.destroy();
     Window::get().destroyWindow();
 }
 

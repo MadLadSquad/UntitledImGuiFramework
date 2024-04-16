@@ -120,4 +120,20 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
         if (auto result = translationEngine.init((UImGui::Utility::getGlobal().instance->initInfo.configDir + "Translations").c_str()) != UI18N_INIT_RESULT_SUCCESS)
             Logger::log("I18N module: There was an issue with loading or processing the translations. Error code: ", UVK_LOG_TYPE_WARNING, (int)result);
 #endif
+#ifdef UIMGUI_OS_MODULE_ENABLED
+    #ifdef UIMGUI_OPEN_SUBMODULE_ENABLED
+        if (Modules::data().open)
+            UOpen::init();
+    #endif
+#endif
+}
+
+void UImGui::ModulesManager::destroy() noexcept
+{
+#ifdef UIMGUI_OS_MODULE_ENABLED
+    #ifdef UIMGUI_OPEN_SUBMODULE_ENABLED
+        if (Modules::data().open)
+            UOpen::destroy();
+    #endif
+#endif
 }

@@ -96,6 +96,8 @@ namespace UImGui
 
         void init(const FString& configDir);
         void initModules(const FString& projectDir);
+        void destroy() noexcept;
+
         void save(const FString& configDir) const noexcept;
     };
 

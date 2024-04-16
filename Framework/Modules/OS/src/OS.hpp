@@ -17,7 +17,8 @@
     #endif
 
     #ifdef UIMGUI_OPEN_SUBMODULE_ENABLED
-        #include <OS/ThirdParty/UntitledOpen/UntitledOpen.h>
+        #include "UntitledOpen/C/CUntitledOpen.h"
+        #include "UntitledOpen/UntitledOpen.hpp"
     #endif
 
     #include "Unix/DBus.hpp"
