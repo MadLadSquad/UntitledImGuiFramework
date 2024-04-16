@@ -91,7 +91,4 @@ find_visual_studio_directory
 mkdir Projects/
 install_build_tool "$1"
 
-cd Framework/Modules/OS/ThirdParty/UntitledOpen/Bindings/ || exit
-cargo build --release
-cd ../../../../../../
 echo -e "\x1b[32mFramework successfully installed!\x1b[0m"
