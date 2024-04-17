@@ -67,8 +67,8 @@ enabled-modules:
 " > uvproj.yaml
 
   # Create symbolic links
-  ln -rs "../../Framework/" Framework 2> /dev/null || cp ../../Engine/ . -r
-  ln -rs "../../UVKBuildTool/" UVKBuildTool 2> /dev/null || cp ../../UVKBuildTool/ . -r
+  cmd //c mklink //d Framework ..\\..\\Framework || ln -rs "../../Framework/" Framework 2> /dev/null || cp ../../Engine/ . -r
+  cmd //c mklink //d UVKBuildTool ..\\..\\UVKBuildTool || ln -rs "../../UVKBuildTool/" UVKBuildTool 2> /dev/null || cp ../../UVKBuildTool/ . -r
 }
 
 function generate_files()
