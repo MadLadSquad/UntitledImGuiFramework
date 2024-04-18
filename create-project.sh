@@ -89,13 +89,7 @@ function compile()
     cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE || exit
     MSBuild.exe "${prjname}".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || exit
 
-    cp Release/"${prjname}".exe . || exit
     cp ../UVKBuildTool/build/Release/UVKBuildToolLib.dll . || exit
-    cp Framework/ThirdParty/yaml-cpp/Release/yaml-cpp.dll . || exit
-    cp yaml-cpp.dll Release/ || exit 
-
-    cp Framework/ThirdParty/freetype/Release/freetype.dll . || exit
-    cp freetype.dll Release/ || exit
   else
     cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE || exit
     make -j "${cpus}" || exit

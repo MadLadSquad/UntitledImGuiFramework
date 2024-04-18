@@ -80,8 +80,7 @@ fi
 if [ "${windows}" == true ]; then
   cmake_i .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "${@:4}" || exit
   MSBuild.exe "$1".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${jobs}" || exit
-  cp Release/"$1".exe . || exit
-  cp Release/UntitledImGuiFramework.dll . || exit
+  cp Release/"$1".exe Release/*.dll . || exit
 else
   cmake_i .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "${@:4}" || exit
   make -j "${jobs}" || exit
