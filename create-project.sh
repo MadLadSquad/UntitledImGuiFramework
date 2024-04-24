@@ -1,5 +1,6 @@
 #!/bin/bash
 
+oldpwd=$(pwd)
 windows=false
 
 # Used to automatically find and add the Visual Studio MSBuild.exe directory to the environment variables!
@@ -67,8 +68,12 @@ enabled-modules:
 " > uvproj.yaml
 
   # Create symbolic links
-  cmd //c mklink //d Framework ..\\..\\Framework || ln -rs "../../Framework/" Framework 2> /dev/null || cp ../../Engine/ . -r
-  cmd //c mklink //d UVKBuildTool ..\\..\\UVKBuildTool || ln -rs "../../UVKBuildTool/" UVKBuildTool 2> /dev/null || cp ../../UVKBuildTool/ . -r
+  if [ "${windows}" = true ]; then
+    cp ../../elevate.bat .
+    cmd //c elevate.bat mklink //d .\\Framework ..\\..\\Framework && cmd //c elevate.bat mklink //d .\\UVKBuildTool ..\\..\\UVKBuildTool && rm elevate.bat && return
+  fi
+  ln -rs "../../Framework/" Framework 2> /dev/null || cp ../../Framework/ . -r
+  ln -rs "../../UVKBuildTool/" UVKBuildTool 2> /dev/null || cp ../../UVKBuildTool/ . -r
 }
 
 function generate_files()
