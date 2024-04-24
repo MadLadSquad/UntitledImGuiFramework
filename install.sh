@@ -4,6 +4,16 @@ VSShortVer="1"
 cpus=" "
 windows=false
 
+oldpwd=$(pwd)
+
+# Standard cleanup error handler. Should be used everywhere exit is used
+# Gentoo Linux uses the die command so I'm not sure we should use just die
+die_() {
+  rm -rf "${oldpwd}"/Projects &> /dev/null
+  rm -rf "${oldpwd}"/UVKBuildTool/build &> /dev/null
+  exit
+}
+
 download_vswhere() {
   # Get the raw JSON code for the releases from Github, get the lines that have the browser download URL and truncate the string in the front and back
   # to get the URL, then we use the URL to download the application, this only happens if we cannot find
@@ -23,7 +33,7 @@ function find_visual_studio_directory()
 
   if [ "${windows}" = true ]; then
     wd=$(pwd)
-    cd "C:/Program Files (x86)/Microsoft Visual Studio/Installer/" || exit
+    cd "C:/Program Files (x86)/Microsoft Visual Studio/Installer/" || die_
     find "vswhere.exe" -maxdepth 0 &> /dev/null || (cd "${wd}" && download_vswhere)
     vs_path=$(./vswhere.exe | grep "installationPath")
     vs_path="${vs_path:18}"
@@ -35,7 +45,7 @@ function find_visual_studio_directory()
     VSVer="${VSVer:28}"
 
     setx PATH "${vs_path}/MSBuild/Current/Bin/amd64/;%PATH%" 2> /dev/null
-    cd "${wd}" || exit
+    cd "${wd}" || die_
   fi
 
   return
@@ -44,24 +54,24 @@ function find_visual_studio_directory()
 # Installs the UVKBuildTool
 function install_build_tool()
 {
-  cd UVKBuildTool/ || exit
-  mkdir build || exit
-  cd build || exit
+  cd UVKBuildTool/ || die_
+  mkdir build || die_
+  cd build || die_
 
   if [ "${windows}" == true ]; then
-    cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DUBT_COMPILING_FOR_WEB=OFF -DCMAKE_BUILD_TYPE=RELEASE || exit
-    MSBuild.exe UVKBuildTool.sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || exit
+    cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DUBT_COMPILING_FOR_WEB=OFF -DCMAKE_BUILD_TYPE=RELEASE || die_
+    MSBuild.exe UVKBuildTool.sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || die_
 
-    cp Release/UVKBuildTool.exe . || exit
-    cp Release/UVKBuildToolLib.dll . || cp Release/libUVKBuildToolLib.dll . || exit
-    cp Release/UVKBuildToolLib.lib . || cp Release/libUVKBuildToolLib.lib . || exit
-    cp yaml-cpp/Release/yaml-cpp.dll . || cp yaml-cpp/Release/libyaml-cpp.dll . || exit
+    cp Release/UVKBuildTool.exe . || die_
+    cp Release/UVKBuildToolLib.dll . || cp Release/libUVKBuildToolLib.dll . || die_
+    cp Release/UVKBuildToolLib.lib . || cp Release/libUVKBuildToolLib.lib . || die_
+    cp yaml-cpp/Release/yaml-cpp.dll . || cp yaml-cpp/Release/libyaml-cpp.dll . || die_
   else
-    cmake .. -G "Unix Makefiles" -DUBT_COMPILING_FOR_WEB=OFF -DCMAKE_BUILD_TYPE=RELEASE || exit
-    make -j "${cpus}" || exit
+    cmake .. -G "Unix Makefiles" -DUBT_COMPILING_FOR_WEB=OFF -DCMAKE_BUILD_TYPE=RELEASE || die_
+    make -j "${cpus}" || die_
   fi
 
-  cd ../../ || exit
+  cd ../../ || die_
   return
 }
 
@@ -69,18 +79,18 @@ if [ "$1" == "" ]; then
   while true; do
     read -rp "Start installation? Y(Yes)/N(No): " yn
     case $yn in
-       	[Yy]* ) break;;
-       	[Nn]* ) exit;;
-       	* ) echo "Please answer with Y(Yes) or N(No)!";;
+       [Yy]* ) break;;
+       [Nn]* ) exit;;
+       * ) echo "Please answer with Y(Yes) or N(No)!";;
     esac
   done
 
   while true; do
     read -rp "Do you want to download offline documentation Y(Yes)/N(No): " yn
     case $yn in
-       	[Yy]* ) git clone https://github.com/MadLadSquad/UntitledImGuiFramework.wiki.git docs/; break;;
-       	[Nn]* ) break;;
-       	* ) echo "Please answer with Y(Yes) or N(No)!";;
+       [Yy]* ) git clone https://github.com/MadLadSquad/UntitledImGuiFramework.wiki.git docs/; break;;
+       [Nn]* ) break;;
+       * ) echo "Please answer with Y(Yes) or N(No)!";;
     esac
   done
 fi

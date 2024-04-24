@@ -1,13 +1,34 @@
 #!/bin/bash
 windows=false
 
+oldpwd=$(pwd)
+
+# Standard cleanup error handler. Should be used everywhere exit is used
+# Gentoo Linux uses the "die" command so I'm not sure we should use just "die"
+die_() {
+  cd "${oldpwd}"
+  # Remove framework since this is just a copy of the files from the framework folder
+  ls "${oldpwd}"/Framework &> /dev/null && rm -rf "${oldpwd}"/Framework
+
+  # Make the framework symlink the real framework
+  ls "${oldpwd}"/FrameworkSym &> /dev/null && mv "${oldpwd}"/FrameworkSym "${oldpwd}"Framework
+
+  # Remove the exported folder and recreate it
+  ls "${oldpwd}"/Exported &> /dev/null && rm -rf "${oldpwd}"/Exported && mkdir "${oldpwd}"/Exported
+
+  # Rename the failing prod-export-specific "CMakeLists.txt" file to "CMakeLists.txt.prodexport.fail" and replace it with the old file
+  ls "${oldpwd}"/CMakeLists.txt && ls "${oldpwd}"/CMakeLists.txt.old && mv "${oldpwd}"/CMakeLists.txt "${oldpwd}"/CMakeLists.txt.prodexport.fail && mv "${oldpwd}"/CMakeLists.txt.old "${oldpwd}"/CMakeLists.txt
+
+  exit
+}
+
 function find_visual_studio_directory()
 {
   env | grep "OS=Windows" > /dev/null && windows=true
 
   if [ "${windows}" = true ]; then
     wd=$(pwd)
-    cd "C:/Program Files (x86)/Microsoft Visual Studio/Installer/" || exit
+    cd "C:/Program Files (x86)/Microsoft Visual Studio/Installer/" || die_
     find "vswhere.exe" -maxdepth 0 &> /dev/null || (cd "${wd}" && download_vswhere)
 
     VSShortVer=$(./vswhere.exe | grep "catalog_productLine: Dev17")
@@ -16,7 +37,7 @@ function find_visual_studio_directory()
     VSVer=$(./vswhere.exe | grep "catalog_productLineVersion:")
     VSVer="${VSVer:28}"
 
-    cd "${wd}" || exit
+    cd "${wd}" || die_
   fi
 
   return
@@ -36,7 +57,7 @@ function process_files()
   find . -name "x64" -type d -exec rm -rf "{}" \; &> /dev/null # Delete all x64 folders, that contain logs
   find . -name "*.dir" -type d -exec rm -rf "{}" \; &> /dev/null # Delete all object file folders
   find . -name "*.sln" -exec rm -rf {} \; &> /dev/null # Delete all VS solution files
-  cd .. || exit
+  cd .. || die_
 }
 
 function help()
@@ -59,7 +80,7 @@ fi
 
 function cmake_i()
 {
-  cmake -DUIMGUI_INSTALL=ON "$@" || exit
+  cmake -DUIMGUI_INSTALL=ON "$@" || die_
 }
 
 jobs=$(grep -c processor /proc/cpuinfo) || jobs=$(sysctl -n hw.ncpu)
@@ -78,21 +99,21 @@ if [ "$3" == "--system-wide" ]; then
 fi
 
 if [ "${windows}" == true ]; then
-  cmake_i .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "${@:4}" || exit
-  MSBuild.exe "$1".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${jobs}" || exit
-  cp Release/"$1".exe Release/*.dll . || exit
+  cmake_i .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "${@:4}" || die_
+  MSBuild.exe "$1".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${jobs}" || die_
+  cp Release/"$1".exe Release/*.dll . || die_
 else
-  cmake_i .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "${@:4}" || exit
-  make -j "${jobs}" || exit
+  cmake_i .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "${@:4}" || die_
+  make -j "${jobs}" || die_
 fi
 
-cmake --install . --prefix="$2" || exit
+cmake --install . --prefix="$2" || die_
 
 process_files "$1"
 mv "CMakeLists.txt.old" "CMakeLists.txt"
 
-rm -rf Framework || exit
-mv FrameworkSym Framework || exit
+rm -rf Framework || die_
+mv FrameworkSym Framework || die_
 
 echo -e "\x1B[32m--------------------------------------------------------------------------------\033[0m"
 echo -e "\x1B[32mBuild Done!\033[0m"
