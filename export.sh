@@ -8,7 +8,7 @@ oldpwd=$(pwd)
 die_() {
   cd "${oldpwd}"
   # Remove framework since this is just a copy of the files from the framework folder
-  ls "${oldpwd}"/Framework &> /dev/null && rm -rf "${oldpwd}"/Framework
+  ls "${oldpwd}"/Framework &> /dev/null && ls "${oldpwd}"/FrameworkSym &> /dev/null && rm -rf "${oldpwd}"/Framework
 
   # Make the framework symlink the real framework
   ls "${oldpwd}"/FrameworkSym &> /dev/null && mv "${oldpwd}"/FrameworkSym "${oldpwd}"Framework
@@ -72,10 +72,10 @@ function help()
 if [ "$1" = "" ]; then # If the first argument is empty throw an error and show help
   echo -e "\x1B[31mError: You cannot run the script without an additional argument!\033[0m"
   help
-  exit
+  die_
 elif [ "$1" == "help" ] || [ "$1" == "-help" ] || [ "$1" == "--help" ] || [ "$1" == "-H" ] || [ "$1" == "-h" ]; then # shows the help message
   help
-  exit
+  die_
 fi
 
 function cmake_i()
@@ -86,10 +86,10 @@ function cmake_i()
 jobs=$(grep -c processor /proc/cpuinfo) || jobs=$(sysctl -n hw.ncpu)
 
 real_framework_path=$(realpath Framework)
-mv Framework FrameworkSym || exit
-cp "${real_framework_path}" . -r || exit
+mv Framework FrameworkSym || die_
+cp "${real_framework_path}" . -r || die_
 
-cd Exported/ || exit
+cd Exported/ || die_
 
 find_visual_studio_directory
 
