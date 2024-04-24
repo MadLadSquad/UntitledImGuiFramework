@@ -89,6 +89,17 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
         Logger::log("No uvproj.yaml config file found, using the default configuration!", UVK_LOG_TYPE_WARNING);
         return;
     }
+    // Some specific applications may want to override the crash on error log functionality as they need to print errors
+    // while not crashing. Examples: debuggers, language interpreters, validators, etc.
+#ifdef PRODUCTION
+    auto prodSettings = node["production"];
+    if (prodSettings)
+    {
+        if (prodSettings["crash-on-error"])
+            Logger::setCrashOnError(prodSettings["crash-on-error"].as<bool>());
+    }
+#endif
+
     auto mod = node["enabled-modules"];
     if (!mod)
         return;
