@@ -68,7 +68,7 @@ enabled-modules:
 " > uvproj.yaml
 
   # Create symbolic links
-  if [ "${windows}" = true ]; then
+  if [ "${windows}" = true && ${headless} = false ]; then
     cp ../../elevate.bat .
     cmd //c elevate.bat mklink //d .\\Framework ..\\..\\Framework && cmd //c elevate.bat mklink //d .\\UVKBuildTool ..\\..\\UVKBuildTool && rm elevate.bat && return
   fi
@@ -103,6 +103,7 @@ function compile()
 
 if [ "$1" != "" ]; then
   prjname="$1"
+  ci=headless
 else
   read -rp "Enter Your Application Name: " prjname # read the project name
 fi

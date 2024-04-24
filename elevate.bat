@@ -22,7 +22,3 @@ echo Arguments   : %*
 echo Working dir : %cd%
 echo.
 %*
-for /l %%x in (5, -1, 1) do (
-  echo Running next script in %%x seconds
-  timeout 1 > NUL
-)
