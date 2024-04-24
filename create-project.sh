@@ -69,8 +69,13 @@ enabled-modules:
 
   # Create symbolic links
   if [ "${windows}" = true && ${headless} = false ]; then
-    cp ../../elevate.bat .
-    cmd //c elevate.bat mklink //d .\\Framework ..\\..\\Framework && cmd //c elevate.bat mklink //d .\\UVKBuildTool ..\\..\\UVKBuildTool && rm elevate.bat && return
+    # If headless, run directly, since we assume that you have the required privileges
+    if [ "${headless}" = true ]; then
+      cmd //c mklink //d .\\Framework ..\\..\\Framework && cmd //c mklink //d .\\UVKBuildTool ..\\..\\UVKBuildTool && return
+    else
+      cp ../../elevate.bat .
+      cmd //c elevate.bat mklink //d .\\Framework ..\\..\\Framework && cmd //c elevate.bat mklink //d .\\UVKBuildTool ..\\..\\UVKBuildTool && rm elevate.bat && return
+    fi
   fi
   ln -rs "../../Framework/" Framework 2> /dev/null || cp ../../Framework/ . -r
   ln -rs "../../UVKBuildTool/" UVKBuildTool 2> /dev/null || cp ../../UVKBuildTool/ . -r
