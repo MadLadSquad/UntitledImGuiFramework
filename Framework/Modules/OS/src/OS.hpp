@@ -20,7 +20,4 @@
         #include "UntitledOpen/C/CUntitledOpen.h"
         #include "UntitledOpen/UntitledOpen.hpp"
     #endif
-
-    #include "Unix/DBus.hpp"
-    #include "Unix/Fontconfig.hpp"
 #endif
