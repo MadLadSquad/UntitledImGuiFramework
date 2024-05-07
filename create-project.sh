@@ -67,7 +67,7 @@ enabled-modules:
   xdg: false" > uvproj.yaml
 
   # Create symbolic links
-  if [ "${windows}" = true && ${headless} = false ]; then
+  if [ "${windows}" == true ] && [ "${headless}" == false ]; then
     # If headless, run directly, since we assume that you have the required privileges
     if [ "${headless}" = true ]; then
       cmd //c mklink //d .\\Framework ..\\..\\Framework && cmd //c mklink //d .\\UVKBuildTool ..\\..\\UVKBuildTool && return
