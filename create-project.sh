@@ -117,6 +117,8 @@ echo -e "\x1B[32mCopiling with ${cpus} compute jobs!\033[0m"
 find_visual_studio_directory
 create_folders "${prjname}"
 generate_files "${prjname}"
-compile "${prjname}" "$2"
+if [ "$3" == "" ]; then
+  compile "${prjname}" "$2"
+fi
 
 echo -e "\x1B[32mFramework and project successfully installed! \033[0m"
