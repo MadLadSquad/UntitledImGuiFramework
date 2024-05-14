@@ -14,6 +14,7 @@ We also wanted a small and light core, which provides most-minimal features. We 
 QT and GTK seemed overengineered to us. [Dear imgui](https://github.com/ocornut/imgui) filled all our requirements.
 
 [Dear imgui](https://github.com/ocornut/imgui) provides a GUI layer which provides the following benefits:
+
 - Light
 - Fast(graphically accelerated)
 - Immediate(rendering is done in the source code using function calls)
@@ -27,6 +28,7 @@ coordinates for the next user session.
 ## Library features
 The library is divided into multiple modules compiled statically into your program. Users can fully decide which modules 
 and submodules they want or don't want to include in their application. Module list and development status below:
+
 - Core Module ✅
   - Window ✅
   - Core ImGui rendering ✅
