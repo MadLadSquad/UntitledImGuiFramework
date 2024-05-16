@@ -12,6 +12,10 @@ extern "C"
     typedef void(*UImGui_CInstanceRegularFun)(UImGui_CInitInfo*);
     typedef void(*UImGui_CInstanceTickFun)(UImGui_CInitInfo*, float);
 
+    /**
+     * @brief C alternative of the InitInfo struct. std::vector members are replaced by pointers and size variables
+     * @note This struct doesn't allow modification of the directory strings
+     */
     typedef struct UIMGUI_PUBLIC_API UImGui_CInitInfo
     {
         UImGui_CComponentHandle* inlineComponents;

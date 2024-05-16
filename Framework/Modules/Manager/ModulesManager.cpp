@@ -108,8 +108,6 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
     CHECK_MODULE_ENABLED(dbus);
     CHECK_MODULE_ENABLED(uexec);
     CHECK_MODULE_ENABLED(theming);
-    CHECK_MODULE_ENABLED(notifications);
-    CHECK_MODULE_ENABLED(polkit);
     CHECK_MODULE_ENABLED(ufont);
     CHECK_MODULE_ENABLED(i18n);
     CHECK_MODULE_ENABLED(undo_redo);

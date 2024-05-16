@@ -9,6 +9,16 @@ extern "C"
     typedef struct UImGui_TextureData UImGuiTextureData;
     typedef bool(*UImGui_Texture_CustomSaveFunction)(UImGui_TextureData* data, UImGui_String location);
 
+    /**
+     * @brief Stores data for a texture
+     * @var filename - file location of the texture
+     * @var id - texture ID
+     * @var size - Width and height as a 2D Vector
+     * @var channels - Number of colour channels
+     * @var data - Custom texture data, can be left null if loading from a file
+     * @var storageIndex - Internal variable part of the C garbage collection system
+     * @var customSaveFunction - Callback for saving the image to a file
+     */
     typedef struct UIMGUI_PUBLIC_API UImGui_TextureData
     {
         UImGui_String filename;
@@ -24,6 +34,9 @@ extern "C"
         UImGui_Texture_CustomSaveFunction customSaveFunction;
     } UImGui_TextureData;
 
+    /**
+     * @brief Enum of standard texture formats. Use UIMGUI_TEXTURE_FORMAT_OTHER when using your own loading function
+     */
     typedef enum UIMGUI_PUBLIC_API UImGui_TextureFormat
     {
         UIMGUI_TEXTURE_FORMAT_PNG,

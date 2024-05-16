@@ -3,6 +3,7 @@
 extern "C"
 {
 #endif
+    // Enum of keycode constants
     typedef enum [[maybe_unused]] CKeys
     {
         Keys_UnknownKey = 349,
