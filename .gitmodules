@@ -64,3 +64,6 @@
 [submodule "Framework/ThirdParty/source-libraries/parallel-hashmap"]
 	path = Framework/ThirdParty/source-libraries/parallel-hashmap
 	url = https://github.com/MadLadSquad/parallel-hashmap.git
+[submodule "Framework/ThirdParty/utfcpp"]
+	path = Framework/ThirdParty/utfcpp
+	url = https://github.com/MadLadSquad/utfcpp.git
