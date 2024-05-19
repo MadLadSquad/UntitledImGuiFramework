@@ -63,9 +63,7 @@ function install_build_tool()
     MSBuild.exe UVKBuildTool.sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || die_
 
     cp Release/UVKBuildTool.exe . &> /dev/null
-    cp Release/UVKBuildToolLib.dll . &> /dev/null || cp Release/libUVKBuildToolLib.dll . &> /dev/null
-    cp Release/UVKBuildToolLib.lib . &> /dev/null || cp Release/libUVKBuildToolLib.lib . &> /dev/null
-    cp yaml-cpp/Release/yaml-cpp.dll . &> /dev/null || cp yaml-cpp/Release/libyaml-cpp.dll . &> /dev/null
+    cp Release/*.dll . &> /dev/null
   else
     cmake .. -G "Unix Makefiles" -DUBT_COMPILING_FOR_WEB=OFF -DCMAKE_BUILD_TYPE=RELEASE || die_
     make -j "${cpus}" || die_
