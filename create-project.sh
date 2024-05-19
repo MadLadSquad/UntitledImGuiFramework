@@ -107,7 +107,7 @@ function compile()
 
 if [ "$1" != "" ]; then
   prjname="$1"
-  ci=headless
+  headless=true
 else
   read -rp "Enter Your Application Name: " prjname # read the project name
 fi
