@@ -646,8 +646,10 @@ size_t UImGui::WindowInternal::getWindowID() noexcept
     Logger::log("Failed to get \"_NET_WM_PID\" of the current window or the XID is output by XGetWindowProperty is null.", UVK_LOG_TYPE_ERROR);
     return -1;
 #else
-    #ifdef GLFW_GLFW_EXPOSE_NATIVE_WIN32
+    #ifdef GLFW_EXPOSE_NATIVE_WIN32
         return GetWindowLong(glfwGetWin32Window(windowMain), GWL_ID);
+    #else
+        return -1;
     #endif
 #endif
 }
