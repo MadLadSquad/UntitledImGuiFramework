@@ -619,6 +619,39 @@ void UImGui::WindowInternal::setShowWindowOnTaskbar(bool bShowOnTaskbarr) noexce
 #endif
 }
 
+size_t UImGui::WindowInternal::getWindowID() noexcept
+{
+#ifdef GLFW_EXPOSE_NATIVE_X11
+    Display* display = glfwGetX11Display();
+    ::Window window = glfwGetX11Window(windowMain);
+    Atom pid = XInternAtom(display, "_NET_WM_PID", 1);
+    if (pid == None)
+    {
+        Logger::log("Couldn't find the \"_NET_WM_PID\" Atom!", UVK_LOG_TYPE_ERROR);
+        return -1;
+    }
+    Atom type;
+    int format;
+    uint64_t nItems;
+    uint64_t bytesAfter;
+    unsigned char* propPID = nullptr;
+
+    auto result = XGetWindowProperty(display, window, pid, 0, 1, False, XA_CARDINAL, &type, &format, &nItems, &bytesAfter, &propPID);
+    if (result == Success && propPID != nullptr)
+    {
+        uint64_t xid = *((uint64_t*)propPID);
+        XFree(propPID);
+        return xid;
+    }
+    Logger::log("Failed to get \"_NET_WM_PID\" of the current window or the XID is output by XGetWindowProperty is null.", UVK_LOG_TYPE_ERROR);
+    return -1;
+#else
+    #ifdef GLFW_GLFW_EXPOSE_NATIVE_WIN32
+        return GetWindowLong(glfwGetWin32Window(windowMain), GWL_ID);
+    #endif
+#endif
+}
+
 void UImGui::WindowInternal::windowSizeCallback(GLFWwindow* window, int width, int height) noexcept
 {
     auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));

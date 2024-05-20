@@ -137,28 +137,23 @@ namespace UImGui
 
         static void windowErrorCallback(int code, const char* description) noexcept;
 
-        // As of now, only supported in X11
-        // TODO: Port to Win32
+        // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
         void setWindowAlwaysOnTop() noexcept;
 
-        // As of now, only supported in X11
-        // TODO: Port to Win32
+        // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
         void setWindowAlwaysBelow() noexcept;
 
-        // As of now, only supported in X11
-        // TODO: Port to Win32
+        // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
         void disableWindowMoving() noexcept;
 
-        // As of now, only supported in X11
-        // TODO: Port to Win32
+        // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
         void setShowWindowInPager(bool bShowInPagerr) noexcept;
 
-        // As of now, only supported in X11
-        // TODO: Port to Win32
+        // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
         void setShowWindowOnTaskbar(bool bShowOnTaskbarr) noexcept;
 
@@ -166,6 +161,10 @@ namespace UImGui
         // TODO: Port to Win32
         // TODO: Port to Wayland
         void setWindowType(const char* type) noexcept;
+
+        // As of now, only supported in X11 and Win32
+        // TODO: Port to Wayland
+        size_t getWindowID() noexcept;
 
         bool bShowOnPager = true;
         bool bShowOnTaskbar = true;

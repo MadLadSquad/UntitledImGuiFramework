@@ -104,6 +104,12 @@ extern "C"
     // Sets the X11 window type
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowType(UImGui_String type);
 
+    // Event Safety - begin, style, post-begin
+    // Available for platforms - X11, Win32
+    // Platforms to be supported - Wayland
+    // Returns the window ID as a size_t
+    UIMGUI_PUBLIC_API size_t UImGui_Window_Platform_getWindowID();
+
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_setWindowSizeInScreenCoords(UImGui_FVector2 sz);
     // Event safety - begin, style, post-begin

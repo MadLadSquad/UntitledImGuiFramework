@@ -364,3 +364,8 @@ void UImGui::Window::Platform::setWindowType(String type) noexcept
 {
     Window::get().setWindowType(type);
 }
+
+size_t UImGui::Window::Platform::getWindowID() noexcept
+{
+    return Window::get().getWindowID();
+}

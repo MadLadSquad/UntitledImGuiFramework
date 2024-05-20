@@ -104,6 +104,12 @@ namespace UImGui
             // Platforms to be supported - Wayland
             // Sets the X11 window type
             static void setWindowType(String type) noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for platforms - X11, Win32
+            // Platforms to be supported - Wayland
+            // Returns the window ID as a size_t
+            static size_t getWindowID() noexcept;
         };
 
         // Event safety - begin, style, post-begin

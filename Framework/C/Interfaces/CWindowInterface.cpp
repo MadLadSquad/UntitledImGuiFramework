@@ -128,6 +128,11 @@ void UImGui_Window_Platform_setWindowType(UImGui_String type)
     UImGui::Window::Platform::setWindowType(type);
 }
 
+size_t UImGui_Window_Platform_getWindowID()
+{
+    return UImGui::Window::Platform::getWindowID();
+}
+
 void UImGui_Window_setWindowSizeInScreenCoords(UImGui_FVector2 sz)
 {
     UImGui::Window::setWindowSizeInScreenCoords(sz);
