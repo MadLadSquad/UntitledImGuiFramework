@@ -26,6 +26,38 @@ namespace UImGui
     YAML::Emitter& operator<<(YAML::Emitter& out, const FVector4& vect) noexcept;
     YAML::Emitter& operator<<(YAML::Emitter& out, const FVector& vect) noexcept;
     YAML::Emitter& operator<<(YAML::Emitter& out, const FVector2& vect) noexcept;
+
+    FVector2 operator+(FVector2 x, FVector2 y) noexcept;
+    FVector operator+(FVector x, FVector y) noexcept;
+    FVector4 operator+(FVector4 x, FVector4 y) noexcept;
+
+    FVector2 operator-(FVector2 x, FVector2 y) noexcept;
+    FVector operator-(FVector x, FVector y) noexcept;
+    FVector4 operator-(FVector4 x, FVector4 y) noexcept;
+
+    FVector2 operator*(FVector2 x, FVector2 y) noexcept;
+    FVector operator*(FVector x, FVector y) noexcept;
+    FVector4 operator*(FVector4 x, FVector4 y) noexcept;
+
+    FVector2 operator/(FVector2 x, FVector2 y) noexcept;
+    FVector operator/(FVector x, FVector y) noexcept;
+    FVector4 operator/(FVector4 x, FVector4 y) noexcept;
+
+    FVector2 operator+(FVector2 x, float y) noexcept;
+    FVector operator+(FVector x, float y) noexcept;
+    FVector4 operator+(FVector4 x, float y) noexcept;
+
+    FVector2 operator-(FVector2 x, float y) noexcept;
+    FVector operator-(FVector x, float y) noexcept;
+    FVector4 operator-(FVector4 x, float y) noexcept;
+
+    FVector2 operator*(FVector2 x, float y) noexcept;
+    FVector operator*(FVector x, float y) noexcept;
+    FVector4 operator*(FVector4 x, float y) noexcept;
+
+    FVector2 operator/(FVector2 x, float y) noexcept;
+    FVector operator/(FVector x, float y) noexcept;
+    FVector4 operator/(FVector4 x, float y) noexcept;
 }
 
 namespace YAML

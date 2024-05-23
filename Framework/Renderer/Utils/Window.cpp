@@ -422,6 +422,7 @@ void UImGui::WindowInternal::setWindowAlwaysOnTop() noexcept
 
 void UImGui::WindowInternal::setWindowAlwaysBelow() noexcept
 {
+
 #ifdef GLFW_EXPOSE_NATIVE_X11
     Display* display = glfwGetX11Display();
     ::Window window = glfwGetX11Window(windowMain);

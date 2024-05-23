@@ -18,4 +18,5 @@
 #include <misc/freetype/imgui_freetype.h>
 #include <custom_funcs.hpp>
 #include <Renderer/Utils/Texture.hpp>
+#include <Renderer/ImGui/ClientSideBar.hpp>
 #include <urll/urll.h>
