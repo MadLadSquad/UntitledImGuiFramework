@@ -15,7 +15,7 @@ void UImGui::ClientSideBar::Begin() noexcept
     ImGui::BeginGroup();
 }
 
-void UImGui::ClientSideBar::End(float deltaTime, UImGui::ClientSideBarFlags flags) noexcept
+void UImGui::ClientSideBar::End(float deltaTime, UImGui::ClientSideBarFlags flags, FVector4 destructiveColor, FVector4 destructiveColorActive) noexcept
 {
     // Create an invisible button that fills up all available space but leaves enough for the buttons
     static float width = 0;
@@ -32,7 +32,7 @@ void UImGui::ClientSideBar::End(float deltaTime, UImGui::ClientSideBarFlags flag
     if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_MAXIMISE_BUTTON)
         renderMaximiseButton(width, style);
     if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_CLOSE_BUTTON)
-        renderCloseButton(width, style);
+        renderCloseButton(width, style, destructiveColor, destructiveColorActive);
 
     ImGui::PopStyleColor(3);
     ImGui::EndGroup();
@@ -81,10 +81,10 @@ void UImGui::ClientSideBar::renderMaximiseButton(float& width, const ImGuiStyle&
     drawList->AddLine(max, { max.x, min.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]));
 }
 
-void UImGui::ClientSideBar::renderCloseButton(float& width, const ImGuiStyle& style) noexcept
+void UImGui::ClientSideBar::renderCloseButton(float& width, const ImGuiStyle& style, FVector4 destructiveColor, FVector4 destructiveColorActive) noexcept
 {
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(255, 123, 99, 255));  // TODO: This should be fixed when using UImGuiTheme
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(192, 28, 40, 255));  // TODO: This should be fixed when using UImGuiTheme
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::ColorConvertFloat4ToU32({ destructiveColor.x, destructiveColor.y, destructiveColor.z, destructiveColor.w }));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::ColorConvertFloat4ToU32({ destructiveColorActive.x, destructiveColorActive.y, destructiveColorActive.z, destructiveColorActive.w }));
 
     if (ImGui::SmallButton(" ##uimgui_internal_invisible_close_button"))
         UImGui::Instance::shutdown();
