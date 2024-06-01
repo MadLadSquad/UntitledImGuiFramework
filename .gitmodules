@@ -5,6 +5,7 @@
 [submodule "Framework/ThirdParty/logger"]
 	path = Framework/ThirdParty/logger
 	url = https://github.com/MadLadSquad/UntitledLog.git
+	branch = master
 [submodule "Framework/ThirdParty/yaml-cpp"]
 	path = Framework/ThirdParty/yaml-cpp
 	url = https://github.com/MadLadSquad/yaml-cpp.git
