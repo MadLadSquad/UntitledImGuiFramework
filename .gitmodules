@@ -1,6 +1,7 @@
 [submodule "UVKBuildTool"]
 	path = UVKBuildTool
 	url = https://github.com/MadLadSquad/UVKBuildTool.git
+	branch = master
 [submodule "Framework/ThirdParty/logger"]
 	path = Framework/ThirdParty/logger
 	url = https://github.com/MadLadSquad/UntitledLog.git
