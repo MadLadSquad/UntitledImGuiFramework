@@ -262,7 +262,11 @@ void UImGui::Utility::interruptSignalHandler() noexcept
                 Logger::log("SIGINT interrupted. Press CTRL+C again to forcefully terminate it!", UVK_LOG_TYPE_WARNING);
                 Instance::shutdown();
                 bFirst = false;
+#ifdef _WIN32
+                return TRUE;
+#else
                 return;
+#endif
             }
             exit(SIGTERM);
 #ifdef _WIN32
