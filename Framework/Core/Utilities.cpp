@@ -249,7 +249,7 @@ void UImGui::Utility::sleep(uint64_t milliseconds) noexcept
 void UImGui::Utility::interruptSignalHandler() noexcept
 {
 #ifdef _WIN32
-    if (!SetConsoleCtrlHandler([](DWORD signal) -> BOOL {
+    if (!SetConsoleCtrlHandler([](DWORD signal) -> BOOL WINAPI {
         if (signal == CTRL_C_EVENT)
         {
 #else
