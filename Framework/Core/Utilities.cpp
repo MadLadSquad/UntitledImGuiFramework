@@ -1,9 +1,12 @@
 #include "Utilities.hpp"
 #include <Global.hpp>
+#include <Instance.hpp>
 #include <C/Internal/Keys.h>
 #include <thread>
 #ifdef _WIN32
     #include <windows.h>
+#else
+    #include <signal.h>
 #endif
 
 void UImGui::Utility::sanitiseFilepath(FString& str) noexcept
@@ -237,4 +240,37 @@ UImGui::FString UImGui::Utility::keyToText(const UImGui::InputAction& action, bo
 void UImGui::Utility::sleep(uint64_t milliseconds) noexcept
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+}
+
+void UImGui::Utility::interruptSignalHandler() noexcept
+{
+#ifdef _WIN32
+    if (!SetConsoleCtrlHandler([](DWORD signal) -> BOOL {
+        if (signal == CTRL_C_EVENT)
+        {
+#else
+    struct sigaction data{ .sa_flags = SA_SIGINFO };
+    data.sa_sigaction = [](int signal, siginfo_t* info, void* next) -> void {
+#endif
+            static bool bFirst = true;
+            if (bFirst)
+            {
+                Logger::log("SIGINT interrupted. Press CTRL+C again to forcefully terminate it!", UVK_LOG_TYPE_WARNING);
+                Instance::shutdown();
+                bFirst = false;
+                return;
+            }
+            exit(SIGTERM);
+#ifdef _WIN32
+        }
+        return TRUE;
+    }, TRUE))
+    {
+        Logger::log("Couldn't setup the Windows interrupt handler!", UVK_LOG_TYPE_WARNING);
+    }
+#else
+    },
+
+    sigaction(SIGINT, &data, nullptr);
+#endif
 }

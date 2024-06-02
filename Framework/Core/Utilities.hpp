@@ -50,6 +50,9 @@ namespace UImGui
         // Sleep for X milliseconds
         static void sleep(uint64_t milliseconds) noexcept;
     private:
+        friend class Global;
+        static void interruptSignalHandler() noexcept;
+
         typedef std::array<std::pair<FString, FString>, Keys::UnknownKey + 1> KeyStringsArrType;
         static void initializeKeyStrings(KeyStringsArrType& keyStrings) noexcept;
     };

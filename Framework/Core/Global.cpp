@@ -9,7 +9,7 @@ UImGui::Global::Global() noexcept
     static bool bFirst = true;
     if (bFirst)
     {
-
+        Utility::interruptSignalHandler();
         bFirst = false;
     }
 }
