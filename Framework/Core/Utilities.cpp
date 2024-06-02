@@ -242,6 +242,10 @@ void UImGui::Utility::sleep(uint64_t milliseconds) noexcept
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
 }
 
+#ifdef _WIN32
+    #define SIGTERM 15
+#endif
+
 void UImGui::Utility::interruptSignalHandler() noexcept
 {
 #ifdef _WIN32
@@ -262,8 +266,9 @@ void UImGui::Utility::interruptSignalHandler() noexcept
             }
             exit(SIGTERM);
 #ifdef _WIN32
+            return TRUE;
         }
-        return TRUE;
+        return FALSE;
     }, TRUE))
     {
         Logger::log("Couldn't setup the Windows interrupt handler!", UVK_LOG_TYPE_WARNING);
