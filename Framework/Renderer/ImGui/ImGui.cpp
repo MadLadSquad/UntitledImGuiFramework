@@ -81,7 +81,6 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
     io.IniFilename = nullptr;
     io.WantSaveIniSettings = false;
     io.ConfigViewportsNoTaskBarIcon = true;
-    io.ConfigUseDefaultMouseCursors = true;
 
     ImGui::LoadIniSettingsFromDisk((UImGui::internalGlobal.instance->initInfo.configDir + "Core/" + ini + ".ini").c_str());
     ImGui::StyleColorsDark();
