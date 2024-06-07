@@ -3,7 +3,6 @@
 #include <yaml-cpp/yaml.h>
 // The imspinner devs decided to just not include imgui
 #include <imgui.h>
-#include <imgui_internal.h>
 #ifdef UIMGUI_SPINNERS_MODULE_ENABLED
     #include "Modules/Spinners/ThirdParty/imspinner/imspinner.h"
 #endif
@@ -39,12 +38,6 @@ void UImGui::ModulesManager::init(const FString& configDir)
         settings.maxTransactions = node["undo-max-transactions"].as<size_t>();
 
     initModules(UImGui_InitInfo_getProjectDir());
-
-    // Put this one after we have initialized the locale module
-#ifdef UIMGUI_LOCALE_MODULE_ENABLED
-    if (node["current-locale"])
-        Locale::getCurrentLayout() = Locale::getLocaleID(node["current-locale"].as<std::string>());
-#endif
 }
 
 void UImGui::ModulesManager::save(const FString& configDir) const noexcept
@@ -53,9 +46,6 @@ void UImGui::ModulesManager::save(const FString& configDir) const noexcept
     out << YAML::BeginMap;
 
     out << YAML::Key << "undo-max-transactions" << YAML::Value << settings.maxTransactions;
-#ifdef UIMGUI_LOCALE_MODULE_ENABLED
-    out << YAML::Key << "current-locale" << YAML::Value << Locale::getLocaleName(Locale::getCurrentLayout());
-#endif
     out << YAML::EndMap;
 
     std::ofstream fout(configDir + "Core/Modules.yaml");
