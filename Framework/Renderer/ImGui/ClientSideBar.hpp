@@ -21,10 +21,10 @@ namespace UImGui
 
         // Renders the bar
         // Event Safety - Post-begin
-        static void End(float deltaTime, ClientSideBarFlags flags = UIMGUI_CLIENT_SIDE_BAR_FLAG_ALL, FVector4 destructiveColor = { 0.753f, 0.110f, 0.157f, 1.0f }, FVector4 destructiveColorActive = { 0.972f, 0.894f, 0.360f, 1.0f }) noexcept;
+        static void End(ClientSideBarFlags flags = UIMGUI_CLIENT_SIDE_BAR_FLAG_ALL, FVector4 destructiveColour = { 1.0, 0.482, 0.388f, 1.0f }, FVector4 destructiveColourActive = { 0.753f, 0.110f, 0.157f, 1.0f }) noexcept;
     private:
         static void renderMinimiseButton(float& width, const ImGuiStyle& style) noexcept;
         static void renderMaximiseButton(float& width, const ImGuiStyle& style) noexcept;
-        static void renderCloseButton(float& width, const ImGuiStyle& style, FVector4 destructiveColor, FVector4 destructiveColorActive) noexcept;
+        static void renderCloseButton(float& width, const ImGuiStyle& style, FVector4 destructiveColour, FVector4 destructiveColourActive) noexcept;
     };
 }

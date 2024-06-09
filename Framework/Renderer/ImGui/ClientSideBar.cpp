@@ -15,7 +15,7 @@ void UImGui::ClientSideBar::Begin() noexcept
     ImGui::BeginGroup();
 }
 
-void UImGui::ClientSideBar::End(float deltaTime, UImGui::ClientSideBarFlags flags, FVector4 destructiveColor, FVector4 destructiveColorActive) noexcept
+void UImGui::ClientSideBar::End(UImGui::ClientSideBarFlags flags, FVector4 destructiveColour, FVector4 destructiveColourActive) noexcept
 {
     // Create an invisible button that fills up all available space but leaves enough for the buttons
     static float width = 0;
@@ -32,13 +32,23 @@ void UImGui::ClientSideBar::End(float deltaTime, UImGui::ClientSideBarFlags flag
     if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_MAXIMISE_BUTTON)
         renderMaximiseButton(width, style);
     if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_CLOSE_BUTTON)
-        renderCloseButton(width, style, destructiveColor, destructiveColorActive);
+        renderCloseButton(width, style, destructiveColour, destructiveColourActive);
 
     ImGui::PopStyleColor(3);
     ImGui::EndGroup();
-    if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_MOVEABLE && ImGui::IsItemHovered() && UImGui::Input::getKey(Keys_MouseButtonLeft))
+
+    // Mouse dragging code courtesy of https://github.com/ashifolfi/lynx-animator/blob/main/src/MainWindow.cpp
+    static bool bDragging = false;
+    if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_MOVEABLE && ((ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsItemActive()) || bDragging))
     {
-        // TODO: Implement
+        if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+        {
+            bDragging = true;
+            auto pos = Window::getCurrentWindowPosition();
+            Window::setCurrentWindowPosition({ pos.x + ImGui::GetIO().MouseDelta.x, pos.y + ImGui::GetIO().MouseDelta.y });
+        }
+        else
+            bDragging = false;
     }
 }
 
@@ -81,10 +91,10 @@ void UImGui::ClientSideBar::renderMaximiseButton(float& width, const ImGuiStyle&
     drawList->AddLine(max, { max.x, min.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]));
 }
 
-void UImGui::ClientSideBar::renderCloseButton(float& width, const ImGuiStyle& style, FVector4 destructiveColor, FVector4 destructiveColorActive) noexcept
+void UImGui::ClientSideBar::renderCloseButton(float& width, const ImGuiStyle& style, FVector4 destructiveColour, FVector4 destructiveColourActive) noexcept
 {
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::ColorConvertFloat4ToU32({ destructiveColor.x, destructiveColor.y, destructiveColor.z, destructiveColor.w }));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::ColorConvertFloat4ToU32({ destructiveColorActive.x, destructiveColorActive.y, destructiveColorActive.z, destructiveColorActive.w }));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::ColorConvertFloat4ToU32({ destructiveColour.x, destructiveColour.y, destructiveColour.z, destructiveColour.w }));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::ColorConvertFloat4ToU32({ destructiveColourActive.x, destructiveColourActive.y, destructiveColourActive.z, destructiveColourActive.w }));
 
     if (ImGui::SmallButton(" ##uimgui_internal_invisible_close_button"))
         UImGui::Instance::shutdown();
