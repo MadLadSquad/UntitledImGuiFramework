@@ -22,7 +22,8 @@ extern "C"
     } UImGui_CTransaction;
 
     // UntitledImGuiFramework Event Safety - Post-begin
-    UIMGUI_PUBLIC_API void UImGui_StateTracker_push(UImGui_CTransaction transaction);
+    // bRedoIsInit defaults to false in the C++ API
+    UIMGUI_PUBLIC_API void UImGui_StateTracker_push(UImGui_CTransaction transaction, bool bRedoIsInit);
     // UntitledImGuiFramework Event Safety - Post-begin
     UIMGUI_PUBLIC_API void UImGui_StateTracker_undo();
     // UntitledImGuiFramework Event Safety - Post-begin

@@ -5,7 +5,7 @@
 extern "C"
 {
 #endif
-void UImGui_StateTracker_push(UImGui_CTransaction transaction)
+void UImGui_StateTracker_push(UImGui_CTransaction transaction, bool bRedoIsInit)
 {
     UImGui::StateTracker::push({
         .undofunc = [&](UImGui::TransactionPayload& payload) -> void
@@ -17,7 +17,7 @@ void UImGui_StateTracker_push(UImGui_CTransaction transaction)
             transaction.redoFunc(&payload);
         },
         .payload = transaction.payload
-    });
+    }, bRedoIsInit);
 }
 
 void UImGui_StateTracker_undo()
