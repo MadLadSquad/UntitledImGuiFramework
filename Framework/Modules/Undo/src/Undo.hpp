@@ -23,7 +23,7 @@ namespace UImGui
         void operator=(StateTracker const&) = delete;
 
         // UntitledImGuiFramework Event Safety - Post-begin
-        static void push(const Transaction& transaction) noexcept;
+        static void push(const Transaction& transaction, bool bRedoIsInit = false) noexcept;
 
         // UntitledImGuiFramework Event Safety - Post-begin
         static void undo() noexcept;
@@ -33,7 +33,7 @@ namespace UImGui
         friend class ModulesManager;
 
         void init() noexcept;
-        void pushAction(const Transaction& transaction);
+        void pushAction(const Transaction& transaction, bool bRedoIsInit);
 
         void uundo() noexcept;
         void rredo() noexcept;
