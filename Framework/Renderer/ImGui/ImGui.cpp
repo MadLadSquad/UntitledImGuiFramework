@@ -1,20 +1,18 @@
 #include <Global.hpp>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
 #include <GLFW/glfw3.h>
 #include <Utils/Window.hpp>
 #include "ImGui.hpp"
 #include <Core/Components/Instance.hpp>
 
-void UImGui::GUIRenderer::beginFrame()
+void UImGui::GUIRenderer::beginFrame() noexcept
 {
-    ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
-void UImGui::GUIRenderer::shutdown(const FString& ini)
+void UImGui::GUIRenderer::shutdown(const FString& ini, GenericInternalRenderer* renderer) noexcept
 {
     auto& initInfo = Instance::get()->initInfo;
 
@@ -58,7 +56,7 @@ void UImGui::GUIRenderer::shutdown(const FString& ini)
     }
 
     ImGui::SaveIniSettingsToDisk((UImGui::internalGlobal.instance->initInfo.configDir + "Core/" + ini + ".ini").c_str());
-    ImGui_ImplOpenGL3_Shutdown();
+    renderer->ImGuiShutdown();
     ImGui_ImplGlfw_Shutdown();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
     if (Modules::data().plotting)
@@ -68,7 +66,7 @@ void UImGui::GUIRenderer::shutdown(const FString& ini)
     Instance::get()->end();
 }
 
-void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
+void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* renderer) noexcept
 {
     ImGui::CreateContext();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
@@ -95,8 +93,7 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
 
     Instance::get()->onEventConfigureStyle(style, io);
 
-    ImGui_ImplGlfw_InitForOpenGL(glfwwindow, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    renderer->ImGuiInit();
 
     Instance::get()->begin();
     auto& initInfo = Instance::get()->initInfo;
@@ -141,8 +138,10 @@ void UImGui::GUIRenderer::init(GLFWwindow* glfwwindow, const FString& ini)
     }
 }
 
-void UImGui::GUIRenderer::beginUI(float deltaTime)
+void UImGui::GUIRenderer::beginUI(float deltaTime, GenericInternalRenderer* renderer) noexcept
 {
+    renderer->ImGuiNewFrame();
+
     static bool opt_fullscreen = true;
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
@@ -205,8 +204,7 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
 
     if (opt_fullscreen)
         ImGui::PopStyleVar(2);
-    //ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
-    //ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 0.0f, 0.0f });
+
     // DockSpace
     ImGuiIO& io = ImGui::GetIO();
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
@@ -231,7 +229,7 @@ void UImGui::GUIRenderer::beginUI(float deltaTime)
     ImGui::End();
     ImGui::Render();
 
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    renderer->ImGuiRenderData();
 
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {

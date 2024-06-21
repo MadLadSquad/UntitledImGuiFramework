@@ -5,6 +5,10 @@
 // C API, contains the renderer data header, since it is shared between the 2 APIs
 #include <C/Internal/RendererData.h>
 
+// Renderers
+#include <OpenGL/OpenGLRenderer.hpp>
+#include <Vulkan/VulkanRenderer.hpp>
+
 namespace UImGui
 {
     typedef UImGui_RendererData RendererData;
@@ -15,9 +19,15 @@ namespace UImGui
         RendererInternal() = default;
 
         void start() noexcept;
-        static void stop() noexcept;
+        void stop() noexcept;
     private:
         friend class Renderer;
+        friend class OpenGLRenderer;
+
+        OpenGLRenderer opengl{};
+        VulkanRenderer vulkan{};
+
+        GenericInternalRenderer* renderer = nullptr;
 
         FString vendorString;
         FString apiVersion;

@@ -34,6 +34,8 @@ extern "C"
 #define X11_WINDOW_TYPE_DND "_NET_WM_WINDOW_TYPE_DND"
 #define X11_WINDOW_TYPE_NORMAL "_NET_WM_WINDOW_TYPE_NORMAL"
 
+#define UNUSED(x) (void)(x);
+
 /**
  * @brief The ComponentState enum defines 3 fields that represent the event state of the given component, the given
  * component can then check its own state(if in PAUSED or RUNNING state) and call specific components of its event

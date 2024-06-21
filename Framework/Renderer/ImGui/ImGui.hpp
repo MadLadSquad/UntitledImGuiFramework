@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <iostream>
+#include <GenericRenderer/GenericRenderer.hpp>
 
 struct ImVec4;
 struct GLFWwindow;
@@ -13,10 +14,10 @@ namespace UImGui
     public:
         GUIRenderer() = default;
 
-        static void init(GLFWwindow* glfwwindow, const FString& ini);
-        static void beginUI(float deltaTime);
-        static void beginFrame();
-        static void shutdown(const FString& ini);
+        static void init(const FString& ini, GenericInternalRenderer* renderer) noexcept;
+        static void beginUI(float deltaTime, GenericInternalRenderer* renderer) noexcept;
+        static void beginFrame() noexcept;
+        static void shutdown(const FString& ini, GenericInternalRenderer* renderer) noexcept;
     private:
     };
 }

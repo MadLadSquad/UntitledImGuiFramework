@@ -129,14 +129,19 @@ void UImGui::WindowInternal::createWindow() noexcept
     }
     Logger::log("Setting up the window", UVK_LOG_TYPE_NOTE);
 
-    // Add GLFW window flags and enable OpenGL
-    // TODO: Support Vulkan here
-    glewExperimental = GL_TRUE;
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
-    glfwWindowHint(GLFW_SAMPLES, 16);
+    if (Renderer::data().bVulkan)
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Have to set this to NO_API because that's how Vulkan is done in it
+    else
+    {
+        // Add GLFW window flags and enable OpenGL
+        glewExperimental = GL_TRUE;
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
+        glfwWindowHint(GLFW_SAMPLES, 16);
+    }
+
     glfwWindowHint(GLFW_RESIZABLE, windowData.bResizeable);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, windowData.bSurfaceTransparent);
     glfwWindowHint(GLFW_VISIBLE, !windowData.bHidden);
@@ -167,7 +172,6 @@ void UImGui::WindowInternal::createWindow() noexcept
     Logger::log("Window was created successfully", UVK_LOG_TYPE_SUCCESS);
 
     // Set framebuffer size
-    // TODO: Support Vulkan here
     int tempx = static_cast<int>(windowSize.x);
     int tempy = static_cast<int>(windowSize.y);
 
@@ -186,17 +190,18 @@ void UImGui::WindowInternal::createWindow() noexcept
     // Set callbacks
     configureCallbacks();
 
-    // Init glew
-    // TODO: Support Vulkan here
-    if (glewInit() != GLEW_OK)
+    if (!Renderer::data().bVulkan)
     {
-        glfwDestroyWindow(windowMain);
-        glfwTerminate();
-        Logger::log("GLEW initialisation failed!", UVK_LOG_TYPE_ERROR);
-        return;
+        if (glewInit() != GLEW_OK)
+        {
+            glfwDestroyWindow(windowMain);
+            glfwTerminate();
+            Logger::log("GLEW initialisation failed!", UVK_LOG_TYPE_ERROR);
+            return;
+        }
+        // Set viewport and global pointer to use in callbacks
+        glViewport(0, 0, tempx, tempy);
     }
-    // Set viewport and global pointer to use in callbacks
-    glViewport(0, 0, tempx, tempy);
     glfwSetWindowUserPointer(windowMain, this);
 }
 
@@ -236,7 +241,9 @@ void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, int wid
 
     windowInst->windowSize.x = static_cast<float>(width);
     windowInst->windowSize.y = static_cast<float>(height);
-    glViewport(0, 0, width, height);
+
+    if (!Renderer::data().bVulkan)
+        glViewport(0, 0, width, height);
 
     for (auto& a : windowInst->windowResizeCallbackList)
         a(width, height);

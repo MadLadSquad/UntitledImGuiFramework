@@ -2,7 +2,6 @@
 #include <yaml-cpp/yaml.h>
 #include <Core/Components/Instance.hpp>
 #include <Renderer/ImGui/ImGui.hpp>
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <Interfaces/WindowInterface.hpp>
 #include <Interfaces/RendererInterface.hpp>
@@ -16,20 +15,12 @@ void UImGui::RendererInternal::start() noexcept
     internalGlobal.renderer = this;
     internalGlobal.init();
 
-    vendorString = (char*)glGetString(GL_VENDOR);
-    if (vendorString.starts_with("NVIDIA"))
-    {
-        driverVersion = (char*)glGetString(GL_VERSION);
-        apiVersion = driverVersion;
-
-        driverVersion.erase(0, driverVersion.find("NVIDIA ") + strlen("NVIDIA "));
-        apiVersion.erase(apiVersion.find(" NVIDIA"));
-    }
-
-    gpuName = (char*)glGetString(GL_RENDERER);
+    renderer = data.bVulkan ? (decltype(renderer))&vulkan : (decltype(renderer))&opengl;
+    renderer->init(*this);
 
     UImGui::internalGlobal.modulesManagerr.init(UImGui::internalGlobal.instance->initInfo.configDir);
-    GUIRenderer::init(Window::get().windowMain, Window::get().windowData.layoutLocation);
+    if (!data.bVulkan) // TODO: Remove this when the renderer is done
+        GUIRenderer::init(Window::get().windowData.layoutLocation, renderer);
 
     double lastTime = 0.0f;
     while (!glfwWindowShouldClose(Window::get().windowMain))
@@ -44,21 +35,18 @@ void UImGui::RendererInternal::start() noexcept
         // Updates the state of the keybindings
         internalGlobal.window.updateKeyState();
 
-        auto& colours = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
-        glClearColor(colours.x, colours.y, colours.z, colours.w);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        GUIRenderer::beginFrame();
-        glUseProgram(0);
-
-        GUIRenderer::beginUI(static_cast<float>(deltaTime));
-        glfwSwapBuffers(Window::get().windowMain);
+        renderer->renderStart(deltaTime);
+        if (!data.bVulkan) // TODO: Remove this when the renderer is done
+            GUIRenderer::beginUI(static_cast<float>(deltaTime), renderer);
+        renderer->renderEnd(deltaTime);
     }
 }
 
 void UImGui::RendererInternal::stop() noexcept
 {
-    GUIRenderer::shutdown(Window::get().windowData.layoutLocation);
+    if (!data.bVulkan) // TODO: Remove this when the renderer is done
+        GUIRenderer::shutdown(Window::get().windowData.layoutLocation, renderer);
+    renderer->destroy();
     UImGui::internalGlobal.modulesManagerr.destroy();
     Window::get().destroyWindow();
 }
