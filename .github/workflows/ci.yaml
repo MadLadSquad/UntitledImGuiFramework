@@ -3,6 +3,27 @@ env:
   BUILD_CONFIGURATION: Release
 on: [ push, pull_request ]
 jobs:
+  macOS:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          submodules: true
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: Get dependencies
+        run: |
+          sudo brew install glew glfw pkg-config yaml-cpp vulkan-headers vulkan-loader vulkan-tools vulkan-utility-libraries vulkan-validationlayers vulkan-extensionlayer
+      - name: Install framework
+        shell: bash
+        run: ./install.sh ci
+      - name: Install project
+        shell: bash
+        run: ./create-project.sh t ci
   Linux:
     runs-on: ubuntu-latest
     steps:
