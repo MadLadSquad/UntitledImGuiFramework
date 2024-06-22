@@ -12,12 +12,12 @@ bool UImGui::InputAction::operator!=(const uint8_t& st) const noexcept
     return state != st;
 }
 
-uint8_t UImGui::Input::getKey(uint16_t key) noexcept
+uint8_t UImGui::Input::getKey(const uint16_t key) noexcept
 {
     return Window::get().keys[key];
 }
 
-const UImGui::InputAction& UImGui::Input::getAction(const UImGui::FString& name) noexcept
+const UImGui::InputAction& UImGui::Input::getAction(const FString& name) noexcept
 {
     for (auto& a : Window::get().inputActionList)
         if (a.name == name)
@@ -51,7 +51,7 @@ UImGui::FVector2 UImGui::Input::getScroll() noexcept
     return Window::get().getScroll();
 }
 
-void UImGui::Input::setCursorVisibility(UImGui::CursorVisibilityState visibility) noexcept
+void UImGui::Input::setCursorVisibility(const CursorVisibilityState visibility) noexcept
 {
     glfwSetInputMode(Window::get().windowMain, GLFW_CURSOR, visibility);
 }
@@ -61,7 +61,7 @@ UImGui::CursorVisibilityState UImGui::Input::getCurrentCursorVisibility() noexce
     return static_cast<CursorVisibilityState>(glfwGetInputMode(Window::get().windowMain, GLFW_CURSOR));
 }
 
-void UImGui::Input::setStickyKeys(bool bEnable) noexcept
+void UImGui::Input::setStickyKeys(const bool bEnable) noexcept
 {
     glfwSetInputMode(Window::get().windowMain, GLFW_STICKY_KEYS, bEnable);
     glfwSetInputMode(Window::get().windowMain, GLFW_STICKY_MOUSE_BUTTONS, bEnable);
@@ -73,7 +73,7 @@ bool UImGui::Input::getStickyKeys() noexcept
     return glfwGetInputMode(Window::get().windowMain, GLFW_STICKY_KEYS);
 }
 
-void UImGui::Input::setRawMouseMotion(bool bEnable) noexcept
+void UImGui::Input::setRawMouseMotion(const bool bEnable) noexcept
 {
     if (glfwRawMouseMotionSupported())
         glfwSetInputMode(Window::get().windowMain, GLFW_RAW_MOUSE_MOTION, bEnable);
@@ -84,7 +84,7 @@ bool UImGui::Input::getRawMouseMotion() noexcept
     return glfwGetInputMode(Window::get().windowMain, GLFW_RAW_MOUSE_MOTION);
 }
 
-void UImGui::Input::setLockKeyMods(bool bEnable) noexcept
+void UImGui::Input::setLockKeyMods(const bool bEnable) noexcept
 {
     glfwSetInputMode(Window::get().windowMain, GLFW_LOCK_KEY_MODS, bEnable);
 }

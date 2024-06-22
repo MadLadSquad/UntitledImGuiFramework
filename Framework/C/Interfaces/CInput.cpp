@@ -1,7 +1,7 @@
 #include "CInput.h"
 #include "Events/Input.hpp"
 
-void UImGui_Input_setCursorVisibility(UImGui_CursorVisibilityState visibility)
+void UImGui_Input_setCursorVisibility(const UImGui_CursorVisibilityState visibility)
 {
     UImGui::Input::setCursorVisibility(visibility);
 }
@@ -11,7 +11,7 @@ UImGui_CursorVisibilityState UImGui_Input_getCurrentCursorVisibility()
     return UImGui::Input::getCurrentCursorVisibility();
 }
 
-void UImGui_Input_setStickyKeys(bool bEnable)
+void UImGui_Input_setStickyKeys(const bool bEnable)
 {
     UImGui::Input::setStickyKeys(bEnable);
 }
@@ -21,7 +21,7 @@ bool UImGui_Input_getStickyKeys()
     return UImGui::Input::getStickyKeys();
 }
 
-void UImGui_Input_setRawMouseMotion(bool bEnable)
+void UImGui_Input_setRawMouseMotion(const bool bEnable)
 {
     UImGui::Input::setRawMouseMotion(bEnable);
 }
@@ -31,7 +31,7 @@ bool UImGui_Input_getRawMouseMotion()
     return UImGui::Input::getRawMouseMotion();
 }
 
-void UImGui_Input_setLockKeyMods(bool bEnable)
+void UImGui_Input_setLockKeyMods(const bool bEnable)
 {
     UImGui::Input::setLockKeyMods(bEnable);
 }
@@ -41,12 +41,12 @@ bool UImGui_Input_getLockKeyMods()
     return UImGui::Input::getLockKeyMods();
 }
 
-uint8_t UImGui_Input_getKey(uint16_t key)
+uint8_t UImGui_Input_getKey(const uint16_t key)
 {
     return UImGui::Input::getKey(key);
 }
 
-UImGui_CInputAction UImGui_Input_getAction(UImGui_String name)
+UImGui_CInputAction UImGui_Input_getAction(const UImGui_String name)
 {
     auto& a = UImGui::Input::getAction(name);
     return UImGui_CInputAction

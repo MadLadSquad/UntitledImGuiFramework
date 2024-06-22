@@ -19,7 +19,7 @@ namespace UImGui
         RendererInternal() = default;
 
         void start() noexcept;
-        void stop() noexcept;
+        void stop() const noexcept;
     private:
         friend class Renderer;
         friend class OpenGLRenderer;

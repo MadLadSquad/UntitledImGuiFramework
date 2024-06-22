@@ -1,12 +1,15 @@
 #define STB_IMAGE_IMPLEMENTATION
 #ifdef _WIN32
     #define GLFW_EXPOSE_NATIVE_WIN32
+#elif __APPLE__
+    #define GLFW_EXPOSE_NATIVE_COCOA
 #else
     #ifdef GLFW_USE_WAYLAND
         #define GLFW_EXPOSE_NATIVE_WAYLAND
     #else
         #define GLFW_EXPOSE_NATIVE_X11
         #include <X11/Xatom.h>
+        #define _NET_WM_STATE_ADD 1
     #endif
 #endif
 
@@ -22,8 +25,6 @@
 #include <Interfaces/WindowInterface.hpp>
 
 #include <Components/Instance.hpp>
-
-#define _NET_WM_STATE_ADD 1
 
 UImGui::WindowInternal::WindowInternal() noexcept
 {
@@ -42,9 +43,9 @@ bool& UImGui::WindowInternal::resized() noexcept
 
 #define SAVE_CONFIG_YAML_BASIC(x, y) out << YAML::Key << #x << YAML::Value << windowData.y
 
-void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) noexcept
+void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) const noexcept
 {
-    std::ofstream fout(UImGui::internalGlobal.instance->initInfo.configDir + "Core/Window.yaml");
+    std::ofstream fout(internalGlobal.instance->initInfo.configDir + "Core/Window.yaml");
     {
         YAML::Emitter out;
         out << YAML::BeginMap;
@@ -82,19 +83,19 @@ void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) noexcept
             out << YAML::BeginMap << YAML::Key << "key" << YAML::Value << a.name;
             out << YAML::Key << "val" << YAML::Value << YAML::Flow << YAML::BeginSeq;
             for (auto& f : a.keyCodes)
-                out << (int)f;
+                out << static_cast<int>(f);
             out << YAML::EndSeq;
             out << YAML::EndMap;
         }
         out << YAML::EndSeq << YAML::EndMap;
 
-        fout = std::ofstream(UImGui::internalGlobal.instance->initInfo.configDir + "Core/Keybindings.yaml");
+        fout = std::ofstream(internalGlobal.instance->initInfo.configDir + "Core/Keybindings.yaml");
         fout << out.c_str();
         fout.close();
     }
 }
 
-void UImGui::WindowInternal::setTitle(UImGui::String title) noexcept
+void UImGui::WindowInternal::setTitle(const String title) noexcept
 {
     glfwSetWindowTitle(windowMain, title);
     windowData.name = title;
@@ -102,7 +103,7 @@ void UImGui::WindowInternal::setTitle(UImGui::String title) noexcept
 
 UImGui::FVector2 UImGui::WindowInternal::getMousePositionChange() noexcept
 {
-    FVector2 ret = mouseOffset;
+    const FVector2 ret = mouseOffset;
     mouseOffset = { 0.0f, 0.0f };
 
     return ret;
@@ -110,7 +111,7 @@ UImGui::FVector2 UImGui::WindowInternal::getMousePositionChange() noexcept
 
 UImGui::FVector2 UImGui::WindowInternal::getScroll() noexcept
 {
-    FVector2 ret = scroll;
+    const FVector2 ret = scroll;
     scroll = { 0.0f, 0.0f };
     return ret;
 }
@@ -154,7 +155,7 @@ void UImGui::WindowInternal::createWindow() noexcept
     if (windowData.fullscreen)
         monitor = glfwGetPrimaryMonitor();
 
-    windowMain = glfwCreateWindow((int)windowSize.x, (int)windowSize.y, windowData.name.c_str(), monitor, nullptr);
+    windowMain = glfwCreateWindow(static_cast<int>(windowSize.x), static_cast<int>(windowSize.y), windowData.name.c_str(), monitor, nullptr);
     if (!windowMain)
     {
         Logger::log("GLFW window creation failed!", UVK_LOG_TYPE_ERROR);
@@ -205,13 +206,13 @@ void UImGui::WindowInternal::createWindow() noexcept
     glfwSetWindowUserPointer(windowMain, this);
 }
 
-void UImGui::WindowInternal::destroyWindow() noexcept
+void UImGui::WindowInternal::destroyWindow() const noexcept
 {
     glfwDestroyWindow(windowMain);
     glfwTerminate();
 }
 
-void UImGui::WindowInternal::configureCallbacks() noexcept
+void UImGui::WindowInternal::configureCallbacks() const noexcept
 {
     glfwSetFramebufferSizeCallback(windowMain, framebufferSizeCallback);
     glfwSetKeyCallback(windowMain, keyboardInputCallback);
@@ -235,7 +236,7 @@ void UImGui::WindowInternal::configureCallbacks() noexcept
     glfwSetErrorCallback(windowErrorCallback);
 }
 
-void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, int width, int height) noexcept
+void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, const int width, const int height) noexcept
 {
     auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
 
@@ -249,19 +250,19 @@ void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, int wid
         a(width, height);
 }
 
-void UImGui::WindowInternal::keyboardInputCallback(GLFWwindow* window, int key, int scanCode, int action, int mods) noexcept
+void UImGui::WindowInternal::keyboardInputCallback(GLFWwindow* window, const int key, int scanCode, const int action, int mods) noexcept
 {
-    auto* wind = (WindowInternal*)glfwGetWindowUserPointer(window);
+    auto* wind = CAST(WindowInternal*, glfwGetWindowUserPointer(window));
     wind->keys[key] = action;
 }
 
-void UImGui::WindowInternal::mouseKeyInputCallback(GLFWwindow* window, int button, int action, int mods) noexcept
+void UImGui::WindowInternal::mouseKeyInputCallback(GLFWwindow* window, const int button, const int action, int mods) noexcept
 {
-    auto* wind = (WindowInternal*)glfwGetWindowUserPointer(window);
+    auto* wind = CAST(WindowInternal*, glfwGetWindowUserPointer(window));
     wind->keys[button] = action;
 }
 
-void UImGui::WindowInternal::mouseCursorPositionCallback(GLFWwindow* window, double xpos, double ypos) noexcept
+void UImGui::WindowInternal::mouseCursorPositionCallback(GLFWwindow* window, const double xpos, const double ypos) noexcept
 {
     auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
 
@@ -279,14 +280,14 @@ void UImGui::WindowInternal::mouseCursorPositionCallback(GLFWwindow* window, dou
     windowInst->mouseLastPos.y = static_cast<float>(ypos);
 }
 
-void UImGui::WindowInternal::scrollInputCallback(GLFWwindow* window, double xoffset, double yoffset) noexcept
+void UImGui::WindowInternal::scrollInputCallback(GLFWwindow* window, const double xoffset, const double yoffset) noexcept
 {
     auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
 
     windowInst->scroll = { static_cast<float>(xoffset), static_cast<float>(yoffset) };
 }
 
-void UImGui::WindowInternal::windowPositionCallback(GLFWwindow* window, int xpos, int ypos) noexcept
+void UImGui::WindowInternal::windowPositionCallback(GLFWwindow* window, const int xpos, const int ypos) noexcept
 {
     auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
 
@@ -359,7 +360,7 @@ skip_window_config:
     }
 }
 
-void UImGui::WindowInternal::close() noexcept
+void UImGui::WindowInternal::close() const noexcept
 {
     glfwSetWindowShouldClose(windowMain, true);
 }
@@ -370,7 +371,7 @@ void UImGui::WindowInternal::updateKeyState() noexcept
     {
         if (!a.keyCodes.empty())
         {
-            for (auto& f : a.keyCodes)
+            for (const auto& f : a.keyCodes)
                 if (keys[f] != keys[a.keyCodes[0]])
                     goto finish_inner_loop;
             a.state = keys[a.keyCodes[0]];
@@ -379,10 +380,10 @@ finish_inner_loop:;
     }
 }
 
-void UImGui::WindowInternal::setIcon(UImGui::String name) noexcept
+void UImGui::WindowInternal::setIcon(const String name) const noexcept
 {
     GLFWimage images[1];
-    images[0].pixels = stbi_load((UImGui::internalGlobal.instance->initInfo.contentDir + name).c_str(), &images[0].width, &images[0].height, nullptr, 4);
+    images[0].pixels = stbi_load((internalGlobal.instance->initInfo.contentDir + name).c_str(), &images[0].width, &images[0].height, nullptr, 4);
     glfwSetWindowIcon(windowMain, 1, images);
     stbi_image_free(images[0].pixels);
 }
@@ -518,7 +519,7 @@ void UImGui::WindowInternal::setWindowType(const char* type) noexcept
 #endif
 }
 
-void UImGui::WindowInternal::setShowWindowInPager(bool bShowInPagerr) noexcept
+void UImGui::WindowInternal::setShowWindowInPager(const bool bShowInPagerr) noexcept
 {
     bShowOnPager = bShowInPagerr;
 #ifdef GLFW_EXPOSE_NATIVE_X11
@@ -572,7 +573,7 @@ void UImGui::WindowInternal::setShowWindowInPager(bool bShowInPagerr) noexcept
 #endif
 }
 
-void UImGui::WindowInternal::setShowWindowOnTaskbar(bool bShowOnTaskbarr) noexcept
+void UImGui::WindowInternal::setShowWindowOnTaskbar(const bool bShowOnTaskbarr) noexcept
 {
     bShowOnTaskbar = bShowOnTaskbarr;
 #ifdef GLFW_EXPOSE_NATIVE_X11
@@ -662,59 +663,53 @@ size_t UImGui::WindowInternal::getWindowID() noexcept
 #endif
 }
 
-void UImGui::WindowInternal::windowSizeCallback(GLFWwindow* window, int width, int height) noexcept
+void UImGui::WindowInternal::windowSizeCallback(GLFWwindow* window, const int width, const int height) noexcept
 {
     auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
-    windowInst->windowSizeInScreenCoords = { (float)width, (float)height };
+    windowInst->windowSizeInScreenCoords = { CAST(float, width), CAST(float, height) };
     for (auto& a : windowInst->windowResizeInScreenCoordCallbackList)
         a(width, height);
 }
 
 void UImGui::WindowInternal::windowCloseCallback(GLFWwindow* window) noexcept
 {
-    auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
-    for (auto& a : windowInst->windowCloseCallbackList)
+    for (auto& a : static_cast<WindowInternal*>(glfwGetWindowUserPointer(window))->windowCloseCallbackList)
         a();
 }
 
-void UImGui::WindowInternal::windowFocusCallback(GLFWwindow* window, int focused) noexcept
+void UImGui::WindowInternal::windowFocusCallback(GLFWwindow* window, const int focused) noexcept
 {
-    auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
-    for (auto& a : windowInst->windowFocusCallbackList)
+    for (auto& a : static_cast<WindowInternal*>(glfwGetWindowUserPointer(window))->windowFocusCallbackList)
         a(focused);
 }
 
-void UImGui::WindowInternal::windowIconifyCallback(GLFWwindow* window, int iconified) noexcept
+void UImGui::WindowInternal::windowIconifyCallback(GLFWwindow* window, const int iconified) noexcept
 {
-    auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
-    for (auto& a : windowInst->windowIconifiedCallbackList)
+    for (auto& a : static_cast<WindowInternal*>(glfwGetWindowUserPointer(window))->windowIconifiedCallbackList)
         a(iconified);
 }
 
-void UImGui::WindowInternal::windowContentScaleCallback(GLFWwindow* window, float x, float y) noexcept
+void UImGui::WindowInternal::windowContentScaleCallback(GLFWwindow* window, const float x, const float y) noexcept
 {
-    auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
-    for (auto& a : windowInst->windowContentScaleChangeCallbackList)
+    for (auto& a : static_cast<WindowInternal*>(glfwGetWindowUserPointer(window))->windowContentScaleChangeCallbackList)
         a({ x, y });
 }
 
 void UImGui::WindowInternal::windowRefreshCallback(GLFWwindow* window) noexcept
 {
-    auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
-    for (auto& a : windowInst->windowRefreshCallbackList)
+    for (auto& a : static_cast<WindowInternal*>(glfwGetWindowUserPointer(window))->windowRefreshCallbackList)
         a();
 }
 
-void UImGui::WindowInternal::windowMaximisedCallback(GLFWwindow* window, int maximised) noexcept
+void UImGui::WindowInternal::windowMaximisedCallback(GLFWwindow* window, const int maximised) noexcept
 {
-    auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
-    for (auto& a : windowInst->windowMaximisedCallbackList)
+    for (auto& a : static_cast<WindowInternal*>(glfwGetWindowUserPointer(window))->windowMaximisedCallbackList)
         a(maximised);
 }
 
 void UImGui::WindowInternal::monitorCallback(GLFWmonitor* monitor, int event) noexcept
 {
-    auto dt = (Monitor*)glfwGetMonitorUserPointer(monitor);
+    auto* dt = CAST(Monitor*, glfwGetMonitorUserPointer(monitor));
     for (auto& a : Window::get().windowMonitorCallbackList)
         a(*dt, static_cast<MonitorState>(event));
 
@@ -733,7 +728,7 @@ void UImGui::WindowInternal::monitorCallback(GLFWmonitor* monitor, int event) no
         Window::get().monitors.emplace_back(monitors[i]);
 }
 
-void UImGui::WindowInternal::windowOSDragDropCallback(GLFWwindow* window, int count, const char** paths) noexcept
+void UImGui::WindowInternal::windowOSDragDropCallback(GLFWwindow* window, const int count, const char** paths) noexcept
 {
     auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
     windowInst->dragDropPaths.clear();
@@ -760,32 +755,32 @@ UImGui::Monitor::Monitor(GLFWmonitor* monitor) noexcept
     glfwSetMonitorUserPointer(this->monitor, (void*)this);
 }
 
-UImGui::FVector2 UImGui::Monitor::getPhysicalSize() noexcept
+UImGui::FVector2 UImGui::Monitor::getPhysicalSize() const noexcept
 {
     int width = 0;
     int height = 0;
     glfwGetMonitorPhysicalSize(monitor, &width, &height);
 
-    return UImGui::FVector2(static_cast<float>(width), static_cast<float>(height));
+    return FVector2{ static_cast<float>(width), static_cast<float>(height) };
 }
 
-UImGui::FVector2 UImGui::Monitor::getContentScale() noexcept
+UImGui::FVector2 UImGui::Monitor::getContentScale() const noexcept
 {
     FVector2 f = {};
     glfwGetMonitorContentScale(monitor, &f.x, &f.y);
     return f;
 }
 
-UImGui::FVector2 UImGui::Monitor::getVirtualPosition() noexcept
+UImGui::FVector2 UImGui::Monitor::getVirtualPosition() const noexcept
 {
     int x = 0;
     int y = 0;
     glfwGetMonitorPos(monitor, &x, &y);
 
-    return UImGui::FVector2(static_cast<float>(x), static_cast<float>(y));
+    return FVector2{ static_cast<float>(x), static_cast<float>(y) };
 }
 
-UImGui::FVector4 UImGui::Monitor::getWorkArea() noexcept
+UImGui::FVector4 UImGui::Monitor::getWorkArea() const noexcept
 {
     int x = 0;
     int y = 0;
@@ -793,14 +788,14 @@ UImGui::FVector4 UImGui::Monitor::getWorkArea() noexcept
     int height = 0;
 
     glfwGetMonitorWorkarea(monitor, &x, &y, &width, &height);
-    return UImGui::FVector4
-    (
+    return FVector4
+    {
             static_cast<float>(x),static_cast<float>(y),
             static_cast<float>(width), static_cast<float>(height)
-    );
+    };
 }
 
-UImGui::FString UImGui::Monitor::getName() noexcept
+UImGui::FString UImGui::Monitor::getName() const noexcept
 {
     return {glfwGetMonitorName(monitor) };
 }
@@ -812,7 +807,7 @@ void UImGui::Monitor::pushEvent(const std::function<void(Monitor&, MonitorState)
 
 UImGui_CMonitorData UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Window_getWindowMonitor()
 {
-    auto tmp = UImGui::Window::getWindowMonitor();
+    const auto tmp = Window::getWindowMonitor();
     return UImGui_CMonitorData
     {
             .additionalData = tmp.additionalData,
@@ -821,9 +816,9 @@ UImGui_CMonitorData UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_
     };
 }
 
-void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::pushGlobalMonitorCallbackFun(UImGui::Monitor& monitor,
-                                                                                      UImGui::MonitorState state,
-                                                                                      UImGui_Window_pushGlobalMonitorCallbackFun f)
+void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::pushGlobalMonitorCallbackFun(const UImGui::Monitor& monitor,
+                                                                                       const UImGui::MonitorState state,
+                                                                                       const UImGui_Window_pushGlobalMonitorCallbackFun f)
 {
     UImGui_CMonitorData dt;
     UImGui_Monitor_initWithMonitor_Internal(&dt, monitor.monitor);
@@ -834,13 +829,13 @@ void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::pushGlobalMonitorCallb
 }
 
 void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_pushEvent(UImGui_CMonitorData* data,
-                                                                                   UImGui_Monitor_EventsFun f)
+                                                                                   const UImGui_Monitor_EventsFun f)
 {
     for (auto& a : UImGui::Window::getMonitors())
     {
         if (a.monitor == data->monitor)
         {
-            a.pushEvent([&](Monitor& fMonitor, MonitorState state) -> void
+            a.pushEvent([&](Monitor& fMonitor, const MonitorState state) -> void
             {
                 UImGui_CMonitorData dt;
                 UImGui_Monitor_initWithMonitor_Internal(&dt, data->monitor);
@@ -855,7 +850,7 @@ void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_pushEve
     Logger::log("Invalid internal monitor address, used when pushing a monitor-local event! Address: ", UVK_LOG_TYPE_ERROR, data->monitor);
 }
 
-void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_setWindowMonitor(UImGui_CMonitorData* monitor)
+void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_setWindowMonitor(const UImGui_CMonitorData* monitor)
 {
     Monitor m;
     m.monitor = monitor->monitor;
@@ -867,7 +862,7 @@ UImGui_CMonitorData* UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui
 {
     auto& monitors = UImGui::internalGlobal.deallocationStruct.monitors;
     monitors.clear();
-    for (auto& a : UImGui::Window::getMonitors())
+    for (const auto& a : Window::getMonitors())
     {
         monitors.push_back(
         {

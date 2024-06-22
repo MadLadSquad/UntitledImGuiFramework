@@ -4,7 +4,7 @@
 #include <Renderer/ImGui/ImGui.hpp>
 #include <GLFW/glfw3.h>
 #include <Interfaces/WindowInterface.hpp>
-#include <Interfaces/RendererInterface.hpp>
+#include <Global.hpp>
 
 void UImGui::RendererInternal::start() noexcept
 {
@@ -15,10 +15,10 @@ void UImGui::RendererInternal::start() noexcept
     internalGlobal.renderer = this;
     internalGlobal.init();
 
-    renderer = data.bVulkan ? (decltype(renderer))&vulkan : (decltype(renderer))&opengl;
+    renderer = data.bVulkan ? CAST(decltype(renderer), &vulkan) : CAST(decltype(renderer), &opengl);
     renderer->init(*this);
 
-    UImGui::internalGlobal.modulesManagerr.init(UImGui::internalGlobal.instance->initInfo.configDir);
+    internalGlobal.modulesManagerr.init(internalGlobal.instance->initInfo.configDir);
     if (!data.bVulkan) // TODO: Remove this when the renderer is done
         GUIRenderer::init(Window::get().windowData.layoutLocation, renderer);
 
@@ -28,7 +28,7 @@ void UImGui::RendererInternal::start() noexcept
         static double deltaTime = 0.0f;
         glfwPollEvents();
 
-        double now = glfwGetTime();
+        const double now = glfwGetTime();
         deltaTime = now - lastTime;
         lastTime = now;
 
@@ -42,12 +42,12 @@ void UImGui::RendererInternal::start() noexcept
     }
 }
 
-void UImGui::RendererInternal::stop() noexcept
+void UImGui::RendererInternal::stop() const noexcept
 {
     if (!data.bVulkan) // TODO: Remove this when the renderer is done
         GUIRenderer::shutdown(Window::get().windowData.layoutLocation, renderer);
     renderer->destroy();
-    UImGui::internalGlobal.modulesManagerr.destroy();
+    internalGlobal.modulesManagerr.destroy();
     Window::get().destroyWindow();
 }
 
@@ -56,7 +56,7 @@ void UImGui::RendererInternal::loadConfig()
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile(UImGui::internalGlobal.instance->initInfo.configDir + "Core/Renderer.yaml");
+        node = YAML::LoadFile(internalGlobal.instance->initInfo.configDir + "Core/Renderer.yaml");
     }
     catch (YAML::BadFile&)
     {

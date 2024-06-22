@@ -5,8 +5,6 @@
 #include <Components/TitlebarComponent.hpp>
 #include <Components/WindowComponent.hpp>
 #include <imgui.h>
-#include <imgui_internal.h>
-#include <Global.hpp>
 
 // This includes the C API, which contains the C version of the init info struct
 #include <C/Components/CInstance.h>
@@ -94,7 +92,7 @@ namespace UImGui
          * @note Event Safety - Post-Startup
          */
         template<ComponentType cmpType>
-        static auto* getComponentByIDs(const FString& name, uint64_t id)
+        static auto* getComponentByIDs(const FString& name, const uint64_t id)
         {
             if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_INLINE)
             {
@@ -171,12 +169,12 @@ namespace UImGui
          * @brief The raw array of CLI arguments passed to the application
          * @note Event Safety - Any time
          */
-        char** argv;
+        char** argv{};
         /**
          * @brief The size of the raw CLI array
          * @note Event Safety - Any time
          */
-        int argc;
+        int argc{};
     private:
         friend class GUIRenderer;
 

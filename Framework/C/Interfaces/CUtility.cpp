@@ -4,7 +4,7 @@
 #include <cstring>
 #include <Core/Global.hpp>
 
-UImGui_String UImGui_Utility_sanitiseFilepath(UImGui_String str)
+UImGui_String UImGui_Utility_sanitiseFilepath(const UImGui_String str)
 {
     UImGui::FString s = str;
     UImGui::Utility::sanitiseFilepath(s);
@@ -13,13 +13,13 @@ UImGui_String UImGui_Utility_sanitiseFilepath(UImGui_String str)
     return UImGui::internalGlobal.deallocationStruct.keyStrings.back().c_str();
 }
 
-UImGui_String UImGui_Utility_keyToText(uint16_t key, bool bLong)
+UImGui_String UImGui_Utility_keyToText(const uint16_t key, const bool bLong)
 {
     UImGui::internalGlobal.deallocationStruct.keyStrings.push_back(UImGui::Utility::keyToText(key, bLong));
     return UImGui::internalGlobal.deallocationStruct.keyStrings.back().c_str();
 }
 
-UImGui_String UImGui_Utility_keyToTextInputAction(UImGui_CInputAction* action, bool bLong)
+UImGui_String UImGui_Utility_keyToTextInputAction(const UImGui_CInputAction* action, const bool bLong)
 {
     UImGui::InputAction a;
     a.keyCodes.resize(action->keyCodesSize);

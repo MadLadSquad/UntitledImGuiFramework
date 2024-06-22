@@ -17,7 +17,7 @@ void* UImGui_Instance_getCppInitInfoGlobalData(bool* bAllocatedOnHeap)
 
 char** UImGui_Instance_getCLIArguments(int* argc)
 {
-    auto* instance = UImGui::internalGlobal.instance;
+    const auto* instance = UImGui::internalGlobal.instance;
     *argc = instance->argc;
 
     return instance->argv;

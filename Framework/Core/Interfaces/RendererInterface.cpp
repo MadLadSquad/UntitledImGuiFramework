@@ -3,12 +3,12 @@
 
 UImGui::RendererData& UImGui::Renderer::data() noexcept
 {
-    return Renderer::get().data;
+    return get().data;
 }
 
 void UImGui::Renderer::saveSettings() noexcept
 {
-    Renderer::get().saveConfig();
+    get().saveConfig();
 }
 
 UImGui::RendererInternal& UImGui::Renderer::get() noexcept

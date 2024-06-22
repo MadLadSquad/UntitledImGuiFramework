@@ -16,7 +16,7 @@ void UImGui::Utility::sanitiseFilepath(FString& str) noexcept
             a = '/';
 }
 
-void UImGui::Utility::keyToText(UImGui::FString& text, const uint16_t& key, bool bLong) noexcept
+void UImGui::Utility::keyToText(FString& text, const uint16_t& key, const bool bLong) noexcept
 {
     static bool bFirst = true;
     static std::array<std::pair<FString, FString>, Keys::UnknownKey + 1> keyStrings{};
@@ -28,7 +28,7 @@ void UImGui::Utility::keyToText(UImGui::FString& text, const uint16_t& key, bool
     text = bLong ? keyStrings[key].first : keyStrings[key].second;
 }
 
-UImGui::FString UImGui::Utility::keyToText(const uint16_t& key, bool bLong) noexcept
+UImGui::FString UImGui::Utility::keyToText(const uint16_t& key, const bool bLong) noexcept
 {
     FString txt;
     keyToText(txt, key, bLong);
@@ -49,7 +49,7 @@ void UImGui::Utility::removeConsole() noexcept
 #endif
 }
 
-UImGui::FString UImGui::Utility::toLower(UImGui::String str) noexcept
+UImGui::FString UImGui::Utility::toLower(const String str) noexcept
 {
     FString ret = str;
     for (auto& a : ret)
@@ -57,13 +57,13 @@ UImGui::FString UImGui::Utility::toLower(UImGui::String str) noexcept
     return ret;
 }
 
-void UImGui::Utility::toLower(UImGui::FString& str) noexcept
+void UImGui::Utility::toLower(FString& str) noexcept
 {
     for (auto& a : str)
         a = static_cast<char>(tolower(a));
 }
 
-UImGui::FString UImGui::Utility::toUpper(UImGui::String str) noexcept
+UImGui::FString UImGui::Utility::toUpper(const String str) noexcept
 {
     FString ret = str;
     for (auto& a : ret)
@@ -71,7 +71,7 @@ UImGui::FString UImGui::Utility::toUpper(UImGui::String str) noexcept
     return ret;
 }
 
-void UImGui::Utility::toUpper(UImGui::FString& str) noexcept
+void UImGui::Utility::toUpper(FString& str) noexcept
 {
     for (auto& a : str)
         a = static_cast<char>(toupper(a));
@@ -223,21 +223,21 @@ void UImGui::Utility::initializeKeyStrings(KeyStringsArrType& keyStrings) noexce
     keyStrings[Keys::None] = { "None", "None" };
 }
 
-void UImGui::Utility::keyToText(UImGui::FString& text, const UImGui::InputAction& action, bool bLong) noexcept
+void UImGui::Utility::keyToText(FString& text, const InputAction& action, const bool bLong) noexcept
 {
     for (auto& a : action.keyCodes)
         text += keyToText(a, bLong) + "+";
     text.pop_back();
 }
 
-UImGui::FString UImGui::Utility::keyToText(const UImGui::InputAction& action, bool bLong) noexcept
+UImGui::FString UImGui::Utility::keyToText(const InputAction& action, const bool bLong) noexcept
 {
     FString ret;
     keyToText(ret, action, bLong);
     return ret;
 }
 
-void UImGui::Utility::sleep(uint64_t milliseconds) noexcept
+void UImGui::Utility::sleep(const uint64_t milliseconds) noexcept
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
 }
@@ -254,7 +254,7 @@ void UImGui::Utility::interruptSignalHandler() noexcept
         {
 #else
     struct sigaction data{ .sa_flags = SA_SIGINFO };
-    data.sa_sigaction = [](int signal, siginfo_t* info, void* next) -> void {
+    data.sa_sigaction = [](int, siginfo_t*, void*) -> void {
 #endif
             static bool bFirst = true;
             if (bFirst)

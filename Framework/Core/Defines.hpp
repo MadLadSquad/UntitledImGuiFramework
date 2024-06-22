@@ -23,6 +23,8 @@
     #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x))
 #endif
 
+#define CAST(x, y) static_cast<x>(y)
+
 namespace UImGui
 {
     /**

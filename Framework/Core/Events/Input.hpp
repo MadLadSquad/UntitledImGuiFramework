@@ -1,5 +1,4 @@
 #pragma once
-#include <Core/Defines.hpp>
 #include <Core/Types.hpp>
 
 // Imports the C API, contains definitions of the C InputAction struct and other uniform API structs and enum

@@ -50,7 +50,7 @@ UImGui_CComponentHandle UImGui_WindowComponent_makeCWindowComponent(UImGui_Compo
                                             UImGui_ComponentRegularFun begin, UImGui_ComponentTickFun tick, UImGui_ComponentRegularFun end,
                                             UImGui_ComponentRegularFun destruct, UImGui_CComponentData data)
 {
-    auto* handle = (CWindowComponentInternalClass*)UImGui::WindowComponent::make<CWindowComponentInternalClass>();
+    auto* handle = dynamic_cast<CWindowComponentInternalClass*>(UImGui::WindowComponent::make<CWindowComponentInternalClass>());
     handle->state = data.state;
     handle->name = data.name;
     handle->id = data.id;

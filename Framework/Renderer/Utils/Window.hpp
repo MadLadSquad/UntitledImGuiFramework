@@ -34,21 +34,21 @@ namespace UImGui
         explicit Monitor(GLFWmonitor* monitor) noexcept;
 
         // Event safety - begin, style, post-begin
-        FVector2 getPhysicalSize() noexcept;
+        [[nodiscard]] FVector2 getPhysicalSize() const noexcept;
 
         // Event safety - begin, style, post-begin
-        FVector2 getContentScale() noexcept;
+        [[nodiscard]] FVector2 getContentScale() const noexcept;
 
         // Event safety - begin, style, post-begin
-        FVector2 getVirtualPosition() noexcept;
+        [[nodiscard]] FVector2 getVirtualPosition() const noexcept;
 
         // Event safety - begin, style, post-begin
         // Returns work area as FVector4 where x = x position, y = y position, z = width, w = height
-        FVector4 getWorkArea() noexcept;
+        [[nodiscard]] FVector4 getWorkArea() const noexcept;
 
         // Event safety - begin, style, post-begin
         // May not be unique
-        FString getName() noexcept;
+        [[nodiscard]] FString getName() const noexcept;
 
         // Event safety - begin, style, post-begin
         void pushEvent(const std::function<void(Monitor&, MonitorState)>& f) noexcept;
@@ -63,10 +63,10 @@ namespace UImGui
         {
         public:
             static UImGui_CMonitorData UImGui_Window_getWindowMonitor();
-            static void pushGlobalMonitorCallbackFun(UImGui::Monitor& monitor, UImGui::MonitorState state,
+            static void pushGlobalMonitorCallbackFun(const Monitor& monitor, UImGui::MonitorState state,
                                                     UImGui_Window_pushGlobalMonitorCallbackFun f);
             static void UImGui_Monitor_pushEvent(UImGui_CMonitorData* data, UImGui_Monitor_EventsFun f);
-            static void UImGui_Monitor_setWindowMonitor(UImGui_CMonitorData* monitor);
+            static void UImGui_Monitor_setWindowMonitor(const UImGui_CMonitorData* monitor);
             static UImGui_CMonitorData* UImGui_Window_getMonitors(size_t* size);
         };
     private:
@@ -87,7 +87,7 @@ namespace UImGui
         [[nodiscard]] GLFWwindow* data() const noexcept;
         bool& resized() noexcept;
 
-        void close() noexcept;
+        void close() const noexcept;
 
         std::vector<std::function<void(const char**, size_t size)>> dragDropPathCCallbackList;
     private:
@@ -100,23 +100,23 @@ namespace UImGui
         void updateKeyState() noexcept;
 
         FVector2 windowSize = { 800.0f, 600.0f };
-        FVector2 windowSizeInScreenCoords;
+        FVector2 windowSizeInScreenCoords{};
 
         std::array<uint16_t, 350> keys{};
         std::vector<InputAction> inputActionList{};
 
-        void saveConfig(bool bSaveKeybindings) noexcept;
+        void saveConfig(bool bSaveKeybindings) const noexcept;
         void openConfig();
         void setTitle(String title) noexcept;
-        void setIcon(String name) noexcept;
+        void setIcon(String name) const noexcept;
 
         FVector2 getMousePositionChange() noexcept;
         FVector2 getScroll() noexcept;
 
         void createWindow() noexcept;
-        void destroyWindow() noexcept;
+        void destroyWindow() const noexcept;
 
-        void configureCallbacks() noexcept;
+        void configureCallbacks() const noexcept;
         static void framebufferSizeCallback(GLFWwindow* window, int width, int height) noexcept;
         static void keyboardInputCallback(GLFWwindow* window, int key, int scanCode, int action, int mods) noexcept;
         static void mouseKeyInputCallback(GLFWwindow* window, int button, int action, int mods) noexcept;
@@ -140,31 +140,38 @@ namespace UImGui
 
         // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
+        // TODO: Port to macOS
         void setWindowAlwaysOnTop() noexcept;
 
         // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
+        // TODO: Port to macOS
         void setWindowAlwaysBelow() noexcept;
 
         // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
+        // TODO: Port to macOS
         void disableWindowMoving() noexcept;
 
         // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
+        // TODO: Port to macOS
         void setShowWindowInPager(bool bShowInPagerr) noexcept;
 
         // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
+        // TODO: Port to macOS
         void setShowWindowOnTaskbar(bool bShowOnTaskbarr) noexcept;
 
         // As of now, only supported in X11
         // TODO: Port to Win32
         // TODO: Port to Wayland
+        // TODO: Port to macOS
         void setWindowType(const char* type) noexcept;
 
         // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
+        // TODO: Port to macOS
         size_t getWindowID() noexcept;
 
         bool bShowOnPager = true;
@@ -199,7 +206,7 @@ namespace UImGui
         FVector2 mouseLastPos = { 0.0f, 0.0f };
         FVector2 mouseOffset = { 0.0f, 0.0f };
 
-        FVector2 scroll;
+        FVector2 scroll{};
 
         FVector2 windowLastPos = { 0.0f, 0.0f };
         FVector2 windowCurrentPos = { 0.0f, 0.0f };

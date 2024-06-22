@@ -50,7 +50,7 @@ UImGui_CComponentHandle UImGui_Titlebar_makeCTitlebarComponent(UImGui_ComponentR
                                                                UImGui_ComponentRegularFun begin, UImGui_ComponentTickFun tick, UImGui_ComponentRegularFun end,
                                                                UImGui_ComponentRegularFun destruct, UImGui_CComponentData data)
 {
-    auto* handle = (CTitlebarComponentInternalClass*)UImGui::TitlebarComponent::make<CTitlebarComponentInternalClass>();
+    auto* handle = dynamic_cast<CTitlebarComponentInternalClass*>(UImGui::TitlebarComponent::make<CTitlebarComponentInternalClass>());
     handle->state = data.state;
     handle->name = data.name;
     handle->id = data.id;

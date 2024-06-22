@@ -50,7 +50,7 @@ UImGui_CComponentHandle UImGui_Inline_makeCInlineComponent(UImGui_ComponentRegul
                                             UImGui_ComponentRegularFun begin, UImGui_ComponentTickFun tick, UImGui_ComponentRegularFun end,
                                             UImGui_ComponentRegularFun destruct, UImGui_CComponentData data)
 {
-    auto* handle = (CInlineComponentInternalClass*)UImGui::InlineComponent::make<CInlineComponentInternalClass>();
+    auto* handle = dynamic_cast<CInlineComponentInternalClass*>(UImGui::InlineComponent::make<CInlineComponentInternalClass>());
     handle->state = data.state;
     handle->name = data.name;
     handle->id = data.id;

@@ -16,6 +16,6 @@ namespace UImGui
         VkQueue presentationQueue{};
         VkDevice device{};
         VkPhysicalDevice physicalDevice{};
-        QueueFamilyIndices indices;
+        //QueueFamilyIndices indices;
     };
 }

@@ -33,7 +33,7 @@ void UImGui::Instance::beginAutohandle() const noexcept
             initInfo.cInitInfo->beginFuncs[i](initInfo.cInitInfo);
 }
 
-void UImGui::Instance::tickAutohandle(float deltaTime) const noexcept
+void UImGui::Instance::tickAutohandle(const float deltaTime) const noexcept
 {
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->tickFuncs != nullptr)
         for (size_t i = 0; i < initInfo.cInitInfo->tickSize; i++)

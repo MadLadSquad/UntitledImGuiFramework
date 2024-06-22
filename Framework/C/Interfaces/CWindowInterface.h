@@ -225,7 +225,7 @@ extern "C"
     // Event safety - begin, style, post-begin
     // Sets the window to the provided monitor. When moving the window, the window will be moved to coordinates
     // (0;0) of the new monitor, while preserving the width and height and using the new monitor's refresh rate
-    UIMGUI_PUBLIC_API void UImGui_Window_setWindowMonitor(UImGui_CMonitorData* monitor);
+    UIMGUI_PUBLIC_API void UImGui_Window_setWindowMonitor(const UImGui_CMonitorData* monitor);
 
     // Event safety - begin, style, post-begin
     // Returns a list of monitors, first monitor is the primary monitor, i.e. the monitor where global UI elements

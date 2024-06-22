@@ -14,7 +14,7 @@ extern "C"
     UIMGUI_PUBLIC_API UImGui_String UImGui_Utility_keyToText(uint16_t key, bool bLong);
 
     // Event Safety - Any time
-    UIMGUI_PUBLIC_API UImGui_String UImGui_Utility_keyToTextInputAction(UImGui_CInputAction* action, bool bLong);
+    UIMGUI_PUBLIC_API UImGui_String UImGui_Utility_keyToTextInputAction(const UImGui_CInputAction* action, bool bLong);
 
     // Event Safety - Any time
     UIMGUI_PUBLIC_API void UImGui_Utility_removeConsole();

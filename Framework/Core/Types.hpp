@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <vector>
 #include <Core/Defines.hpp>
 
@@ -20,44 +19,43 @@ namespace UImGui
     typedef UImGui_FVector4 FVector4;
 
     typedef UImGui_String String;
-
     typedef std::string FString;
 
-    YAML::Emitter& operator<<(YAML::Emitter& out, const FVector4& vect) noexcept;
-    YAML::Emitter& operator<<(YAML::Emitter& out, const FVector& vect) noexcept;
-    YAML::Emitter& operator<<(YAML::Emitter& out, const FVector2& vect) noexcept;
+    UIMGUI_PUBLIC_API YAML::Emitter& operator<<(YAML::Emitter& out, const FVector4& vect) noexcept;
+    UIMGUI_PUBLIC_API YAML::Emitter& operator<<(YAML::Emitter& out, const FVector& vect) noexcept;
+    UIMGUI_PUBLIC_API YAML::Emitter& operator<<(YAML::Emitter& out, const FVector2& vect) noexcept;
 
-    FVector2 operator+(FVector2 x, FVector2 y) noexcept;
-    FVector operator+(FVector x, FVector y) noexcept;
-    FVector4 operator+(FVector4 x, FVector4 y) noexcept;
+    UIMGUI_PUBLIC_API FVector2 operator+(FVector2 x, FVector2 y) noexcept;
+    UIMGUI_PUBLIC_API FVector operator+(FVector x, FVector y) noexcept;
+    UIMGUI_PUBLIC_API FVector4 operator+(FVector4 x, FVector4 y) noexcept;
 
-    FVector2 operator-(FVector2 x, FVector2 y) noexcept;
-    FVector operator-(FVector x, FVector y) noexcept;
-    FVector4 operator-(FVector4 x, FVector4 y) noexcept;
+    UIMGUI_PUBLIC_API FVector2 operator-(FVector2 x, FVector2 y) noexcept;
+    UIMGUI_PUBLIC_API FVector operator-(FVector x, FVector y) noexcept;
+    UIMGUI_PUBLIC_API FVector4 operator-(FVector4 x, FVector4 y) noexcept;
 
-    FVector2 operator*(FVector2 x, FVector2 y) noexcept;
-    FVector operator*(FVector x, FVector y) noexcept;
-    FVector4 operator*(FVector4 x, FVector4 y) noexcept;
+    UIMGUI_PUBLIC_API FVector2 operator*(FVector2 x, FVector2 y) noexcept;
+    UIMGUI_PUBLIC_API FVector operator*(FVector x, FVector y) noexcept;
+    UIMGUI_PUBLIC_API FVector4 operator*(FVector4 x, FVector4 y) noexcept;
 
-    FVector2 operator/(FVector2 x, FVector2 y) noexcept;
-    FVector operator/(FVector x, FVector y) noexcept;
-    FVector4 operator/(FVector4 x, FVector4 y) noexcept;
+    UIMGUI_PUBLIC_API FVector2 operator/(FVector2 x, FVector2 y) noexcept;
+    UIMGUI_PUBLIC_API FVector operator/(FVector x, FVector y) noexcept;
+    UIMGUI_PUBLIC_API FVector4 operator/(FVector4 x, FVector4 y) noexcept;
 
-    FVector2 operator+(FVector2 x, float y) noexcept;
-    FVector operator+(FVector x, float y) noexcept;
-    FVector4 operator+(FVector4 x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector2 operator+(FVector2 x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector operator+(FVector x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector4 operator+(FVector4 x, float y) noexcept;
 
-    FVector2 operator-(FVector2 x, float y) noexcept;
-    FVector operator-(FVector x, float y) noexcept;
-    FVector4 operator-(FVector4 x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector2 operator-(FVector2 x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector operator-(FVector x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector4 operator-(FVector4 x, float y) noexcept;
 
-    FVector2 operator*(FVector2 x, float y) noexcept;
-    FVector operator*(FVector x, float y) noexcept;
-    FVector4 operator*(FVector4 x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector2 operator*(FVector2 x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector operator*(FVector x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector4 operator*(FVector4 x, float y) noexcept;
 
-    FVector2 operator/(FVector2 x, float y) noexcept;
-    FVector operator/(FVector x, float y) noexcept;
-    FVector4 operator/(FVector4 x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector2 operator/(FVector2 x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector operator/(FVector x, float y) noexcept;
+    UIMGUI_PUBLIC_API FVector4 operator/(FVector4 x, float y) noexcept;
 }
 
 namespace YAML

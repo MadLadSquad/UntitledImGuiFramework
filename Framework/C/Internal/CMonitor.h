@@ -36,21 +36,21 @@ UIMGUI_PUBLIC_API void UImGui_Monitor_init(UImGui_CMonitorData* data);
 UIMGUI_PUBLIC_API void UImGui_Monitor_initWithMonitor_Internal(UImGui_CMonitorData* data, GLFWmonitor* monitor);
 
 // Event safety - begin, style, post-begin
-UIMGUI_PUBLIC_API UImGui_FVector2 UImGui_Monitor_getPhysicalSize(UImGui_CMonitorData* data);
+UIMGUI_PUBLIC_API UImGui_FVector2 UImGui_Monitor_getPhysicalSize(const UImGui_CMonitorData* data);
 
 // Event safety - begin, style, post-begin
-UIMGUI_PUBLIC_API UImGui_FVector2 UImGui_Monitor_getContentScale(UImGui_CMonitorData* data);
+UIMGUI_PUBLIC_API UImGui_FVector2 UImGui_Monitor_getContentScale(const UImGui_CMonitorData* data);
 
 // Event safety - begin, style, post-begin
-UIMGUI_PUBLIC_API UImGui_FVector2 UImGui_Monitor_getVirtualPosition(UImGui_CMonitorData* data);
+UIMGUI_PUBLIC_API UImGui_FVector2 UImGui_Monitor_getVirtualPosition(const UImGui_CMonitorData* data);
 
 // Event safety - begin, style, post-begin
 // Returns work area as FVector4 where x = x position, y = y position, z = width, w = height
-UIMGUI_PUBLIC_API UImGui_FVector4 UImGui_Monitor_getWorkArea(UImGui_CMonitorData* data);
+UIMGUI_PUBLIC_API UImGui_FVector4 UImGui_Monitor_getWorkArea(const UImGui_CMonitorData* data);
 
 // Event safety - begin, style, post-begin
 // May not be unique
-UIMGUI_PUBLIC_API UImGui_String UImGui_Monitor_getName(UImGui_CMonitorData* data);
+UIMGUI_PUBLIC_API UImGui_String UImGui_Monitor_getName(const UImGui_CMonitorData* data);
 
 // Event safety - begin, style, post-begin
 UIMGUI_PUBLIC_API void UImGui_Monitor_pushEvent(UImGui_CMonitorData* data, UImGui_Monitor_EventsFun f);

@@ -1,5 +1,4 @@
 #pragma once
-#include <Core/Defines.hpp>
 #include <Core/Types.hpp>
 #include "Utils/Window.hpp"
 #include <C/Interfaces/CWindowInterface.h>
