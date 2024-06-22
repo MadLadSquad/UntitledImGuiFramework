@@ -3,7 +3,7 @@
 
 namespace UImGui
 {
-    class OpenGLRenderer : public GenericInternalRenderer
+    class OpenGLRenderer final : public GenericInternalRenderer
     {
     public:
         OpenGLRenderer() = default;
@@ -17,6 +17,8 @@ namespace UImGui
         virtual void ImGuiShutdown() noexcept override;
         virtual void ImGuiInit() noexcept override;
         virtual void ImGuiRenderData() noexcept override;
+
+        virtual ~OpenGLRenderer() = default;
     private:
 
     };

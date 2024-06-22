@@ -15,12 +15,12 @@ void UImGui::ClientSideBar::Begin() noexcept
     ImGui::BeginGroup();
 }
 
-void UImGui::ClientSideBar::End(UImGui::ClientSideBarFlags flags, FVector4 destructiveColour, FVector4 destructiveColourActive) noexcept
+void UImGui::ClientSideBar::End(const ClientSideBarFlags flags, const FVector4 destructiveColour, const FVector4 destructiveColourActive) noexcept
 {
     // Create an invisible button that fills up all available space but leaves enough for the buttons
     static float width = 0;
     ImGui::InvisibleButton("uimgui_internal_main_bar_spacing", { ImGui::GetContentRegionAvail().x - width, ImGui::GetFrameHeight() });
-    auto& style = ImGui::GetStyle();
+    const auto& style = ImGui::GetStyle();
     width = 0;
 
     ImGui::PushStyleColor(ImGuiCol_Button, style.Colors[ImGuiCol_MenuBarBg]); // Dear imgui does some fuckery when ImGui::BeginMainMenuBar is called
@@ -44,7 +44,7 @@ void UImGui::ClientSideBar::End(UImGui::ClientSideBarFlags flags, FVector4 destr
         if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
         {
             bDragging = true;
-            auto pos = Window::getCurrentWindowPosition();
+            const auto pos = Window::getCurrentWindowPosition();
             Window::setCurrentWindowPosition({ pos.x + ImGui::GetIO().MouseDelta.x, pos.y + ImGui::GetIO().MouseDelta.y });
         }
         else
@@ -55,7 +55,7 @@ void UImGui::ClientSideBar::End(UImGui::ClientSideBarFlags flags, FVector4 destr
 void UImGui::ClientSideBar::renderMinimiseButton(float& width, const ImGuiStyle& style) noexcept
 {
     if (ImGui::SmallButton(" ##uimgui_internal_invisible_minimise_button"))
-        UImGui::Window::iconifyWindow();
+        Window::iconifyWindow();
     UPDATE_PADDING;
     ADD_PADDING_TO_ITEM_RECT(min, max, padding);
 
@@ -69,16 +69,16 @@ void UImGui::ClientSideBar::renderMaximiseButton(float& width, const ImGuiStyle&
     static bool bWindowed = false;
     if (bFirst)
     {
-        bWindowed = !UImGui::Window::getWindowCurrentlyMaximised();
+        bWindowed = !Window::getWindowCurrentlyMaximised();
         bFirst = false;
     }
 
     if (ImGui::SmallButton(" ##uimgui_internal_invisible_maximise_button"))
     {
         if (bWindowed)
-            UImGui::Window::maximiseWindow();
+            Window::maximiseWindow();
         else
-            UImGui::Window::restoreWindowState();
+            Window::restoreWindowState();
         bWindowed = !bWindowed;
     }
     UPDATE_PADDING;
@@ -97,7 +97,7 @@ void UImGui::ClientSideBar::renderCloseButton(float& width, const ImGuiStyle& st
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::ColorConvertFloat4ToU32({ destructiveColourActive.x, destructiveColourActive.y, destructiveColourActive.z, destructiveColourActive.w }));
 
     if (ImGui::SmallButton(" ##uimgui_internal_invisible_close_button"))
-        UImGui::Instance::shutdown();
+        Instance::shutdown();
     UPDATE_PADDING;
     ADD_PADDING_TO_ITEM_RECT(min, max, padding);
 

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-oldpwd=$(pwd)
 windows=false
 
 # Used to automatically find and add the Visual Studio MSBuild.exe directory to the environment variables!
@@ -37,8 +36,8 @@ function create_folders()
   mkdir Exported || echo "Project already exists!"
 
   # Copy the config template we want
-  cp -r ../../Config/ .
-  cp -r ../../Content/ .
+  cp -r ../../Config .
+  cp -r ../../Content .
   cp ../../export.sh .
 
   # We create a project file which will be used to configure our generated files
@@ -76,8 +75,8 @@ enabled-modules:
       cmd //c elevate.bat mklink //d .\\Framework ..\\..\\Framework && cmd //c elevate.bat mklink //d .\\UVKBuildTool ..\\..\\UVKBuildTool && rm elevate.bat && return
     fi
   fi
-  ln -s "../../Framework/" Framework 2> /dev/null || cp -r ../../Framework/ .
-  ln -s "../../UVKBuildTool/" UVKBuildTool 2> /dev/null || cp -r ../../UVKBuildTool/ .
+  ln -s "../../Framework/" Framework 2> /dev/null || cp -r ../../Framework .
+  ln -s "../../UVKBuildTool/" UVKBuildTool 2> /dev/null || cp -r ../../UVKBuildTool .
 }
 
 function generate_files()

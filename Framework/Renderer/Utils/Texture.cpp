@@ -6,14 +6,14 @@
 #include <Utilities.hpp>
 #include <Global.hpp>
 
-UImGui::Texture::Texture(UImGui::String file) noexcept
+UImGui::Texture::Texture(String file) noexcept
 {
     init(file);
 }
 
-void UImGui::Texture::init(UImGui::String file) noexcept
+void UImGui::Texture::init(String file) noexcept
 {
-    auto& strings = UImGui::Utility::getGlobal().deallocationStruct.keyStrings;
+    auto& strings = Utility::getGlobal().deallocationStruct.keyStrings;
 
     strings.emplace_back(file);
     dt.filename = strings.back().c_str();
@@ -27,7 +27,7 @@ void UImGui::Texture::init(UImGui::String file) noexcept
     dt.customSaveFunction = [](TextureData*, String) -> bool { return false; };
 }
 
-void UImGui::Texture::load(void* data, uint32_t x, uint32_t y, uint32_t depth, bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
+void UImGui::Texture::load(void* data, uint32_t x, uint32_t y, const uint32_t depth, const bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
 {
     if (data == nullptr || (x == 0 && y == 0))
     {
@@ -60,7 +60,7 @@ void UImGui::Texture::load(void* data, uint32_t x, uint32_t y, uint32_t depth, b
         freeFunc(data);
 }
 
-void UImGui::Texture::loadImGui(void* data, uint32_t x, uint32_t y, uint32_t depth, bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
+void UImGui::Texture::loadImGui(void* data, uint32_t x, uint32_t y, const uint32_t depth, const bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
 {
     if (data == nullptr || (x == 0 && y == 0))
     {
@@ -108,7 +108,7 @@ void UImGui::Texture::clear() noexcept
     dt.id = 0;
     dt.size = { 0.0f, 0.0f };
 
-    auto& strings = UImGui::Utility::getGlobal().deallocationStruct.keyStrings;
+    auto& strings = Utility::getGlobal().deallocationStruct.keyStrings;
     strings.erase(strings.begin() + static_cast<std::string::difference_type>(dt.storageIndex));
 }
 
@@ -127,7 +127,7 @@ const uint32_t& UImGui::Texture::get() const noexcept
     return dt.id;
 }
 
-void UImGui::Texture::setCustomSaveFunction(UImGui::Texture::CustomSaveFunction f) noexcept
+void UImGui::Texture::setCustomSaveFunction(const CustomSaveFunction f) noexcept
 {
     dt.customSaveFunction = f;
 }

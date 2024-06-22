@@ -14,7 +14,7 @@ void UImGui::GUIRenderer::beginFrame() noexcept
 
 void UImGui::GUIRenderer::shutdown(const FString& ini, GenericInternalRenderer* renderer) noexcept
 {
-    auto& initInfo = Instance::get()->initInfo;
+    const auto& initInfo = Instance::get()->initInfo;
 
     for (auto& a : initInfo.titlebarComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
@@ -55,7 +55,7 @@ void UImGui::GUIRenderer::shutdown(const FString& ini, GenericInternalRenderer* 
         }
     }
 
-    ImGui::SaveIniSettingsToDisk((UImGui::internalGlobal.instance->initInfo.configDir + "Core/" + ini + ".ini").c_str());
+    ImGui::SaveIniSettingsToDisk((internalGlobal.instance->initInfo.configDir + "Core/" + ini + ".ini").c_str());
     renderer->ImGuiShutdown();
     ImGui_ImplGlfw_Shutdown();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
@@ -80,7 +80,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
     io.WantSaveIniSettings = false;
     io.ConfigViewportsNoTaskBarIcon = true;
 
-    ImGui::LoadIniSettingsFromDisk((UImGui::internalGlobal.instance->initInfo.configDir + "Core/" + ini + ".ini").c_str());
+    ImGui::LoadIniSettingsFromDisk((internalGlobal.instance->initInfo.configDir + "Core/" + ini + ".ini").c_str());
     ImGui::StyleColorsDark();
 
     ImGuiStyle& style = ImGui::GetStyle();
