@@ -2,7 +2,11 @@
 #include <Renderer.hpp>
 #include <ImGui/ImGui.hpp>
 #include <Interfaces/WindowInterface.hpp>
-#include <GL/glew.h>
+#ifndef __APPLE__
+    #include <GL/glew.h>
+#else
+    #include <OpenGL/GL.h>
+#endif
 #include <GLFW/glfw3.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -53,7 +57,11 @@ void UImGui::OpenGLRenderer::ImGuiShutdown() noexcept
 void UImGui::OpenGLRenderer::ImGuiInit() noexcept
 {
     ImGui_ImplGlfw_InitForOpenGL(Window::get().data(), true);
+#ifdef __APPLE__
+    ImGui_ImplOpenGL3_Init("#version 410");
+#else
     ImGui_ImplOpenGL3_Init("#version 450");
+#endif
 }
 
 void UImGui::OpenGLRenderer::ImGuiRenderData() noexcept

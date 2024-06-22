@@ -1,7 +1,11 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 
 #include "Texture.hpp"
-#include <GL/glew.h>
+#ifndef __APPLE__
+    #include <GL/glew.h>
+#else
+    #include <OpenGL/GL.h>
+#endif
 #include <stb_image.h>
 #include <Utilities.hpp>
 #include <Global.hpp>

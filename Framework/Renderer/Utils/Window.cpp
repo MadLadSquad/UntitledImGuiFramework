@@ -15,7 +15,11 @@
 
 #include "Window.hpp"
 #include "Global.hpp"
-#include <GL/glew.h>
+#ifndef __APPLE__
+    #include <GL/glew.h>
+#else
+    #include <OpenGL/GL.h>
+#endif
 #include <GLFW/glfw3.h>
 
 #include <GLFW/glfw3native.h>
@@ -134,10 +138,16 @@ void UImGui::WindowInternal::createWindow() noexcept
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Have to set this to NO_API because that's how Vulkan is done in it
     else
     {
+#ifndef __APPLE__
         // Add GLFW window flags and enable OpenGL
         glewExperimental = GL_TRUE;
+#endif
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+#ifdef __APPLE__
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+#else
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+#endif
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
         glfwWindowHint(GLFW_SAMPLES, 16);
@@ -193,6 +203,7 @@ void UImGui::WindowInternal::createWindow() noexcept
 
     if (!Renderer::data().bVulkan)
     {
+#ifndef __APPLE__
         if (glewInit() != GLEW_OK)
         {
             glfwDestroyWindow(windowMain);
@@ -200,6 +211,7 @@ void UImGui::WindowInternal::createWindow() noexcept
             Logger::log("GLEW initialisation failed!", UVK_LOG_TYPE_ERROR);
             return;
         }
+#endif
         // Set viewport and global pointer to use in callbacks
         glViewport(0, 0, tempx, tempy);
     }
@@ -339,7 +351,7 @@ skip_window_config:
 
     try
     {
-        out = YAML::LoadFile(UImGui::internalGlobal.instance->initInfo.configDir + "Core/Keybindings.yaml");
+        out = YAML::LoadFile(internalGlobal.instance->initInfo.configDir + "Core/Keybindings.yaml");
     }
     catch (YAML::BadFile&)
     {
