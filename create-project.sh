@@ -112,7 +112,7 @@ else
   read -rp "Enter Your Application Name: " prjname # read the project name
 fi
 prjname=${prjname/ /} # Remove any spaces if the name contains them
-cpus=$(grep -c processor /proc/cpuinfo) || cpus=$(sysctl -n hw.ncpu) # get the cpu threads for maximum performance when compiling. The second command is for MacOS systems if we even try to support them
+cpus=$(grep -c processor /proc/cpuinfo 2> /dev/null) || cpus=$(sysctl -n hw.ncpu) # get the cpu threads for maximum performance when compiling. The second command is for MacOS systems if we even try to support them
 echo -e "\x1B[32mCopiling with ${cpus} compute jobs!\033[0m"
 find_visual_studio_directory
 create_folders "${prjname}"
