@@ -5,7 +5,7 @@
 extern "C"
 {
 #endif
-void UImGui_StateTracker_push(UImGui_CTransaction transaction, bool bRedoIsInit)
+void UImGui_StateTracker_push(const UImGui_CTransaction transaction, const bool bRedoIsInit)
 {
     UImGui::StateTracker::push({
         .undofunc = [&](UImGui::TransactionPayload& payload) -> void

@@ -1,7 +1,6 @@
 #include "Utilities.hpp"
 #include <Global.hpp>
 #include <Instance.hpp>
-#include <C/Internal/Keys.h>
 #include <thread>
 #ifdef _WIN32
     #include <windows.h>

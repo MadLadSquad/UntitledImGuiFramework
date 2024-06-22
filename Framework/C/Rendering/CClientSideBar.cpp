@@ -6,7 +6,7 @@ void UImGui_ClientSideBar_Begin()
     UImGui::ClientSideBar::Begin();
 }
 
-void UImGui_ClientSideBar_End(UImGui_ClientSideBarFlags flags, UImGui_FVector4 destructiveColour, UImGui_FVector4 destructiveColourActive) noexcept
+void UImGui_ClientSideBar_End(const UImGui_ClientSideBarFlags flags, const UImGui_FVector4 destructiveColour, const UImGui_FVector4 destructiveColourActive)
 {
     UImGui::ClientSideBar::End(flags, destructiveColour, destructiveColourActive);
 }

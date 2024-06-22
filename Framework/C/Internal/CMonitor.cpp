@@ -1,5 +1,4 @@
 #include "CMonitor.h"
-#include <Interfaces/WindowInterface.hpp>
 #include <Utils/Window.hpp>
 #include <GLFW/glfw3.h>
 

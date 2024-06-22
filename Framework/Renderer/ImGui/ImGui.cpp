@@ -2,7 +2,6 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <GLFW/glfw3.h>
-#include <Utils/Window.hpp>
 #include "ImGui.hpp"
 #include <Core/Components/Instance.hpp>
 
@@ -16,7 +15,7 @@ void UImGui::GUIRenderer::shutdown(const FString& ini, GenericInternalRenderer* 
 {
     const auto& initInfo = Instance::get()->initInfo;
 
-    for (auto& a : initInfo.titlebarComponents)
+    for (const auto& a : initInfo.titlebarComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->end();
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->titlebarComponents != nullptr)
@@ -29,7 +28,7 @@ void UImGui::GUIRenderer::shutdown(const FString& ini, GenericInternalRenderer* 
         }
     }
 
-    for (auto& a : initInfo.windowComponents)
+    for (const auto& a : initInfo.windowComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->end();
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->windowComponents != nullptr)
@@ -42,7 +41,7 @@ void UImGui::GUIRenderer::shutdown(const FString& ini, GenericInternalRenderer* 
         }
     }
 
-    for (auto& a : initInfo.inlineComponents)
+    for (const auto& a : initInfo.inlineComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->end();
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->inlineComponents != nullptr)
@@ -86,7 +85,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
     ImGuiStyle& style = ImGui::GetStyle();
 #ifdef UIMGUI_THEME_MODULE_ENABLED
     if (Modules::data().theming)
-        UImGui::Theme::load((UImGui::internalGlobal.instance->initInfo.configDir + "Theme/default.theme.yaml").c_str());
+        Theme::load((internalGlobal.instance->initInfo.configDir + "Theme/default.theme.yaml").c_str());
 #endif
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
@@ -96,9 +95,9 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
     renderer->ImGuiInit();
 
     Instance::get()->begin();
-    auto& initInfo = Instance::get()->initInfo;
+    const auto& initInfo = Instance::get()->initInfo;
 
-    for (auto& a : Instance::get()->initInfo.titlebarComponents)
+    for (const auto& a : Instance::get()->initInfo.titlebarComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->titlebarComponents != nullptr)
@@ -111,7 +110,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
         }
     }
 
-    for (auto& a : Instance::get()->initInfo.windowComponents)
+    for (const auto& a : Instance::get()->initInfo.windowComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->windowComponents != nullptr)
@@ -124,7 +123,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
         }
     }
 
-    for (auto& a : Instance::get()->initInfo.inlineComponents)
+    for (const auto& a : Instance::get()->initInfo.inlineComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->inlineComponents != nullptr)
@@ -138,7 +137,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
     }
 }
 
-void UImGui::GUIRenderer::beginUI(float deltaTime, GenericInternalRenderer* renderer) noexcept
+void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer* renderer) noexcept
 {
     renderer->ImGuiNewFrame();
 
@@ -149,7 +148,7 @@ void UImGui::GUIRenderer::beginUI(float deltaTime, GenericInternalRenderer* rend
     window_flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
     if (opt_fullscreen)
     {
-        ImGuiViewport* viewport = ImGui::GetMainViewport();
+        const ImGuiViewport* viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowBgAlpha(1.0f);
 
         ImGui::SetNextWindowPos(viewport->WorkPos);
@@ -174,9 +173,9 @@ void UImGui::GUIRenderer::beginUI(float deltaTime, GenericInternalRenderer* rend
     ImGui::PopStyleVar();
 
     Instance::get()->tick(deltaTime);
-    auto& initInfo = Instance::get()->initInfo;
+    const auto& initInfo = Instance::get()->initInfo;
 
-    for (auto& a : Instance::get()->initInfo.titlebarComponents)
+    for (const auto& a : Instance::get()->initInfo.titlebarComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->titlebarComponents != nullptr)
@@ -189,7 +188,7 @@ void UImGui::GUIRenderer::beginUI(float deltaTime, GenericInternalRenderer* rend
         }
     }
 
-    for (auto& a : Instance::get()->initInfo.inlineComponents)
+    for (const auto& a : Instance::get()->initInfo.inlineComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->inlineComponents != nullptr)
@@ -206,14 +205,14 @@ void UImGui::GUIRenderer::beginUI(float deltaTime, GenericInternalRenderer* rend
         ImGui::PopStyleVar(2);
 
     // DockSpace
-    ImGuiIO& io = ImGui::GetIO();
+    const ImGuiIO& io = ImGui::GetIO();
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
-        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+        const ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
 
-    for (auto& a : Instance::get()->initInfo.windowComponents)
+    for (const auto& a : Instance::get()->initInfo.windowComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->windowComponents != nullptr)

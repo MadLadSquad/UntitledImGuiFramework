@@ -25,7 +25,7 @@ extern "C"
 
     // Renders the bar. In C++, flags defaults to UIMGUI_CLIENT_SIDE_BAR_FLAG_ALL, { 1.0, 0.482, 0.388f, 1.0f }, { 0.753f, 0.110f, 0.157f, 1.0f }
     // Event Safety - Post-begin
-    UIMGUI_PUBLIC_API void UImGui_ClientSideBar_End(UImGui_ClientSideBarFlags flags, UImGui_FVector4 destructiveColour, UImGui_FVector4 destructiveColourActive) noexcept;
+    UIMGUI_PUBLIC_API void UImGui_ClientSideBar_End(UImGui_ClientSideBarFlags flags, UImGui_FVector4 destructiveColour, UImGui_FVector4 destructiveColourActive);
 #ifdef __cplusplus
 }
 #endif

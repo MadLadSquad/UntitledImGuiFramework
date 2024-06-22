@@ -1,9 +1,8 @@
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
 #include "Undo.hpp"
-#include "Global.hpp"
 #include <Modules/Manager/ModulesManager.hpp>
 
-void eraseWhenOverBufferSize(std::deque<UImGui::Transaction*>& container, std::deque<UImGui::Transaction>& transactions, size_t i) noexcept
+void eraseWhenOverBufferSize(std::deque<UImGui::Transaction*>& container, const std::deque<UImGui::Transaction>& transactions, const size_t i) noexcept
 {
     for (size_t j = 0; j < container.size(); j++)
         if (&transactions[i] == container[j])
@@ -15,7 +14,7 @@ void UImGui::StateTracker::init() noexcept
     transactionSize = Modules::data().maxTransactions;
 }
 
-void UImGui::StateTracker::push(const UImGui::Transaction& transaction, bool bRedoIsInit) noexcept
+void UImGui::StateTracker::push(const Transaction& transaction, const bool bRedoIsInit) noexcept
 {
     Modules::get().stateTracker.pushAction(transaction, bRedoIsInit);
 }
@@ -30,12 +29,12 @@ void UImGui::StateTracker::redo() noexcept
     Modules::get().stateTracker.rredo();
 }
 
-void UImGui::StateTracker::pushAction(const UImGui::Transaction& transaction, bool bRedoIsInit)
+void UImGui::StateTracker::pushAction(const Transaction& transaction, const bool bRedoIsInit)
 {
     if (transactions.size() == transactionSize)
     {
         // Destroying half of the buffer saves memory and performance for future transactions
-        size_t size = transactionSize / 2;
+        const size_t size = transactionSize / 2;
 
         for (size_t i = 0; i < size; i++)
         {

@@ -1,8 +1,6 @@
 #include "ModulesManager.hpp"
 #include <Core/Global.hpp>
 #include <yaml-cpp/yaml.h>
-// The imspinner devs decided to just not include imgui
-#include <imgui.h>
 #ifdef UIMGUI_SPINNERS_MODULE_ENABLED
     #include "Modules/Spinners/ThirdParty/imspinner/imspinner.h"
 #endif
@@ -116,8 +114,8 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
 #endif
 #ifdef UIMGUI_I18N_MODULE_ENABLED
     if (Modules::data().i18n)
-        if (auto result = translationEngine.init((UImGui::Utility::getGlobal().instance->initInfo.configDir + "Translations").c_str()) != UI18N_INIT_RESULT_SUCCESS)
-            Logger::log("I18N module: There was an issue with loading or processing the translations. Error code: ", UVK_LOG_TYPE_WARNING, (int)result);
+        if (const auto result = translationEngine.init((Utility::getGlobal().instance->initInfo.configDir + "Translations").c_str()) != UI18N_INIT_RESULT_SUCCESS)
+            Logger::log("I18N module: There was an issue with loading or processing the translations. Error code: ", UVK_LOG_TYPE_WARNING, CAST(int, result));
 #endif
 #ifdef UIMGUI_OS_MODULE_ENABLED
     #ifdef UIMGUI_OPEN_SUBMODULE_ENABLED

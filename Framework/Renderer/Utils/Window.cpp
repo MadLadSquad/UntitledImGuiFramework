@@ -436,6 +436,9 @@ void UImGui::WindowInternal::setWindowAlwaysOnTop() noexcept
     #ifdef GLFW_EXPOSE_NATIVE_WIN32
         auto window = glfwGetWin32Window(windowMain);
         SetWindowPos(window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    #else
+        auto window = glfwGetCocoaWindow(windowMain);
+        
     #endif
 #endif
 }
