@@ -48,3 +48,5 @@ uvproj.yaml
 CMakeLists.txt
 
 docs/
+
+.DS_Store
