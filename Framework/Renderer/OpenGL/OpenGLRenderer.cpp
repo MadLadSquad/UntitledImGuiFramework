@@ -27,7 +27,7 @@ void UImGui::OpenGLRenderer::init(RendererInternal& renderer) noexcept
 
 void UImGui::OpenGLRenderer::renderStart(double deltaTime) noexcept
 {
-    auto& colours = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
+    const auto& colours = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
     glClearColor(colours.x, colours.y, colours.z, colours.w);
     glClear(GL_COLOR_BUFFER_BIT);
 }
