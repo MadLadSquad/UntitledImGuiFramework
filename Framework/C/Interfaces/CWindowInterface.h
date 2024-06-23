@@ -66,48 +66,43 @@ extern "C"
     UIMGUI_PUBLIC_API void UImGui_Window_pushWindowCloseCallback(UImGui_Window_pushWindowCloseCallbackFun f);
     
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11
-    // Platforms to be supported - Wayland, Win32
+    // Available for platforms - X11, Win32 & macOS
+    // Platforms to be supported - Wayland
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowAlwaysOnTop();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11
-    // Platforms to be supported - Wayland, Win32
+    // Available for platforms - X11, Win32 & macOS
+    // Platforms to be supported - Wayland
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowAlwaysOnBottom();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11
-    // Platforms to be supported - Wayland, Win32
-    UIMGUI_PUBLIC_API void UImGui_Window_Platform_disableWindowMovement();
-
-    // Event Safety - begin, style, post-begin
-    // Available for platforms - X11
-    // Platforms to be supported - Wayland, Win32
+    // Available for platforms - X11, Win32 & macOS
+    // Platforms to be supported - Wayland
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowShowingOnPager(bool bShowInPager);
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11
-    // Platforms to be supported - Wayland, Win32
+    // Available for platforms - X11, Win32 & macOS
+    // Platforms to be supported - Wayland
     UIMGUI_PUBLIC_API bool UImGui_Window_Platform_getWindowShowingOnPager();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11
-    // Platforms to be supported - Wayland, Win32
+    // Available for platforms - X11, Win32 & macOS
+    // Platforms to be supported - Wayland
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowShowingOnTaskbar(bool bShowOnTaskbar);
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11
-    // Platforms to be supported - Wayland, Win32
+    // Available for platforms - X11, Win32 & macOS
+    // Platforms to be supported - Wayland
     UIMGUI_PUBLIC_API bool UImGui_Window_Platform_getWindowShowingOnTaskbar();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11
+    // Available for platforms - X11 & macOS
     // Platforms to be supported - Wayland, Win32
-    // Sets the X11 window type
+    // Sets the X11/Cocoa window type
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowType(UImGui_String type);
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32
+    // Available for platforms - X11, Win32 & macOS
     // Platforms to be supported - Wayland
-    // Returns the window ID as a size_t
+    // Returns the window ID as a size_t. On macOS it returns the memory address to the window as its integer representation
     UIMGUI_PUBLIC_API size_t UImGui_Window_Platform_getWindowID();
 
     // Event safety - begin, style, post-begin

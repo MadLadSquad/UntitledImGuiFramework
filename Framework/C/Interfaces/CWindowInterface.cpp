@@ -98,11 +98,6 @@ void UImGui_Window_Platform_setWindowAlwaysOnBottom()
     UImGui::Window::Platform::setWindowAlwaysOnBottom();
 }
 
-void UImGui_Window_Platform_disableWindowMovement()
-{
-    UImGui::Window::Platform::disableWindowMovement();
-}
-
 void UImGui_Window_Platform_setWindowShowingOnPager(const bool bShowInPager)
 {
     UImGui::Window::Platform::setWindowShowingOnPager(bShowInPager);
