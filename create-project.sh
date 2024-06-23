@@ -47,6 +47,7 @@ version: \"1.0.0.0\"
 engine-version: \"1.0.0.0\"
 build-mode-static: false
 build-mode-vendor: true
+system-wide: false
 enabled-modules:
   os: false
   dbus: false

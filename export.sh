@@ -83,11 +83,11 @@ function cmake_i()
   cmake -DUIMGUI_INSTALL=ON "$@" || die_
 }
 
-jobs=$(grep -c processor /proc/cpuinfo) || jobs=$(sysctl -n hw.ncpu)
+jobs=$(grep -c processor /proc/cpuinfo 2> /dev/null) || jobs=$(sysctl -n hw.ncpu)
 
 real_framework_path=$(realpath Framework)
 mv Framework FrameworkSym || die_
-cp "${real_framework_path}" . -r || die_
+cp -r "${real_framework_path}" . || die_
 
 cd Exported/ || die_
 
