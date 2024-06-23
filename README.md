@@ -4,7 +4,7 @@
 [![trello](https://img.shields.io/badge/Trello-UDE-blue])](https://trello.com/b/HmfuRY2K/untitleddesktop)
 [![Discord](https://img.shields.io/discord/717037253292982315.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/4wgH8ZE)
 
-A desktop software development framework that uses Dear imgui as its UI and Rendering library.
+A desktop software development framework that uses dear imgui as its UI and rendering library.
 
 ## Motivation
 Desktop UI frameworks and libraries like QT and GTK are complicated and really rigid. Using them or system-specific UI libraries
@@ -59,17 +59,36 @@ functions for easily rendering bold, italic, underlined and other types of text
   - URL and file/folder opener with default application using the [UntitledOpen](https://github.com/MadLadSquad/UntitledOpen) library ✅
   - Exec integration using the [UntitledExec](https://github.com/MadLadSquad/UntitledExec) library ✅
   - Cross-platform system font querying using the [UntitledFontUtils](https://github.com/MadLadSquad/UntitledFontUtils) library ✅
-  - Unix: ✅
+  - Freedesktop: ✅
     - [XDG Basedir](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) integration ✅
     - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration ✅
 
 The framework uses C++ as its main development language. Additionally, because we want to include support for full modability and 
 plugins in mutiple languages, the user-facing API has a separate, completely C version that can be used to develop 
-applications too! 
+applications too!
 
 Simply write the required bindings to your language or generate them automatically from C using a relevant tool. As long as 
 you have the main engine library compiled you should easily be able to write applications in C or any other programming 
 language that supports C style functions. C and C++ ABI stability of the core is generally guaranteed.
+
+## Supported platforms
+We currently support the following platforms as official targets:
+
+1. Windows
+1. macOS
+1. Linux
+
+All of the operating systems above have generally the same features, as we're trying to have a generic platform to build desktop applications with. 
+
+The only exception is the Freedesktop submodule of the OS module, which provides more libraries for working with desktop environment features, that are 
+otherwise baked into the core OS libraries, when talking about Windows and macOS.
+
+### Future platform support
+For the 2.0 release of the framework, we plan to have first class support for the following additional platforms:
+
+1. WASM
+1. Android
+1. iOS
 
 ## Learn
 You can find the documentation in the [wiki](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki).
