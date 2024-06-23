@@ -74,11 +74,6 @@ namespace UImGui
             static void setWindowAlwaysOnBottom() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
-            // Platforms to be supported - Wayland
-            static void disableWindowMovement() noexcept;
-
-            // Event Safety - begin, style, post-begin
             // Platform note: On Win32 "setWindowShowingOnPager" and "setWindowShowingOnTaskbar" run the same code,
             // as it is not possible to disable the window from showing on both the taskbar and window switcher
             // Available for platforms - X11, Win32
@@ -105,9 +100,9 @@ namespace UImGui
             static void setWindowType(String type) noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for platforms - X11, Win32, macOS
             // Platforms to be supported - Wayland
-            // Returns the window ID as a size_t
+            // Returns the window ID as a size_t. On macOS this is the integer representation of the window pointer
             static size_t getWindowID() noexcept;
         };
 

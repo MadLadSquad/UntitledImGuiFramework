@@ -330,11 +330,6 @@ void UImGui::Window::Platform::setWindowAlwaysOnTop() noexcept
     get().setWindowAlwaysOnTop();
 }
 
-void UImGui::Window::Platform::disableWindowMovement() noexcept
-{
-    get().disableWindowMoving();
-}
-
 void UImGui::Window::Platform::setWindowAlwaysOnBottom() noexcept
 {
     get().setWindowAlwaysBelow();

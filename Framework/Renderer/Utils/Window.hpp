@@ -151,11 +151,6 @@ namespace UImGui
         // As of now, only supported in X11 and Win32
         // TODO: Port to Wayland
         // TODO: Port to macOS
-        void disableWindowMoving() noexcept;
-
-        // As of now, only supported in X11 and Win32
-        // TODO: Port to Wayland
-        // TODO: Port to macOS
         void setShowWindowInPager(bool bShowInPagerr) noexcept;
 
         // As of now, only supported in X11 and Win32
@@ -169,9 +164,9 @@ namespace UImGui
         // TODO: Port to macOS
         void setWindowType(const char* type) noexcept;
 
-        // As of now, only supported in X11 and Win32
+        // As of now, only supported in X11, Win32 and macOS
+        // On macOS this is an integer representation of the underlying pointer
         // TODO: Port to Wayland
-        // TODO: Port to macOS
         size_t getWindowID() noexcept;
 
         bool bShowOnPager = true;

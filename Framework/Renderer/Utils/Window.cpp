@@ -437,15 +437,13 @@ void UImGui::WindowInternal::setWindowAlwaysOnTop() noexcept
         auto window = glfwGetWin32Window(windowMain);
         SetWindowPos(window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
     #else
-        auto window = glfwGetCocoaWindow(windowMain);
-        
+
     #endif
 #endif
 }
 
 void UImGui::WindowInternal::setWindowAlwaysBelow() noexcept
 {
-
 #ifdef GLFW_EXPOSE_NATIVE_X11
     Display* display = glfwGetX11Display();
     ::Window window = glfwGetX11Window(windowMain);
@@ -501,14 +499,6 @@ void UImGui::WindowInternal::setWindowAlwaysBelow() noexcept
     #endif
 #endif
 }
-
-void UImGui::WindowInternal::disableWindowMoving() noexcept
-{
-#ifdef GLFW_EXPOSE_NATIVE_X11
-
-#endif
-}
-
 
 void UImGui::WindowInternal::setWindowType(const char* type) noexcept
 {
@@ -673,7 +663,7 @@ size_t UImGui::WindowInternal::getWindowID() noexcept
     #ifdef GLFW_EXPOSE_NATIVE_WIN32
         return GetWindowLong(glfwGetWin32Window(windowMain), GWL_ID);
     #else
-        return -1;
+        return (intptr_t)glfwGetCocoaWindow(windowMain);
     #endif
 #endif
 }
