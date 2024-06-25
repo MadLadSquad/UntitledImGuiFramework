@@ -76,20 +76,20 @@ extern "C"
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowAlwaysOnBottom();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32 & macOS
+    // Available for platforms - X11, Win32
     // Platforms to be supported - Wayland
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowShowingOnPager(bool bShowInPager);
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32 & macOS
+    // Available for platforms - X11, Win32
     // Platforms to be supported - Wayland
     UIMGUI_PUBLIC_API bool UImGui_Window_Platform_getWindowShowingOnPager();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32 & macOS
+    // Available for platforms - X11, Win32
     // Platforms to be supported - Wayland
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowShowingOnTaskbar(bool bShowOnTaskbar);
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32 & macOS
+    // Available for platforms - X11, Win32
     // Platforms to be supported - Wayland
     UIMGUI_PUBLIC_API bool UImGui_Window_Platform_getWindowShowingOnTaskbar();
 

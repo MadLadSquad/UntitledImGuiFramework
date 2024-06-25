@@ -146,11 +146,11 @@ namespace UImGui
         // TODO: Port to Wayland
         void setWindowAlwaysBelow() noexcept;
 
-        // As of now, only supported on X11, Win32 & macOS
+        // As of now, only supported on X11 & Win32
         // TODO: Port to Wayland
         void setShowWindowInPager(bool bShowInPagerr) noexcept;
 
-        // As of now, only supported on X11, Win32 & macOS
+        // As of now, only supported on X11 & Win32
         // TODO: Port to Wayland
         void setShowWindowOnTaskbar(bool bShowOnTaskbarr) noexcept;
 

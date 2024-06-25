@@ -2,16 +2,6 @@
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
 
-void UImGui::MacOSWindow::setShowWindowOnTaskbar(void* window, bool bShow)
-{
-    id w = (id)window;
-}
-
-void UImGui::MacOSWindow::setShowWindowInPager(void* window, bool bShow)
-{
-    id w = (id)window;
-}
-
 void UImGui::MacOSWindow::setWindowAlwaysBelow(void* window)
 {
     id w = (id)window;

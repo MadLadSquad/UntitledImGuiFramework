@@ -577,8 +577,6 @@ void UImGui::WindowInternal::setShowWindowInPager(const bool bShowInPagerr) noex
             LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
             SetWindowLongPtr(window, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
         }
-    #else
-        MacOSWindow::setShowWindowInPager(glfwGetCocoaWindow(windowMain), bShowInPagerr);
     #endif
 #endif
 }
@@ -634,8 +632,6 @@ void UImGui::WindowInternal::setShowWindowOnTaskbar(const bool bShowOnTaskbarr) 
             LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
             SetWindowLongPtr(window, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
         }
-    #else
-        MacOSWindow::setShowWindowOnTaskbar(glfwGetCocoaWindow(windowMain), bShowOnTaskbarr);
     #endif
 #endif
 }
