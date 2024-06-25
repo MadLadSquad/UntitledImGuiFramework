@@ -64,37 +64,37 @@ namespace UImGui
             void operator=(Platform const&) = delete;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for platforms - X11, Win32, macOS
             // Platforms to be supported - Wayland
             static void setWindowAlwaysOnTop() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for platforms - X11, Win32, macOS
             // Platforms to be supported - Wayland
             static void setWindowAlwaysOnBottom() noexcept;
 
             // Event Safety - begin, style, post-begin
             // Platform note: On Win32 "setWindowShowingOnPager" and "setWindowShowingOnTaskbar" run the same code,
             // as it is not possible to disable the window from showing on both the taskbar and window switcher
-            // Available for platforms - X11, Win32
+            // Available for platforms - X11, Win32, macOS
             // Platforms to be supported - Wayland
             static void setWindowShowingOnPager(bool bShowInPager) noexcept;
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for platforms - X11, Win32, macOS
             // Platforms to be supported - Wayland
             static bool getWindowShowingOnPager() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for platforms - X11, Win32, macOS
             // Platforms to be supported - Wayland
             static void setWindowShowingOnTaskbar(bool bShowOnTaskbar) noexcept;
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for platforms - X11, Win32, macOS
             // Platforms to be supported - Wayland
             static bool getWindowShowingOnTaskbar() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11
+            // Available for platforms - X11 & macOS
             // Platforms to be supported - Wayland
             // Sets the X11 window type
             static void setWindowType(String type) noexcept;

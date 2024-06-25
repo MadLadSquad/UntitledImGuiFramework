@@ -138,33 +138,28 @@ namespace UImGui
 
         static void windowErrorCallback(int code, const char* description) noexcept;
 
-        // As of now, only supported in X11 and Win32
+        // As of now, only supported on X11, Win32 & macOS
         // TODO: Port to Wayland
-        // TODO: Port to macOS
         void setWindowAlwaysOnTop() noexcept;
 
-        // As of now, only supported in X11 and Win32
+        // As of now, only supported on X11, Win32 & macOS
         // TODO: Port to Wayland
-        // TODO: Port to macOS
         void setWindowAlwaysBelow() noexcept;
 
-        // As of now, only supported in X11 and Win32
+        // As of now, only supported on X11, Win32 & macOS
         // TODO: Port to Wayland
-        // TODO: Port to macOS
         void setShowWindowInPager(bool bShowInPagerr) noexcept;
 
-        // As of now, only supported in X11 and Win32
+        // As of now, only supported on X11, Win32 & macOS
         // TODO: Port to Wayland
-        // TODO: Port to macOS
         void setShowWindowOnTaskbar(bool bShowOnTaskbarr) noexcept;
 
-        // As of now, only supported in X11
+        // As of now, only supported on X11 & macOS
         // TODO: Port to Win32
         // TODO: Port to Wayland
-        // TODO: Port to macOS
         void setWindowType(const char* type) noexcept;
 
-        // As of now, only supported in X11, Win32 and macOS
+        // As of now, only supported on X11, Win32 and macOS
         // On macOS this is an integer representation of the underlying pointer
         // TODO: Port to Wayland
         size_t getWindowID() noexcept;

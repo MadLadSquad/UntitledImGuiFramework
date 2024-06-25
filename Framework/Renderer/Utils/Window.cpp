@@ -19,6 +19,7 @@
     #include <GL/glew.h>
 #else
     #include <OpenGL/GL.h>
+    #include "macOS/MacOSWindowPlatform.h"
 #endif
 #include <GLFW/glfw3.h>
 
@@ -437,7 +438,7 @@ void UImGui::WindowInternal::setWindowAlwaysOnTop() noexcept
         auto window = glfwGetWin32Window(windowMain);
         SetWindowPos(window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
     #else
-
+        MacOSWindow::setWindowAlwaysAbove(glfwGetCocoaWindow(windowMain));
     #endif
 #endif
 }
@@ -496,6 +497,8 @@ void UImGui::WindowInternal::setWindowAlwaysBelow() noexcept
         auto window = glfwGetWin32Window(windowMain);
         SetWindowPos(window, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
         //DefWindowProcA(window, WM_WINDOWPOSCHANGING, 0, 0);
+    #else
+        MacOSWindow::setWindowAlwaysBelow(glfwGetCocoaWindow(windowMain));
     #endif
 #endif
 }
@@ -574,6 +577,8 @@ void UImGui::WindowInternal::setShowWindowInPager(const bool bShowInPagerr) noex
             LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
             SetWindowLongPtr(window, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
         }
+    #else
+        MacOSWindow::setShowWindowInPager(glfwGetCocoaWindow(windowMain), bShowInPagerr);
     #endif
 #endif
 }
@@ -629,6 +634,8 @@ void UImGui::WindowInternal::setShowWindowOnTaskbar(const bool bShowOnTaskbarr) 
             LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
             SetWindowLongPtr(window, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
         }
+    #else
+        MacOSWindow::setShowWindowOnTaskbar(glfwGetCocoaWindow(windowMain), bShowOnTaskbarr);
     #endif
 #endif
 }
