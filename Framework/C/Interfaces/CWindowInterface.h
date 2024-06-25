@@ -94,9 +94,8 @@ extern "C"
     UIMGUI_PUBLIC_API bool UImGui_Window_Platform_getWindowShowingOnTaskbar();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11 & macOS
-    // Platforms to be supported - Wayland, Win32
-    // Sets the X11/Cocoa window type
+    // Available for platforms - X11
+    // Sets the X11 window type
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowType(UImGui_String type);
 
     // Event Safety - begin, style, post-begin

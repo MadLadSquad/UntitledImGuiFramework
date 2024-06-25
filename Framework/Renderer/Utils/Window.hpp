@@ -154,9 +154,7 @@ namespace UImGui
         // TODO: Port to Wayland
         void setShowWindowOnTaskbar(bool bShowOnTaskbarr) noexcept;
 
-        // As of now, only supported on X11 & macOS
-        // TODO: Port to Win32
-        // TODO: Port to Wayland
+        // As of now, only supported on X11
         void setWindowType(const char* type) noexcept;
 
         // As of now, only supported on X11, Win32 and macOS

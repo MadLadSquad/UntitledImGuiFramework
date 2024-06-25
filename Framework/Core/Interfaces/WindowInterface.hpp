@@ -94,8 +94,7 @@ namespace UImGui
             static bool getWindowShowingOnTaskbar() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11 & macOS
-            // Platforms to be supported - Wayland
+            // Available for platforms - X11
             // Sets the X11 window type
             static void setWindowType(String type) noexcept;
 
