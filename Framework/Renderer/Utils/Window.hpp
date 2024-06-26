@@ -27,6 +27,7 @@ namespace UImGui
 
     typedef UImGui_MonitorState MonitorState;
 
+    // WARNING: THIS WILL NOT WORK ON EMSCRIPTEN
     struct UIMGUI_PUBLIC_API Monitor
     {
     public:

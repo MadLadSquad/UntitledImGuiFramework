@@ -1,5 +1,6 @@
 #pragma once
 #include <GenericRenderer/GenericRenderer.hpp>
+
 #include <Renderer/Vulkan/Components/VKInstance.hpp>
 #include <Renderer/Vulkan/Components/VKDevice.hpp>
 
@@ -20,6 +21,8 @@ namespace UImGui
         virtual void ImGuiInit() noexcept override;
         virtual void ImGuiRenderData() noexcept override;
     private:
+#ifndef __EMSCRIPTEN__
         VKInstance instance{};
+#endif
     };
 }

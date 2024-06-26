@@ -17,7 +17,7 @@ typedef enum UImGui_MonitorState
 typedef void(*UImGui_Monitor_EventsFun)(struct UImGui_CMonitorData*, UImGui_MonitorState);
 typedef struct GLFWmonitor GLFWmonitor;
 
-// Do not create this manually!!! this should be fetched using the UImGui_Window_getWindowMonitor or
+// Do not create this manually!!! This should be fetched using the UImGui_Window_getWindowMonitor or
 // UImGui_Window_getMonitors functions
 typedef struct UIMGUI_PUBLIC_API UImGui_CMonitorData
 {
@@ -29,6 +29,8 @@ typedef struct UIMGUI_PUBLIC_API UImGui_CMonitorData
 } UImGui_CMonitorData;
 
 typedef void(*UImGui_Window_pushGlobalMonitorCallbackFun)(UImGui_CMonitorData*, UImGui_MonitorState);
+
+#ifndef __EMSCRIPTEN__
 
 // Event safety - any time
 UIMGUI_PUBLIC_API void UImGui_Monitor_init(UImGui_CMonitorData* data);
@@ -54,6 +56,8 @@ UIMGUI_PUBLIC_API UImGui_String UImGui_Monitor_getName(const UImGui_CMonitorData
 
 // Event safety - begin, style, post-begin
 UIMGUI_PUBLIC_API void UImGui_Monitor_pushEvent(UImGui_CMonitorData* data, UImGui_Monitor_EventsFun f);
+
+#endif
 
 #ifdef __cplusplus
 }

@@ -3,7 +3,7 @@
     #define GLFW_EXPOSE_NATIVE_WIN32
 #elif __APPLE__
     #define GLFW_EXPOSE_NATIVE_COCOA
-#else
+#elif !__EMSCRIPTEN__
     #ifdef GLFW_USE_WAYLAND
         #define GLFW_EXPOSE_NATIVE_WAYLAND
     #else
@@ -139,18 +139,24 @@ void UImGui::WindowInternal::createWindow() noexcept
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Have to set this to NO_API because that's how Vulkan is done in it
     else
     {
-#ifndef __APPLE__
+#if !__APPLE__ && !__EMSCRIPTEN__
         // Add GLFW window flags and enable OpenGL
         glewExperimental = GL_TRUE;
 #endif
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-#ifdef __APPLE__
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+#ifdef __EMSCRIPTEN__
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 #else
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-#endif
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        #ifdef __APPLE__
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+        #else
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+        #endif
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
+#endif
         glfwWindowHint(GLFW_SAMPLES, 16);
     }
 
@@ -204,7 +210,7 @@ void UImGui::WindowInternal::createWindow() noexcept
 
     if (!Renderer::data().bVulkan)
     {
-#ifndef __APPLE__
+#if !__APPLE__ && !__EMSCRIPTEN__
         if (glewInit() != GLEW_OK)
         {
             glfwDestroyWindow(windowMain);
@@ -437,7 +443,7 @@ void UImGui::WindowInternal::setWindowAlwaysOnTop() noexcept
     #ifdef GLFW_EXPOSE_NATIVE_WIN32
         auto window = glfwGetWin32Window(windowMain);
         SetWindowPos(window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-    #else
+    #elif !__EMSCRIPTEN__
         MacOSWindow::setWindowAlwaysAbove(glfwGetCocoaWindow(windowMain));
     #endif
 #endif
@@ -497,7 +503,7 @@ void UImGui::WindowInternal::setWindowAlwaysBelow() noexcept
         auto window = glfwGetWin32Window(windowMain);
         SetWindowPos(window, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
         //DefWindowProcA(window, WM_WINDOWPOSCHANGING, 0, 0);
-    #else
+    #elif !__EMSCRIPTEN__
         MacOSWindow::setWindowAlwaysBelow(glfwGetCocoaWindow(windowMain));
     #endif
 #endif
@@ -665,7 +671,7 @@ size_t UImGui::WindowInternal::getWindowID() noexcept
 #else
     #ifdef GLFW_EXPOSE_NATIVE_WIN32
         return GetWindowLong(glfwGetWin32Window(windowMain), GWL_ID);
-    #else
+    #elif !__EMSCRIPTEN__
         return (intptr_t)glfwGetCocoaWindow(windowMain);
     #endif
 #endif
@@ -717,6 +723,7 @@ void UImGui::WindowInternal::windowMaximisedCallback(GLFWwindow* window, const i
 
 void UImGui::WindowInternal::monitorCallback(GLFWmonitor* monitor, int event) noexcept
 {
+#ifndef __EMSCRIPTEN__
     auto* dt = CAST(Monitor*, glfwGetMonitorUserPointer(monitor));
     for (auto& a : Window::get().windowMonitorCallbackList)
         a(*dt, static_cast<MonitorState>(event));
@@ -734,6 +741,7 @@ void UImGui::WindowInternal::monitorCallback(GLFWmonitor* monitor, int event) no
     // Update monitors list
     for (size_t i = 0; i < count; i++)
         Window::get().monitors.emplace_back(monitors[i]);
+#endif
 }
 
 void UImGui::WindowInternal::windowOSDragDropCallback(GLFWwindow* window, const int count, const char** paths) noexcept
@@ -759,37 +767,52 @@ void UImGui::WindowInternal::windowErrorCallback(int code, const char* descripti
 
 UImGui::Monitor::Monitor(GLFWmonitor* monitor) noexcept
 {
+#ifndef __EMSCRIPTEN__
     this->monitor = monitor;
     glfwSetMonitorUserPointer(this->monitor, (void*)this);
+#endif
 }
 
 UImGui::FVector2 UImGui::Monitor::getPhysicalSize() const noexcept
 {
+#ifndef __EMSCRIPTEN__
     int width = 0;
     int height = 0;
     glfwGetMonitorPhysicalSize(monitor, &width, &height);
 
     return FVector2{ static_cast<float>(width), static_cast<float>(height) };
+#else
+    return { 0.0f, 0.0f };
+#endif
 }
 
 UImGui::FVector2 UImGui::Monitor::getContentScale() const noexcept
 {
+#ifndef __EMSCRIPTEN__
     FVector2 f = {};
     glfwGetMonitorContentScale(monitor, &f.x, &f.y);
     return f;
+#else
+    return { 0.0f, 0.0f };
+#endif
 }
 
 UImGui::FVector2 UImGui::Monitor::getVirtualPosition() const noexcept
 {
+#ifndef __EMSCRIPTEN__
     int x = 0;
     int y = 0;
     glfwGetMonitorPos(monitor, &x, &y);
 
     return FVector2{ static_cast<float>(x), static_cast<float>(y) };
+#else
+    return { 0.0f, 0.0f };
+#endif
 }
 
 UImGui::FVector4 UImGui::Monitor::getWorkArea() const noexcept
 {
+#ifndef __EMSCRIPTEN__
     int x = 0;
     int y = 0;
     int width = 0;
@@ -801,20 +824,30 @@ UImGui::FVector4 UImGui::Monitor::getWorkArea() const noexcept
             static_cast<float>(x),static_cast<float>(y),
             static_cast<float>(width), static_cast<float>(height)
     };
+#else
+    return { 0.0f, 0.0f, 0.0f, 0.0f };
+#endif
 }
 
 UImGui::FString UImGui::Monitor::getName() const noexcept
 {
-    return {glfwGetMonitorName(monitor) };
+#ifndef __EMSCRIPTEN__
+    return { glfwGetMonitorName(monitor) };
+#else
+    return {};
+#endif
 }
 
 void UImGui::Monitor::pushEvent(const std::function<void(Monitor&, MonitorState)>& f) noexcept
 {
+#ifndef __EMSCRIPTEN__
     events.push_back(f);
+#endif
 }
 
 UImGui_CMonitorData UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Window_getWindowMonitor()
 {
+#ifndef __EMSCRIPTEN__
     const auto tmp = Window::getWindowMonitor();
     return UImGui_CMonitorData
     {
@@ -822,23 +855,29 @@ UImGui_CMonitorData UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_
             .additionalDataSize = tmp.additionalDataSize,
             .monitor = tmp.monitor,
     };
+#else
+    return {};
+#endif
 }
 
 void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::pushGlobalMonitorCallbackFun(const UImGui::Monitor& monitor,
                                                                                        const UImGui::MonitorState state,
                                                                                        const UImGui_Window_pushGlobalMonitorCallbackFun f)
 {
+#ifndef __EMSCRIPTEN__
     UImGui_CMonitorData dt;
     UImGui_Monitor_initWithMonitor_Internal(&dt, monitor.monitor);
     dt.additionalData = monitor.additionalData;
     dt.additionalDataSize = monitor.additionalDataSize;
 
     f(&dt, state);
+#endif
 }
 
 void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_pushEvent(UImGui_CMonitorData* data,
                                                                                    const UImGui_Monitor_EventsFun f)
 {
+#ifndef __EMSCRIPTEN__
     for (auto& a : UImGui::Window::getMonitors())
     {
         if (a.monitor == data->monitor)
@@ -856,18 +895,22 @@ void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_pushEve
         }
     }
     Logger::log("Invalid internal monitor address, used when pushing a monitor-local event! Address: ", UVK_LOG_TYPE_ERROR, data->monitor);
+#endif
 }
 
 void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_setWindowMonitor(const UImGui_CMonitorData* monitor)
 {
+#ifndef __EMSCRIPTEN__
     Monitor m;
     m.monitor = monitor->monitor;
 
     UImGui::Window::setWindowMonitor(m);
+#endif
 }
 
 UImGui_CMonitorData* UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Window_getMonitors(size_t* size)
 {
+#ifndef __EMSCRIPTEN__
     auto& monitors = UImGui::internalGlobal.deallocationStruct.monitors;
     monitors.clear();
     for (const auto& a : Window::getMonitors())
@@ -881,4 +924,7 @@ UImGui_CMonitorData* UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui
     }
     *size = monitors.size();
     return monitors.data();
+#else
+    return nullptr;
+#endif
 }

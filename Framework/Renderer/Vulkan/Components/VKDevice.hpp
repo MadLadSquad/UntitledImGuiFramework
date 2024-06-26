@@ -1,4 +1,5 @@
 #pragma once
+#ifndef __EMSCRIPTEN__
 #include "VKInstance.hpp"
 
 namespace UImGui
@@ -19,3 +20,4 @@ namespace UImGui
         //QueueFamilyIndices indices;
     };
 }
+#endif

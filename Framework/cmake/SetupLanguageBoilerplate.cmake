@@ -1,0 +1,22 @@
+if (WIN32)
+    set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+    set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+endif()
+set(VULKAN_HEADERS_ENABLE_MODULE FALSE)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_C_STANDARD 99)
+
+if (APPLE)
+    enable_language(OBJC)
+    enable_language(OBJCXX)
+endif()
+
+function(multicast fun)
+    set(optionals ${ARGN})
+    cmake_language(CALL ${fun} UntitledImGuiFramework ${optionals})
+    if (NOT WIN32)
+        cmake_language(CALL ${fun} ${APP_LIB_TARGET} ${optionals})
+    endif()
+    cmake_language(CALL ${fun} ${APP_TARGET} ${optionals})
+endfunction()

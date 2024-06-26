@@ -213,6 +213,8 @@ namespace UImGui
         // Event safety - begin, style, post-begin
         static bool getWindowCurrentlyMaximised() noexcept;
 
+#ifndef __EMSCRIPTEN__
+
         // Event safety - begin, style, post-begin
         // Returns the monitor of the current window.
         static Monitor getWindowMonitor() noexcept;
@@ -229,6 +231,7 @@ namespace UImGui
 
         // Event safety - begin, style, post-begin
         static void pushGlobalMonitorCallback(const std::function<void(Monitor&, MonitorState)>& f) noexcept;
+#endif
 
         // Event safety - begin, style, post-begin
         // Returns all the strings acquired by the application when the user drags in a file or an array of files

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef __EMSCRIPTEN__
+
 #include "ThirdParty/vulkan-headers/include/vulkan/vulkan.h"
 #include <vector>
 
@@ -27,3 +29,4 @@ namespace UImGui
         void createDebugCallback() noexcept;
     };
 }
+#endif

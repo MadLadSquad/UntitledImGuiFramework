@@ -1,6 +1,8 @@
 #pragma once
 #include <array>
 #include <vector>
+#ifndef __EMSCRIPTEN__
+
 #include <vulkan/vulkan.h>
 
 namespace UImGui
@@ -33,3 +35,4 @@ namespace UImGui
 
 
 }
+#endif

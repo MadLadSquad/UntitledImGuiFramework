@@ -304,6 +304,8 @@ bool UImGui_Window_getWindowCurrentlyMaximised()
     return UImGui::Window::getWindowCurrentlyMaximised();
 }
 
+#ifndef __EMSCRIPTEN__
+
 UImGui_CMonitorData UImGui_Window_getWindowMonitor()
 {
     return UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Window_getWindowMonitor();
@@ -328,6 +330,8 @@ void UImGui_Window_pushGlobalMonitorCallback(const UImGui_Window_pushGlobalMonit
         UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::pushGlobalMonitorCallbackFun(monitor, state, f);
     });
 }
+
+#endif
 
 void UImGui_Window_pushWindowOSDragDropCallback(UImGui_Window_pushWindowOSDragDropCallbackFun f)
 {

@@ -212,6 +212,7 @@ extern "C"
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API bool UImGui_Window_getWindowCurrentlyMaximised();
 
+#ifndef __EMSCRIPTEN__
     // A "UImGui_Window_getWindowMonitor" function should be here, but because it has to access private class variables,
     // it's defined under the C++ interface's Monitor's private section.
     UIMGUI_PUBLIC_API UImGui_CMonitorData UImGui_Window_getWindowMonitor();
@@ -228,6 +229,7 @@ extern "C"
 
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_pushGlobalMonitorCallback(UImGui_Window_pushGlobalMonitorCallbackFun f);
+#endif
 
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_pushWindowOSDragDropCallback(UImGui_Window_pushWindowOSDragDropCallbackFun f);

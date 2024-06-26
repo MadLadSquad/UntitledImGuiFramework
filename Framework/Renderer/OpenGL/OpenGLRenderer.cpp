@@ -59,6 +59,8 @@ void UImGui::OpenGLRenderer::ImGuiInit() noexcept
     ImGui_ImplGlfw_InitForOpenGL(Window::get().data(), true);
 #ifdef __APPLE__
     ImGui_ImplOpenGL3_Init("#version 410");
+#elif __EMSCRIPTEN__
+    ImGui_ImplOpenGL3_Init("#version 100");
 #else
     ImGui_ImplOpenGL3_Init("#version 450");
 #endif

@@ -284,6 +284,8 @@ bool& UImGui::Window::getWindowMaximisedSetting() noexcept
     return get().windowData.bMaximised;
 }
 
+#ifndef __EMSCRIPTEN__
+
 std::vector<UImGui::Monitor>& UImGui::Window::getMonitors() noexcept
 {
     return get().monitors;
@@ -304,6 +306,7 @@ void UImGui::Window::setWindowMonitor(const Monitor& monitor) noexcept
 
     glfwSetWindowMonitor(get().windowMain, monitor.monitor, 0, 0, currentMode->width, currentMode->height, mode->refreshRate);
 }
+#endif
 
 std::vector<UImGui::FString>& UImGui::Window::getOSDragDropStrings() noexcept
 {
@@ -315,10 +318,14 @@ void UImGui::Window::pushWindowOSDragDropCallback(const std::function<void(std::
     get().dragDropPathCallbackList.push_back(f);
 }
 
+#ifndef __EMSCRIPTEN__
+
 void UImGui::Window::pushGlobalMonitorCallback(const std::function<void(Monitor&, MonitorState)>& f) noexcept
 {
     get().windowMonitorCallbackList.push_back(f);
 }
+
+#endif
 
 void UImGui::Window::pushWindowErrorCallback(const std::function<void(int, String)>& f) noexcept
 {

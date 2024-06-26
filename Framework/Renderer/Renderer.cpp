@@ -1,10 +1,19 @@
 #include "Renderer.hpp"
+#ifdef __EMSCRIPTEN__
+    #include <emscripten.h>
+#endif
 #include <yaml-cpp/yaml.h>
 #include <Core/Components/Instance.hpp>
 #include <Renderer/ImGui/ImGui.hpp>
 #include <GLFW/glfw3.h>
 #include <Interfaces/WindowInterface.hpp>
 #include <Global.hpp>
+
+static std::function<void(void)> loop = []() -> void {};
+void renderLoop()
+{
+    loop();
+}
 
 void UImGui::RendererInternal::start() noexcept
 {
@@ -15,6 +24,10 @@ void UImGui::RendererInternal::start() noexcept
     internalGlobal.renderer = this;
     internalGlobal.init();
 
+#ifdef __EMSCRIPTEN__
+    data.bVulkan = false;
+#endif
+
     renderer = data.bVulkan ? CAST(decltype(renderer), &vulkan) : CAST(decltype(renderer), &opengl);
     renderer->init(*this);
 
@@ -23,8 +36,13 @@ void UImGui::RendererInternal::start() noexcept
         GUIRenderer::init(Window::get().windowData.layoutLocation, renderer);
 
     double lastTime = 0.0f;
+
+#ifdef __EMSCRIPTEN__
+    loop = [&]() -> void {
+#else
     while (!glfwWindowShouldClose(Window::get().windowMain))
     {
+#endif
         static double deltaTime = 0.0f;
         glfwPollEvents();
 
@@ -39,7 +57,12 @@ void UImGui::RendererInternal::start() noexcept
         if (!data.bVulkan) // TODO: Remove this when the renderer is done
             GUIRenderer::beginUI(static_cast<float>(deltaTime), renderer);
         renderer->renderEnd(deltaTime);
+#ifdef __EMSCRIPTEN__
+    };
+    emscripten_set_main_loop(renderLoop, 0, true);
+#else
     }
+#endif
 }
 
 void UImGui::RendererInternal::stop() const noexcept

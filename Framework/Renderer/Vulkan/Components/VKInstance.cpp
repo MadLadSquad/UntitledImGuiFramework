@@ -1,4 +1,6 @@
 #include "VKInstance.hpp"
+#ifndef __EMSCRIPTEN__
+
 #include "Core/Core.hpp"
 #include "Generated/BuildDef.hpp"
 #include "ThirdParty/glfw/include/GLFW/glfw3.h"
@@ -174,3 +176,4 @@ VkBool32 UImGui::VKInstance::debugCallback(VkDebugReportFlagsEXT flags, VkDebugR
 
     return VK_FALSE;
 }
+#endif
