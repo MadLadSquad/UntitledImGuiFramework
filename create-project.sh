@@ -107,6 +107,9 @@ function compile()
     MSBuild.exe "${prjname}".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || exit
 
     cp ../UVKBuildTool/build/Release/UVKBuildToolLib.dll . || exit
+  elif [ "$2" == "wasm" ]; then
+    emcmake .. -DCMAKE_BUILD_TYPE=RELEASE || exit
+    make -j "${cpus}" || exit
   else
     cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE || exit
     make -j "${cpus}" || exit
