@@ -77,6 +77,7 @@ We currently support the following platforms as official targets:
 1. Windows
 1. macOS
 1. Linux
+1. WASM
 
 All of the operating systems above have generally the same features, as we're trying to have a generic platform to build desktop applications with. 
 
@@ -86,7 +87,6 @@ otherwise baked into the core OS libraries, when talking about Windows and macOS
 ### Future platform support
 For the 2.0 release of the framework, we plan to have first class support for the following additional platforms:
 
-1. WASM
 1. Android
 1. iOS
 
