@@ -5,7 +5,6 @@ include_directories("Source/" "Framework/" "Framework/ThirdParty/imgui/core/" "F
         "Framework/ThirdParty/vulkan-headers/include" ${GLFW_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS}
         "Framework/ThirdParty/" ${LM_INCLUDE_DIRS})
 
-
 if (NOT APPLE)
     link_directories("ThirdParty/glew/lib")
 endif()
@@ -60,51 +59,30 @@ endif()
 if (USE_PLOTTING_MODULE)
     file(GLOB_RECURSE UGUI_IMPLOT_SRC "Framework/Modules/Plotting/*.cpp")
     file(GLOB_RECURSE UGUI_IMPLOT_HEAD "Framework/Modules/Plotting/*.hpp")
-else()
-    file(GLOB_RECURSE UGUI_IMPLOT_SRC )
-    file(GLOB_RECURSE UGUI_IMPLOT_HEAD )
 endif()
 
 if (USE_KNOBS_MODULE)
     file(GLOB_RECURSE UGUI_KNOBS_SRC "Framework/Modules/Knobs/*.cpp")
     file(GLOB_RECURSE UGUI_KNOBS_HEAD "Framework/Modules/Knobs/*.h")
-else()
-    file(GLOB_RECURSE UGUI_KNOBS_SRC )
-    file(GLOB_RECURSE UGUI_KNOBS_HEAD )
 endif()
 
 if (USE_SPINNER_MODULE)
-    file(GLOB_RECURSE UGUI_SPINNER_HEAD "Framework/Modules/Spinners/*.h"
-            "Framework/ThirdParty/imgui/core/imgui.cpp"
-            "Framework/ThirdParty/imgui/core/imgui_draw.cpp"
-            "Framework/ThirdParty/imgui/core/imgui_tables.cpp"
-            "Framework/ThirdParty/imgui/core/imgui_widgets.cpp")
-else()
-    file(GLOB_RECURSE UGUI_SPINNER_HEAD )
+    file(GLOB_RECURSE UGUI_SPINNER_HEAD "Framework/Modules/Spinners/*.h")
 endif()
 
 if (USE_TOGGLES_MODULE)
     file(GLOB_RECURSE UGUI_TOGGLES_SRC "Framework/Modules/Toggles/*.cpp")
     file(GLOB_RECURSE UGUI_TOGGLES_HEAD "Framework/Modules/Toggles/*.h")
-else()
-    file(GLOB_RECURSE UGUI_TOGGLES_SRC )
-    file(GLOB_RECURSE UGUI_TOGGLES_HEAD )
 endif()
 
 if (USE_TEXT_UTILS_MODULE)
     file(GLOB_RECURSE UGUI_TEXT_UTILS_SRC "Framework/Modules/TextUtils/*.cpp")
     file(GLOB_RECURSE UGUI_TEXT_UTILS_HEAD "Framework/Modules/TextUtils/*.hpp")
-else()
-    file(GLOB_RECURSE UGUI_TEXT_UTILS_SRC )
-    file(GLOB_RECURSE UGUI_TEXT_UTILS_HEAD )
 endif()
 
 if (USE_THEME_MODULE)
     file(GLOB_RECURSE UTHEME_SRC "Framework/Modules/Theming/UTheme.cpp")
     file(GLOB_RECURSE UTHEME_HEAD "Framework/Modules/Theming/UTheme.hpp")
-else()
-    file(GLOB_RECURSE UTHEME_SRC )
-    file(GLOB_RECURSE UTHEME_HEAD )
 endif()
 
 if (BUILD_MODE_VENDOR)

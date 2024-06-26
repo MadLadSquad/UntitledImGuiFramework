@@ -59,8 +59,8 @@ if (WIN32)
             ${YAML_CPP_LIBRARIES_T} ${FREETYPE_LIBRARIES} ${VULKAN_LIBRARIES_T})
     target_link_libraries(${APP_TARGET} UntitledImGuiFramework ${YAML_CPP_LIBRARIES_T})
 else()
-    target_link_libraries(UntitledImGuiFramework ${GLFW_LIBRARIES_T} ${GLEW_LIBRARIES_T} ${OPENGL_LIBRARIES_T}
-            ${YAML_CPP_LIBRARIES_T} ${FREETYPE_LIBRARIES} ${VULKAN_LIBRARIES_T} ${X11_LIBRARIES} pthread dl)
+    target_link_libraries(UntitledImGuiFramework ${GLFW_LIBRARIES_T} ${GLEW_LIBRARIES_T} ${OPENGL_LIBRARIES_T} pthread
+            ${YAML_CPP_LIBRARIES_T} ${FREETYPE_LIBRARIES} ${VULKAN_LIBRARIES_T} ${X11_LIBRARIES} dl)
     target_link_libraries(${APP_LIB_TARGET} UntitledImGuiFramework pthread dl ${YAML_CPP_LIBRARIES_T})
     target_link_libraries(${APP_TARGET} UntitledImGuiFramework ${APP_LIB_TARGET} ${YAML_CPP_LIBRARIES_T} dl)
 
@@ -70,7 +70,8 @@ else()
     endif ()
 
     if (EMSCRIPTEN)
-        multicast(target_link_options PRIVATE -sUSE_GLFW=3 -s ALLOW_MEMORY_GROWTH=1 -fwasm-exceptions -sSUPPORT_LONGJMP=wasm)
+        multicast(target_link_options PRIVATE -sUSE_GLFW=3 -s ALLOW_MEMORY_GROWTH=1 -fwasm-exceptions
+                -sSUPPORT_LONGJMP=wasm)
     else ()
         multicast(target_link_libraries util)
     endif()
