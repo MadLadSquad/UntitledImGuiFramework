@@ -85,9 +85,5 @@ jobs:
           emsdk-master/emsdk activate latest
 
           cd emsdk-master/ && source ./emsdk_env.sh && cd ..
-      - name: Install framework
-        shell: bash
-        run: ./install.sh ci
-      - name: Install project
-        shell: bash
-        run: ./create-project.sh t ci wasm
+          ./install.sh ci
+          ./create-project.sh t ci wasm
