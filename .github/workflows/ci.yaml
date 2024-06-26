@@ -17,7 +17,7 @@ jobs:
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
       - name: Get dependencies
         run: |
-          brew install glew glfw pkg-config yaml-cpp vulkan-headers vulkan-loader vulkan-tools vulkan-utility-libraries vulkan-validationlayers vulkan-extensionlayer
+          brew install glew glfw yaml-cpp vulkan-headers vulkan-loader vulkan-tools vulkan-utility-libraries vulkan-validationlayers vulkan-extensionlayer
       - name: Install framework
         shell: bash
         run: ./install.sh ci
