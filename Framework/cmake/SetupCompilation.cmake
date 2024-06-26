@@ -235,3 +235,5 @@ if (USE_I18N_MODULE)
         list(APPEND VENDOR_COMPILE_DEFS ${UI18N_COMPILE_DEFS})
     endif()
 endif()
+
+custom_setup_step()

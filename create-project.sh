@@ -40,6 +40,14 @@ function create_folders()
   cp -r ../../Content .
   cp ../../export.sh .
 
+  mkdir Config/cmake || die
+  touch Config/cmake/"${prjname}".cmake && echo "\
+function(custom_setup_step)
+endfunction()
+
+function(custom_compile_step)
+endfunction()" > Config/cmake/"${prjname}".cmake
+
   # We create a project file which will be used to configure our generated files
   touch uvproj.yaml && echo "\
 name: \"${prjname}\"

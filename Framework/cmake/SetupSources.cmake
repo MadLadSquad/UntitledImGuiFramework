@@ -33,20 +33,20 @@ endif()
 
 file(GLOB_RECURSE UGUI_SRC "Framework/Core/*.cpp" "Framework/Renderer/*.cpp" ${IMGUI_SRC}
         "Framework/ThirdParty/imgui/core/*.cpp" "Framework/ThirdParty/imgui/misc/cpp/*.cpp" "Framework/C/*.cpp"
-        "Framework/ThirdParty/logger/*.cpp"
+        "Framework/ThirdParty/logger/*.cpp" ${UIMGUI_CUSTOM_FRAMEWORK_SOURCES}
         "Framework/ThirdParty/source-libraries/*.cpp" "Framework/Modules/i18n/src/*.cpp" "Framework/Modules/Modules.hpp"
         "Framework/Modules/Undo/src/*.cpp" "Framework/Modules/Manager/*.cpp" "Framework/Modules/OS/src/*.cpp")
 file(GLOB_RECURSE UGUI_HEAD "Framework/Core/*.hpp" "Framework/Renderer/*.hpp" ${IMGUI_HEAD} "Framework/Renderer/*.h"
         "Framework/ThirdParty/imgui/core/*.h" "Framework/ThirdParty/imgui/misc/cpp/*.h" "Framework/C/*.h"
-        "Framework/ThirdParty/logger/*.h" "Framework/C/*.hpp"
+        "Framework/ThirdParty/logger/*.h" "Framework/C/*.hpp" ${UIMGUI_CUSTOM_FRAMEWORK_HEADERS}
         "Framework/ThirdParty/source-libraries/*.h" "Framework/ThirdParty/source-libraries/*.hpp"
         "Framework/Modules/i18n/src/*.hpp" "Framework/Modules/Undo/src/*.hpp" "Framework/Modules/Manager/*.hpp"
         "Framework/Modules/OS/src/*.h" "Framework/Modules/OS/src/*.hpp")
 
-file(GLOB_RECURSE UGUI_APP_SRC "Source/*.cpp")
-file(GLOB_RECURSE UGUI_APP_HEAD "Source/*.hpp" "Generated/Config.hpp")
+file(GLOB_RECURSE UGUI_APP_SRC "Source/*.cpp" "${UIMGUI_CUSTOM_APP_SOURCES}")
+file(GLOB_RECURSE UGUI_APP_HEAD "Source/*.hpp" "Generated/Config.hpp" "${UIMGUI_CUSTOM_APP_HEADERS}")
 
-file(GLOB_RECURSE EXEC_SRC "")
+file(GLOB_RECURSE EXEC_SRC "${UIMGUI_CUSTOM_EXEC_SOURCES}")
 
 if (APPLE)
     file(GLOB_RECURSE APPLE_SRC "Framework/Renderer/*.mm" "Framework/Renderer/*.m")
