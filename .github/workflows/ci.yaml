@@ -78,12 +78,8 @@ jobs:
       - name: Get dependencies
         run: | 
           sudo apt update && sudo apt-get install x11-xserver-utils libgl1-mesa-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev gcc make g++ libxmu-dev libxi-dev libgl-dev libglu1-mesa-dev libvulkan1 mesa-vulkan-drivers vulkan-tools libvulkan-dev libasound2-dev libflac-dev libogg-dev libtool libvorbis-dev libopus-dev libsndfile1-dev libglew-dev libssl-dev zlib1g zlib1g-dev libglfw3 libglfw3-dev libyaml-cpp-dev libxkbcommon-dev
-          wget -q https://github.com/emscripten-core/emsdk/archive/master.tar.gz
-          tar -xvf master.tar.gz
-          emsdk-master/emsdk update
-          emsdk-master/emsdk install latest
-          emsdk-master/emsdk activate latest
-
-          cd emsdk-master/ && source ./emsdk_env.sh && cd ..
-          ./install.sh ci
-          ./create-project.sh t ci wasm
+      - uses: mymindstorm/setup-emsdk@v14
+      - name: Install framework
+        run: ./install.sh ci
+      - name: Install project
+        run: ./create-project.sh t ci wasm
