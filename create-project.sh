@@ -108,7 +108,7 @@ function compile()
 
     cp ../UVKBuildTool/build/Release/UVKBuildToolLib.dll . || exit
   elif [ "$2" == "wasm" ]; then
-    emcmake .. -DCMAKE_BUILD_TYPE=RELEASE || exit
+    emcmake cmake .. -DCMAKE_BUILD_TYPE=RELEASE || exit
     make -j "${cpus}" || exit
   else
     cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE || exit
