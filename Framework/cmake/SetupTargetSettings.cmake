@@ -1,3 +1,18 @@
+if (EMSCRIPTEN)
+
+    if (ENABLE_PRE_SCRIPT)
+        set(EM_LINK_FLAGS "--pre-js ${CMAKE_CURRENT_SOURCE_DIR}/Config/WASM/pre.js")
+    endif()
+
+    if (ENABLE_POST_SCRIPT)
+        set(EM_LINK_FLAGS "${EM_LINK_FLAGS} --post-js ${CMAKE_CURRENT_SOURCE_DIR}/Config/WASM/post.js")
+    endif()
+
+    if (DEFINED EM_LINK_FLAGS)
+        multicast(set_target_properties PROPERTIES LINK_FLAGS "${EM_LINK_FLAGS}")
+    endif()
+endif()
+
 if (BUILD_VARIANT_STATIC)
     multicast(target_compile_definitions PRIVATE UIMGUI_BUILD_VARIANT_STATIC)
 endif()

@@ -4,9 +4,12 @@ option(BUILD_VARIANT_STATIC "Builds the Framework, application library(exists on
     executable binary" OFF)
 
 if (EMSCRIPTEN)
+    option(USE_HTML_GENERATION "Automatically generate HTML" ON)
     set(BUILD_VARIANT_STATIC ON)
-    set(CMAKE_EXECUTABLE_SUFFIX ".html")
-    set(OPENGL_LIBRARIES "-s WASM=1 -s USE_WEBGL2=1 -s FULL_ES3=1")
+    if (USE_HTML_GENERATION)
+        set(CMAKE_EXECUTABLE_SUFFIX ".html")
+    endif()
+    set(OPENGL_LIBRARIES "-s WASM=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s SIDE_MODULE=1 -Os")
 
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL " " FORCE)
     set(GLFW_BUILD_TESTS    OFF CACHE BOOL " " FORCE)

@@ -673,6 +673,8 @@ size_t UImGui::WindowInternal::getWindowID() noexcept
         return GetWindowLong(glfwGetWin32Window(windowMain), GWL_ID);
     #elif !__EMSCRIPTEN__
         return (intptr_t)glfwGetCocoaWindow(windowMain);
+    #else
+        return NULL;
     #endif
 #endif
 }
