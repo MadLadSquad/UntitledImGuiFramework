@@ -9,12 +9,6 @@
 #include <Interfaces/WindowInterface.hpp>
 #include <Global.hpp>
 
-static std::function<void(void)> loop = []() -> void {};
-void renderLoop()
-{
-    loop();
-}
-
 void UImGui::RendererInternal::start() noexcept
 {
     loadConfig();
@@ -35,33 +29,11 @@ void UImGui::RendererInternal::start() noexcept
     if (!data.bVulkan) // TODO: Remove this when the renderer is done
         GUIRenderer::init(Window::get().windowData.layoutLocation, renderer);
 
-    double lastTime = 0.0f;
-
 #ifdef __EMSCRIPTEN__
-    loop = [&]() -> void {
+    emscripten_set_main_loop_arg(tick, this, 0, true);
 #else
     while (!glfwWindowShouldClose(Window::get().windowMain))
-    {
-#endif
-        static double deltaTime = 0.0f;
-        glfwPollEvents();
-
-        const double now = glfwGetTime();
-        deltaTime = now - lastTime;
-        lastTime = now;
-
-        // Updates the state of the keybindings
-        internalGlobal.window.updateKeyState();
-
-        renderer->renderStart(deltaTime);
-        if (!data.bVulkan) // TODO: Remove this when the renderer is done
-            GUIRenderer::beginUI(static_cast<float>(deltaTime), renderer);
-        renderer->renderEnd(deltaTime);
-#ifdef __EMSCRIPTEN__
-    };
-    emscripten_set_main_loop(renderLoop, 0, true);
-#else
-    }
+        tick(this);
 #endif
 }
 
@@ -72,6 +44,25 @@ void UImGui::RendererInternal::stop() const noexcept
     renderer->destroy();
     internalGlobal.modulesManagerr.destroy();
     Window::get().destroyWindow();
+}
+
+void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
+{
+    auto& inst = *((RendererInternal*)rendererInstance);
+    static double deltaTime = 0.0f;
+    glfwPollEvents();
+
+    const double now = glfwGetTime();
+    deltaTime = now - inst.lastTime;
+    inst.lastTime = now;
+
+    // Updates the state of the keybindings
+    internalGlobal.window.updateKeyState();
+
+    inst.renderer->renderStart(deltaTime);
+    if (!inst.data.bVulkan) // TODO: Remove this when the renderer is done
+        GUIRenderer::beginUI(static_cast<float>(deltaTime), inst.renderer);
+    inst.renderer->renderEnd(deltaTime);
 }
 
 void UImGui::RendererInternal::loadConfig()

@@ -4,7 +4,7 @@
 #include <thread>
 #ifdef _WIN32
     #include <windows.h>
-#else
+#elif !__EMSCRIPTEN__
     #include <signal.h>
 #endif
 
@@ -247,6 +247,7 @@ void UImGui::Utility::sleep(const uint64_t milliseconds) noexcept
 
 void UImGui::Utility::interruptSignalHandler() noexcept
 {
+#ifndef __EMSCRIPTEN__
 #ifdef _WIN32
     if (!SetConsoleCtrlHandler([](DWORD signal) -> BOOL WINAPI {
         if (signal == CTRL_C_EVENT)
@@ -281,5 +282,6 @@ void UImGui::Utility::interruptSignalHandler() noexcept
 
     sigaction(SIGINT, &data, nullptr);
     sigaction(SIGTERM, &data, nullptr);
+#endif
 #endif
 }

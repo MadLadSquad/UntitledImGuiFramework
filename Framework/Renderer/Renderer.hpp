@@ -24,6 +24,8 @@ namespace UImGui
         friend class Renderer;
         friend class OpenGLRenderer;
 
+        static void tick(void* rendererInstance) noexcept;
+
         OpenGLRenderer opengl{};
         VulkanRenderer vulkan{};
 
@@ -36,6 +38,8 @@ namespace UImGui
 
         void loadConfig();
         void saveConfig() const noexcept;
+
+        double lastTime = 0.0f;
 
         RendererData data =
         {

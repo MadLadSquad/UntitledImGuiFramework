@@ -160,17 +160,21 @@ void UImGui::WindowInternal::createWindow() noexcept
         glfwWindowHint(GLFW_SAMPLES, 16);
     }
 
+#ifndef __EMSCRIPTEN__
     glfwWindowHint(GLFW_RESIZABLE, windowData.bResizeable);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, windowData.bSurfaceTransparent);
     glfwWindowHint(GLFW_VISIBLE, !windowData.bHidden);
     glfwWindowHint(GLFW_FOCUSED, windowData.bFocused);
     glfwWindowHint(GLFW_DECORATED, windowData.bDecorated);
     glfwWindowHint(GLFW_MAXIMIZED, windowData.bMaximised);
+#endif
 
     Logger::log("Window settings configured", UVK_LOG_TYPE_NOTE);
     GLFWmonitor* monitor = nullptr;
+#ifndef __EMSCRIPTEN__
     if (windowData.fullscreen)
         monitor = glfwGetPrimaryMonitor();
+#endif
 
     windowMain = glfwCreateWindow(static_cast<int>(windowSize.x), static_cast<int>(windowSize.y), windowData.name.c_str(), monitor, nullptr);
     if (!windowMain)
@@ -401,10 +405,12 @@ finish_inner_loop:;
 
 void UImGui::WindowInternal::setIcon(const String name) const noexcept
 {
+#ifndef __EMSCRIPTEN__
     GLFWimage images[1];
     images[0].pixels = stbi_load((internalGlobal.instance->initInfo.contentDir + name).c_str(), &images[0].width, &images[0].height, nullptr, 4);
     glfwSetWindowIcon(windowMain, 1, images);
     stbi_image_free(images[0].pixels);
+#endif
 }
 
 void UImGui::WindowInternal::setWindowAlwaysOnTop() noexcept
