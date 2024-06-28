@@ -19,30 +19,6 @@ endif()
 multicast(set_target_properties PROPERTIES LINKER_LANGUAGE CXX)
 include(SetupTargetSettings)
 
-if (EMSCRIPTEN)
-    multicast(target_compile_options PRIVATE -fwasm-exceptions -sSUPPORT_LONGJMP=wasm)
-
-    # Package asset files
-    file(GLOB_RECURSE CONFIG_ASSET_FILES ${CMAKE_SOURCE_DIR}/Config/*)
-    file(GLOB_RECURSE CONTENT_ASSET_FILES ${CMAKE_SOURCE_DIR}/Content/*)
-
-    foreach(asset_file ${CONFIG_ASSET_FILES})
-        string(REPLACE "${CMAKE_SOURCE_DIR}/" "" relative_asset_file ${asset_file})
-        list(APPEND ASSET_LINK_FLAGS --preload-file ${asset_file}@/${relative_asset_file})
-    endforeach()
-
-    foreach(asset_file ${CONTENT_ASSET_FILES})
-        string(REPLACE "${CMAKE_SOURCE_DIR}/" "" relative_asset_file ${asset_file})
-        list(APPEND ASSET_LINK_FLAGS --preload-file ${asset_file}@/${relative_asset_file})
-    endforeach()
-
-    set_target_properties(${APP_LIB_TARGET} PROPERTIES LINK_FLAGS "${ASSET_LINK_FLAGS}")
-
-    multicast(set_target_properties PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Config)
-    multicast(set_target_properties PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Content)
-    multicast(set_target_properties PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/uvproj.yaml)
-endif ()
-
 target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_COMPILE_LIB" "YAML_CPP_DLL"
         "UVK_LOG_EXPORT_FROM_LIBRARY" "UVK_LIB_COMPILE" "URLL_USE_FUNCTIONAL")
 if (NOT WIN32)

@@ -1,16 +1,27 @@
 if (EMSCRIPTEN)
 
+
+    set_target_properties(${APP_LIB_TARGET} PROPERTIES LINK_FLAGS "${ASSET_LINK_FLAGS}")
+
+    multicast(set_target_properties PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Config)
+    multicast(set_target_properties PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Content)
+    multicast(set_target_properties PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/uvproj.yaml)
+endif ()
+
+if (EMSCRIPTEN)
+    multicast(target_compile_options PRIVATE -fwasm-exceptions -sSUPPORT_LONGJMP=wasm)
+
+    set(EM_LINK_FLAGS "--preload-file ${CMAKE_CURRENT_SOURCE_DIR}/Config@../Config --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/Content@../Content --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/uvproj.yaml@../uvproj.yaml")
+
     if (ENABLE_PRE_SCRIPT)
-        set(EM_LINK_FLAGS "--pre-js ${CMAKE_CURRENT_SOURCE_DIR}/Config/WASM/pre.js")
+        set(EM_LINK_FLAGS "${EM_LINK_FLAGS} --pre-js ${CMAKE_CURRENT_SOURCE_DIR}/Config/WASM/pre.js")
     endif()
 
     if (ENABLE_POST_SCRIPT)
         set(EM_LINK_FLAGS "${EM_LINK_FLAGS} --post-js ${CMAKE_CURRENT_SOURCE_DIR}/Config/WASM/post.js")
     endif()
 
-    if (DEFINED EM_LINK_FLAGS)
-        multicast(set_target_properties PROPERTIES LINK_FLAGS "${EM_LINK_FLAGS}")
-    endif()
+    multicast(set_target_properties PROPERTIES LINK_FLAGS "${EM_LINK_FLAGS}")
 endif()
 
 if (BUILD_VARIANT_STATIC)
