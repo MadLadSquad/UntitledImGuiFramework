@@ -97,10 +97,12 @@ Documentation is written as pure learning material, code examples are, in most c
 the C and C++ API in mind. Additionally, there is specific documentation for distibuting applications including the 
 framework on different platforms that may be used by OS maintainers to create packages for the framework.
 
+## Interactive demo
+Learn how to UI is built using dear imgui and the capabilities of the framework, on [our interactive demo website]()!
+
 ## Showcase and Progress
-Coming soon, follow our [YouTube channel](https://www.youtube.com/channel/UCWKEvueStyfeMGnkvVJuGxQ) and the 
-[UntitledDesktopEnvironment wiki](https://trello.com/b/HmfuRY2K/untitleddesktop) for updates and some feature highlights 
-soon!
+Coming soon, follow the [UntitledDesktopEnvironment webpage](https://trello.com/b/HmfuRY2K/untitleddesktop) for updates 
+and some feature highlights.
 
 There are many applications, already in production, that use the framework. A list can be found 
 [here](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki/Applications-using-the-framework). If your application 
