@@ -280,5 +280,6 @@ void UImGui::Utility::interruptSignalHandler() noexcept
     },
 
     sigaction(SIGINT, &data, nullptr);
+    sigaction(SIGTERM, &data, nullptr);
 #endif
 }
