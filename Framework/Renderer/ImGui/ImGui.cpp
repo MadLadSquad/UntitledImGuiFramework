@@ -142,6 +142,7 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer
     renderer->ImGuiNewFrame();
 
     static bool opt_fullscreen = true;
+    static bool opt_padding = false;
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse;
@@ -154,7 +155,7 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer
         ImGui::SetNextWindowPos(viewport->WorkPos);
         ImGui::SetNextWindowSize(viewport->WorkSize);
         ImGui::SetNextWindowViewport(viewport->ID);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 12.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 8.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
@@ -168,9 +169,11 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer
 
     static bool bIsOpen = true;
 
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    if (!opt_padding)
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::Begin("DockSpace Demo", &bIsOpen, window_flags | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
-    ImGui::PopStyleVar();
+    if (!opt_padding)
+        ImGui::PopStyleVar();
 
     Instance::get()->tick(deltaTime);
     const auto& initInfo = Instance::get()->initInfo;
