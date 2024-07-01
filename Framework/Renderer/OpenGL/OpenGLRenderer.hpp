@@ -13,7 +13,7 @@ namespace UImGui
         virtual void renderEnd(double deltaTime) noexcept override;
         virtual void destroy() noexcept override;
 
-        virtual void ImGuiNewFrame() noexcept override;
+        virtual void ImGuiNewFrame() override;
         virtual void ImGuiShutdown() noexcept override;
         virtual void ImGuiInit() noexcept override;
         virtual void ImGuiRenderData() noexcept override;

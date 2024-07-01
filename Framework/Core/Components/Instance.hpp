@@ -96,19 +96,19 @@ namespace UImGui
         {
             if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_INLINE)
             {
-                for (auto& a : Instance::get()->initInfo.inlineComponents)
+                for (auto& a : get()->initInfo.inlineComponents)
                     if (a->name == name && a->id == id)
                         return a;
             }
             else if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_TITLEBAR)
             {
-                for (auto& a : Instance::get()->initInfo.titlebarComponents)
+                for (auto& a : get()->initInfo.titlebarComponents)
                     if (a->name == name && a->id == id)
                         return a;
             }
             else if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_WINDOW)
             {
-                for (auto& a : Instance::get()->initInfo.windowComponents)
+                for (auto& a : get()->initInfo.windowComponents)
                     if (a->name == name && a->id == id)
                         return a;
             }
@@ -128,7 +128,7 @@ namespace UImGui
         template<typename T>
         static T* cast()
         {
-            return static_cast<T*>(Instance::get());
+            return static_cast<T*>(get());
         }
 
         /**
@@ -146,7 +146,7 @@ namespace UImGui
          * @param deltaTime - the delta time calculated in the application's render loop
          * @note Event Safety - Any time
          */
-        void tickAutohandle(float deltaTime) const noexcept;
+        void tickAutohandle(float deltaTime) const;
         /**
          * @brief Used to automatically handle downstream end events
          * @note Event Safety - Any time
@@ -179,6 +179,6 @@ namespace UImGui
         friend class GUIRenderer;
 
         // Event Safety - Any time
-        static Instance* get() noexcept;
+        static Instance* get();
     };
 }

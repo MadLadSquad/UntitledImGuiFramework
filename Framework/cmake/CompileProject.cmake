@@ -16,17 +16,7 @@ else()
     add_executable(${APP_TARGET} ${EXECUTABLE_SOURCES})
 endif()
 
-multicast(set_target_properties PROPERTIES LINKER_LANGUAGE CXX)
 include(SetupTargetSettings)
-
-target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_COMPILE_LIB" "YAML_CPP_DLL"
-        "UVK_LOG_EXPORT_FROM_LIBRARY" "UVK_LIB_COMPILE" "URLL_USE_FUNCTIONAL")
-if (NOT WIN32)
-    target_compile_definitions(${APP_LIB_TARGET} PRIVATE "URLL_USE_FUNCTIONAL" "UVK_LOG_EXPORT_FROM_LIBRARY")
-endif()
-target_compile_definitions(${APP_TARGET} PRIVATE "UVK_LOG_EXPORT_FROM_LIBRARY" "URLL_USE_FUNCTIONAL")
-
-custom_compile_step()
 
 # ----------------------------------------------------------------------------------------------------------------------
 # --------------------------------------------- Link to the required libraries -----------------------------------------
@@ -47,10 +37,7 @@ else()
                 "-framework QuartzCore")
     endif ()
 
-    if (EMSCRIPTEN)
-        multicast(target_link_options PRIVATE -sUSE_GLFW=3 -s ALLOW_MEMORY_GROWTH=1 -fwasm-exceptions
-                -sSUPPORT_LONGJMP=wasm)
-    else ()
+    if (NOT EMSCRIPTEN)
         multicast(target_link_libraries util)
     endif()
 

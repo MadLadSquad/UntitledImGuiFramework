@@ -42,7 +42,7 @@ void UImGui::OpenGLRenderer::destroy() noexcept
 
 }
 
-void UImGui::OpenGLRenderer::ImGuiNewFrame() noexcept
+void UImGui::OpenGLRenderer::ImGuiNewFrame()
 {
     ImGui_ImplOpenGL3_NewFrame();
     GUIRenderer::beginFrame();

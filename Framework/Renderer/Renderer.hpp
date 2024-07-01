@@ -18,13 +18,13 @@ namespace UImGui
     public:
         RendererInternal() = default;
 
-        void start() noexcept;
+        void start();
         void stop() const noexcept;
     private:
         friend class Renderer;
         friend class OpenGLRenderer;
 
-        static void tick(void* rendererInstance) noexcept;
+        static void tick(void* rendererInstance);
 
         OpenGLRenderer opengl{};
         VulkanRenderer vulkan{};

@@ -5,7 +5,7 @@
 #include "ImGui.hpp"
 #include <Core/Components/Instance.hpp>
 
-void UImGui::GUIRenderer::beginFrame() noexcept
+void UImGui::GUIRenderer::beginFrame()
 {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -137,7 +137,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
     }
 }
 
-void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer* renderer) noexcept
+void UImGui::GUIRenderer::beginUI(float deltaTime, GenericInternalRenderer* renderer)
 {
     renderer->ImGuiNewFrame();
 
@@ -175,10 +175,11 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer
     if (!opt_padding)
         ImGui::PopStyleVar();
 
-    Instance::get()->tick(deltaTime);
-    const auto& initInfo = Instance::get()->initInfo;
+    auto* instance = Instance::get();
+    instance->tick(deltaTime);
+    const auto& initInfo = instance->initInfo;
 
-    for (const auto& a : Instance::get()->initInfo.titlebarComponents)
+    for (const auto& a : instance->initInfo.titlebarComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->titlebarComponents != nullptr)
@@ -191,7 +192,7 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer
         }
     }
 
-    for (const auto& a : Instance::get()->initInfo.inlineComponents)
+    for (const auto& a : instance->initInfo.inlineComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->inlineComponents != nullptr)
@@ -215,7 +216,7 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
 
-    for (const auto& a : Instance::get()->initInfo.windowComponents)
+    for (const auto& a : instance->initInfo.windowComponents)
         if (a->state == UIMGUI_COMPONENT_STATE_RUNNING)
             a->tick(deltaTime);
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->windowComponents != nullptr)

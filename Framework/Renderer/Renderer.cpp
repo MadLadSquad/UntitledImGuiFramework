@@ -9,7 +9,7 @@
 #include <Interfaces/WindowInterface.hpp>
 #include <Global.hpp>
 
-void UImGui::RendererInternal::start() noexcept
+void UImGui::RendererInternal::start()
 {
     loadConfig();
 
@@ -46,7 +46,7 @@ void UImGui::RendererInternal::stop() const noexcept
     Window::get().destroyWindow();
 }
 
-void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
+void UImGui::RendererInternal::tick(void* rendererInstance)
 {
     auto& inst = *((RendererInternal*)rendererInstance);
     static double deltaTime = 0.0f;
