@@ -46,7 +46,7 @@ void UImGui::RendererInternal::stop() const noexcept
     Window::get().destroyWindow();
 }
 
-void UImGui::RendererInternal::tick(void* rendererInstance)
+void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
 {
     auto& inst = *((RendererInternal*)rendererInstance);
     static double deltaTime = 0.0f;
@@ -65,7 +65,7 @@ void UImGui::RendererInternal::tick(void* rendererInstance)
     inst.renderer->renderEnd(deltaTime);
 }
 
-void UImGui::RendererInternal::loadConfig()
+void UImGui::RendererInternal::loadConfig() noexcept
 {
     YAML::Node node;
     try

@@ -5,7 +5,7 @@
 #include "ImGui.hpp"
 #include <Core/Components/Instance.hpp>
 
-void UImGui::GUIRenderer::beginFrame()
+void UImGui::GUIRenderer::beginFrame() noexcept
 {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -137,7 +137,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
     }
 }
 
-void UImGui::GUIRenderer::beginUI(float deltaTime, GenericInternalRenderer* renderer)
+void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer* renderer) noexcept
 {
     renderer->ImGuiNewFrame();
 

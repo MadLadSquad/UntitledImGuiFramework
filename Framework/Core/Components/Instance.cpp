@@ -33,7 +33,7 @@ void UImGui::Instance::beginAutohandle() const noexcept
             initInfo.cInitInfo->beginFuncs[i](initInfo.cInitInfo);
 }
 
-void UImGui::Instance::tickAutohandle(float deltaTime) const
+void UImGui::Instance::tickAutohandle(const float deltaTime) const noexcept
 {
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->tickFuncs != nullptr)
         for (size_t i = 0; i < initInfo.cInitInfo->tickSize; i++)
@@ -57,7 +57,7 @@ void UImGui::Instance::shutdown() noexcept
     Window::get().close();
 }
 
-UImGui::Instance* UImGui::Instance::get()
+UImGui::Instance* UImGui::Instance::get() noexcept
 {
     return internalGlobal.instance;
 }

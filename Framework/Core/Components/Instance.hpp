@@ -92,7 +92,7 @@ namespace UImGui
          * @note Event Safety - Post-Startup
          */
         template<ComponentType cmpType>
-        static auto* getComponentByIDs(const FString& name, const uint64_t id)
+        static auto* getComponentByIDs(const FString& name, const uint64_t id) noexcept
         {
             if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_INLINE)
             {
@@ -126,7 +126,7 @@ namespace UImGui
          * @note Event Safety - Any time
          */
         template<typename T>
-        static T* cast()
+        static T* cast() noexcept
         {
             return static_cast<T*>(get());
         }
@@ -146,7 +146,7 @@ namespace UImGui
          * @param deltaTime - the delta time calculated in the application's render loop
          * @note Event Safety - Any time
          */
-        void tickAutohandle(float deltaTime) const;
+        void tickAutohandle(float deltaTime) const noexcept;
         /**
          * @brief Used to automatically handle downstream end events
          * @note Event Safety - Any time
@@ -179,6 +179,6 @@ namespace UImGui
         friend class GUIRenderer;
 
         // Event Safety - Any time
-        static Instance* get();
+        static Instance* get() noexcept;
     };
 }

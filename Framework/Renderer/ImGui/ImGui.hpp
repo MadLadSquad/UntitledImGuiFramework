@@ -13,8 +13,8 @@ namespace UImGui
         GUIRenderer() = default;
 
         static void init(const FString& ini, GenericInternalRenderer* renderer) noexcept;
-        static void beginUI(float deltaTime, GenericInternalRenderer* renderer);
-        static void beginFrame();
+        static void beginUI(float deltaTime, GenericInternalRenderer* renderer) noexcept;
+        static void beginFrame() noexcept;
         static void shutdown(const FString& ini, GenericInternalRenderer* renderer) noexcept;
     };
 }

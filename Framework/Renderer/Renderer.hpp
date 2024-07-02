@@ -24,7 +24,7 @@ namespace UImGui
         friend class Renderer;
         friend class OpenGLRenderer;
 
-        static void tick(void* rendererInstance);
+        static void tick(void* rendererInstance) noexcept;
 
         OpenGLRenderer opengl{};
         VulkanRenderer vulkan{};
@@ -36,7 +36,7 @@ namespace UImGui
         FString driverVersion;
         FString gpuName;
 
-        void loadConfig();
+        void loadConfig() noexcept;
         void saveConfig() const noexcept;
 
         double lastTime = 0.0f;
