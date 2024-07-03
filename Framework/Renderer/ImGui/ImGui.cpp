@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include "ImGui.hpp"
 #include <Core/Components/Instance.hpp>
+#include <Core/Platform/WASM.hpp>
 
 void UImGui::GUIRenderer::beginFrame() noexcept
 {
@@ -90,14 +91,15 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 
-    Instance::get()->onEventConfigureStyle(style, io);
+    auto* inst = Instance::get();
+    inst->onEventConfigureStyle(style, io);
 
     renderer->ImGuiInit();
 
-    Instance::get()->begin();
-    const auto& initInfo = Instance::get()->initInfo;
+    inst->begin();
+    const auto& initInfo = inst->initInfo;
 
-    for (const auto& a : Instance::get()->initInfo.titlebarComponents)
+    for (const auto& a : inst->initInfo.titlebarComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->titlebarComponents != nullptr)
@@ -110,7 +112,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
         }
     }
 
-    for (const auto& a : Instance::get()->initInfo.windowComponents)
+    for (const auto& a : inst->initInfo.windowComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->windowComponents != nullptr)
@@ -123,7 +125,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
         }
     }
 
-    for (const auto& a : Instance::get()->initInfo.inlineComponents)
+    for (const auto& a : inst->initInfo.inlineComponents)
         if (a->state != UIMGUI_COMPONENT_STATE_OFF)
             a->begin();
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->inlineComponents != nullptr)
