@@ -9,7 +9,7 @@ if (EMSCRIPTEN)
     if (USE_HTML_GENERATION)
         set(CMAKE_EXECUTABLE_SUFFIX ".html")
     endif()
-    set(OPENGL_LIBRARIES "-s WASM=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -O0 -fwasm-exceptions")
+    set(OPENGL_LIBRARIES "-s WASM=1 -sUSE_WEBGPU=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -O0 -fwasm-exceptions")
 
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL " " FORCE)
     set(GLFW_BUILD_TESTS    OFF CACHE BOOL " " FORCE)
