@@ -6,6 +6,9 @@
 
 A desktop software development framework that uses dear imgui as its UI and rendering library.
 
+## NEW: Interactive web demo
+You can try out the demo [here](https://uimgui.madladsquad.com).
+
 ## Motivation
 Desktop UI frameworks and libraries like QT and GTK are complicated and really rigid. Using them or system-specific UI libraries
 would hard-lock us into using only what they use. 
@@ -84,12 +87,6 @@ All of the operating systems above have generally the same features, as we're tr
 The only exception is the Freedesktop submodule of the OS module, which provides more libraries for working with desktop environment features, that are 
 otherwise baked into the core OS libraries, when talking about Windows and macOS.
 
-### Future platform support
-For the 2.0 release of the framework, we plan to have first class support for the following additional platforms:
-
-1. Android
-1. iOS
-
 ## Learn
 You can find the documentation in the [wiki](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki).
 
@@ -97,12 +94,11 @@ Documentation is written as pure learning material, code examples are, in most c
 the C and C++ API in mind. Additionally, there is specific documentation for distibuting applications including the 
 framework on different platforms that may be used by OS maintainers to create packages for the framework.
 
-## Interactive demo
-Learn how to UI is built using dear imgui and the capabilities of the framework, on [our interactive demo website]()!
-
 ## Showcase and Progress
-Coming soon, follow the [UntitledDesktopEnvironment webpage](https://trello.com/b/HmfuRY2K/untitleddesktop) for updates 
+Coming soon, follow the [UntitledDesktopEnvironment webpage](https://madladsquad.com/desktop) for updates 
 and some feature highlights.
+
+Try out the new interactive web demo [here](https://uimgui.madladsquad.com/).
 
 There are many applications, already in production, that use the framework. A list can be found 
 [here](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki/Applications-using-the-framework). If your application 
