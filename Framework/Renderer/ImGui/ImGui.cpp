@@ -66,6 +66,26 @@ void UImGui::GUIRenderer::shutdown(const FString& ini, GenericInternalRenderer* 
     Instance::get()->end();
 }
 
+// We need to check whether macOS is used, in order to correctly swap Control & Command on when targeting WASM
+#ifdef __EMSCRIPTEN__
+EM_JS(bool, em_is_on_macOS, (), {
+    let platform = navigator.platform.toLowerCase();
+    return platform.indexOf("mac") === 0
+        || platform.indexOf("ipad") === 0
+        || platform.indexOf("ipod") === 0
+        || platform.indexOf("iphone") === 0;
+});
+#else
+constexpr bool em_is_on_macOS() noexcept
+{
+#ifdef __APPLE__
+    return true;
+#else
+    return false;
+#endif
+}
+#endif
+
 void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* renderer) noexcept
 {
     ImGui::CreateContext();
@@ -79,6 +99,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
     io.IniFilename = nullptr;
     io.WantSaveIniSettings = false;
     io.ConfigViewportsNoTaskBarIcon = true;
+    io.ConfigMacOSXBehaviors = em_is_on_macOS();
 
     ImGui::LoadIniSettingsFromDisk((internalGlobal.instance->initInfo.configDir + "Core/" + ini + ".ini").c_str());
     ImGui::StyleColorsDark();
