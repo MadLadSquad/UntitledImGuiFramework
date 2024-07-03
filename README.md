@@ -84,12 +84,6 @@ All of the operating systems above have generally the same features, as we're tr
 The only exception is the Freedesktop submodule of the OS module, which provides more libraries for working with desktop environment features, that are 
 otherwise baked into the core OS libraries, when talking about Windows and macOS.
 
-### Future platform support
-For the 2.0 release of the framework, we plan to have first class support for the following additional platforms:
-
-1. Android
-1. iOS
-
 ## Learn
 You can find the documentation in the [wiki](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki).
 
