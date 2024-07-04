@@ -1,3 +1,5 @@
+include("${APP_TARGET}Modules")
+
 option(UIMGUI_INSTALL_FRAMEWORK "Whether to install the framework" OFF)
 option(UIMGUI_INSTALL "Installs all libraries" OFF)
 option(BUILD_VARIANT_STATIC "Builds the Framework, application library(exists only on Unix) and executable into a single

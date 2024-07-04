@@ -61,8 +61,6 @@ enabled-modules:
   dbus: false
   uexec: false
   theming: false
-  notifications: false
-  polkit: false
   ufont: false
   i18n: false
   undo-redo: false
