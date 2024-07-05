@@ -192,7 +192,6 @@ if (USE_OS_MODULE AND NOT EMSCRIPTEN)
         endif ()
     endif()
     if (ENABLE_UFONT_UTILS)
-        #find_package(Fontconfig REQUIRED)
     endif()
 endif()
 
