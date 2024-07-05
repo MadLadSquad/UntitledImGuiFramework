@@ -107,6 +107,14 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
     CHECK_MODULE_ENABLED(cli_parser);
     CHECK_MODULE_ENABLED(xdg);
     CHECK_MODULE_ENABLED(open);
+    
+    // Fix up double forms
+    if (mod["undo-redo"])
+        Modules::data().undo_redo = mod["undo-redo"].as<bool>();
+    if (mod["text-utils"])
+        Modules::data().text_utils = mod["text-utils"].as<bool>();
+    if (mod["cli-parser"])
+        Modules::data().cli_parser = mod["cli-parser"].as<bool>();
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
     if (Modules::data().undo_redo)
