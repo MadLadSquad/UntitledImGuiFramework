@@ -10,6 +10,8 @@
 #include <Utilities.hpp>
 #include <Global.hpp>
 
+#include "Interfaces/RendererInterface.hpp"
+
 UImGui::Texture::Texture(String file) noexcept
 {
     init(file);
@@ -42,23 +44,8 @@ void UImGui::Texture::load(void* data, uint32_t x, uint32_t y, const uint32_t de
             return;
         }
     }
+    Renderer::get().renderer->loadTexture(reinterpret_cast<intptr_t>(&dt.id), x, y, depth, data);
 
-    glGenTextures(1, &dt.id);
-    glBindTexture(GL_TEXTURE_2D, dt.id);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    uint32_t dataType = GL_UNSIGNED_BYTE;
-    if (depth > 8)
-        dataType = GL_UNSIGNED_SHORT;
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(x), static_cast<int>(y), 0, GL_RGBA, dataType, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
     dt.size = { static_cast<float>(x), static_cast<float>(y) };
     if (bFreeImageData)
         freeFunc(data);
@@ -76,22 +63,7 @@ void UImGui::Texture::loadImGui(void* data, uint32_t x, uint32_t y, const uint32
         }
     }
 
-    glGenTextures(1, &dt.id);
-    glBindTexture(GL_TEXTURE_2D, dt.id);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-#if defined(GL_UNPACK_ROW_LENGTH) && !defined(__EMSCRIPTEN__)
-    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-#endif
-    uint32_t dataType = GL_UNSIGNED_BYTE;
-    if (depth > 8)
-        dataType = GL_UNSIGNED_SHORT;
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(x), static_cast<int>(y), 0, GL_RGBA, dataType, data);
+    Renderer::get().renderer->loadTextureImGui(reinterpret_cast<intptr_t>(&dt.id), x, y, depth, data);
     dt.size = { static_cast<float>(x), static_cast<float>(y) };
 
     if (bFreeImageData)
@@ -102,13 +74,12 @@ void UImGui::Texture::loadImGui(void* data, uint32_t x, uint32_t y, const uint32
 
 void UImGui::Texture::use() const noexcept
 {
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, dt.id);
+    Renderer::get().renderer->useTexture(reinterpret_cast<intptr_t>(&dt.id));
 }
 
 void UImGui::Texture::clear() noexcept
 {
-    glDeleteTextures(1, &dt.id);
+    Renderer::get().renderer->clearTexture(reinterpret_cast<intptr_t>(&dt.id));
     dt.id = 0;
     dt.size = { 0.0f, 0.0f };
 

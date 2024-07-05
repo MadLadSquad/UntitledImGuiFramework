@@ -20,6 +20,11 @@ namespace UImGui
         virtual void ImGuiShutdown() noexcept override;
         virtual void ImGuiInit() noexcept override;
         virtual void ImGuiRenderData() noexcept override;
+
+        virtual void loadTexture(intptr_t id, uint32_t x, uint32_t y, uint32_t depth, const void* data) noexcept override;
+        virtual void loadTextureImGui(intptr_t id, uint32_t x, uint32_t y, uint32_t depth, const void* data) noexcept override;
+        virtual void useTexture(intptr_t id) noexcept override;
+        virtual void clearTexture(intptr_t id) noexcept override;
     private:
 #ifndef __EMSCRIPTEN__
         VKInstance instance{};

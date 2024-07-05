@@ -5,6 +5,8 @@
 // Imports the C Texture API, defines the TextureData struct.
 #include <C/Rendering/CTexture.h>
 
+#define TEXTURE_CAST(x) (void*)(intptr_t)(x)
+
 namespace UImGui
 {
     typedef UImGui_TextureData TextureData;

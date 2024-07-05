@@ -23,6 +23,7 @@ namespace UImGui
     private:
         friend class Renderer;
         friend class OpenGLRenderer;
+        friend class Texture;
 
         static void tick(void* rendererInstance) noexcept;
 

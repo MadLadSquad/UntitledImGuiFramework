@@ -43,3 +43,23 @@ void UImGui::VulkanRenderer::ImGuiRenderData() noexcept
 {
 
 }
+
+void UImGui::VulkanRenderer::loadTexture(const intptr_t id, const uint32_t x, const uint32_t y, const uint32_t depth, const void* data) noexcept
+{
+
+}
+
+void UImGui::VulkanRenderer::loadTextureImGui(const intptr_t id, const uint32_t x, const uint32_t y, const uint32_t depth, const void* data) noexcept
+{
+
+}
+
+void UImGui::VulkanRenderer::useTexture(intptr_t id) noexcept
+{
+
+}
+
+void UImGui::VulkanRenderer::clearTexture(intptr_t id) noexcept
+{
+
+}
