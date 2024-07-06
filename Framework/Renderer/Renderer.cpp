@@ -21,7 +21,6 @@ void UImGui::RendererInternal::start()
     internalGlobal.init();
 
 #ifdef __EMSCRIPTEN__
-    data.bVulkan = em_supports_wgpu() && data.bVulkan;
     renderer = data.bVulkan ? CAST(decltype(renderer), &wgpu) : CAST(decltype(renderer), &opengl);
 #else
     renderer = data.bVulkan ? CAST(decltype(renderer), &vulkan) : CAST(decltype(renderer), &opengl);
@@ -29,7 +28,9 @@ void UImGui::RendererInternal::start()
     renderer->init(*this);
 
     internalGlobal.modulesManagerr.init(internalGlobal.instance->initInfo.configDir);
+#ifndef __EMSCRIPTEN__
     if (!data.bVulkan) // TODO: Remove this when the renderer is done
+#endif
         GUIRenderer::init(Window::get().windowData.layoutLocation, renderer);
 
 #ifdef __EMSCRIPTEN__
@@ -42,7 +43,9 @@ void UImGui::RendererInternal::start()
 
 void UImGui::RendererInternal::stop() const noexcept
 {
+#ifndef __EMSCRIPTEN__
     if (!data.bVulkan) // TODO: Remove this when the renderer is done
+#endif
         GUIRenderer::shutdown(Window::get().windowData.layoutLocation, renderer);
     renderer->destroy();
     internalGlobal.modulesManagerr.destroy();
@@ -63,7 +66,9 @@ void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
     internalGlobal.window.updateKeyState();
 
     inst.renderer->renderStart(deltaTime);
+#ifndef __EMSCRIPTEN__
     if (!inst.data.bVulkan) // TODO: Remove this when the renderer is done
+#endif
         GUIRenderer::beginUI(static_cast<float>(deltaTime), inst.renderer);
     inst.renderer->renderEnd(deltaTime);
 }
@@ -82,7 +87,12 @@ void UImGui::RendererInternal::loadConfig() noexcept
     }
 
     if (node["vulkan"])
-        data.bVulkan = node["vulkan"].as<bool>();
+        data.bVulkan = node["vulkan"].as<bool>() &&
+#ifdef __EMSCRIPTEN__
+            em_supports_wgpu();
+#else
+            true;
+#endif
     if (node["v-sync"])
         data.bUsingVSync = node["v-sync"].as<bool>();
     if (node["msaa-samples"])

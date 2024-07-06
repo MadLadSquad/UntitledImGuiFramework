@@ -30,7 +30,15 @@ namespace UImGui
         virtual ~WebGPURenderer() noexcept = default;
     private:
 #ifdef __EMSCRIPTEN__
+        WGPUInstance instance = nullptr;
+        WGPUDevice device = nullptr;
+        WGPUSurface surface = nullptr;
+        WGPUSwapChain swapchain = nullptr;
+        WGPUTextureFormat preferredFormat = WGPUTextureFormat_RGBA8Unorm;
+        uint32_t swapchainWidth = 800;
+        uint32_t swapchainHeight = 600;
 
+        void createSwapchain() noexcept;
 #endif
     };
 }

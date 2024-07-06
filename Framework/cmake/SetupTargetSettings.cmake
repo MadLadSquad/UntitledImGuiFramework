@@ -2,7 +2,7 @@ multicast(set_target_properties PROPERTIES LINKER_LANGUAGE CXX)
 if (EMSCRIPTEN)
     multicast(target_compile_options PRIVATE -fwasm-exceptions -sSUPPORT_LONGJMP=wasm -Wbad-function-cast -Wcast-function-type)
 
-    set(EM_LINK_FLAGS "-fwasm-exceptions --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/Config@../Config --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/Content@../Content --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/uvproj.yaml@../uvproj.yaml")
+    set(EM_LINK_FLAGS "--extern-pre-js ${CMAKE_CURRENT_SOURCE_DIR}/Framework/Core/Platform/framework_pre.js -fwasm-exceptions --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/Config@../Config --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/Content@../Content --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/uvproj.yaml@../uvproj.yaml")
 
     if (ENABLE_PRE_SCRIPT)
         set(EM_LINK_FLAGS "${EM_LINK_FLAGS} --pre-js ${CMAKE_CURRENT_SOURCE_DIR}/Config/WASM/pre.js")
