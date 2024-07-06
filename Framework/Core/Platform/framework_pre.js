@@ -2,8 +2,17 @@ async function configure_WebGPU() {
     if (navigator.gpu !== undefined && navigator.gpu !== null)
     {
         const adapter = await navigator.gpu.requestAdapter();
-        const device = await adapter.requestDevice();
-        Module.preinitializedWebGPUDevice = device;
+        if (adapter !== undefined && adapter !== null)
+        {
+            const device = await adapter.requestDevice();
+            if (device !== undefined && device !== null)
+            {
+                window.bWebGPUEnabled = true;
+                Module.preinitializedWebGPUDevice = device;
+                return;
+            }
+        }
+        window.bWebGPUEnabled = false;
     }
 }
 configure_WebGPU();
