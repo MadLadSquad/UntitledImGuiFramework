@@ -9,6 +9,8 @@
 #include <Interfaces/WindowInterface.hpp>
 #include <Global.hpp>
 
+#include <Platform/WASM.hpp>
+
 void UImGui::RendererInternal::start()
 {
     loadConfig();
@@ -19,10 +21,11 @@ void UImGui::RendererInternal::start()
     internalGlobal.init();
 
 #ifdef __EMSCRIPTEN__
-    data.bVulkan = false;
-#endif
-
+    data.bVulkan = em_supports_wgpu() && data.bVulkan;
+    renderer = data.bVulkan ? CAST(decltype(renderer), &wgpu) : CAST(decltype(renderer), &opengl);
+#else
     renderer = data.bVulkan ? CAST(decltype(renderer), &vulkan) : CAST(decltype(renderer), &opengl);
+#endif
     renderer->init(*this);
 
     internalGlobal.modulesManagerr.init(internalGlobal.instance->initInfo.configDir);

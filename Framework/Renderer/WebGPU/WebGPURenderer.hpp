@@ -1,15 +1,16 @@
 #pragma once
 #include <GenericRenderer/GenericRenderer.hpp>
-
-#include <Renderer/Vulkan/Components/VKInstance.hpp>
-#include <Renderer/Vulkan/Components/VKDevice.hpp>
+#ifdef __EMSCRIPTEN__
+    #include <webgpu/webgpu.h>
+    #include <webgpu/webgpu_cpp.h>
+#endif
 
 namespace UImGui
 {
-    class VulkanRenderer final : public GenericInternalRenderer
+    class WebGPURenderer final : public GenericInternalRenderer
     {
     public:
-        VulkanRenderer() = default;
+        WebGPURenderer() noexcept = default;
 
         virtual void init(RendererInternal& renderer) noexcept override;
         virtual void renderStart(double deltaTime) noexcept override;
@@ -25,9 +26,11 @@ namespace UImGui
         virtual void loadTextureImGui(intptr_t id, uint32_t x, uint32_t y, uint32_t depth, const void* data) noexcept override;
         virtual void useTexture(intptr_t id) noexcept override;
         virtual void clearTexture(intptr_t id) noexcept override;
+
+        virtual ~WebGPURenderer() noexcept = default;
     private:
-#ifndef __EMSCRIPTEN__
-        VKInstance instance{};
+#ifdef __EMSCRIPTEN__
+
 #endif
     };
 }

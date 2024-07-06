@@ -8,6 +8,7 @@
 // Renderers
 #include <OpenGL/OpenGLRenderer.hpp>
 #include <Vulkan/VulkanRenderer.hpp>
+#include <WebGPU/WebGPURenderer.hpp>
 
 namespace UImGui
 {
@@ -29,6 +30,7 @@ namespace UImGui
 
         OpenGLRenderer opengl{};
         VulkanRenderer vulkan{};
+        WebGPURenderer wgpu{};
 
         GenericInternalRenderer* renderer = nullptr;
 

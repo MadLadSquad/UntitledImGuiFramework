@@ -84,6 +84,6 @@ target_compile_definitions(${APP_TARGET} PRIVATE "UVK_LOG_EXPORT_FROM_LIBRARY" "
 custom_compile_step()
 
 if (EMSCRIPTEN)
-    multicast(target_link_options PRIVATE -sUSE_GLFW=3 -s ALLOW_MEMORY_GROWTH=1 -fwasm-exceptions
+    multicast(target_link_options PRIVATE -sUSE_WEBGPU=1 -sUSE_GLFW=3 -sALLOW_MEMORY_GROWTH=1 -fwasm-exceptions
             -sSUPPORT_LONGJMP=wasm)
 endif ()

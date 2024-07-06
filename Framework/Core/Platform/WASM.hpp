@@ -1,26 +1,17 @@
 #pragma once
 #ifdef __EMSCRIPTEN__
-#include <emscripten.h>
+    #include <emscripten.h>
 #endif
+
 // We need to check whether macOS is used, in order to correctly swap Control & Command on when targeting WASM
-namespace UImGui
+#if __cplusplus || __EMSCRIPTEN__
+extern "C"
 {
+#endif
+    bool em_is_on_macOS();
 #ifdef __EMSCRIPTEN__
-    EM_JS(bool, em_is_on_macOS, (), {
-        let platform = navigator.platform.toLowerCase();
-        return platform.indexOf("mac") === 0
-            || platform.indexOf("ipad") === 0
-            || platform.indexOf("ipod") === 0
-            || platform.indexOf("iphone") === 0;
-    });
-#else
-    constexpr bool em_is_on_macOS() noexcept
-    {
-#ifdef __APPLE__
-        return true;
-#else
-        return false;
+    bool em_supports_wgpu();
 #endif
-    }
-#endif
+#if __cplusplus || __EMSCRIPTEN__
 }
+#endif
