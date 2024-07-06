@@ -1,3 +1,5 @@
+'use strict'
+
 async function configure_WebGPU() {
     if (navigator.gpu !== undefined && navigator.gpu !== null)
     {
