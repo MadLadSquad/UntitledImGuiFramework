@@ -76,6 +76,8 @@ void UImGui::WebGPURenderer::init(RendererInternal& renderer) noexcept
 
     wgpuDeviceSetUncapturedErrorCallback(device, errorCallback, nullptr);
     createSwapchain();
+
+    Logger::log("Created the WebGPU renderer!", UVK_LOG_TYPE_SUCCESS);
 }
 
 void UImGui::WebGPURenderer::renderStart(double deltaTime) noexcept
