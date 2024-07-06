@@ -158,9 +158,6 @@ void UImGui::WindowInternal::createWindow() noexcept
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 #endif
         glfwWindowHint(GLFW_SAMPLES, static_cast<int>(Renderer::data().msaaSamples));
-
-        glEnable(GL_MULTISAMPLE);
-        glEnable(GL_DEPTH_TEST);
     }
 
 #ifndef __EMSCRIPTEN__
@@ -226,6 +223,8 @@ void UImGui::WindowInternal::createWindow() noexcept
             return;
         }
 #endif
+        glEnable(GL_MULTISAMPLE);
+        glEnable(GL_DEPTH_TEST);
         // Set viewport and global pointer to use in callbacks
         glViewport(0, 0, tempx, tempy);
     }

@@ -10,7 +10,7 @@ EM_JS(bool, em_is_on_macOS, (), {
 });
 
 EM_JS(bool, em_supports_wgpu, (), {
-    return navigator.gpu !== null && navigator.gpu !== undefined && window.bWebGPUEnabled;
+    return navigator.gpu !== undefined && navigator.gpu !== null && bWebGPUEnabled;
 });
 #else
 bool em_is_on_macOS()

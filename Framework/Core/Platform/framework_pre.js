@@ -1,5 +1,7 @@
 'use strict'
 
+var bWebGPUEnabled = false;
+
 async function configure_WebGPU() {
     if (navigator.gpu !== undefined && navigator.gpu !== null)
     {
@@ -9,12 +11,10 @@ async function configure_WebGPU() {
             const device = await adapter.requestDevice();
             if (device !== undefined && device !== null)
             {
-                window.bWebGPUEnabled = true;
+                bWebGPUEnabled = true;
                 Module.preinitializedWebGPUDevice = device;
-                return;
             }
         }
     }
-    window.bWebGPUEnabled = false;
 }
 configure_WebGPU();
