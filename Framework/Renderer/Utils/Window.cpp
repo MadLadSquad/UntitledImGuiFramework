@@ -157,7 +157,10 @@ void UImGui::WindowInternal::createWindow() noexcept
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 #endif
-        glfwWindowHint(GLFW_SAMPLES, 16);
+        glfwWindowHint(GLFW_SAMPLES, static_cast<int>(Renderer::data().msaaSamples));
+
+        glEnable(GL_MULTISAMPLE);
+        glEnable(GL_DEPTH_TEST);
     }
 
 #ifndef __EMSCRIPTEN__
