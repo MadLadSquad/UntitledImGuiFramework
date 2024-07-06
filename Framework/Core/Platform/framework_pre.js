@@ -12,7 +12,7 @@ async function configure_WebGPU() {
                 return;
             }
         }
-        window.bWebGPUEnabled = false;
     }
+    window.bWebGPUEnabled = false;
 }
 configure_WebGPU();
