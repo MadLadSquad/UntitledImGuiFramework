@@ -1,62 +1,28 @@
 #pragma once
 #include <Types.hpp>
-#include <stb_image_write.h>
-
-// Imports the C Texture API, defines the TextureData struct.
 #include <C/Rendering/CTexture.h>
-
-#define TEXTURE_CAST(x) (void*)(intptr_t)(x)
+#include <stb_image_write.h>
 
 namespace UImGui
 {
     typedef UImGui_TextureData TextureData;
     typedef UImGui_TextureFormat TextureFormat;
 
-    class UIMGUI_PUBLIC_API Texture
+    class GenericTexture
     {
     public:
         typedef UImGui_Texture_CustomSaveFunction CustomSaveFunction;
 
         // Event Safety - Any time
-        Texture() = default;
-        /**
-         * @brief Saves the name of a file for the texture to load
-         * @param file - The name of the image file to be loaded
-         * @note Event Safety - Any time
-         */
-        explicit Texture(String file) noexcept;
-        /**
-         * @brief Equivalent to calling the constructor
-         * @note Event Safety - Any time
-         */
-        void init(String file) noexcept;
-
-        // Loads the image for regular OpenGL/Vulkan usage.
-        // Event Safety - Post-begin
-        void load(void* data = nullptr, uint32_t x = 0, uint32_t y = 0, uint32_t depth = 0, bool bFreeImageData = true,
-                  const std::function<void(void*)>& freeFunc = UImGui_Texture_defaultFreeFunc) noexcept;
-        // Loads the image for dear imgui OpenGL/Vulkan usage
-        // Event Safety - Post-begin
-        void loadImGui(void* data = nullptr, uint32_t x = 0, uint32_t y = 0, uint32_t depth = 0, bool bFreeImageData = true,
-                       const std::function<void(void*)>& freeFunc = UImGui_Texture_defaultFreeFunc) noexcept;
-
-        // Returns the image buffer
+        GenericTexture() noexcept = default;
         // Event Safety - Any time
-        [[nodiscard]] const uint32_t& get() const noexcept;
+        virtual void init(String location) noexcept = 0;
 
-        // Use the regular OpenGL/Vulkan image
-        // Event Safety - All initiated
-        void use() const noexcept;
+        // Event Safety - Post-begin
+        virtual void* get() noexcept = 0;
 
-        // Returns the size of the image
-        // Event Safety - Any time
-        [[nodiscard]] const FVector2& size() const noexcept;
-
-        // Outputs an image with a given format to a file. Only works if the image buffer is not freed automatically
-        // when loading the image.
-        // jpegQuality is set to 100 by default in the C++ API. 0 = lowest quality, 100 = highest quality
-        // Even Safety - Post-begin
-
+        virtual void load(void* data, FVector2 size, uint32_t depth, bool bFreeImageData,
+                                const std::function<void(void*)>& freeFunc) noexcept = 0;
         /**
          * @brief Outputs an image with a given format to a file. Only works if the image buffer is not freed
          * automatically when loading the image.
@@ -69,7 +35,7 @@ namespace UImGui
          * argument sets it to 100
          */
         template<TextureFormat format>
-        bool saveToFile(String location, TextureFormat fmt = format, uint8_t jpegQuality = 100) noexcept
+        bool saveToFile(const String location, const TextureFormat fmt = format, const uint8_t jpegQuality = 100) noexcept
         {
             if (dt.data != nullptr)
             {
@@ -90,17 +56,16 @@ namespace UImGui
                     if (fmt == UIMGUI_TEXTURE_FORMAT_PNG)
                         return stbi_write_png(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
                                               dt.channels, dt.data, static_cast<int>(dt.size.x) * dt.channels);
-                    else if (fmt == UIMGUI_TEXTURE_FORMAT_BMP)
+                    if (fmt == UIMGUI_TEXTURE_FORMAT_BMP)
                         return stbi_write_bmp(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
                                               dt.channels, dt.data);
-                    else if (fmt == UIMGUI_TEXTURE_FORMAT_TGA)
+                    if (fmt == UIMGUI_TEXTURE_FORMAT_TGA)
                         return stbi_write_tga(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
                                               dt.channels, dt.data);
-                    else if (fmt == UIMGUI_TEXTURE_FORMAT_JPEG)
+                    if (fmt == UIMGUI_TEXTURE_FORMAT_JPEG)
                         return stbi_write_jpg(location, static_cast<int>(dt.size.x), static_cast<int>(dt.size.y),
                                               dt.channels, dt.data, jpegQuality);
-                    else
-                        return dt.customSaveFunction(&dt, location);
+                    return dt.customSaveFunction(&dt, location);
                 }
             }
             return false;
@@ -110,13 +75,22 @@ namespace UImGui
         // Event Safety - All initiated
         void setCustomSaveFunction(CustomSaveFunction f) noexcept;
 
+        // Returns the size of the image
+        // Event Safety - Any time
+        [[nodiscard]] const FVector2& size() const noexcept;
+
         // Cleans up the image data
         // Event Safety - All initiated
-        void clear() noexcept;
-        // Same as calling clear
-        // Event Safety - All initiated
-        ~Texture() noexcept;
-    private:
+        virtual void clear() noexcept = 0;
+        virtual ~GenericTexture() noexcept = default;
+    protected:
+        friend class Texture;
+
+        void beginLoad(void** data, FVector2& size) noexcept;
+        void endLoad(void* data, FVector2 size, bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept;
+
+        void defaultInit(String location) noexcept;
+        void defaultClear() noexcept;
         TextureData dt{};
     };
 }

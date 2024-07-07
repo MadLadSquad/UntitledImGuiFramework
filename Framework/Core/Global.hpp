@@ -1,5 +1,5 @@
 #pragma once
-#include <Renderer/Utils/Window.hpp>
+#include <Renderer/Window/Window.hpp>
 #include "Modules/Manager/ModulesManager.hpp"
 #include "CDeallocation.hpp"
 

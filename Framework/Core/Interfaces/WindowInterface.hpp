@@ -1,6 +1,6 @@
 #pragma once
 #include <Core/Types.hpp>
-#include "Utils/Window.hpp"
+#include "Window/Window.hpp"
 #include <C/Interfaces/CWindowInterface.h>
 
 namespace UImGui

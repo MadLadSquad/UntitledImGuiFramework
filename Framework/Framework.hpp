@@ -17,7 +17,7 @@
 #include <misc/cpp/imgui_stdlib.h>
 #include <misc/freetype/imgui_freetype.h>
 #include <custom_funcs.hpp>
-#include <Renderer/Utils/Texture.hpp>
+#include <Renderer/Texture.hpp>
 #include <Renderer/ImGui/ClientSideBar.hpp>
 #include <urll/urll.h>
 
