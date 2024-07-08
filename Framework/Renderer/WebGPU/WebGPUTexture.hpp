@@ -1,7 +1,11 @@
 #pragma once
 #include <GenericRenderer/GenericTexture.hpp>
-
-#include "parallel-hashmap/parallel_hashmap/phmap_dump.h"
+#ifdef __EMSCRIPTEN__
+    #include "imgui_impl_wgpu.h"
+    #include <emscripten.h>
+    #include <emscripten/html5.h>
+    #include <emscripten/html5_webgpu.h>
+#endif
 
 namespace UImGui
 {
@@ -25,7 +29,12 @@ namespace UImGui
         virtual void clear() noexcept override;
         virtual ~WebGPUTexture() noexcept override;
     private:
-        uint32_t id = 0;
+#ifdef __EMSCRIPTEN__
+        WGPUTextureDescriptor textureDescriptor{};
+        WGPUTexture texture = nullptr;
+        WGPUTextureView textureView = nullptr;
+
+#endif
     };
 
 }

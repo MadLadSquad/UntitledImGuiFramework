@@ -24,6 +24,7 @@ namespace UImGui
 
         virtual ~WebGPURenderer() noexcept = default;
     private:
+        friend class WebGPUTexture;
 #ifdef __EMSCRIPTEN__
         WGPUInstance instance = nullptr;
         WGPUDevice device = nullptr;
