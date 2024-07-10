@@ -7,10 +7,12 @@
 #include <cstring>
 
 #define VK_LAYER_KHRONOS_VALIDATION "VK_LAYER_KHRONOS_validation"
+#define VK_DESTROY_DEBUG_REPORT_CALLBACK_EXT_NAME "vkDestroyDebugReportCallbackEXT"
+#define VK_CREATE_DEBUG_REPORT_CALLBACK_EXT_NAME "vkCreateDebugReportCallbackEXT"
 
 void UImGui::VKInstance::init() noexcept
 {
-    constexpr const VkApplicationInfo applicationInfo
+    constexpr VkApplicationInfo applicationInfo
     {
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pApplicationName = "UntitledImGuiFramework",
@@ -35,6 +37,11 @@ void UImGui::VKInstance::init() noexcept
     instanceLayers.push_back(VK_LAYER_KHRONOS_VALIDATION);
 #endif
 
+    // Fixes inability to create an instance on macOS
+#ifdef VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME
+    instanceExtensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+#endif
+
     if (!checkInstanceExtensionsSupport(instanceExtensions))
     {
         Logger::log("Couldn't load all required extensions!", UVK_LOG_TYPE_ERROR);
@@ -44,6 +51,9 @@ void UImGui::VKInstance::init() noexcept
     const VkInstanceCreateInfo instanceCreateInfo
     {
         .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+#ifdef VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME
+        .flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR,
+#endif
         .pApplicationInfo = &applicationInfo,
         .enabledLayerCount = static_cast<uint32_t>(instanceLayers.size()),
         .ppEnabledLayerNames = instanceLayers.data(),
@@ -66,10 +76,10 @@ void UImGui::VKInstance::init() noexcept
     createDebugCallback();
 }
 
-void UImGui::VKInstance::destroy() noexcept
+void UImGui::VKInstance::destroy() const noexcept
 {
 #ifdef DEVELOPMENT
-    auto destroyDebugCallback = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(instance,"vkDestroyDebugReportCallbackEXT");
+    const auto destroyDebugCallback = reinterpret_cast<PFN_vkDestroyDebugReportCallbackEXT>(vkGetInstanceProcAddr(instance,VK_DESTROY_DEBUG_REPORT_CALLBACK_EXT_NAME));
     destroyDebugCallback(instance, callback, nullptr);
 #endif
     vkDestroyInstance(instance, nullptr);
@@ -134,15 +144,15 @@ bool UImGui::VKInstance::checkValidationLayerSupport(const std::vector<const cha
 void UImGui::VKInstance::createDebugCallback() noexcept
 {
 #ifdef DEVELOPMENT
-    constexpr const VkDebugReportCallbackCreateInfoEXT callbackCreateInfoExt
+    constexpr VkDebugReportCallbackCreateInfoEXT callbackCreateInfoExt
     {
         .sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT,
         .flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT,
         .pfnCallback = debugCallback
     };
 
-    auto createDebugReportCallback = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugReportCallbackEXT");
-    auto result = createDebugReportCallback(instance, &callbackCreateInfoExt, nullptr, &callback);
+    const auto createDebugReportCallback = reinterpret_cast<PFN_vkCreateDebugReportCallbackEXT>(vkGetInstanceProcAddr(instance, VK_CREATE_DEBUG_REPORT_CALLBACK_EXT_NAME));
+    const auto result = createDebugReportCallback(instance, &callbackCreateInfoExt, nullptr, &callback);
     if (result != VK_SUCCESS)
     {
         Logger::log("Failed to create a debug callback! Error code: ", UVK_LOG_TYPE_ERROR, result);
@@ -151,8 +161,8 @@ void UImGui::VKInstance::createDebugCallback() noexcept
 #endif
 }
 
-VkBool32 UImGui::VKInstance::debugCallback(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objType, uint64_t obj,
-                                           size_t location, int32_t code, const char* layerPrefix, const char* message, void* userData) noexcept
+VkBool32 UImGui::VKInstance::debugCallback(const VkDebugReportFlagsEXT flags, const VkDebugReportObjectTypeEXT objType, const uint64_t obj,
+                                           const size_t location, const int32_t code, const char* layerPrefix, const char* message, void* userData) noexcept
 {
     UNUSED(objType); UNUSED(obj); UNUSED(location); UNUSED(code); UNUSED(layerPrefix); UNUSED(userData);
 

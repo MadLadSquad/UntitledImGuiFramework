@@ -13,7 +13,7 @@ namespace UImGui
         ~VKInstance() = default;
 
         void init() noexcept;
-        void destroy() noexcept;
+        void destroy() const noexcept;
 
         VkInstance& data() noexcept;
     private:

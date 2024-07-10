@@ -1,6 +1,6 @@
 #include "VulkanRenderer.hpp"
 
-void UImGui::VulkanRenderer::init(UImGui::RendererInternal& renderer) noexcept
+void UImGui::VulkanRenderer::init(RendererInternal& renderer) noexcept
 {
 #ifndef __EMSCRIPTEN__
     instance.init();
