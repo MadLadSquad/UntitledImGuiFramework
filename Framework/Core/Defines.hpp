@@ -24,6 +24,7 @@
 #endif
 
 #define CAST(x, y) static_cast<x>(y)
+#define FCAST(x, y) (x)y
 
 namespace UImGui
 {

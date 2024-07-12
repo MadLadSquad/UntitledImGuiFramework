@@ -12,9 +12,9 @@
 
 void UImGui::VKInstance::init() noexcept
 {
-    constexpr VkApplicationInfo applicationInfo
+    constexpr vk::ApplicationInfo applicationInfo
     {
-        .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
+        //.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pApplicationName = "UntitledImGuiFramework",
         .applicationVersion = VK_MAKE_VERSION(1, 0, 0),
         .pEngineName = "UntitledImGuiFramework",
@@ -48,11 +48,10 @@ void UImGui::VKInstance::init() noexcept
         std::terminate();
     }
 
-    const VkInstanceCreateInfo instanceCreateInfo
+    const vk::InstanceCreateInfo instanceCreateInfo
     {
-        .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
 #ifdef VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME
-        .flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR,
+        .flags = vk::InstanceCreateFlagBits::eEnumeratePortabilityKHR,
 #endif
         .pApplicationInfo = &applicationInfo,
         .enabledLayerCount = static_cast<uint32_t>(instanceLayers.size()),
@@ -67,8 +66,8 @@ void UImGui::VKInstance::init() noexcept
         std::terminate();
     }
 
-    auto result = vkCreateInstance(&instanceCreateInfo, nullptr, &instance);
-    if (result != VK_SUCCESS)
+    auto result = createInstance(&instanceCreateInfo, nullptr, &instance);
+    if (VK_NOT_SUCCESS(result))
     {
         Logger::log("Couldn't create a Vulkan Instance! Error code: ", UVK_LOG_TYPE_ERROR, result);
         std::terminate();
@@ -80,25 +79,20 @@ void UImGui::VKInstance::init() noexcept
 void UImGui::VKInstance::destroy() const noexcept
 {
 #ifdef DEVELOPMENT
-    const auto destroyDebugCallback = reinterpret_cast<PFN_vkDestroyDebugReportCallbackEXT>(vkGetInstanceProcAddr(instance,VK_DESTROY_DEBUG_REPORT_CALLBACK_EXT_NAME));
+    const auto destroyDebugCallback = reinterpret_cast<PFN_vkDestroyDebugReportCallbackEXT>(instance.getProcAddr(VK_DESTROY_DEBUG_REPORT_CALLBACK_EXT_NAME));
     destroyDebugCallback(instance, callback, nullptr);
 #endif
-    vkDestroyInstance(instance, nullptr);
+    instance.destroy();
 }
 
-VkInstance& UImGui::VKInstance::data() noexcept
+vk::Instance& UImGui::VKInstance::data() noexcept
 {
     return instance;
 }
 
 bool UImGui::VKInstance::checkInstanceExtensionsSupport(const std::vector<const char*>& extensions) noexcept
 {
-    uint32_t extensionsNum = 0;
-    vkEnumerateInstanceExtensionProperties(nullptr, &extensionsNum, nullptr);
-
-    std::vector<VkExtensionProperties> extensionProperties(extensionsNum);
-    vkEnumerateInstanceExtensionProperties(nullptr, &extensionsNum, extensionProperties.data());
-
+    auto extensionProperties = vk::enumerateInstanceExtensionProperties(nullptr);
     for (auto& a : extensions)
     {
         bool bHasExtension = false;
@@ -119,12 +113,7 @@ bool UImGui::VKInstance::checkInstanceExtensionsSupport(const std::vector<const 
 
 bool UImGui::VKInstance::checkValidationLayerSupport(const std::vector<const char*>& validationLayers) noexcept
 {
-    uint32_t layerCount;
-    vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
-
-    std::vector<VkLayerProperties> availableLayers(layerCount);
-    vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
-
+    auto availableLayers = vk::enumerateInstanceLayerProperties();
     for (auto& a : validationLayers)
     {
         bool bHasLayer = false;
@@ -151,8 +140,7 @@ void UImGui::VKInstance::createDebugCallback() noexcept
         .flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT,
         .pfnCallback = debugCallback
     };
-
-    const auto createDebugReportCallback = reinterpret_cast<PFN_vkCreateDebugReportCallbackEXT>(vkGetInstanceProcAddr(instance, VK_CREATE_DEBUG_REPORT_CALLBACK_EXT_NAME));
+    const auto createDebugReportCallback = reinterpret_cast<PFN_vkCreateDebugReportCallbackEXT>(instance.getProcAddr(VK_CREATE_DEBUG_REPORT_CALLBACK_EXT_NAME));
     const auto result = createDebugReportCallback(instance, &callbackCreateInfoExt, nullptr, &callback);
     if (result != VK_SUCCESS)
     {
