@@ -4,6 +4,7 @@ void UImGui::VulkanRenderer::init(RendererInternal& renderer) noexcept
 {
 #ifndef __EMSCRIPTEN__
     instance.init();
+    device.create();
 #endif
 }
 
@@ -20,6 +21,7 @@ void UImGui::VulkanRenderer::renderEnd(double deltaTime) noexcept
 void UImGui::VulkanRenderer::destroy() noexcept
 {
 #ifndef __EMSCRIPTEN__
+    device.destroy();
     instance.destroy();
 #endif
 }

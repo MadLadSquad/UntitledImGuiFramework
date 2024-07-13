@@ -23,6 +23,7 @@ namespace UImGui
     private:
 #ifndef __EMSCRIPTEN__
         VKInstance instance{};
+        VKDevice device{ instance };
 #endif
     };
 }

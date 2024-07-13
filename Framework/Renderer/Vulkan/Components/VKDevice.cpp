@@ -2,14 +2,24 @@
 #ifndef __EMSCRIPTEN__
 #include <Interfaces/RendererInterface.hpp>
 
-constexpr std::array<const char*, 2> deviceExtensions =
+#define VK_KHR_PORTABILITY_SUBSET_NAME "VK_KHR_portability_subset"
+
+inline std::vector<const char*> deviceExtensions =
 {
     VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-    VK_EXT_CUSTOM_BORDER_COLOR_EXTENSION_NAME
+#ifdef VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME
+    VK_KHR_PORTABILITY_SUBSET_NAME
+#endif
 };
 
-void UImGui::VKDevice::createDevice() noexcept
+UImGui::VKDevice::VKDevice(VKInstance& inst) noexcept
 {
+    instance = &inst;
+}
+
+void UImGui::VKDevice::create() noexcept
+{
+    surface.create(*instance);
     createPhysicalDevice();
     auto queueFamilyList = physicalDevice.getQueueFamilyProperties();
 
@@ -35,21 +45,14 @@ void UImGui::VKDevice::createDevice() noexcept
         .sampleRateShading = static_cast<VkBool32>(Renderer::data().bSampleRateShading),
         .samplerAnisotropy = VK_TRUE,           // We're using Anisotropy
     };
-    constexpr vk::PhysicalDeviceCustomBorderColorFeaturesEXT physicalDeviceCustomBorderColorFeaturesExt
-    {
-        .customBorderColors = VK_TRUE,                                                  // Enable custom texture border colours
-        .customBorderColorWithoutFormat = VK_FALSE,                                     // Require format for the custom border colours
-    };
 
     const uint32_t queueInfoCount = indices.graphicsFamily == indices.presentationFamily ? 1 : 2;
-
     const vk::DeviceCreateInfo deviceCreateInfo =
     {
-        //.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-        .pNext = &physicalDeviceCustomBorderColorFeaturesExt,   // Set the pNext pointer to point to the custom border colours struct
+        .pNext = nullptr,
         .queueCreateInfoCount = queueInfoCount,
         .pQueueCreateInfos = createInfos,
-        .enabledExtensionCount = deviceExtensions.size(),
+        .enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size()),
         .ppEnabledExtensionNames = deviceExtensions.data(),
         .pEnabledFeatures = &deviceFeatures
     };
@@ -64,11 +67,14 @@ void UImGui::VKDevice::createDevice() noexcept
     // Get the queues
     queue = device.getQueue(indices.graphicsFamily, 0);
     presentationQueue = device.getQueue(indices.presentationFamily, 0);
+
+    Logger::log("Created Vulkan logical device!", UVK_LOG_TYPE_SUCCESS);
 }
 
-void UImGui::VKDevice::destroyDevice() const noexcept
+void UImGui::VKDevice::destroy() const noexcept
 {
     device.destroy();
+    surface.destroy(*instance);
 }
 
 void UImGui::VKDevice::createPhysicalDevice() noexcept
@@ -83,7 +89,7 @@ void UImGui::VKDevice::createPhysicalDevice() noexcept
     bool bFoundDiscreteDevice = false;
     uint32_t largestMemorySizeFoundIndex = 0;
     uint64_t largestMemorySize = 0;
-    QueueFamilyIndices lastSavedIndex = {};
+    QueueFamilyIndices lastSavedIndex = { 0, 0 };
 
     for (size_t i = 0; i < devices.size(); i++)
     {
@@ -96,7 +102,7 @@ void UImGui::VKDevice::createPhysicalDevice() noexcept
         uint64_t size = 0;
 
         // Set the size of the memory for the given GPU
-        for (auto& a : devices[i].getMemoryProperties().memoryHeaps)
+        for (const auto& a : devices[i].getMemoryProperties().memoryHeaps)
         {
             if (a.flags & vk::MemoryHeapFlagBits::eDeviceLocal)
             {
@@ -110,19 +116,17 @@ void UImGui::VKDevice::createPhysicalDevice() noexcept
         // Get the queue families
         auto queueFamilyList = devices[i].getQueueFamilyProperties();
 
-        int j = 0;
         // Select the queue family
-        for (; j < queueFamilyList.size(); j++)
+        for (int j = 0; j < queueFamilyList.size(); j++)
         {
             const auto& a = queueFamilyList[j];
             if (a.queueCount > 0 && a.queueFlags & vk::QueueFlagBits::eGraphics)
             {
                 families.graphicsFamily = j;
                 vk::Bool32 bSupportsPresentation = false;
-                // TODO: Implement
-                //physicalDevice.getSurfaceSupportKHR(j, swapchain.surface, &bSupportsPresentation);
 
-                if (bSupportsPresentation)
+                const auto result = physicalDevice.getSurfaceSupportKHR(j, surface.get(), &bSupportsPresentation);
+                if (bSupportsPresentation && result == vk::Result::eSuccess)
                     families.presentationFamily = j;
                 break;
             }
@@ -154,9 +158,8 @@ void UImGui::VKDevice::createPhysicalDevice() noexcept
                 goto continue_to_other_device_in_list;
         }
 
-        // TODO: Implement
-        //if (!swapchain.getSwapchainDetails(devices[i], families))
-        //    continue;
+        if (!surface.getPhysicalDeviceSurfaceSupport(devices[i], indices))
+            continue;
 
         // If the size is larger set the index of the device to this since it's the best one so far
         if (size > largestMemorySize)
@@ -179,7 +182,7 @@ continue_to_other_device_in_list:;
     setMSAASamples();
     indices = lastSavedIndex;
 
-    Logger::log("Loaded Vulkan device ", UVK_LOG_TYPE_SUCCESS, deviceProperties.deviceName);
+    Logger::log("Loaded Vulkan device - ", UVK_LOG_TYPE_SUCCESS, deviceProperties.deviceName);
 }
 
 void UImGui::VKDevice::setMSAASamples() const noexcept
