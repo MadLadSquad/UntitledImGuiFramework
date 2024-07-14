@@ -53,13 +53,13 @@ void UImGui::VKDraw::ImGuiInit() const noexcept
         .Device = device->device,
         .QueueFamily = CAST(uint32_t, device->indices.graphicsFamily),
         .Queue = device->queue,
-        .PipelineCache = VK_NULL_HANDLE,
         .DescriptorPool = device->descriptorPools.pool,
         .RenderPass = window.RenderPass,
-        .Subpass = 0,
         .MinImageCount = CAST(uint32_t, minimalImageCount),
         .ImageCount = window.ImageCount,
         .MSAASamples = VK_SAMPLE_COUNT_1_BIT,//CAST(VkSampleCountFlagBits, Renderer::data().msaaSamples),
+        .PipelineCache = VK_NULL_HANDLE,
+        .Subpass = 0,
         .Allocator = nullptr,
         .CheckVkResultFn = [](VkResult result) -> void
         {
