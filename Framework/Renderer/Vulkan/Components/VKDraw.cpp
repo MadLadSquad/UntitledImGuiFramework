@@ -143,8 +143,14 @@ void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
             .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
             .renderPass = window.RenderPass,
             .framebuffer = fd->Framebuffer,
-            .renderArea.extent.width = CAST(uint32_t, window.Width),
-            .renderArea.extent.height = CAST(uint32_t, window.Height),
+            .renderArea =
+            {
+                .extent =
+                {
+                    .width = CAST(uint32_t, window.Width),
+                    .height = CAST(uint32_t, window.Height),
+                }
+            },
             .clearValueCount = 1,
             .pClearValues = &window.ClearValue,
         };
