@@ -10,6 +10,7 @@
 
 #include <Components/Instance.hpp>
 #include <Interfaces/WindowInterface.hpp>
+#include <Interfaces/RendererInterface.hpp>
 #include <ImGui/ImGui.hpp>
 
 static void errorCallback(WGPUErrorType errorType, const char* message, void*)

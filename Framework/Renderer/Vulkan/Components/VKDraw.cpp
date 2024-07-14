@@ -81,6 +81,7 @@ void UImGui::VKDraw::ImGuiPreDraw() noexcept
 
     if (width > 0 && height > 0 && (bRebuildSwapchain || window.Width != width || window.Height != height))
     {
+        //std::cout << "Resize" << std::endl;
         ImGui_ImplVulkan_SetMinImageCount(minimalImageCount);
         ImGui_ImplVulkanH_CreateOrResizeWindow(instance->data(), device->physicalDevice, device->device,
                                                &window, device->indices.graphicsFamily, nullptr, width, height,
@@ -92,9 +93,9 @@ void UImGui::VKDraw::ImGuiPreDraw() noexcept
 
 void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
 {
-    VkSemaphore image_acquired_semaphore  = window.FrameSemaphores[window.SemaphoreIndex].ImageAcquiredSemaphore;
-    VkSemaphore render_complete_semaphore = window.FrameSemaphores[window.SemaphoreIndex].RenderCompleteSemaphore;
-    VkResult result = vkAcquireNextImageKHR(device->device, window.Swapchain, UINT64_MAX, image_acquired_semaphore, VK_NULL_HANDLE, &window.FrameIndex);
+    VkSemaphore imageAcquired = window.FrameSemaphores[window.SemaphoreIndex].ImageAcquiredSemaphore;
+    VkSemaphore renderComplete = window.FrameSemaphores[window.SemaphoreIndex].RenderCompleteSemaphore;
+    VkResult result = vkAcquireNextImageKHR(device->device, window.Swapchain, UINT64_MAX, imageAcquired, VK_NULL_HANDLE, &window.FrameIndex);
     if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
     {
         bRebuildSwapchain = true;
@@ -102,94 +103,100 @@ void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
     }
 
     const ImGui_ImplVulkanH_Frame* fd = &window.Frames[window.FrameIndex];
+    result = vkWaitForFences(device->device, 1, &fd->Fence, VK_TRUE, UINT64_MAX);
+    if (result != VK_SUCCESS)
     {
-        result = vkWaitForFences(device->device, 1, &fd->Fence, VK_TRUE, UINT64_MAX);
-        if (result != VK_SUCCESS)
-        {
-            Logger::log("Couldn't wait on fences. Error code: ", UVK_LOG_TYPE_ERROR, result);
-            std::terminate();
-        }
-
-        result = vkResetFences(device->device, 1, &fd->Fence);
-        if (result != VK_SUCCESS)
-        {
-            Logger::log("Couldn't reset fences. Error code: ", UVK_LOG_TYPE_ERROR, result);
-            std::terminate();
-        }
+        Logger::log("Couldn't wait on fences. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        std::terminate();
     }
-    {
-        result = vkResetCommandPool(device->device, fd->CommandPool, 0);
-        if (result != VK_SUCCESS)
-        {
-            Logger::log("Couldn't reset command pool. Error code: ", UVK_LOG_TYPE_ERROR, result);
-            std::terminate();
-        }
 
-        constexpr VkCommandBufferBeginInfo info =
-        {
-            .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-            .flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
-        };
-        result = vkBeginCommandBuffer(fd->CommandBuffer, &info);
-        if (result != VK_SUCCESS)
-        {
-            Logger::log("Couldn't open the command buffer. Error code: ", UVK_LOG_TYPE_ERROR, result);
-            std::terminate();
-        }
-    }
+    result = vkResetFences(device->device, 1, &fd->Fence);
+    if (result != VK_SUCCESS)
     {
-        const VkRenderPassBeginInfo info =
+        Logger::log("Couldn't reset fences. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        std::terminate();
+    }
+
+    recordCommands(drawData, imageAcquired, renderComplete);
+    present();
+}
+
+void UImGui::VKDraw::recordCommands(void* drawData, VkSemaphore& imageAcquired, VkSemaphore& renderComplete) noexcept
+{
+    const ImGui_ImplVulkanH_Frame* fd = &window.Frames[window.FrameIndex];
+
+    VkResult result = vkResetCommandPool(device->device, fd->CommandPool, 0);
+    if (result != VK_SUCCESS)
+    {
+        Logger::log("Couldn't reset command pool. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        std::terminate();
+    }
+
+    constexpr VkCommandBufferBeginInfo commandBufferBeginInfo =
+    {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+        .flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
+    };
+    result = vkBeginCommandBuffer(fd->CommandBuffer, &commandBufferBeginInfo);
+    if (result != VK_SUCCESS)
+    {
+        Logger::log("Couldn't open the command buffer. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        std::terminate();
+    }
+
+    const VkRenderPassBeginInfo renderPassBeginInfo =
+    {
+        .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+        .renderPass = window.RenderPass,
+        .framebuffer = fd->Framebuffer,
+        .renderArea =
         {
-            .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-            .renderPass = window.RenderPass,
-            .framebuffer = fd->Framebuffer,
-            .renderArea =
+            .extent =
             {
-                .extent =
-                {
-                    .width = CAST(uint32_t, window.Width),
-                    .height = CAST(uint32_t, window.Height),
-                }
-            },
-            .clearValueCount = 1,
-            .pClearValues = &window.ClearValue,
-        };
-        vkCmdBeginRenderPass(fd->CommandBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
-    }
+                .width = CAST(uint32_t, window.Width),
+                .height = CAST(uint32_t, window.Height),
+            }
+        },
+        .clearValueCount = 1,
+        .pClearValues = &window.ClearValue,
+    };
+    vkCmdBeginRenderPass(fd->CommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
     // Record dear imgui primitives into command buffer
     ImGui_ImplVulkan_RenderDrawData(CAST(ImDrawData*, drawData), fd->CommandBuffer);
 
     // Submit command buffer
     vkCmdEndRenderPass(fd->CommandBuffer);
+
+    constexpr VkPipelineStageFlags waitPipelineStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    const VkSubmitInfo submitInfo =
     {
-        constexpr VkPipelineStageFlags wait_stage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        const VkSubmitInfo info =
-        {
-            .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-            .waitSemaphoreCount = 1,
-            .pWaitSemaphores = &image_acquired_semaphore,
-            .pWaitDstStageMask = &wait_stage,
-            .commandBufferCount = 1,
-            .pCommandBuffers = &fd->CommandBuffer,
-            .signalSemaphoreCount = 1,
-            .pSignalSemaphores = &render_complete_semaphore,
-        };
+        .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+        .waitSemaphoreCount = 1,
+        .pWaitSemaphores = &imageAcquired,
+        .pWaitDstStageMask = &waitPipelineStage,
+        .commandBufferCount = 1,
+        .pCommandBuffers = &fd->CommandBuffer,
+        .signalSemaphoreCount = 1,
+        .pSignalSemaphores = &renderComplete,
+    };
 
-        result = vkEndCommandBuffer(fd->CommandBuffer);
-        if (result != VK_SUCCESS)
-        {
-            Logger::log("Couldn't close the command buffer. Error code: ", UVK_LOG_TYPE_ERROR, result);
-            std::terminate();
-        }
-        result = vkQueueSubmit(device->queue, 1, &info, fd->Fence);
-        if (result != VK_SUCCESS)
-        {
-            Logger::log("Couldn't submit to the queue. Error code: ", UVK_LOG_TYPE_ERROR, result);
-            std::terminate();
-        }
+    result = vkEndCommandBuffer(fd->CommandBuffer);
+    if (result != VK_SUCCESS)
+    {
+        Logger::log("Couldn't close the command buffer. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        std::terminate();
     }
+    result = vkQueueSubmit(device->queue, 1, &submitInfo, fd->Fence);
+    if (result != VK_SUCCESS)
+    {
+        Logger::log("Couldn't submit to the queue. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        std::terminate();
+    }
+}
 
+void UImGui::VKDraw::present() noexcept
+{
     // Present frame
     if (bRebuildSwapchain)
         return;
@@ -205,7 +212,7 @@ void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
         .pImageIndices = &window.FrameIndex
     };
 
-    result = vkQueuePresentKHR(device->queue, &info);
+    const VkResult result = vkQueuePresentKHR(device->queue, &info);
     if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
     {
         bRebuildSwapchain = true;

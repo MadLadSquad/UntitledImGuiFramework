@@ -26,6 +26,9 @@ namespace UImGui
         ImGui_ImplVulkanH_Window window{};
         bool bRebuildSwapchain = false;
         int minimalImageCount = 2;
+
+        void recordCommands(void* drawData, VkSemaphore& imageAcquired, VkSemaphore& renderComplete) noexcept;
+        void present() noexcept;
     };
 }
 #endif
