@@ -1,6 +1,7 @@
 #include "VKDevice.hpp"
 #ifndef __EMSCRIPTEN__
 #include <Interfaces/RendererInterface.hpp>
+#include <Renderer.hpp>
 
 #define VK_KHR_PORTABILITY_SUBSET_NAME "VK_KHR_portability_subset"
 
@@ -17,11 +18,21 @@ UImGui::VKDevice::VKDevice(VKInstance& inst) noexcept
     instance = &inst;
 }
 
-void UImGui::VKDevice::create() noexcept
+void UImGui::VKDevice::create(RendererInternal& renderer) noexcept
 {
     surface.create(*instance);
     createPhysicalDevice();
     auto queueFamilyList = physicalDevice.getQueueFamilyProperties();
+
+    const auto properties = physicalDevice.getProperties();
+    renderer.gpuName = properties.deviceName.data();
+    renderer.apiVersion = std::to_string(VK_VERSION_MAJOR(properties.apiVersion)) + "."
+                        + std::to_string(VK_VERSION_MINOR(properties.apiVersion)) + "."
+                        + std::to_string(VK_VERSION_PATCH(properties.apiVersion));
+    renderer.driverVersion = std::to_string(VK_VERSION_MAJOR(properties.driverVersion)) + "."
+                           + std::to_string(VK_VERSION_MINOR(properties.driverVersion)) + "."
+                           + std::to_string(VK_VERSION_PATCH(properties.driverVersion));
+    renderer.vendorString = properties.deviceName.data();
 
     constexpr float priority = 1.0f;
 

@@ -24,6 +24,7 @@ namespace UImGui
     private:
         friend class Renderer;
         friend class OpenGLRenderer;
+        friend class VKDevice;
         friend class WebGPURenderer;
         friend class Texture;
         friend class WebGPUTexture;

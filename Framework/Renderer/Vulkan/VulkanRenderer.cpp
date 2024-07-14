@@ -5,7 +5,7 @@ void UImGui::VulkanRenderer::init(RendererInternal& renderer) noexcept
 {
 #ifndef __EMSCRIPTEN__
     instance.init();
-    device.create();
+    device.create(renderer);
     draw.init();
 #endif
 }

@@ -8,14 +8,14 @@
 
 namespace UImGui
 {
-
+    class RendererInternal;
     class VKDevice
     {
     public:
         VKDevice() = default;
         explicit VKDevice(VKInstance& inst) noexcept;
 
-        void create() noexcept;
+        void create(RendererInternal& renderer) noexcept;
         [[nodiscard]] const vk::Device& get() const noexcept;
         void destroy() const noexcept;
 
