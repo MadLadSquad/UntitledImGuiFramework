@@ -11,7 +11,6 @@ namespace UImGui
         VKSurface() noexcept = default;
 
         void create(VKInstance& instance) noexcept;
-        void destroy(VKInstance& instance) const noexcept;
 
         bool getPhysicalDeviceSurfaceSupport(const vk::PhysicalDevice& device, const QueueFamilyIndices& indices) noexcept;
 

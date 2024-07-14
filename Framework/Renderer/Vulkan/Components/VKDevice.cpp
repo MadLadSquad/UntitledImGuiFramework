@@ -68,13 +68,21 @@ void UImGui::VKDevice::create() noexcept
     queue = device.getQueue(indices.graphicsFamily, 0);
     presentationQueue = device.getQueue(indices.presentationFamily, 0);
 
-    Logger::log("Created Vulkan logical device!", UVK_LOG_TYPE_SUCCESS);
+    Logger::log("Created Vulkan logical device!", UVK_LOG_TYPE_NOTE);
+
+    descriptorPools.allocate();
+}
+
+const vk::Device& UImGui::VKDevice::get() const noexcept
+{
+    return device;
 }
 
 void UImGui::VKDevice::destroy() const noexcept
 {
+    descriptorPools.destroy();
     device.destroy();
-    surface.destroy(*instance);
+    // One would usually destroy the surface here, but imgui takes care of it.
 }
 
 void UImGui::VKDevice::createPhysicalDevice() noexcept
@@ -182,7 +190,7 @@ continue_to_other_device_in_list:;
     setMSAASamples();
     indices = lastSavedIndex;
 
-    Logger::log("Loaded Vulkan device - ", UVK_LOG_TYPE_SUCCESS, deviceProperties.deviceName);
+    Logger::log("Loaded Vulkan device - ", UVK_LOG_TYPE_NOTE, deviceProperties.deviceName);
 }
 
 void UImGui::VKDevice::setMSAASamples() const noexcept

@@ -3,6 +3,7 @@
 
 #include <Renderer/Vulkan/Components/VKInstance.hpp>
 #include <Renderer/Vulkan/Components/VKDevice.hpp>
+#include <Renderer/Vulkan/Components/VKDraw.hpp>
 
 namespace UImGui
 {
@@ -24,6 +25,7 @@ namespace UImGui
 #ifndef __EMSCRIPTEN__
         VKInstance instance{};
         VKDevice device{ instance };
+        VKDraw draw{ instance, device };
 #endif
     };
 }

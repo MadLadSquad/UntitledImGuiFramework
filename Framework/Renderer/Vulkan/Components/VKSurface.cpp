@@ -14,12 +14,7 @@ void UImGui::VKSurface::create(VKInstance& instance) noexcept
         std::terminate();
     }
     surface = surf;
-    Logger::log("Created Vulkan render surface!", UVK_LOG_TYPE_SUCCESS);
-}
-
-void UImGui::VKSurface::destroy(VKInstance& instance) const noexcept
-{
-    vkDestroySurfaceKHR(instance.data(), surface, nullptr);
+    Logger::log("Created Vulkan render surface!", UVK_LOG_TYPE_NOTE);
 }
 
 bool UImGui::VKSurface::getPhysicalDeviceSurfaceSupport(const vk::PhysicalDevice& device, const QueueFamilyIndices& indices) noexcept

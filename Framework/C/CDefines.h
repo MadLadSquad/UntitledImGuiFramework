@@ -35,6 +35,7 @@ extern "C"
 #define X11_WINDOW_TYPE_NORMAL "_NET_WM_WINDOW_TYPE_NORMAL"
 
 #define UNUSED(x) (void)(x);
+#define CARRAY_SIZE(x) ((int)(sizeof(x) / sizeof(*(x))))
 
 /**
  * @brief The ComponentState enum defines 3 fields that represent the event state of the given component, the given

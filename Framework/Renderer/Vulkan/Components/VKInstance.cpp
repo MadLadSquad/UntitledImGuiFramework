@@ -72,7 +72,7 @@ void UImGui::VKInstance::init() noexcept
         std::terminate();
     }
     createDebugCallback();
-    Logger::log("Created a Vulkan instance successfully!", UVK_LOG_TYPE_SUCCESS);
+    Logger::log("Created a Vulkan instance successfully!", UVK_LOG_TYPE_NOTE);
 }
 
 void UImGui::VKInstance::destroy() const noexcept

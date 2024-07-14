@@ -28,10 +28,7 @@ void UImGui::RendererInternal::start()
     renderer->init(*this);
 
     internalGlobal.modulesManagerr.init(internalGlobal.instance->initInfo.configDir);
-#ifndef __EMSCRIPTEN__
-    if (!data.bVulkan) // TODO: Remove this when the renderer is done
-#endif
-        GUIRenderer::init(Window::get().windowData.layoutLocation, renderer);
+    GUIRenderer::init(Window::get().windowData.layoutLocation, renderer);
 
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop_arg(tick, this, 0, true);
@@ -43,10 +40,7 @@ void UImGui::RendererInternal::start()
 
 void UImGui::RendererInternal::stop() const noexcept
 {
-#ifndef __EMSCRIPTEN__
-    if (!data.bVulkan) // TODO: Remove this when the renderer is done
-#endif
-        GUIRenderer::shutdown(Window::get().windowData.layoutLocation, renderer);
+    GUIRenderer::shutdown(Window::get().windowData.layoutLocation, renderer);
     renderer->destroy();
     internalGlobal.modulesManagerr.destroy();
     Window::get().destroyWindow();
@@ -66,10 +60,7 @@ void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
     internalGlobal.window.updateKeyState();
 
     inst.renderer->renderStart(deltaTime);
-#ifndef __EMSCRIPTEN__
-    if (!inst.data.bVulkan) // TODO: Remove this when the renderer is done
-#endif
-        GUIRenderer::beginUI(static_cast<float>(deltaTime), inst.renderer);
+    GUIRenderer::beginUI(static_cast<float>(deltaTime), inst.renderer);
     inst.renderer->renderEnd(deltaTime);
 }
 
