@@ -147,7 +147,7 @@ void UImGui::WebGPURenderer::ImGuiShutdown() noexcept
 void UImGui::WebGPURenderer::ImGuiInit() noexcept
 {
     ImGui_ImplGlfw_InitForOther(Window::get().data(), true);
-    ImGui_ImplGlfw_InstallEmscriptenCanvasResizeCallback("#canvas");
+    ImGui_ImplGlfw_InstallEmscriptenCallbacks(Window::get().data(), "canvas");
 
     ImGui_ImplWGPU_InitInfo initInfo{};
     initInfo.Device = device;
