@@ -60,7 +60,7 @@ void UImGui::OpenGLRenderer::ImGuiInit() noexcept
 #ifdef __APPLE__
     ImGui_ImplOpenGL3_Init("#version 410");
 #elif __EMSCRIPTEN__
-    ImGui_ImplGlfw_InstallEmscriptenCanvasResizeCallback("canvas");
+    ImGui_ImplGlfw_InstallEmscriptenCallbacks(Window::get().data(), "canvas");
     ImGui_ImplOpenGL3_Init("#version 100");
 #else
     ImGui_ImplOpenGL3_Init("#version 450");
