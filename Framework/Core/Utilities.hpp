@@ -1,7 +1,7 @@
 #pragma once
 #include <Defines.hpp>
 #include <Types.hpp>
-#include "Events/Keys.hpp"
+#include <C/Internal/Keys.h>
 
 namespace UImGui
 {
@@ -49,7 +49,7 @@ namespace UImGui
         friend class Global;
         static void interruptSignalHandler() noexcept;
 
-        typedef std::array<std::pair<FString, FString>, Keys::UnknownKey + 1> KeyStringsArrType;
+        typedef std::array<std::pair<FString, FString>, Keys_UnknownKey + 1> KeyStringsArrType;
         static void initializeKeyStrings(KeyStringsArrType& keyStrings) noexcept;
     };
 }
