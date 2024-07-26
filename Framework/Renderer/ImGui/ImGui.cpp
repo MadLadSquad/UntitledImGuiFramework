@@ -87,7 +87,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
     ImGuiStyle& style = ImGui::GetStyle();
 #ifdef UIMGUI_THEME_MODULE_ENABLED
     if (Modules::data().theming)
-        Theme::load((internalGlobal.instance->initInfo.configDir + "Theme/default.theme.yaml").c_str());
+        Theme::load((Instance::get()->initInfo.configDir + "Theme/default.theme.yaml").c_str());
 #endif
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;

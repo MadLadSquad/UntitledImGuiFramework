@@ -178,7 +178,10 @@ namespace UImGui
     private:
         friend class GUIRenderer;
         friend class RendererInternal;
+
+        friend class ModulesManager;
         friend class Modules;
+
         friend class WindowInternal;
 
         // Event Safety - Any time
