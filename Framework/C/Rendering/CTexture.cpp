@@ -1,4 +1,5 @@
 #include "CTexture.h"
+#include <Core/Global.hpp>
 #include <Renderer/Texture.hpp>
 #include <stb_image.h>
 
@@ -11,8 +12,7 @@ void UImGui_Texture_defaultFreeFunc(void* data)
 
 UImGui_CTexture* UImGui_Texture_init(const UImGui_String file)
 {
-    auto* texture = new UImGui::Texture(file);
-    return texture;
+    return &UImGui::Global::get().deallocationStruct.textures.emplace_back(file);
 }
 
 void UImGui_Texture_load(UImGui_CTexture* texture, void* data, const UImGui_FVector2 size, const uint32_t depth,
@@ -46,7 +46,16 @@ void UImGui_Texture_setCustomSaveFunction(UImGui_CTexture* texture, const UImGui
     cast(texture)->setCustomSaveFunction(f);
 }
 
-void UImGui_Texture_free(UImGui_CTexture* texture)
+void UImGui_Texture_release(UImGui_CTexture* texture)
 {
-    delete static_cast<UImGui::Texture*>(texture);
+    // Could use pointer arithmetic but that would be really unsafe
+    auto& textures = UImGui::Global::get().deallocationStruct.textures;
+    for (size_t i = 0; i < textures.size(); i++)
+    {
+        if (texture == &textures[i])
+        {
+            textures.erase(textures.begin() + static_cast<decltype(UImGui::Global::get().deallocationStruct.textures)::difference_type>(i));
+            return;
+        }
+    }
 }

@@ -94,7 +94,7 @@ extern "C"
 
     // Frees the Texture handle
     // Event safety - Post-begin
-    UIMGUI_PUBLIC_API void UImGui_Texture_free(UImGui_CTexture* texture);
+    UIMGUI_PUBLIC_API void UImGui_Texture_release(UImGui_CTexture* texture);
 #ifdef __cplusplus
 };
 #endif
