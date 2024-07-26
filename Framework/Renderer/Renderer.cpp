@@ -15,10 +15,12 @@ void UImGui::RendererInternal::start()
 {
     loadConfig();
 
+    auto& global = Global::get();
+
     // Normally we would just use the Renderer::get but since we assign a pointer here we need to avoid the SEGFAULT and
     // other madness the normal solution entails
-    internalGlobal.renderer = this;
-    internalGlobal.init();
+    global.renderer = this;
+    global.init();
 
 #ifdef __EMSCRIPTEN__
     renderer = data.bVulkan ? CAST(decltype(renderer), &wgpu) : CAST(decltype(renderer), &opengl);
@@ -27,7 +29,7 @@ void UImGui::RendererInternal::start()
 #endif
     renderer->init(*this);
 
-    internalGlobal.modulesManagerr.init(internalGlobal.instance->initInfo.configDir);
+    global.modulesManagerr.init(global.instance->initInfo.configDir);
     GUIRenderer::init(Window::get().windowData.layoutLocation, renderer);
 
 #ifdef __EMSCRIPTEN__
@@ -42,7 +44,7 @@ void UImGui::RendererInternal::stop() const noexcept
 {
     GUIRenderer::shutdown(Window::get().windowData.layoutLocation, renderer);
     renderer->destroy();
-    internalGlobal.modulesManagerr.destroy();
+    Global::get().modulesManagerr.destroy();
     Window::get().destroyWindow();
 }
 
@@ -57,7 +59,7 @@ void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
     inst.lastTime = now;
 
     // Updates the state of the keybindings
-    internalGlobal.window.updateKeyState();
+    Global::get().window.updateKeyState();
 
     inst.renderer->renderStart(deltaTime);
     GUIRenderer::beginUI(static_cast<float>(deltaTime), inst.renderer);
@@ -69,7 +71,7 @@ void UImGui::RendererInternal::loadConfig() noexcept
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile(internalGlobal.instance->initInfo.configDir + "Core/Renderer.yaml");
+        node = YAML::LoadFile(Instance::get()->initInfo.configDir + "Core/Renderer.yaml");
     }
     catch (YAML::BadFile&)
     {
@@ -105,7 +107,7 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     out << YAML::Key << "sample-rate-shading" << YAML::Value << data.bSampleRateShading;
     out << YAML::Key << "sample-rate-shading-mult" << YAML::Value << data.sampleRateShadingMult;
 
-    std::ofstream fout(UImGui::internalGlobal.instance->initInfo.configDir + "Core/Renderer.yaml");
+    std::ofstream fout(Instance::get()->initInfo.configDir + "Core/Renderer.yaml");
     fout << out.c_str();
     fout.close();
 }

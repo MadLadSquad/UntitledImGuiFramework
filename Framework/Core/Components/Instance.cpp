@@ -59,5 +59,5 @@ void UImGui::Instance::shutdown() noexcept
 
 UImGui::Instance* UImGui::Instance::get() noexcept
 {
-    return internalGlobal.instance;
+    return Global::get().instance;
 }

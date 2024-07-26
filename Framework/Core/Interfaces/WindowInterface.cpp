@@ -63,7 +63,7 @@ UImGui::FVector2 UImGui::Window::getWindowPositionChange() noexcept
 
 UImGui::WindowInternal& UImGui::Window::get() noexcept
 {
-    return internalGlobal.window;
+    return Global::get().window;
 }
 
 void UImGui::Window::refreshSettings() noexcept

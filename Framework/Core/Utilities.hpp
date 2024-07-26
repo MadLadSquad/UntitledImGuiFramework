@@ -30,10 +30,6 @@ namespace UImGui
         static FString keyToText(const InputAction& action, bool bLong) noexcept;
 
         // Event Safety - Any time
-        // DO NOT USE THIS, THIS IS ONLY HERE FOR INTERNAL REASONS!!! REALLY KNOW WHAT YOU'RE DOING WHEN USING THIS
-        static Global& getGlobal() noexcept;
-
-        // Event Safety - Any time
         static void removeConsole() noexcept;
 
         // Event Safety - Any time

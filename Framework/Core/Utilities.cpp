@@ -34,11 +34,6 @@ UImGui::FString UImGui::Utility::keyToText(const uint16_t& key, const bool bLong
     return txt;
 }
 
-UImGui::Global& UImGui::Utility::getGlobal() noexcept
-{
-    return internalGlobal;
-}
-
 void UImGui::Utility::removeConsole() noexcept
 {
 #ifdef _WIN32

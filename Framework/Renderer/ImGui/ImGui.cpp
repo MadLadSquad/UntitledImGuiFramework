@@ -55,7 +55,7 @@ void UImGui::GUIRenderer::shutdown(const FString& ini, GenericInternalRenderer* 
         }
     }
 
-    ImGui::SaveIniSettingsToDisk((internalGlobal.instance->initInfo.configDir + "Core/" + ini + ".ini").c_str());
+    ImGui::SaveIniSettingsToDisk((Instance::get()->initInfo.configDir + "Core/" + ini + ".ini").c_str());
     renderer->ImGuiShutdown();
     ImGui_ImplGlfw_Shutdown();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
@@ -81,7 +81,7 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
     io.ConfigViewportsNoTaskBarIcon = true;
     io.ConfigMacOSXBehaviors = em_is_on_macOS();
 
-    ImGui::LoadIniSettingsFromDisk((internalGlobal.instance->initInfo.configDir + "Core/" + ini + ".ini").c_str());
+    ImGui::LoadIniSettingsFromDisk((Instance::get()->initInfo.configDir + "Core/" + ini + ".ini").c_str());
     ImGui::StyleColorsDark();
 
     ImGuiStyle& style = ImGui::GetStyle();

@@ -9,14 +9,16 @@ UImGui_String UImGui_Utility_sanitiseFilepath(const UImGui_String str)
     UImGui::FString s = str;
     UImGui::Utility::sanitiseFilepath(s);
 
-    UImGui::internalGlobal.deallocationStruct.keyStrings.push_back(s);
-    return UImGui::internalGlobal.deallocationStruct.keyStrings.back().c_str();
+    auto& global = UImGui::Global::get();
+    global.deallocationStruct.keyStrings.push_back(s);
+    return global.deallocationStruct.keyStrings.back().c_str();
 }
 
 UImGui_String UImGui_Utility_keyToText(const uint16_t key, const bool bLong)
 {
-    UImGui::internalGlobal.deallocationStruct.keyStrings.push_back(UImGui::Utility::keyToText(key, bLong));
-    return UImGui::internalGlobal.deallocationStruct.keyStrings.back().c_str();
+    auto& global = UImGui::Global::get();
+    global.deallocationStruct.keyStrings.push_back(UImGui::Utility::keyToText(key, bLong));
+    return global.deallocationStruct.keyStrings.back().c_str();
 }
 
 UImGui_String UImGui_Utility_keyToTextInputAction(const UImGui_CInputAction* action, const bool bLong)
@@ -25,7 +27,7 @@ UImGui_String UImGui_Utility_keyToTextInputAction(const UImGui_CInputAction* act
     a.keyCodes.resize(action->keyCodesSize);
     memcpy(a.keyCodes.data(), action->keyCodes, a.keyCodes.size() * sizeof(size_t));
 
-    auto& deallocationStruct = UImGui::internalGlobal.deallocationStruct;
+    auto& deallocationStruct = UImGui::Global::get().deallocationStruct;
 
     deallocationStruct.keyStrings.push_back(UImGui::Utility::keyToText(a, bLong));
     return deallocationStruct.keyStrings.back().c_str();

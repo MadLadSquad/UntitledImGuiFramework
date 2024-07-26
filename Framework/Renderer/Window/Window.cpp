@@ -50,7 +50,8 @@ bool& UImGui::WindowInternal::resized() noexcept
 
 void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) const noexcept
 {
-    std::ofstream fout(internalGlobal.instance->initInfo.configDir + "Core/Window.yaml");
+    auto* instance = Instance::get();
+    std::ofstream fout(instance->initInfo.configDir + "Core/Window.yaml");
     {
         YAML::Emitter out;
         out << YAML::BeginMap;
@@ -94,7 +95,7 @@ void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) const noexcept
         }
         out << YAML::EndSeq << YAML::EndMap;
 
-        fout = std::ofstream(internalGlobal.instance->initInfo.configDir + "Core/Keybindings.yaml");
+        fout = std::ofstream(instance->initInfo.configDir + "Core/Keybindings.yaml");
         fout << out.c_str();
         fout.close();
     }
@@ -332,9 +333,10 @@ void UImGui::WindowInternal::openConfig()
 {
     YAML::Node out;
 
+    const auto* instance = Instance::get();
     try
     {
-        out = YAML::LoadFile(UImGui::internalGlobal.instance->initInfo.configDir + "Core/Window.yaml");
+        out = YAML::LoadFile(instance->initInfo.configDir + "Core/Window.yaml");
     }
     catch (YAML::BadFile&)
     {
@@ -364,7 +366,7 @@ skip_window_config:
 
     try
     {
-        out = YAML::LoadFile(internalGlobal.instance->initInfo.configDir + "Core/Keybindings.yaml");
+        out = YAML::LoadFile(instance->initInfo.configDir + "Core/Keybindings.yaml");
     }
     catch (YAML::BadFile&)
     {
@@ -409,7 +411,7 @@ void UImGui::WindowInternal::setIcon(const String name) const noexcept
 {
 #ifndef __EMSCRIPTEN__
     GLFWimage images[1];
-    images[0].pixels = stbi_load((internalGlobal.instance->initInfo.contentDir + name).c_str(), &images[0].width, &images[0].height, nullptr, 4);
+    images[0].pixels = stbi_load((Instance::get()->initInfo.contentDir + name).c_str(), &images[0].width, &images[0].height, nullptr, 4);
     glfwSetWindowIcon(windowMain, 1, images);
     stbi_image_free(images[0].pixels);
 #endif
@@ -921,7 +923,7 @@ void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_setWind
 UImGui_CMonitorData* UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Window_getMonitors(size_t* size)
 {
 #ifndef __EMSCRIPTEN__
-    auto& monitors = UImGui::internalGlobal.deallocationStruct.monitors;
+    auto& monitors = Global::get().deallocationStruct.monitors;
     monitors.clear();
     for (const auto& a : Window::getMonitors())
     {

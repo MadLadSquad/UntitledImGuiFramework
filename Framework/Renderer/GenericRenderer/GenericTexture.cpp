@@ -44,7 +44,7 @@ void UImGui::GenericTexture::endLoad(void* data, const FVector2 size, const bool
 
 void UImGui::GenericTexture::defaultInit(const String location) noexcept
 {
-    auto& strings = Utility::getGlobal().deallocationStruct.keyStrings;
+    auto& strings = Global::get().deallocationStruct.keyStrings;
 
     strings.emplace_back(location);
     dt.filename = strings.back().c_str();
@@ -61,7 +61,7 @@ void UImGui::GenericTexture::defaultClear() noexcept
 {
     dt.size = { 0.0f, 0.0f };
 
-    auto& strings = Utility::getGlobal().deallocationStruct.keyStrings;
+    auto& strings = Global::get().deallocationStruct.keyStrings;
     if (!strings.empty() && dt.storageIndex < strings.size())
         strings.erase(strings.begin() + static_cast<std::string::difference_type>(dt.storageIndex));
 }

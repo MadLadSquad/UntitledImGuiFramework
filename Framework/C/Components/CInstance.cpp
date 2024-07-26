@@ -2,7 +2,7 @@
 #include <Instance.hpp>
 #include <Global.hpp>
 
-#define INIT_INFO UImGui::internalGlobal.instance->initInfo
+#define INIT_INFO UImGui::Global::get().instance->initInfo
 
 void UImGui_Instance_setCInitInfo(UImGui_CInitInfo* initInfo)
 {
@@ -17,7 +17,7 @@ void* UImGui_Instance_getCppInitInfoGlobalData(bool* bAllocatedOnHeap)
 
 char** UImGui_Instance_getCLIArguments(int* argc)
 {
-    const auto* instance = UImGui::internalGlobal.instance;
+    const auto* instance = UImGui::Global::get().instance;
     *argc = instance->argc;
 
     return instance->argv;

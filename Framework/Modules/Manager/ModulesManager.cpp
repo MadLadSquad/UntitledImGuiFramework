@@ -57,12 +57,12 @@ UImGui::ModuleSettings& UImGui::Modules::data() noexcept
 
 void UImGui::Modules::save() noexcept
 {
-    Modules::get().save(UImGui::Utility::getGlobal().instance->initInfo.configDir);
+    get().save(Instance::get()->initInfo.configDir);
 }
 
 UImGui::ModulesManager& UImGui::Modules::get() noexcept
 {
-    return internalGlobal.modulesManagerr;
+    return Global::get().modulesManagerr;
 }
 
 void UImGui::ModulesManager::initModules(const FString& projectDir)

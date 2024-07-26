@@ -25,3 +25,9 @@ void UImGui::Global::init() noexcept
 {
     window.createWindow();
 }
+
+UImGui::Global& UImGui::Global::get() noexcept
+{
+    static Global global{};
+    return global;
+}

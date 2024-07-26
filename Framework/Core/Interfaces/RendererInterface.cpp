@@ -13,7 +13,7 @@ void UImGui::Renderer::saveSettings() noexcept
 
 UImGui::RendererInternal& UImGui::Renderer::get() noexcept
 {
-    return *internalGlobal.renderer;
+    return *Global::get().renderer;
 }
 
 const UImGui::FString& UImGui::Renderer::getVendorString() noexcept
