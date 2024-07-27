@@ -6,13 +6,11 @@
 
 UImGui::Global::Global() noexcept
 {
-    Logger::log("Constructed global", UVK_LOG_TYPE_NOTE);
     Utility::interruptSignalHandler();
 }
 
 UImGui::Global::~Global() noexcept
 {
-    Logger::log("Destroyed global", UVK_LOG_TYPE_NOTE);
 #ifdef _WIN32
     ExitProcess(0);
 #endif
