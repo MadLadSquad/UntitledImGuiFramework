@@ -75,6 +75,10 @@ endif()
 if (NOT EMSCRIPTEN)
     target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_COMPILE_LIB" "YAML_CPP_DLL" "URLL_USE_FUNCTIONAL"
             "UVK_LOG_EXPORT_FROM_LIBRARY" "UVK_LIB_COMPILE" "VULKAN_HPP_NO_STRUCT_CONSTRUCTORS")
+    if (APPLE)
+        multicast(target_compile_definitions PRIVATE "GL_SILENCE_DEPRECATION")
+    endif()
+
     if (NOT WIN32)
         target_compile_definitions(${APP_LIB_TARGET} PRIVATE "URLL_USE_FUNCTIONAL" "UVK_LOG_EXPORT_FROM_LIBRARY")
     endif()
