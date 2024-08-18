@@ -21,8 +21,14 @@ void UImGui::Global::init() noexcept
     window.createWindow();
 }
 
-UImGui::Global& UImGui::Global::get() noexcept
+UImGui::Global& UImGui::Global::get(Global* parent) noexcept
+{
+    static Global* global = parent == nullptr ? getWithCreate() : parent;
+    return *global;
+}
+
+UImGui::Global* UImGui::Global::getWithCreate() noexcept
 {
     static Global global{};
-    return global;
+    return &global;
 }

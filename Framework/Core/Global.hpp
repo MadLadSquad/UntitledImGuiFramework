@@ -16,7 +16,7 @@ namespace UImGui
 
         void init() noexcept;
 
-        static Global& get() noexcept;
+        static Global& get(Global* parent = nullptr) noexcept;
 
         Instance* instance = nullptr;
         RendererInternal* renderer = nullptr;
@@ -30,5 +30,7 @@ namespace UImGui
 
         WindowInternal window{};
         ModulesManager modulesManagerr{};
+
+        static Global* getWithCreate() noexcept;
     };
 }
