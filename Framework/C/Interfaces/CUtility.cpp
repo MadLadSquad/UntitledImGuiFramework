@@ -42,3 +42,8 @@ void UImGui_Utility_sleep(uint64_t milliseconds)
 {
     UImGui::Utility::sleep(milliseconds);
 }
+
+UImGui_CGlobal* UImGui_Global_get(UImGui_CGlobal* parent)
+{
+    return (UImGui_CGlobal*)&UImGui::Global::get((UImGui::Global*)parent);
+}

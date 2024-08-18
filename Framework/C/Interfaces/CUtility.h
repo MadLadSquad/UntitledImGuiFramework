@@ -7,6 +7,8 @@
 extern "C"
 {
 #endif
+    typedef void UImGui_CGlobal;
+
     // Event Safety - Any time
     UIMGUI_PUBLIC_API UImGui_String UImGui_Utility_sanitiseFilepath(UImGui_String str);
 
@@ -22,6 +24,8 @@ extern "C"
     // Event Safety - Any time
     // Sleep for X milliseconds
     UIMGUI_PUBLIC_API void UImGui_Utility_sleep(uint64_t milliseconds);
+
+    UIMGUI_PUBLIC_API UImGui_CGlobal* UImGui_Global_get(UImGui_CGlobal* parent);
 #ifdef __cplusplus
 }
 #endif
