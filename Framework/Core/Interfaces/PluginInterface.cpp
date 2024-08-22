@@ -7,7 +7,7 @@ bool UImGui::Plugins::load(String location) noexcept
     auto* handle = URLL::dlopen(location);
     if (handle == nullptr)
     {
-        Logger::log("Couldn't load the plugin at location: ", UVK_LOG_TYPE_WARNING, location, "', Error: ", dlerror());
+        Logger::log("Couldn't load the plugin at location: ", UVK_LOG_TYPE_WARNING, location, "', Error: ", URLL::dlerror());
         return false;
     }
 
