@@ -131,6 +131,18 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
             UOpen::init();
     #endif
 #endif
+
+    // Load standard plugins
+#ifdef __APPLE__
+    if (node["plugins"] && node["plugins"]["macos"])
+        Global::get().plugins.standardPlugins = node["plugins"]["macos"].as<decltype(Global::get().plugins.standardPlugins)>();
+#elif _WIN32
+    if (node["plugins"] && node["plugins"]["windows"])
+        Global::get().plugins.standardPlugins = node["plugins"]["windows"].as<decltype(Global::get().plugins.standardPlugins)>();
+#else
+    if (node["plugins"] && node["plugins"]["linux"])
+        Global::get().plugins.standardPlugins = node["plugins"]["linux"].as<decltype(Global::get().plugins.standardPlugins)>();
+#endif
 }
 
 void UImGui::ModulesManager::destroy() noexcept

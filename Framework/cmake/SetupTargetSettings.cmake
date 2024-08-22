@@ -91,3 +91,14 @@ if (EMSCRIPTEN)
     multicast(target_link_options PRIVATE -sUSE_WEBGPU=1 -sUSE_GLFW=3 -sALLOW_MEMORY_GROWTH=1 -fwasm-exceptions
             -sSUPPORT_LONGJMP=wasm)
 endif ()
+
+if (WIN32)
+    multicast(target_compile_definitions PRIVATE "UIMGUI_PLATFORM_WINDOWS")
+elseif (APPLE)
+    multicast(target_compile_definitions PRIVATE "UIMGUI_PLATFORM_MACOS")
+elseif (EMSCRIPTEN)
+    multicast(target_compile_definitions PRIVATE "UIMGUI_PLATFORM_MACOS")
+
+else ()
+
+endif ()

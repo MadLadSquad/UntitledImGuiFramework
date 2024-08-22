@@ -2,6 +2,7 @@
 #include <Renderer/Window/Window.hpp>
 #include "Modules/Manager/ModulesManager.hpp"
 #include "CDeallocation.hpp"
+#include <Interfaces/PluginInterface.hpp>
 
 namespace UImGui
 {
@@ -26,10 +27,13 @@ namespace UImGui
         friend class Window;
         friend class Renderer;
         friend class Modules;
+        friend class ModulesManager;
         friend class RendererInternal;
+        friend class Plugins;
 
         WindowInternal window{};
         ModulesManager modulesManagerr{};
+        Plugins plugins{};
 
         static Global* getWithCreate() noexcept;
     };
