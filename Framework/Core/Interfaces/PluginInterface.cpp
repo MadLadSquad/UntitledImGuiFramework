@@ -19,12 +19,12 @@ bool UImGui::Plugins::load(String location) noexcept
 
     if (URLL::dlsym(handle, "UImGui_Plugin_attach", temp.attach) != handle)
     {
-        Logger::log("Couldn't load the attach symbol from the plugin at location: '", UVK_LOG_TYPE_WARNING, location, "', Error: ", dlerror());
+        Logger::log("Couldn't load the attach symbol from the plugin at location: '", UVK_LOG_TYPE_WARNING, location, "', Error: ", URLL::dlerror());
         return false;
     }
     if (URLL::dlsym(handle, "UImGui_Plugin_detach", temp.detach) != handle)
     {
-        Logger::log("Couldn't load the detach symbol from the plugin at location: ", UVK_LOG_TYPE_WARNING, location, "', Error: ", dlerror());
+        Logger::log("Couldn't load the detach symbol from the plugin at location: ", UVK_LOG_TYPE_WARNING, location, "', Error: ", URLL::dlerror());
         return false;
     }
 
