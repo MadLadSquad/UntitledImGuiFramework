@@ -1,7 +1,7 @@
 #include "ClientSideBar.hpp"
 #include <imgui.h>
 #include <Interfaces/WindowInterface.hpp>
-#include <Instance.hpp>
+#include <Components/Instance.hpp>
 
 #define UPDATE_PADDING (width += ImGui::GetItemRectSize().x + style.WindowPadding.x)
 #define ADD_PADDING_TO_ITEM_RECT(x, y, z) auto (x) = ImGui::GetItemRectMin(); \

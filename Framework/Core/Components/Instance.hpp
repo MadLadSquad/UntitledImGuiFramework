@@ -178,6 +178,9 @@ namespace UImGui
          * @note Event Safety - Any time
          */
         int argc{};
+
+        // Event Safety - Any time
+        static Instance* get() noexcept;
     private:
         friend class GUIRenderer;
         friend class RendererInternal;
@@ -186,8 +189,5 @@ namespace UImGui
         friend class Modules;
 
         friend class WindowInternal;
-
-        // Event Safety - Any time
-        static Instance* get() noexcept;
     };
 }

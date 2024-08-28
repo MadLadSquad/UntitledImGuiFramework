@@ -1,8 +1,22 @@
 #pragma once
 #include <Types.hpp>
+#include <Utilities.hpp>
 
 namespace UImGui
 {
+    class Global;
+
+    struct UIMGUI_PUBLIC_API PluginContext
+    {
+        Global* global = nullptr;
+        ImGuiContext* imguiContext = nullptr;
+        ImGuiMemAllocFunc* allocFunc = nullptr;
+        ImGuiMemFreeFunc* freeFunc = nullptr;
+        void** userData = nullptr;
+        void* implotContext = nullptr;
+        void* textUtilsContext = nullptr;
+    };
+
     struct UIMGUI_PUBLIC_API Plugin
     {
         FString name{};
@@ -14,7 +28,7 @@ namespace UImGui
         // 4. Dear imgui free function
         // 5. Dear imgui memory user data
         // 6. ImPlot context pointer(if enabled)
-        std::function<void(void*, void*, void*, void*, void**, void*)> attach = [](void*, void*, void*, void*, void**, void*) -> void {};
+        std::function<void(void*)> attach = [](void*) -> void {};
         std::function<void()> detach = []() -> void {};
     };
 

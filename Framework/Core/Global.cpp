@@ -1,8 +1,9 @@
 #include "Global.hpp"
-#include <Instance.hpp>
+#include <Components/Instance.hpp>
 #ifdef _WIN32
     #include <windows.h>
 #endif
+#include <Utilities.hpp>
 
 UImGui::Global::Global() noexcept
 {

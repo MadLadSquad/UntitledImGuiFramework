@@ -8,6 +8,7 @@
 
 #include <Interfaces/RendererInterface.hpp>
 #include <Interfaces/WindowInterface.hpp>
+#include <Interfaces/PluginInterface.hpp>
 
 #include <Core/Utilities.hpp>
 

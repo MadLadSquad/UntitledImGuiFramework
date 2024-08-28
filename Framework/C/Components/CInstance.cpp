@@ -1,5 +1,5 @@
 #include "CInstance.h"
-#include <Instance.hpp>
+#include <Components/Instance.hpp>
 #include <Global.hpp>
 
 #define INIT_INFO UImGui::Global::get().instance->initInfo

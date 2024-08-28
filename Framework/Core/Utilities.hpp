@@ -47,10 +47,7 @@ namespace UImGui
         static void toUpper(FString& str) noexcept;
 
         // Loads a framework context from the plugin's side
-        static void loadContext(Global* global, ImGuiContext* imguiContext, const ImGuiMemAllocFunc* imguiAllocFunc,
-                                                                            const ImGuiMemFreeFunc* imguiFreeFunc,
-                                                                            void** imguiMemoryUserData,
-                                                                            void* implotContext) noexcept;
+        static void loadContext(void* context) noexcept;
 
         // Event Safety - Any time
         // Sleep for X milliseconds

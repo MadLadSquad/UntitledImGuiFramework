@@ -75,19 +75,24 @@ void UImGui::Utility::toUpper(FString& str) noexcept
         a = static_cast<char>(toupper(a));
 }
 
-void UImGui::Utility::loadContext(Global* global, ImGuiContext* imguiContext, const ImGuiMemAllocFunc* imguiAllocFunc,
-                                                                              const ImGuiMemFreeFunc* imguiFreeFunc,
-                                                                              void** imguiMemoryUserData,
-                                                                              void* implotContext) noexcept
+void UImGui::Utility::loadContext(void* context) noexcept
 {
-    Global::get(global);
-    ImGui::SetCurrentContext(imguiContext);
-    ImGui::SetAllocatorFunctions(*imguiAllocFunc, *imguiFreeFunc, *imguiMemoryUserData);
+    auto* ctx = (PluginContext*)context;
+    Global::get(ctx->global);
+    ImGui::SetCurrentContext(ctx->imguiContext);
+    ImGui::SetAllocatorFunctions(*ctx->allocFunc, *ctx->freeFunc, *ctx->userData);
 
-    if (implotContext != nullptr && Modules::data().plotting)
+    if (ctx->implotContext != nullptr && Modules::data().plotting)
     {
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
-        ImPlot::SetCurrentContext((ImPlotContext*)implotContext);
+        ImPlot::SetCurrentContext((ImPlotContext*)ctx->implotContext);
+#endif
+    }
+
+    if (ctx->textUtilsContext != nullptr && Modules::data().text_utils)
+    {
+#ifdef UIMGUI_TEXT_UTILS_MODULE_ENABLED
+        TextUtils::initTextUtilsData((TextUtilsData*)ctx->textUtilsContext);
 #endif
     }
 }

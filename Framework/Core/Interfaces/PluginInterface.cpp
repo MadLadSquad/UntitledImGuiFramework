@@ -33,13 +33,26 @@ bool UImGui::Plugins::load(String location) noexcept
     void* userData;
 
     ImGui::GetAllocatorFunctions(&alloc, &free, &userData);
-    temp.attach(&Global::get(), ImGui::GetCurrentContext(), &alloc, &free, &userData,
+
+    PluginContext ctx
+    {
+        .global = &Global::get(),
+        .imguiContext = ImGui::GetCurrentContext(),
+        .allocFunc = &alloc,
+        .freeFunc = &free,
+        .userData = &userData,
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
-        Modules::data().plotting ? ImPlot::GetCurrentContext() : nullptr
+        .implotContext = Modules::data().plotting ? ImPlot::GetCurrentContext() : nullptr,
 #else
-        nullptr
+        .implotContext = nullptr,
 #endif
-    );
+#ifdef UIMGUI_TEXT_UTILS_MODULE_ENABLED
+        .textUtilsContext = Modules::data().text_utils ? TextUtils::getTextUtilsData() : nullptr;
+#else
+        .textUtilsContext = nullptr
+#endif
+    };
+    temp.attach(&ctx);
     get().plugins.push_back(temp);
     return true;
 }
