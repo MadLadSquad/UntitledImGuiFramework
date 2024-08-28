@@ -25,6 +25,9 @@ extern "C"
     // Sleep for X milliseconds
     UIMGUI_PUBLIC_API void UImGui_Utility_sleep(uint64_t milliseconds);
 
+    UIMGUI_PUBLIC_API void UImGui_Utility_loadContext(void* global, void* imguiContext, void* imguiAllocFunc, void* imguiFreeFunc, void** imguiMemoryUserData, void* implotContext);
+
+    // Event Safety - Any time
     UIMGUI_PUBLIC_API UImGui_CGlobal* UImGui_Global_get(UImGui_CGlobal* parent);
 #ifdef __cplusplus
 }

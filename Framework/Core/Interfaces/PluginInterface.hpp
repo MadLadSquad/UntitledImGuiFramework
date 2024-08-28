@@ -3,7 +3,7 @@
 
 namespace UImGui
 {
-    struct Plugin
+    struct UIMGUI_PUBLIC_API Plugin
     {
         FString name{};
         void* handle = nullptr;
@@ -26,11 +26,13 @@ namespace UImGui
         /**
          * @brief Loads a plugin from a location string
          * @param location - the file location for the plugin shared library
+         * @note Event safety - post-startup
          * @return A boolean that is true on success and false on error
          */
         static bool load(String location) noexcept;
 
         /**
+         * @note Event safety - post-startup
          * @return A constant reference to an array of strings that represent the list of user-defined plugins, fetched
          * using the standard plugins interface
          */
@@ -39,6 +41,7 @@ namespace UImGui
         /**
          * @brief A helper function that automatically loads all plugins that are added by the user through the standard
          * plugins interface
+         * @note Event safety - post-startup
          */
         static void loadStandard() noexcept;
 

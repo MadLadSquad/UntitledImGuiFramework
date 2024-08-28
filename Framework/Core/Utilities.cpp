@@ -1,11 +1,15 @@
 #include "Utilities.hpp"
 #include <Global.hpp>
-#include <Instance.hpp>
+#include <Components/Instance.hpp>
 #include <thread>
 #ifdef _WIN32
     #include <windows.h>
 #elif !__EMSCRIPTEN__
     #include <signal.h>
+#endif
+
+#ifdef UIMGUI_PLOTTING_MODULE_ENABLED
+    #include <Plotting/ThirdParty/implot/implot_internal.h>
 #endif
 
 void UImGui::Utility::sanitiseFilepath(FString& str) noexcept
@@ -69,6 +73,23 @@ void UImGui::Utility::toUpper(FString& str) noexcept
 {
     for (auto& a : str)
         a = static_cast<char>(toupper(a));
+}
+
+void UImGui::Utility::loadContext(Global* global, ImGuiContext* imguiContext, const ImGuiMemAllocFunc* imguiAllocFunc,
+                                                                              const ImGuiMemFreeFunc* imguiFreeFunc,
+                                                                              void** imguiMemoryUserData,
+                                                                              void* implotContext) noexcept
+{
+    Global::get(global);
+    ImGui::SetCurrentContext(imguiContext);
+    ImGui::SetAllocatorFunctions(*imguiAllocFunc, *imguiFreeFunc, *imguiMemoryUserData);
+
+    if (implotContext != nullptr && Modules::data().plotting)
+    {
+#ifdef UIMGUI_PLOTTING_MODULE_ENABLED
+        ImPlot::SetCurrentContext((ImPlotContext*)implotContext);
+#endif
+    }
 }
 
 void UImGui::Utility::initializeKeyStrings(KeyStringsArrType& keyStrings) noexcept

@@ -3,6 +3,10 @@
 #include <Types.hpp>
 #include <C/Internal/Keys.h>
 
+struct ImGuiContext;
+typedef void* (*ImGuiMemAllocFunc)(size_t sz, void* user_data);
+typedef void  (*ImGuiMemFreeFunc )(void* ptr, void* user_data);
+
 namespace UImGui
 {
     class Global;
@@ -41,6 +45,12 @@ namespace UImGui
         static FString toUpper(String str) noexcept;
         // Event Safety - Any time
         static void toUpper(FString& str) noexcept;
+
+        // Loads a framework context from the plugin's side
+        static void loadContext(Global* global, ImGuiContext* imguiContext, const ImGuiMemAllocFunc* imguiAllocFunc,
+                                                                            const ImGuiMemFreeFunc* imguiFreeFunc,
+                                                                            void** imguiMemoryUserData,
+                                                                            void* implotContext) noexcept;
 
         // Event Safety - Any time
         // Sleep for X milliseconds

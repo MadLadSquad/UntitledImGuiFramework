@@ -43,6 +43,15 @@ void UImGui_Utility_sleep(uint64_t milliseconds)
     UImGui::Utility::sleep(milliseconds);
 }
 
+void UImGui_Utility_loadContext(void* global, void* imguiContext, void* imguiAllocFunc, void* imguiFreeFunc, void** imguiMemoryUserData, void* implotContext)
+{
+    UImGui::Utility::loadContext((UImGui::Global*)global, (ImGuiContext*)imguiContext, (ImGuiMemAllocFunc*)imguiAllocFunc,
+                                                                                       (ImGuiMemFreeFunc*)imguiFreeFunc,
+                                                                                       imguiMemoryUserData,
+                                                                                       implotContext);
+}
+
+
 UImGui_CGlobal* UImGui_Global_get(UImGui_CGlobal* parent)
 {
     return (UImGui_CGlobal*)&UImGui::Global::get((UImGui::Global*)parent);
