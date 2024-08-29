@@ -85,6 +85,11 @@ if (USE_THEME_MODULE)
     file(GLOB_RECURSE UTHEME_HEAD "Framework/Modules/Theming/UTheme.hpp")
 endif()
 
+if (USE_I18N_MODULE)
+    file(GLOB_RECURSE UI18N_SRC "Framework/Modules/i18n/src/*.cpp")
+    file(GLOB_RECURSE UI18N_HEAD "Framework/Modules/i18n/src/*.hpp" "Framework/Modules/i18n/src/*.h")
+endif()
+
 if (BUILD_MODE_VENDOR)
     foreach(f IN ITEMS ${ENABLED_LIBRARIES})
         get_target_property(INCLUDE_DIRS ${f} INCLUDE_DIRECTORIES)
@@ -95,8 +100,8 @@ endif()
 set(LIBRARY_SOURCES "${UGUI_SRC}" "${UGUI_HEAD}" "Generated/BuildDef.hpp" "${UGUI_IMPLOT_SRC}" "${UGUI_IMPLOT_HEAD}"
         "${UGUI_TOGGLES_HEAD}" "${UGUI_TOGGLES_SRC}" "${UGUI_SPINNER_HEAD}" "${UGUI_KNOBS_HEAD}" "${UGUI_KNOBS_SRC}"
         "${UGUI_CLI_SRC}" "${UGUI_CLI_HEAD}" "${UGUI_TEXT_UTILS_SRC}" "${UGUI_TEXT_UTILS_HEAD}" "${LM_INCLUDE_DIRS}"
-        "${UTHEME_SRC}" "${UTHEME_HEAD}" "${APPLE_SRC}")
+        "${UTHEME_SRC}" "${UTHEME_HEAD}" "${UI18N_SRC}" "${UI18n_HEAD}" "${APPLE_SRC}")
 set(EXECUTABLE_SOURCES "Generated/main.cpp" "${UGUI_HEAD}" "${EXEC_SRC}" "Generated/BuildDef.hpp" "${UGUI_IMPLOT_HEAD}"
         "${UGUI_TOGGLES_HEAD}" "${UGUI_SPINNER_HEAD}" "${UGUI_KNOBS_HEAD}" "${UGUI_CLI_HEAD}" "${UGUI_APP_HEAD}"
-        "${UGUI_TEXT_UTILS_HEAD}" "${UTHEME_HEAD}")
+        "${UGUI_TEXT_UTILS_HEAD}" "${UTHEME_HEAD}" "${UI18N_HEAD}")
 set(APP_LIBRARY_SOURCES "${UGUI_APP_SRC}" "${UGUI_APP_HEAD}" "${LM_INCLUDE_DIRS}")

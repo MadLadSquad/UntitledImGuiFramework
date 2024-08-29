@@ -64,6 +64,7 @@ namespace UImGui
         friend class Locale;
         friend class LocaleManager;
         friend class StateTracker;
+        friend class I18N;
 
         ModuleSettings settings =
         {
