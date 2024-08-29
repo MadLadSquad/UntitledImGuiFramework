@@ -47,7 +47,7 @@ bool UImGui::Plugins::load(String location) noexcept
         .implotContext = nullptr,
 #endif
 #ifdef UIMGUI_TEXT_UTILS_MODULE_ENABLED
-        .textUtilsContext = Modules::data().text_utils ? TextUtils::getTextUtilsData() : nullptr;
+        .textUtilsContext = Modules::data().text_utils ? TextUtils::getTextUtilsData() : nullptr,
 #else
         .textUtilsContext = nullptr
 #endif
