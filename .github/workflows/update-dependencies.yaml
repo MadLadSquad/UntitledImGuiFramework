@@ -52,7 +52,7 @@ jobs:
           cd .. || exit
           rm -rf dear_bindings
           cd ../../../../ || exit
-          (git add . && git commit -m "auto" && git push origin HEAD:auto) || echo "?" >> $GITHUB_OUTPUT
+          (git add . && git commit -m "auto" && git push origin HEAD:auto && echo "out=s" >> $GITHUB_OUTPUT) || echo "out=?" >> $GITHUB_OUTPUT
       - name: Create PR
         if: "steps.mod.outputs.out != '?'"
         uses: JasonEtco/create-an-issue@v2 
