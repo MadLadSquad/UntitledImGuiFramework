@@ -35,9 +35,7 @@ namespace UImGui
     class UIMGUI_PUBLIC_API Plugins
     {
     public:
-        Plugins() = delete;
-        Plugins(const Plugins&) = delete;
-        void operator=(Plugins const&) = delete;
+        Plugins() noexcept = default;
 
         /**
          * @brief Loads a plugin from a location string
