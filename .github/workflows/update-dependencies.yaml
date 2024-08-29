@@ -40,17 +40,21 @@ jobs:
           git config --global user.email "contact@madladsquad.com"
           git fetch --all
           git checkout auto || git checkout -b auto
-          o=$(git submodule update --remote --merge)
-          echo "out=${o:0:1}?" >> $GITHUB_OUTPUT
-      - name: Commit
-        if: "steps.mod.outputs.out != '?'"
-        id: commit
-        run: |
-          (git add . && git commit -m "auto" && git push origin auto && echo "com=+" >> $GITHUB_OUTPUT) || echo "com=?" >> $GITHUB_OUTPUT
-      - name: Test
-        run: "echo '${{ steps.mod.outputs.out }} ${{ steps.commits.outputs.com }}!'"
+          git submodule update --remote --merge --init
+          cd Framework/ThirdParty/source-libraries/cimgui || exit
+          git clone https://github.com/dearimgui/dear_bindings.git --recursive || exit
+          cd dear_bindings || exit
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          python3 dear_bindings.py --imconfig-path ../../../imgui/core/imconfig.h -o cimgui ../../../imgui/core/imgui.h
+          mv cimgui.cpp cimgui.h ../
+          cd .. || exit
+          rm -rf dear_bindings
+          cd ../../../../ || exit
+          (git add . && git commit -m "auto" && git push origin HEAD:auto) || echo "?" >> $GITHUB_OUTPUT
       - name: Create PR
-        if: "steps.mod.outputs.out != '?' && steps.commit.outputs.com != '?'"
+        if: "steps.mod.outputs.out != '?'"
         uses: JasonEtco/create-an-issue@v2 
         env:
           GITHUB_TOKEN: ${{ secrets.ACTION_ISSUE_SECRET }}
