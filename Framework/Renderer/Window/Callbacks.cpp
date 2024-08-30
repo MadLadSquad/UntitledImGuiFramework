@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <Interfaces/RendererInterface.hpp>
 #include <Interfaces/WindowInterface.hpp>
+#include <Defines.hpp>
 
 void UImGui::WindowInternal::configureCallbacks() const noexcept
 {

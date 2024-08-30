@@ -11,6 +11,8 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#include <Defines.hpp>
+
 void UImGui::OpenGLRenderer::init(RendererInternal& renderer) noexcept
 {
     renderer.vendorString = FCAST(const char*, glGetString(GL_VENDOR));

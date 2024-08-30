@@ -5,6 +5,8 @@
 
 #include <imgui_impl_glfw.h>
 
+#include <Defines.hpp>
+
 UImGui::VKDraw::VKDraw(VKInstance& inst, VKDevice& dev) noexcept
 {
     instance = &inst;

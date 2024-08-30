@@ -1,6 +1,7 @@
 #include "VKDescriptors.hpp"
 #ifndef __EMSCRIPTEN__
 #include "VKDevice.hpp"
+#include <Types.hpp>
 
 UImGui::VKDescriptorPools::VKDescriptorPools(VKDevice& dev) noexcept
 {
@@ -16,7 +17,7 @@ void UImGui::VKDescriptorPools::allocate() noexcept
             .descriptorCount = 1
         },
     };
-    constexpr vk::DescriptorPoolCreateInfo descriptorPoolCreateInfo =
+    const vk::DescriptorPoolCreateInfo descriptorPoolCreateInfo =
     {
         .flags = vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet,
         .maxSets = 1,

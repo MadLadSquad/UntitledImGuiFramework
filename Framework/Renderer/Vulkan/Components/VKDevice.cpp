@@ -2,6 +2,7 @@
 #ifndef __EMSCRIPTEN__
 #include <Interfaces/RendererInterface.hpp>
 #include <Renderer.hpp>
+#include <Defines.hpp>
 
 #define VK_KHR_PORTABILITY_SUBSET_NAME "VK_KHR_portability_subset"
 
