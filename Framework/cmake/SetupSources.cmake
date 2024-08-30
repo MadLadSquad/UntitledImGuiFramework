@@ -62,8 +62,8 @@ if (USE_PLOTTING_MODULE)
 endif()
 
 if (USE_KNOBS_MODULE)
-    file(GLOB_RECURSE UGUI_KNOBS_SRC "Framework/Modules/Knobs/*.cpp")
-    file(GLOB_RECURSE UGUI_KNOBS_HEAD "Framework/Modules/Knobs/*.h")
+    file(GLOB_RECURSE UGUI_KNOBS_SRC "Framework/Modules/Knobs/ThirdParty/imgui-knobs/imgui-knobs.cpp")
+    file(GLOB_RECURSE UGUI_KNOBS_HEAD "Framework/Modules/Knobs/ThirdParty/imgui-knobs/imgui-knobs.h")
 endif()
 
 if (USE_SPINNER_MODULE)
