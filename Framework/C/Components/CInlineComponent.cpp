@@ -1,7 +1,7 @@
 #include "CInlineComponent.h"
 #include <Components/InlineComponent.hpp>
 
-class CInlineComponentInternalClass : public UImGui::InlineComponent
+class CInlineComponentInternalClass final : public UImGui::InlineComponent
 {
 public:
     CInlineComponentInternalClass()
@@ -15,7 +15,7 @@ public:
         beginF(&data);
     }
 
-    virtual void tick(float deltaTime) override
+    virtual void tick(const float deltaTime) override
     {
         tickAutohandle(deltaTime);
         tickF(&data, deltaTime);
@@ -46,9 +46,9 @@ public:
 };
 
 
-UImGui_CComponentHandle UImGui_Inline_makeCInlineComponent(UImGui_ComponentRegularFun construct,
-                                            UImGui_ComponentRegularFun begin, UImGui_ComponentTickFun tick, UImGui_ComponentRegularFun end,
-                                            UImGui_ComponentRegularFun destruct, UImGui_CComponentData data)
+UImGui_CComponentHandle UImGui_Inline_makeCInlineComponent(const UImGui_ComponentRegularFun construct,
+                                                           const UImGui_ComponentRegularFun begin, const UImGui_ComponentTickFun tick, const UImGui_ComponentRegularFun end,
+                                                           const UImGui_ComponentRegularFun destruct, const UImGui_CComponentData data)
 {
     auto* handle = dynamic_cast<CInlineComponentInternalClass*>(UImGui::InlineComponent::make<CInlineComponentInternalClass>());
     handle->state = data.state;
@@ -69,7 +69,7 @@ UImGui_CComponentData_P* UImGui_Inline_getCInlineComponentData(UImGui_CComponent
     return &static_cast<CInlineComponentInternalClass*>(handle)->data;
 }
 
-void UImGui_Inline_destroyCInlineComponent(UImGui_CComponentHandle* handle)
+void UImGui_Inline_destroyCInlineComponent(UImGui_CComponentHandle handle)
 {
     delete (CInlineComponentInternalClass*)handle;
 }

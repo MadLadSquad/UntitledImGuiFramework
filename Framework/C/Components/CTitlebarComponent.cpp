@@ -1,7 +1,7 @@
 #include "CTitlebarComponent.h"
 #include <Components/TitlebarComponent.hpp>
 
-class CTitlebarComponentInternalClass : public UImGui::TitlebarComponent
+class CTitlebarComponentInternalClass final : public UImGui::TitlebarComponent
 {
 public:
     CTitlebarComponentInternalClass()

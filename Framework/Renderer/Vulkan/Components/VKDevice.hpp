@@ -4,7 +4,6 @@
 #include "VKSurface.hpp"
 #include "VKDescriptors.hpp"
 #include "VKUtility.hpp"
-#include <Types.hpp>
 
 namespace UImGui
 {

@@ -10,7 +10,6 @@ namespace UImGui
      * @implements begin - The default begin event as detailed in the docs
      * @implements tick - The default tick event as detailed in the docs
      * @implements end - The default end event as detailed in the docs
-     * @implements ~TitlebarComponent - The destructor for the component
      * @static make - Creates a titlebar component of a given subclass type
      * @var componentType - The type of the component as a constexpr
      * @var state - The default initial state of the component

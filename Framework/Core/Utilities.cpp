@@ -77,7 +77,7 @@ void UImGui::Utility::toUpper(FString& str) noexcept
 
 void UImGui::Utility::loadContext(void* context) noexcept
 {
-    auto* ctx = (PluginContext*)context;
+    const auto* ctx = static_cast<PluginContext*>(context);
     Global::get(ctx->global);
     ImGui::SetCurrentContext(ctx->imguiContext);
     ImGui::SetAllocatorFunctions(*ctx->allocFunc, *ctx->freeFunc, *ctx->userData);
@@ -85,14 +85,14 @@ void UImGui::Utility::loadContext(void* context) noexcept
     if (ctx->implotContext != nullptr && Modules::data().plotting)
     {
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
-        ImPlot::SetCurrentContext((ImPlotContext*)ctx->implotContext);
+        ImPlot::SetCurrentContext(static_cast<ImPlotContext*>(ctx->implotContext));
 #endif
     }
 
     if (ctx->textUtilsContext != nullptr && Modules::data().text_utils)
     {
 #ifdef UIMGUI_TEXT_UTILS_MODULE_ENABLED
-        TextUtils::initTextUtilsData((TextUtilsData*)ctx->textUtilsContext);
+        TextUtils::initTextUtilsData(static_cast<TextUtilsData*>(ctx->textUtilsContext));
 #endif
     }
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include <Core/Defines.hpp>
 #include <Core/Types.hpp>
 
 // C API, contains the renderer data header, since it is shared between the 2 APIs

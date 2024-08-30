@@ -50,7 +50,6 @@ namespace UImGui
      * @implements begin - The default begin event as detailed in the docs
      * @implements tick - The default tick event as detailed in the docs
      * @implements end - The default end event as detailed in the docs
-     * @implements ~Instance - Destructs the instance, called when the program closes
      * @implements onEventConfigureStyle - A function called when the style of the different UI widgets needs to be configured
      * @static getGlobal - Returns the global data struct void pointer defined in the init info struct
      * @static getComponentByIDs - Given the name and the numeric ID of a component, as well as its type(a member of the ComponentType) as a template argument it returns a pointer to the given component if found, if not it returns a nullptr and an error

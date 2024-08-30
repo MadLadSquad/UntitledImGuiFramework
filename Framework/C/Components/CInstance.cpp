@@ -1,8 +1,7 @@
 #include "CInstance.h"
 #include <Components/Instance.hpp>
-#include <Global.hpp>
 
-#define INIT_INFO UImGui::Global::get().instance->initInfo
+#define INIT_INFO UImGui::Instance::get()->initInfo
 
 void UImGui_Instance_setCInitInfo(UImGui_CInitInfo* initInfo)
 {
@@ -17,7 +16,7 @@ void* UImGui_Instance_getCppInitInfoGlobalData(bool* bAllocatedOnHeap)
 
 char** UImGui_Instance_getCLIArguments(int* argc)
 {
-    const auto* instance = UImGui::Global::get().instance;
+    const auto* instance = UImGui::Instance::get();
     *argc = instance->argc;
 
     return instance->argv;

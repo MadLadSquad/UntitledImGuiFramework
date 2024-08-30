@@ -50,7 +50,7 @@ void UImGui::RendererInternal::stop() const noexcept
 
 void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
 {
-    auto& inst = *((RendererInternal*)rendererInstance);
+    auto& inst = *(static_cast<RendererInternal*>(rendererInstance));
     static double deltaTime = 0.0f;
     glfwPollEvents();
 

@@ -5,7 +5,7 @@ void UImGui::TitlebarComponent::beginAutohandle() noexcept
 
 }
 
-void UImGui::TitlebarComponent::tickAutohandle(float deltaTime) noexcept
+void UImGui::TitlebarComponent::tickAutohandle(float) noexcept
 {
 
 }

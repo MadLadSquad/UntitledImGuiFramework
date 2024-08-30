@@ -13,16 +13,16 @@
 
 void UImGui::OpenGLRenderer::init(RendererInternal& renderer) noexcept
 {
-    renderer.vendorString = (const char*)glGetString(GL_VENDOR);
+    renderer.vendorString = FCAST(const char*, glGetString(GL_VENDOR));
     if (renderer.vendorString.starts_with("NVIDIA"))
     {
-        renderer.driverVersion = (const char*)glGetString(GL_VERSION);
+        renderer.driverVersion = FCAST(const char*, glGetString(GL_VERSION));
         renderer.apiVersion = renderer.driverVersion;
 
         renderer.driverVersion.erase(0, renderer.driverVersion.find("NVIDIA ") + strlen("NVIDIA "));
         renderer.apiVersion.erase(renderer.apiVersion.find(" NVIDIA"));
     }
-    renderer.gpuName = (const char*)glGetString(GL_RENDERER);
+    renderer.gpuName = FCAST(const char*, glGetString(GL_RENDERER));
 }
 
 void UImGui::OpenGLRenderer::renderStart(double deltaTime) noexcept

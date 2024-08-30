@@ -1,7 +1,7 @@
 #include "CWindowComponent.h"
 #include <Components/WindowComponent.hpp>
 
-class CWindowComponentInternalClass : public UImGui::WindowComponent
+class CWindowComponentInternalClass final : public UImGui::WindowComponent
 {
 public:
     CWindowComponentInternalClass()
@@ -15,7 +15,7 @@ public:
         beginF(&data);
     }
 
-    virtual void tick(float deltaTime) override
+    virtual void tick(const float deltaTime) override
     {
         tickAutohandle(deltaTime);
         tickF(&data, deltaTime);
@@ -46,9 +46,9 @@ public:
 };
 
 
-UImGui_CComponentHandle UImGui_WindowComponent_makeCWindowComponent(UImGui_ComponentRegularFun construct,
-                                            UImGui_ComponentRegularFun begin, UImGui_ComponentTickFun tick, UImGui_ComponentRegularFun end,
-                                            UImGui_ComponentRegularFun destruct, UImGui_CComponentData data)
+UImGui_CComponentHandle UImGui_WindowComponent_makeCWindowComponent(const UImGui_ComponentRegularFun construct,
+                                                                    const UImGui_ComponentRegularFun begin, const UImGui_ComponentTickFun tick, const UImGui_ComponentRegularFun end,
+                                                                    const UImGui_ComponentRegularFun destruct, UImGui_CComponentData data)
 {
     auto* handle = dynamic_cast<CWindowComponentInternalClass*>(UImGui::WindowComponent::make<CWindowComponentInternalClass>());
     handle->state = data.state;
@@ -69,7 +69,7 @@ UImGui_CComponentData_P* UImGui_WindowComponent_getCWindowComponentData(UImGui_C
     return &static_cast<CWindowComponentInternalClass*>(handle)->data;
 }
 
-void UImGui_WindowComponent_destroyCWindowComponent(UImGui_CComponentHandle* handle)
+void UImGui_WindowComponent_destroyCWindowComponent(UImGui_CComponentHandle handle)
 {
     delete (CWindowComponentInternalClass*)handle;
 }

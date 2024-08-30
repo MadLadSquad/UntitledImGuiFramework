@@ -16,7 +16,7 @@ void UImGui::VKDescriptorPools::allocate() noexcept
             .descriptorCount = 1
         },
     };
-    const vk::DescriptorPoolCreateInfo descriptorPoolCreateInfo =
+    constexpr vk::DescriptorPoolCreateInfo descriptorPoolCreateInfo =
     {
         .flags = vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet,
         .maxSets = 1,

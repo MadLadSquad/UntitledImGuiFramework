@@ -1,5 +1,4 @@
 #pragma once
-#include <Defines.hpp>
 #include <Types.hpp>
 #include <C/Internal/Keys.h>
 

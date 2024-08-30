@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <Core/Defines.hpp>
 
 // Types.hpp only contains C++ code. Check out the C header for more types
 #include <C/CTypes.h>

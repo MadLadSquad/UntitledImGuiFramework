@@ -38,7 +38,7 @@ void UImGui_Utility_removeConsole()
     UImGui::Utility::removeConsole();
 }
 
-void UImGui_Utility_sleep(uint64_t milliseconds)
+void UImGui_Utility_sleep(const uint64_t milliseconds)
 {
     UImGui::Utility::sleep(milliseconds);
 }
@@ -51,5 +51,5 @@ void UImGui_Utility_loadContext(void* context)
 
 UImGui_CGlobal* UImGui_Global_get(UImGui_CGlobal* parent)
 {
-    return (UImGui_CGlobal*)&UImGui::Global::get((UImGui::Global*)parent);
+    return &UImGui::Global::get(static_cast<UImGui::Global*>(parent));
 }

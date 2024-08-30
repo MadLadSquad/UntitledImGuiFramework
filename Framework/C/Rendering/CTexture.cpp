@@ -46,7 +46,7 @@ void UImGui_Texture_setCustomSaveFunction(UImGui_CTexture* texture, const UImGui
     cast(texture)->setCustomSaveFunction(f);
 }
 
-void UImGui_Texture_release(UImGui_CTexture* texture)
+void UImGui_Texture_release(const UImGui_CTexture* texture)
 {
     // Could use pointer arithmetic but that would be really unsafe
     auto& textures = UImGui::Global::get().deallocationStruct.textures;
