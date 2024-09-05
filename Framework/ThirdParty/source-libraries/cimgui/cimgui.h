@@ -2,7 +2,7 @@
 // **DO NOT EDIT DIRECTLY**
 // https://github.com/dearimgui/dear_bindings
 
-// dear imgui, v1.91.1 WIP
+// dear imgui, v1.91.1
 // (headers)
 
 // Help:
@@ -32,8 +32,8 @@
 
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
-#define IMGUI_VERSION       "1.91.1 WIP"
-#define IMGUI_VERSION_NUM   19104
+#define IMGUI_VERSION       "1.91.1"
+#define IMGUI_VERSION_NUM   19110
 #define IMGUI_HAS_TABLE
 #define IMGUI_HAS_VIEWPORT           // Viewport WIP branch
 #define IMGUI_HAS_DOCK               // Docking WIP branch
@@ -485,7 +485,7 @@ CIMGUI_API void  ImGui_PopTextWrapPos(void);
 // - Use the ShowStyleEditor() function to interactively see/edit the colors.
 CIMGUI_API ImFont*       ImGui_GetFont(void);                                                // get current font
 CIMGUI_API float         ImGui_GetFontSize(void);                                            // get current font size (= height in pixels) of current font with current scale applied
-CIMGUI_API ImVec2        ImGui_GetFontTexUvWhitePixel(void);                                 // get UV coordinate for a while pixel, useful to draw custom shapes via the ImDrawList API
+CIMGUI_API ImVec2        ImGui_GetFontTexUvWhitePixel(void);                                 // get UV coordinate for a white pixel, useful to draw custom shapes via the ImDrawList API
 CIMGUI_API ImU32         ImGui_GetColorU32(ImGuiCol idx);                                    // Implied alpha_mul = 1.0f
 CIMGUI_API ImU32         ImGui_GetColorU32Ex(ImGuiCol idx, float alpha_mul /* = 1.0f */);    // retrieve given style color with style alpha applied and optional extra alpha multiplier, packed as a 32-bit value suitable for ImDrawList
 CIMGUI_API ImU32         ImGui_GetColorU32ImVec4(ImVec4 col);                                // retrieve given color with style alpha applied, packed as a 32-bit value suitable for ImDrawList
@@ -2201,7 +2201,7 @@ typedef enum
     ImGuiTableColumnFlags_NoSort               = 1<<9,   // Disable ability to sort on this field (even if ImGuiTableFlags_Sortable is set on the table).
     ImGuiTableColumnFlags_NoSortAscending      = 1<<10,  // Disable ability to sort in the ascending direction.
     ImGuiTableColumnFlags_NoSortDescending     = 1<<11,  // Disable ability to sort in the descending direction.
-    ImGuiTableColumnFlags_NoHeaderLabel        = 1<<12,  // TableHeadersRow() will not submit horizontal label for this column. Convenient for some small columns. Name will still appear in context menu or in angled headers.
+    ImGuiTableColumnFlags_NoHeaderLabel        = 1<<12,  // TableHeadersRow() will submit an empty label for this column. Convenient for some small columns. Name will still appear in context menu or in angled headers. You may append into this cell by calling TableSetColumnIndex() right after the TableHeadersRow() call.
     ImGuiTableColumnFlags_NoHeaderWidth        = 1<<13,  // Disable header text width contribution to automatic column width.
     ImGuiTableColumnFlags_PreferSortAscending  = 1<<14,  // Make the initial sort direction Ascending when first sorting on this column (default).
     ImGuiTableColumnFlags_PreferSortDescending = 1<<15,  // Make the initial sort direction Descending when first sorting on this column.
@@ -3752,7 +3752,7 @@ typedef enum
     ImGuiViewportFlags_None                = 0,
     ImGuiViewportFlags_IsPlatformWindow    = 1<<0,   // Represent a Platform Window
     ImGuiViewportFlags_IsPlatformMonitor   = 1<<1,   // Represent a Platform Monitor (unused yet)
-    ImGuiViewportFlags_OwnedByApp          = 1<<2,   // Platform Window: Was created/managed by the user application? (rather than our backend)
+    ImGuiViewportFlags_OwnedByApp          = 1<<2,   // Platform Window: Is created/managed by the user application? (rather than our backend)
     ImGuiViewportFlags_NoDecoration        = 1<<3,   // Platform Window: Disable platform decorations: title bar, borders, etc. (generally set all windows, but if ImGuiConfigFlags_ViewportsDecoration is set we only set this on popups/tooltips)
     ImGuiViewportFlags_NoTaskBarIcon       = 1<<4,   // Platform Window: Disable platform task bar icon (generally set on popups/tooltips, or all windows if ImGuiConfigFlags_ViewportsNoTaskBarIcon is set)
     ImGuiViewportFlags_NoFocusOnAppearing  = 1<<5,   // Platform Window: Don't take focus when created.
