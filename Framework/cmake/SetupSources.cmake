@@ -1,9 +1,15 @@
-include_directories("Source/" "Framework/" "Framework/ThirdParty/imgui/core/" "Framework/ThirdParty/imgui/backends/"
-        "Framework/ThirdParty/imgui/misc/" "Framework/ThirdParty/imgui/" "Framework/Core/" "Framework/Renderer/"
-        "Framework/ThirdParty/logger/src/" "Framework/ThirdParty/source-libraries/" "Framework/Modules" "."
-        "Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser/ThirdParty/" ${YAML_CPP_INCLUDE_DIRS_T}
-        "Framework/ThirdParty/vulkan-headers/include" ${GLFW_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS}
-        "Framework/ThirdParty/" ${LM_INCLUDE_DIRS})
+set(FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Source/" "${CMAKE_SOURCE_DIR}/Framework/"
+        "${CMAKE_SOURCE_DIR}/Framework/Core/" "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/imgui/core/"
+        "${CMAKE_SOURCE_DIR}/Framework/Modules" "." "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/imgui/backends/"
+        "${CMAKE_SOURCE_DIR}/Framework/Renderer/" "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/imgui/misc/"
+        "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/imgui/" "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/logger/src/"
+        "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/source-libraries/" ${GLFW_INCLUDE_DIRS} ${LM_INCLUDE_DIRS}
+        "${CMAKE_SOURCE_DIR}/Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser/ThirdParty/" ${GLEW_INCLUDE_DIRS}
+        "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/vulkan-headers/include" "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/"
+        ${YAML_CPP_INCLUDE_DIRS_T} ${FREETYPE_INCLUDE_DIRS})
+
+include_directories(${FRAMEWORK_INCLUDE_DIRS})
+set(FRAMEWORK_INCLUDE_DIRS ${FRAMEWORK_INCLUDE_DIRS} PARENT_SCOPE) # Define once for parent and once for child
 
 if (NOT APPLE)
     link_directories("ThirdParty/glew/lib")

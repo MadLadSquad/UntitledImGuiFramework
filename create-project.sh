@@ -119,7 +119,7 @@ if [ "$1" != "" ]; then
   prjname="$1"
   headless=true
 else
-  read -rp "Enter Your Application Name: " prjname # read the project name
+  read -rp "Enter your application's name: " prjname # read the project name
 fi
 prjname=${prjname/ /} # Remove any spaces if the name contains them
 cpus=$(grep -c processor /proc/cpuinfo 2> /dev/null) || cpus=$(sysctl -n hw.ncpu) # get the cpu threads for maximum performance when compiling. The second command is for macOS systems if we even try to support them
