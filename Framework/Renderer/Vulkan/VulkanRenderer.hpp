@@ -7,7 +7,7 @@
 
 namespace UImGui
 {
-    class VulkanRenderer final : public GenericInternalRenderer
+    class UIMGUI_PUBLIC_API VulkanRenderer final : public GenericInternalRenderer
     {
     public:
         VulkanRenderer() = default;

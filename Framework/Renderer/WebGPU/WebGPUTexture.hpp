@@ -9,7 +9,7 @@
 
 namespace UImGui
 {
-    class WebGPUTexture final : public GenericTexture
+    class UIMGUI_PUBLIC_API WebGPUTexture final : public GenericTexture
     {
     public:
         WebGPUTexture() noexcept = default;

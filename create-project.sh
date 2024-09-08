@@ -74,14 +74,8 @@ enabled-modules:
   open: false" > uvproj.yaml
 
   # Create symbolic links
-  if [ "${windows}" == true ] && [ "${headless}" == false ]; then
-    # If headless, run directly, since we assume that you have the required privileges
-    if [ "${headless}" = true ]; then
-      cmd //c mklink //d .\\Framework ..\\..\\Framework && cmd //c mklink //d .\\UVKBuildTool ..\\..\\UVKBuildTool && return
-    else
-      cp ../../elevate.bat .
-      cmd //c elevate.bat mklink //d .\\Framework ..\\..\\Framework && cmd //c elevate.bat mklink //d .\\UVKBuildTool ..\\..\\UVKBuildTool && rm elevate.bat && return
-    fi
+  if [ "${windows}" == true ]; then
+    cmd //c mklink //d .\\Framework ..\\..\\Framework && cmd //c mklink //d .\\UVKBuildTool ..\\..\\UVKBuildTool && return
   fi
   ln -s "../../Framework/" Framework 2> /dev/null || cp -r ../../Framework .
   ln -s "../../UVKBuildTool/" UVKBuildTool 2> /dev/null || cp -r ../../UVKBuildTool .

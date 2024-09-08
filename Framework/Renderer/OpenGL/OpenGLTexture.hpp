@@ -3,7 +3,7 @@
 
 namespace UImGui
 {
-    class OpenGLTexture final : public GenericTexture
+    class UIMGUI_PUBLIC_API OpenGLTexture final : public GenericTexture
     {
     public:
         OpenGLTexture() noexcept = default;

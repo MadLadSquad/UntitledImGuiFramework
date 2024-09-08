@@ -7,7 +7,7 @@
 namespace UImGui
 {
     // Struct that combines framebuffers, swapchains, render passes, etc. in one package
-    class VKDraw
+    class UIMGUI_PUBLIC_API VKDraw
     {
     public:
         VKDraw() noexcept = default;

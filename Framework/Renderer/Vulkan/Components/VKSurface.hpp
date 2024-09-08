@@ -5,7 +5,7 @@
 
 namespace UImGui
 {
-    class VKSurface
+    class UIMGUI_PUBLIC_API VKSurface
     {
     public:
         VKSurface() noexcept = default;

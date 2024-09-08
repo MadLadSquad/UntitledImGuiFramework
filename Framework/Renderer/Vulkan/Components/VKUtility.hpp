@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <vector>
+#include <Core/Defines.hpp>
 
 #ifndef __EMSCRIPTEN__
 #include <vulkan/vulkan.hpp>
@@ -9,7 +10,7 @@ namespace UImGui
 {
     class VKDevice;
 
-    struct SwapchainDetails
+    struct UIMGUI_PUBLIC_API SwapchainDetails
     {
         vk::SurfaceCapabilitiesKHR surfaceCapabilities;
         std::vector<vk::SurfaceFormatKHR> surfaceFormats;

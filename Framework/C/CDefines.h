@@ -10,15 +10,16 @@ extern "C"
 #ifdef _WIN32
     #ifdef UIMGUI_COMPILE_LIB
         #define UIMGUI_PUBLIC_API __declspec(dllexport)
+        #define IMGUI_API __declspec(dllexport)
+        #define CIMGUI_API __declspec(dllexport)
     #else
         #define UIMGUI_PUBLIC_API __declspec(dllimport)
+        #define IMGUI_API __declspec(dllimport)
+        #define CIMGUI_API __declspec(dllimport)
     #endif
 #else
     #define UIMGUI_PUBLIC_API
 #endif
-
-#define IMGUI_API UIMGUI_PUBLIC_API
-#define CIMGUI_API UIMGUI_PUBLIC_API
 
 #define X11_WINDOW_TYPE_DESKTOP "_NET_WM_WINDOW_TYPE_DESKTOP"
 #define X11_WINDOW_TYPE_DOCK "_NET_WM_WINDOW_TYPE_DOCK"

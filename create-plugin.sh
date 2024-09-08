@@ -33,16 +33,22 @@ function create()
 #include <Framework/Framework.hpp>
 #include <Generated/Config.hpp>
 
+#ifdef _WIN32
+    #define PLUGIN_EXPORT __declspec(dllexport)
+#else
+    #define PLUGIN_EXPORT
+#endif
+
 #ifdef __cplusplus
 extern \"C\"
 {
 #endif
-    UIMGUI_PUBLIC_API void UImGui_Plugin_attach(void* context)
+    PLUGIN_EXPORT void UImGui_Plugin_attach(void* context)
     {
         UImGui::Utility::loadContext(context);
     }
 
-    UIMGUI_PUBLIC_API void UImGui_Plugin_detach()
+    PLUGIN_EXPORT void UImGui_Plugin_detach()
     {
     }
 #ifdef __cplusplus
@@ -54,6 +60,11 @@ cmake_minimum_required(VERSION 3.21)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_C_STANDARD 99)
+
+if (WIN32)
+    set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+    set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+endif()
 
 project(${plugin_name})
 include_directories(. ${prjname}/Source ${prjname}/Generated ${prjname}/Framework ${prjname}/)
@@ -72,23 +83,18 @@ if (NOT WIN32)
 endif ()
 target_link_libraries(${plugin_name} PUBLIC UntitledImGuiFramework)" > CMakeLists.txt
 
-    # Create symbolic links
-    if [ "${windows}" == true ] && [ "${headless}" == false ]; then
-      # If headless, run directly, since we assume that you have the required privileges
-      if [ "${headless}" = true ]; then
-        cmd //c mklink //d .\\"${prjname}" ..\\"${prjname}" && return
-      else
-        cp ../../elevate.bat .
-        cmd //c elevate.bat mklink //d .\\"${prjname}" ..\\"${prjname}" && rm elevate.bat && return
-      fi
-    fi
-    ln -s "../${prjname}/" "${prjname}" 2> /dev/null || cp -r ../"${prjname}" .
+  # Create symbolic links
+  if [ "${windows}" == true ]; then
+    cmd //c mklink //d .\\"${prjname}" ..\\"${prjname}" && return
+  fi
+  ln -s "../${prjname}/" "${prjname}" 2> /dev/null || cp -r ../"${prjname}" .
 }
 
 function compile()
 {
   mkdir build || exit
   cd build || exit
+  cp ../"${prjname}"/Framework/ThirdParty/vulkan/vulkan-1.lib . || exit
   if [ "${windows}" == true ]; then
     cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE || exit
     MSBuild.exe "${plugin_name}".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || exit

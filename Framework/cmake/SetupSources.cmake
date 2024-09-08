@@ -14,7 +14,7 @@ set(FRAMEWORK_INCLUDE_DIRS ${FRAMEWORK_INCLUDE_DIRS} PARENT_SCOPE) # Define once
 if (NOT APPLE)
     link_directories("ThirdParty/glew/lib")
 endif()
-link_directories("Framework/ThirdParty/vulkan" "UVKBuildTool/build")
+link_directories("${CMAKE_SOURCE_DIR}/Framework/ThirdParty/vulkan" "UVKBuildTool/build")
 
 if (EMSCRIPTEN)
     file(GLOB_RECURSE IMGUI_SRC "Framework/ThirdParty/imgui/backends/imgui_impl_glfw.cpp"

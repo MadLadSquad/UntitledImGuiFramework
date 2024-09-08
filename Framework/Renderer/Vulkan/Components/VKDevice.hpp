@@ -8,7 +8,7 @@
 namespace UImGui
 {
     class RendererInternal;
-    class VKDevice
+    class UIMGUI_PUBLIC_API VKDevice
     {
     public:
         VKDevice() = default;

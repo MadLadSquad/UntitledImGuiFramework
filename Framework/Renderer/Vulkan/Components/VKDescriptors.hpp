@@ -5,7 +5,7 @@
 namespace UImGui
 {
     class VKDevice;
-    class VKDescriptorPools
+    class UIMGUI_PUBLIC_API VKDescriptorPools
     {
     public:
         VKDescriptorPools() noexcept = default;

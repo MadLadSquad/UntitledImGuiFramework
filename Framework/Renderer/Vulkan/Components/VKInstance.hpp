@@ -2,12 +2,13 @@
 #ifndef __EMSCRIPTEN__
 #include <vulkan/vulkan.hpp>
 #include <vector>
+#include <Core/Defines.hpp>
 
 #define VK_NOT_SUCCESS(x) x != vk::Result::eSuccess
 
 namespace UImGui
 {
-    class VKInstance
+    class UIMGUI_PUBLIC_API VKInstance
     {
     public:
         VKInstance() = default;
