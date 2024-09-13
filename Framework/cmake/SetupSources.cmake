@@ -75,7 +75,11 @@ if (USE_KNOBS_MODULE)
 endif()
 
 if (USE_SPINNER_MODULE)
-    file(GLOB_RECURSE UGUI_SPINNER_HEAD "Framework/Modules/Spinners/*.h" ${IMGUI_SRC} "Framework/ThirdParty/imgui/core/*.cpp")
+    if (WIN32)
+        file(GLOB_RECURSE UGUI_SPINNER_HEAD "Framework/Modules/Spinners/*.h")
+    else()
+        file(GLOB_RECURSE UGUI_SPINNER_HEAD "Framework/Modules/Spinners/*.h" ${IMGUI_SRC} "Framework/ThirdParty/imgui/core/*.cpp")
+    endif()
 endif()
 
 if (USE_TOGGLES_MODULE)

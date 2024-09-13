@@ -54,6 +54,7 @@ bool UImGui::Plugins::load(String location) noexcept
     };
     temp.attach(&ctx);
     get().plugins.push_back(temp);
+    Logger::log("Loaded plugin at location: ", UVK_LOG_TYPE_SUCCESS, location);
     return true;
 }
 

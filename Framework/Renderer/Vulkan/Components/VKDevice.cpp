@@ -9,7 +9,7 @@
 inline std::vector<const char*> deviceExtensions =
 {
     VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-#ifdef VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME
+#if defined(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME) && !defined(_WIN32)
     VK_KHR_PORTABILITY_SUBSET_NAME
 #endif
 };
@@ -145,7 +145,7 @@ void UImGui::VKDevice::createPhysicalDevice() noexcept
                 families.graphicsFamily = j;
                 vk::Bool32 bSupportsPresentation = false;
 
-                const auto result = physicalDevice.getSurfaceSupportKHR(j, surface.get(), &bSupportsPresentation);
+                const auto result = devices[i].getSurfaceSupportKHR(j, surface.get(), &bSupportsPresentation);
                 if (bSupportsPresentation && result == vk::Result::eSuccess)
                     families.presentationFamily = j;
                 break;

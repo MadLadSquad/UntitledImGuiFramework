@@ -80,7 +80,7 @@ if (NOT EMSCRIPTEN)
     endif()
 
     if (WIN32)
-        target_compile_definitions(UntitledImGuiFramwork PRIVATE "UIMGUI_PUBLIC_API=__declspec(dllexport)" "IMGUI_API=__declspec(dllexport)" "CIMGUI_API=__declspec(dllexport)")
+        target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_PUBLIC_API=__declspec(dllexport)" "IMGUI_API=__declspec(dllexport)" "CIMGUI_API=__declspec(dllexport)")
     else()
         target_compile_definitions(${APP_LIB_TARGET} PRIVATE "URLL_USE_FUNCTIONAL" "UVK_LOG_EXPORT_FROM_LIBRARY")
     endif()
