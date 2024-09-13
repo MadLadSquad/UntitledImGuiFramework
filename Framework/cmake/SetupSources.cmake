@@ -9,7 +9,9 @@ set(FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Source/" "${CMAKE_SOURCE_DIR}/Fr
         ${YAML_CPP_INCLUDE_DIRS_T} ${FREETYPE_INCLUDE_DIRS})
 
 include_directories(${FRAMEWORK_INCLUDE_DIRS})
-set(FRAMEWORK_INCLUDE_DIRS ${FRAMEWORK_INCLUDE_DIRS} PARENT_SCOPE) # Define once for parent and once for child
+if (DEFINED PLUGIN_PREFIX)
+    set(FRAMEWORK_INCLUDE_DIRS ${FRAMEWORK_INCLUDE_DIRS} PARENT_SCOPE) # Define once for parent and once for child
+endif ()
 
 if (NOT APPLE)
     link_directories("ThirdParty/glew/lib")
