@@ -93,8 +93,10 @@ if (USE_TEXT_UTILS_MODULE)
 endif()
 
 if (USE_THEME_MODULE)
-    file(GLOB_RECURSE UTHEME_SRC "Framework/Modules/Theming/UTheme.cpp")
-    file(GLOB_RECURSE UTHEME_HEAD "Framework/Modules/Theming/UTheme.hpp")
+    file(GLOB_RECURSE UTHEME_SRC "Framework/Modules/Theming/ThirdParty/UntitledImGuiTheme/UTheme.cpp" "Framework/Modules/Theming/ThirdParty/UntitledImGuiTheme/C/CUTheme.cpp")
+    file(GLOB_RECURSE UTHEME_HEAD "Framework/Modules/Theming/ThirdParty/UntitledImGuiTheme/UTheme.hpp"
+            "Framework/Modules/Theming/ThirdParty/UntitledImGuiTheme/C/CUTheme.h"
+            "Framework/Modules/Theming/ThirdParty/UntitledImGuiTheme/Common.h")
 endif()
 
 if (USE_I18N_MODULE)
