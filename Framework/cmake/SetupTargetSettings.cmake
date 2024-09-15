@@ -74,18 +74,21 @@ endif()
 
 if (NOT EMSCRIPTEN)
     target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_COMPILE_LIB" "YAML_CPP_DLL" "URLL_USE_FUNCTIONAL"
-            "UVK_LOG_EXPORT_FROM_LIBRARY" "UVK_LIB_COMPILE" "VULKAN_HPP_NO_STRUCT_CONSTRUCTORS")
+            "MLS_EXPORT_LIBRARY" "MLS_LIB_COMPILE" "VULKAN_HPP_NO_STRUCT_CONSTRUCTORS")
     if (APPLE)
         multicast(target_compile_definitions PRIVATE "GL_SILENCE_DEPRECATION")
     endif()
 
     if (WIN32)
-        target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_PUBLIC_API=__declspec(dllexport)" "IMGUI_API=__declspec(dllexport)" "CIMGUI_API=__declspec(dllexport)")
+        target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_PUBLIC_API=__declspec(dllexport)"
+                "IMGUI_API=__declspec(dllexport)" "CIMGUI_API=__declspec(dllexport)"
+                "MLS_PUBLIC_API=__declspec(dllexport)"
+        )
     else()
-        target_compile_definitions(${APP_LIB_TARGET} PRIVATE "URLL_USE_FUNCTIONAL" "UVK_LOG_EXPORT_FROM_LIBRARY")
+        target_compile_definitions(${APP_LIB_TARGET} PRIVATE "URLL_USE_FUNCTIONAL" "MLS_EXPORT_LIBRARY")
     endif()
 endif()
-target_compile_definitions(${APP_TARGET} PRIVATE "UVK_LOG_EXPORT_FROM_LIBRARY" "URLL_USE_FUNCTIONAL")
+target_compile_definitions(${APP_TARGET} PRIVATE "MLS_EXPORT_LIBRARY" "URLL_USE_FUNCTIONAL")
 
 custom_compile_step()
 

@@ -6,7 +6,7 @@ set(FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Source/" "${CMAKE_SOURCE_DIR}/Fr
         "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/source-libraries/" ${GLFW_INCLUDE_DIRS} ${LM_INCLUDE_DIRS}
         "${CMAKE_SOURCE_DIR}/Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser/ThirdParty/" ${GLEW_INCLUDE_DIRS}
         "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/vulkan-headers/include" "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/"
-        ${YAML_CPP_INCLUDE_DIRS_T} ${FREETYPE_INCLUDE_DIRS})
+        "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/source-libraries/cimgui/" ${YAML_CPP_INCLUDE_DIRS_T} ${FREETYPE_INCLUDE_DIRS})
 
 include_directories(${FRAMEWORK_INCLUDE_DIRS})
 if (DEFINED PLUGIN_PREFIX)
@@ -89,7 +89,7 @@ endif()
 
 if (USE_TEXT_UTILS_MODULE)
     file(GLOB_RECURSE UGUI_TEXT_UTILS_SRC "Framework/Modules/TextUtils/*.cpp")
-    file(GLOB_RECURSE UGUI_TEXT_UTILS_HEAD "Framework/Modules/TextUtils/*.hpp")
+    file(GLOB_RECURSE UGUI_TEXT_UTILS_HEAD "Framework/Modules/TextUtils/*.hpp" "Framework/Modules/TextUtils/*.h")
 endif()
 
 if (USE_THEME_MODULE)
