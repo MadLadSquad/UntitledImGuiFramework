@@ -39,7 +39,7 @@ and submodules they want or don't want to include in their application. Module l
   - Renderer subsystems ✅
     - OpenGL ✅
     - Vulkan ✅
-    - WebGL ✅
+    - WebGPU ✅
 - I18N module ✅
   - Adds the [UntitledI18N](https://github.com/MadLadSquad/UntitledI18N) library for internationalisation support
 - Plotting Module ✅
