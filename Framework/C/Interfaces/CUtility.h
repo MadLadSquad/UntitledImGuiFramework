@@ -29,6 +29,7 @@ extern "C"
 
     /**
      * @brief Converts a string to lower case using the default locale settings
+     * @warning str will be overwritten, reassign to the return value
      * @note Event Safety - Any time
      * @note The returned string has to be freed
      * @returns A lower case string
@@ -37,6 +38,7 @@ extern "C"
 
     /**
      * @brief Converts a string to upper case using the default locale settings
+     * @warning str will be overwritten, reassign to the return value
      * @note Event Safety - Any time
      * @note The returned string has to be freed
      * @returns A upper case string
