@@ -5,6 +5,7 @@
 #include <Core/Global.hpp>
 #include <utfcpp/source/utf8.h>
 #include <Core/Types.hpp>
+#include <locale>
 
 UImGui_String UImGui_Utility_sanitiseFilepath(const UImGui_String str)
 {
@@ -62,7 +63,11 @@ UImGui_String UImGui_Utility_toLower(char* str)
     std::u32string tmp = utf8::utf8to32(u8tmp);
 
     for (auto& a : tmp)
+#ifdef _WIN32
         a = std::tolower(a, std::locale(""));
+#else
+        a = std::tolower<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
+#endif
     u8tmp = utf8::utf32to8(tmp);
 
     auto tmpRealloc = static_cast<char*>(realloc(str, u8tmp.size()));
@@ -80,7 +85,11 @@ UImGui_String UImGui_Utility_toUpper(char* str)
     std::u32string tmp = utf8::utf8to32(u8tmp);
 
     for (auto& a : tmp)
+#ifdef _WIN32
         a = std::toupper(a, std::locale(""));
+#else
+        a = std::toupper<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
+#endif
     u8tmp = utf8::utf32to8(tmp);
 
     auto tmpRealloc = static_cast<char*>(realloc(str, u8tmp.size()));

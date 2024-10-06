@@ -54,7 +54,11 @@ UImGui::FString UImGui::Utility::toLower(const String str) noexcept
     std::u32string tmp = utf8::utf8to32(FString(str));
 
     for (auto& a : tmp)
+#ifdef _WIN32
         a = std::tolower(a, std::locale(""));
+#else
+        a = std::tolower<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
+#endif
     return utf8::utf32to8(tmp);
 }
 
@@ -62,7 +66,11 @@ void UImGui::Utility::toLower(FString& str) noexcept
 {
     std::u32string tmp = utf8::utf8to32(str);
     for (auto& a : tmp)
+#ifdef _WIN32
         a = std::tolower(a, std::locale(""));
+#else
+        a = std::tolower<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
+#endif
     str = utf8::utf32to8(tmp);
 }
 
@@ -71,7 +79,11 @@ UImGui::FString UImGui::Utility::toUpper(const String str) noexcept
     std::u32string tmp = utf8::utf8to32(FString(str));
 
     for (auto& a : tmp)
+#ifdef _WIN32
         a = std::toupper(a, std::locale(""));
+#else
+        a = std::toupper<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
+#endif
     return utf8::utf32to8(tmp);
 }
 
@@ -79,7 +91,11 @@ void UImGui::Utility::toUpper(FString& str) noexcept
 {
     std::u32string tmp = utf8::utf8to32(str);
     for (auto& a : tmp)
+#ifdef _WIN32
         a = std::toupper(a, std::locale(""));
+#else
+        a = std::toupper<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
+#endif
     str = utf8::utf32to8(tmp);
 }
 
