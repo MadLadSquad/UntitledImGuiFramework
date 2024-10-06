@@ -27,6 +27,22 @@ extern "C"
 
     UIMGUI_PUBLIC_API void UImGui_Utility_loadContext(void* context);
 
+    /**
+     * @brief Converts a string to lower case using the default locale settings
+     * @note Event Safety - Any time
+     * @note The returned string has to be freed
+     * @returns A lower case string
+     */
+    UIMGUI_PUBLIC_API UImGui_String UImGui_Utility_toLower(char* str);
+
+    /**
+     * @brief Converts a string to upper case using the default locale settings
+     * @note Event Safety - Any time
+     * @note The returned string has to be freed
+     * @returns A upper case string
+     */
+    UIMGUI_PUBLIC_API UImGui_String UImGui_Utility_toUpper(char* str);
+
     // Event Safety - Any time
     UIMGUI_PUBLIC_API UImGui_CGlobal* UImGui_Global_get(UImGui_CGlobal* parent);
 #ifdef __cplusplus

@@ -1,6 +1,7 @@
 #pragma once
 #include <Types.hpp>
 #include <C/Internal/CMonitor.h>
+#include <C/Interfaces/CPluginInterface.h>
 #include <Renderer/Texture.hpp>
 
 namespace UImGui
@@ -11,5 +12,6 @@ namespace UImGui
         std::vector<FString> keyStrings;
         std::vector<UImGui_CMonitorData> monitors;
         std::vector<Texture> textures;
+        std::vector<UImGui_CPlugin> plugins;
     };
 }

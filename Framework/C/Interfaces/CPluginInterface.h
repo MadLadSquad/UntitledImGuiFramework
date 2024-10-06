@@ -5,6 +5,12 @@
 extern "C"
 {
 #endif
+    typedef struct UIMGUI_PUBLIC_API UImGui_CPlugin
+    {
+        const char* name;
+        void* handle;
+    } UImGui_CPlugin;
+
     /**
      * @brief Loads a plugin from a location string
      * @param location - the file location for the plugin shared library
@@ -19,6 +25,15 @@ extern "C"
      * @note Event safety - post-startup
      */
     UIMGUI_PUBLIC_API void UImGui_Plugins_loadStandard();
+
+    /**
+     * @brief Returns a list of plugins
+     * @param size - A pointer that will get filled with the size of the array of C Plugin structs
+     * @note Does not give you access to the attach and detach functions. These can only be accessed through the C++ API
+     * @note Event safety - post-startup
+     * @return A list of C Plugin structs
+     */
+    UIMGUI_PUBLIC_API UImGui_CPlugin* UImGui_Plugins_getPlugins(size_t* size);
 
 #ifdef __cplusplus
 }

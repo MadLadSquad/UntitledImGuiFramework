@@ -2,11 +2,13 @@
 #include <Global.hpp>
 #include <Components/Instance.hpp>
 #include <thread>
+#include <locale>
 #ifdef _WIN32
     #include <windows.h>
 #elif !__EMSCRIPTEN__
     #include <signal.h>
 #endif
+#include <utfcpp/source/utf8.h>
 
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
     #include <Plotting/ThirdParty/implot/implot_internal.h>
@@ -49,30 +51,36 @@ void UImGui::Utility::removeConsole() noexcept
 
 UImGui::FString UImGui::Utility::toLower(const String str) noexcept
 {
-    FString ret = str;
-    for (auto& a : ret)
-        a = static_cast<char>(tolower(a));
-    return ret;
+    std::u32string tmp = utf8::utf8to32(FString(str));
+
+    for (auto& a : tmp)
+        a = std::tolower(a, std::locale(""));
+    return utf8::utf32to8(tmp);
 }
 
 void UImGui::Utility::toLower(FString& str) noexcept
 {
-    for (auto& a : str)
-        a = static_cast<char>(tolower(a));
+    std::u32string tmp = utf8::utf8to32(str);
+    for (auto& a : tmp)
+        a = std::tolower(a, std::locale(""));
+    str = utf8::utf32to8(tmp);
 }
 
 UImGui::FString UImGui::Utility::toUpper(const String str) noexcept
 {
-    FString ret = str;
-    for (auto& a : ret)
-        a = static_cast<char>(toupper(a));
-    return ret;
+    std::u32string tmp = utf8::utf8to32(FString(str));
+
+    for (auto& a : tmp)
+        a = std::toupper(a, std::locale(""));
+    return utf8::utf32to8(tmp);
 }
 
 void UImGui::Utility::toUpper(FString& str) noexcept
 {
-    for (auto& a : str)
-        a = static_cast<char>(toupper(a));
+    std::u32string tmp = utf8::utf8to32(str);
+    for (auto& a : tmp)
+        a = std::toupper(a, std::locale(""));
+    str = utf8::utf32to8(tmp);
 }
 
 void UImGui::Utility::loadContext(void* context) noexcept
