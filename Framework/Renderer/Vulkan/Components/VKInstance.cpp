@@ -43,7 +43,7 @@ void UImGui::VKInstance::init() noexcept
 
     if (!checkInstanceExtensionsSupport(instanceExtensions))
     {
-        Logger::log("Couldn't load all required extensions!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't load all required extensions!", ULOG_LOG_TYPE_ERROR);
         std::terminate();
     }
 
@@ -61,18 +61,18 @@ void UImGui::VKInstance::init() noexcept
 
     if (!checkValidationLayerSupport(instanceLayers))
     {
-        Logger::log("Couldn't create validation layers!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't create validation layers!", ULOG_LOG_TYPE_ERROR);
         std::terminate();
     }
 
     auto result = createInstance(&instanceCreateInfo, nullptr, &instance);
     if (VK_NOT_SUCCESS(result))
     {
-        Logger::log("Couldn't create a Vulkan Instance! Error code: ", UVK_LOG_TYPE_ERROR, result);
+        Logger::log("Couldn't create a Vulkan Instance! Error code: ", ULOG_LOG_TYPE_ERROR, result);
         std::terminate();
     }
     createDebugCallback();
-    Logger::log("Created a Vulkan instance successfully!", UVK_LOG_TYPE_NOTE);
+    Logger::log("Created a Vulkan instance successfully!", ULOG_LOG_TYPE_NOTE);
 }
 
 void UImGui::VKInstance::destroy() const noexcept
@@ -143,7 +143,7 @@ void UImGui::VKInstance::createDebugCallback() noexcept
     const auto result = createDebugReportCallback(instance, &callbackCreateInfoExt, nullptr, &callback);
     if (result != VK_SUCCESS)
     {
-        Logger::log("Failed to create a debug callback! Error code: ", UVK_LOG_TYPE_ERROR, result);
+        Logger::log("Failed to create a debug callback! Error code: ", ULOG_LOG_TYPE_ERROR, result);
         std::terminate();
     }
 #endif
@@ -156,19 +156,19 @@ VkBool32 UImGui::VKInstance::debugCallback(const VkDebugReportFlagsEXT flags, co
 
     if (flags & VK_DEBUG_REPORT_ERROR_BIT_EXT)
     {
-        Logger::log("Vulkan Validation error: ", UVK_LOG_TYPE_ERROR, message);
+        Logger::log("Vulkan Validation error: ", ULOG_LOG_TYPE_ERROR, message);
         return VK_TRUE;
     }
 
     if (flags & VK_DEBUG_REPORT_WARNING_BIT_EXT)
     {
-        Logger::log("Vulkan Validation warning: ", UVK_LOG_TYPE_WARNING, message);
+        Logger::log("Vulkan Validation warning: ", ULOG_LOG_TYPE_WARNING, message);
         return VK_TRUE;
     }
 
     if (flags & VK_DEBUG_REPORT_INFORMATION_BIT_EXT)
     {
-        Logger::log("Vulkan Validation info: ", UVK_LOG_TYPE_NOTE, message);
+        Logger::log("Vulkan Validation info: ", ULOG_LOG_TYPE_NOTE, message);
         return VK_TRUE;
     }
 

@@ -176,7 +176,7 @@ void UImGui::WindowInternal::windowOSDragDropCallback(GLFWwindow* window, const 
 
 void UImGui::WindowInternal::windowErrorCallback(int code, const char* description) noexcept
 {
-    Logger::log("Encountered GLFW window error, ", UVKLog::UVK_LOG_TYPE_ERROR, code, ": ", description);
+    Logger::log("Encountered GLFW window error, ", ULOG_LOG_TYPE_ERROR, code, ": ", description);
     for (auto& a : Window::get().windowErrorCallbackList)
         a(code, description);
 }

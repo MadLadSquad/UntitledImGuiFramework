@@ -58,9 +58,9 @@ file(GLOB_RECURSE UGUI_SRC "Framework/Core/*.cpp" "Framework/Renderer/*.cpp" ${I
         "Framework/Modules/Undo/src/*.cpp" "Framework/Modules/Manager/*.cpp" "Framework/Modules/OS/src/*.cpp")
 file(GLOB_RECURSE UGUI_HEAD "Framework/Core/*.hpp" "Framework/Renderer/*.hpp" ${IMGUI_HEAD} "Framework/Renderer/*.h"
         "Framework/ThirdParty/imgui/core/*.h" "Framework/ThirdParty/imgui/core/*.hpp" "Framework/C/*.h"
-        "Framework/ThirdParty/imgui/misc/cpp/*.h" "Framework/ThirdParty/logger/*.h" "Framework/C/*.hpp"
-        ${UIMGUI_CUSTOM_FRAMEWORK_HEADERS} "Framework/ThirdParty/source-libraries/*.h" "Framework/Modules/OS/src/*.h"
-        "Framework/ThirdParty/source-libraries/*.hpp" "Framework/Modules/i18n/src/*.hpp"
+        "Framework/ThirdParty/imgui/misc/cpp/*.h" "Framework/ThirdParty/logger/*.h" "Framework/ThirdParty/logger/*.hpp"
+        "Framework/C/*.hpp" ${UIMGUI_CUSTOM_FRAMEWORK_HEADERS} "Framework/ThirdParty/source-libraries/*.h"
+        "Framework/Modules/OS/src/*.h" "Framework/ThirdParty/source-libraries/*.hpp" "Framework/Modules/i18n/src/*.hpp"
         "Framework/Modules/Undo/src/*.hpp" "Framework/Modules/Manager/*.hpp" "Framework/Modules/OS/src/*.hpp")
 
 file(GLOB_RECURSE UGUI_APP_SRC "Source/*.cpp" "${UIMGUI_CUSTOM_APP_SOURCES}")

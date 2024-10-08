@@ -28,7 +28,7 @@ void UImGui::ModulesManager::init(const FString& configDir)
     }
     catch (YAML::BadFile&)
     {
-        Logger::log("No Modules.yaml config file found, using the default configuration!", UVK_LOG_TYPE_WARNING);
+        Logger::log("No Modules.yaml config file found, using the default configuration!", ULOG_LOG_TYPE_WARNING);
         return;
     }
 
@@ -74,7 +74,7 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
     }
     catch (YAML::BadFile&)
     {
-        Logger::log("No uvproj.yaml config file found, using the default configuration!", UVK_LOG_TYPE_WARNING);
+        Logger::log("No uvproj.yaml config file found, using the default configuration!", ULOG_LOG_TYPE_WARNING);
         return;
     }
     // Some specific applications may want to override the crash on error log functionality as they need to print errors
@@ -123,7 +123,7 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
 #ifdef UIMGUI_I18N_MODULE_ENABLED
     if (Modules::data().i18n)
         if (const auto result = translationEngine.init((Instance::get()->initInfo.configDir + "Translations").c_str()) != UI18N_INIT_RESULT_SUCCESS)
-            Logger::log("I18N module: There was an issue with loading or processing the translations. Error code: ", UVK_LOG_TYPE_WARNING, CAST(int, result));
+            Logger::log("I18N module: There was an issue with loading or processing the translations. Error code: ", ULOG_LOG_TYPE_WARNING, CAST(int, result));
 #endif
 #ifdef UIMGUI_OS_MODULE_ENABLED
     #ifdef UIMGUI_OPEN_SUBMODULE_ENABLED

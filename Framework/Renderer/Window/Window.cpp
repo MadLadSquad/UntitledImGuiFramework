@@ -113,11 +113,11 @@ void UImGui::WindowInternal::createWindow() noexcept
     // Init GLFW
     if (!glfwInit())
     {
-        Logger::log("GLFW initialisation failed!", UVK_LOG_TYPE_ERROR);
+        Logger::log("GLFW initialisation failed!", ULOG_LOG_TYPE_ERROR);
         glfwTerminate();
         return;
     }
-    Logger::log("Setting up the window", UVK_LOG_TYPE_NOTE);
+    Logger::log("Setting up the window", ULOG_LOG_TYPE_NOTE);
 
     if (Renderer::data().bVulkan)
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Have to set this to NO_API because that's how Vulkan is done in it
@@ -153,7 +153,7 @@ void UImGui::WindowInternal::createWindow() noexcept
     glfwWindowHint(GLFW_MAXIMIZED, windowData.bMaximised);
 #endif
 
-    Logger::log("Window settings configured", UVK_LOG_TYPE_NOTE);
+    Logger::log("Window settings configured", ULOG_LOG_TYPE_NOTE);
     GLFWmonitor* monitor = nullptr;
 #ifndef __EMSCRIPTEN__
     if (windowData.fullscreen)
@@ -163,11 +163,11 @@ void UImGui::WindowInternal::createWindow() noexcept
     windowMain = glfwCreateWindow(static_cast<int>(windowSize.x), static_cast<int>(windowSize.y), windowData.name.c_str(), monitor, nullptr);
     if (!windowMain)
     {
-        Logger::log("GLFW window creation failed!", UVK_LOG_TYPE_ERROR);
+        Logger::log("GLFW window creation failed!", ULOG_LOG_TYPE_ERROR);
         glfwTerminate();
         return;
     }
-    Logger::log("Created window", UVK_LOG_TYPE_NOTE);
+    Logger::log("Created window", ULOG_LOG_TYPE_NOTE);
 
     // Load window icon
     setIcon(windowData.iconLocation.c_str());
@@ -175,7 +175,7 @@ void UImGui::WindowInternal::createWindow() noexcept
     Window::setSizeLimits({ windowData.sizeLimits.x, windowData.sizeLimits.y }, { windowData.sizeLimits.z, windowData.sizeLimits.w });
     Window::setSizeLimitByAspectRatio(windowData.aspectRatioSizeLimit);
 
-    Logger::log("Window was created successfully", UVK_LOG_TYPE_SUCCESS);
+    Logger::log("Window was created successfully", ULOG_LOG_TYPE_SUCCESS);
 
     // Set framebuffer size
     int tempx = static_cast<int>(windowSize.x);
@@ -203,7 +203,7 @@ void UImGui::WindowInternal::createWindow() noexcept
         {
             glfwDestroyWindow(windowMain);
             glfwTerminate();
-            Logger::log("GLEW initialisation failed!", UVK_LOG_TYPE_ERROR);
+            Logger::log("GLEW initialisation failed!", ULOG_LOG_TYPE_ERROR);
             return;
         }
 #endif
@@ -234,7 +234,7 @@ void UImGui::WindowInternal::openConfig()
     }
     catch (YAML::BadFile&)
     {
-        Logger::log("Couldn't open the Window.yaml config file, please fix this error before shipping for production! Starting with default settings!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't open the Window.yaml config file, please fix this error before shipping for production! Starting with default settings!", ULOG_LOG_TYPE_ERROR);
         goto skip_window_config;
     }
 
@@ -264,7 +264,7 @@ skip_window_config:
     }
     catch (YAML::BadFile&)
     {
-        Logger::log("Couldn't open the Keybindings.yaml config file, please fix this error before shipping for production! Starting with default settings!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't open the Keybindings.yaml config file, please fix this error before shipping for production! Starting with default settings!", ULOG_LOG_TYPE_ERROR);
         return;
     }
 

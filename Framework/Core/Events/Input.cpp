@@ -22,7 +22,7 @@ const UImGui::InputAction& UImGui::Input::getAction(const FString& name) noexcep
     for (auto& a : Window::get().inputActionList)
         if (a.name == name)
             return a;
-    Logger::log("Input action with name: ", UVK_LOG_TYPE_ERROR, name, ", does not exist!");
+    Logger::log("Input action with name: ", ULOG_LOG_TYPE_ERROR, name, ", does not exist!");
     std::terminate();
 }
 

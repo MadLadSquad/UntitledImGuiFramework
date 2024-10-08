@@ -25,7 +25,7 @@ void UImGui::GenericTexture::beginLoad(void** data, FVector2& size) noexcept
         *data = stbi_load(dt.filename, &x, &y, &dt.channels, 4);
         if (*data == nullptr)
         {
-            Logger::log("Failed to load a texture with the following location: ", UVK_LOG_TYPE_ERROR, dt.filename);
+            Logger::log("Failed to load a texture with the following location: ", ULOG_LOG_TYPE_ERROR, dt.filename);
             return;
         }
         size.x = static_cast<float>(x);

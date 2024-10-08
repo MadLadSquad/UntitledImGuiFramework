@@ -37,7 +37,7 @@ void UImGui::VKDraw::init() noexcept
 
     // Create Swapchain, RenderPass, Framebuffer, etc.
     ImGui_ImplVulkanH_CreateOrResizeWindow(instance->data(), device->physicalDevice, device->device, &window, device->indices.graphicsFamily, nullptr, CAST(int, Window::windowSize().x), CAST(int, Window::windowSize().y), minimalImageCount);
-    Logger::log("Started Vulkan renderer!", UVK_LOG_TYPE_SUCCESS);
+    Logger::log("Started Vulkan renderer!", ULOG_LOG_TYPE_SUCCESS);
 }
 
 void UImGui::VKDraw::destroy() noexcept
@@ -67,7 +67,7 @@ void UImGui::VKDraw::ImGuiInit() const noexcept
         {
             if (result != VK_SUCCESS)
             {
-                Logger::log("Dear imgui Vulkan rendering failure. Error code: ", UVK_LOG_TYPE_ERROR, result);
+                Logger::log("Dear imgui Vulkan rendering failure. Error code: ", ULOG_LOG_TYPE_ERROR, result);
                 std::terminate();
             }
         }
@@ -108,14 +108,14 @@ void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
     result = vkWaitForFences(device->device, 1, &fd->Fence, VK_TRUE, UINT64_MAX);
     if (result != VK_SUCCESS)
     {
-        Logger::log("Couldn't wait on fences. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        Logger::log("Couldn't wait on fences. Error code: ", ULOG_LOG_TYPE_ERROR, result);
         std::terminate();
     }
 
     result = vkResetFences(device->device, 1, &fd->Fence);
     if (result != VK_SUCCESS)
     {
-        Logger::log("Couldn't reset fences. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        Logger::log("Couldn't reset fences. Error code: ", ULOG_LOG_TYPE_ERROR, result);
         std::terminate();
     }
 
@@ -130,7 +130,7 @@ void UImGui::VKDraw::recordCommands(void* drawData, VkSemaphore& imageAcquired, 
     VkResult result = vkResetCommandPool(device->device, fd->CommandPool, 0);
     if (result != VK_SUCCESS)
     {
-        Logger::log("Couldn't reset command pool. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        Logger::log("Couldn't reset command pool. Error code: ", ULOG_LOG_TYPE_ERROR, result);
         std::terminate();
     }
 
@@ -142,7 +142,7 @@ void UImGui::VKDraw::recordCommands(void* drawData, VkSemaphore& imageAcquired, 
     result = vkBeginCommandBuffer(fd->CommandBuffer, &commandBufferBeginInfo);
     if (result != VK_SUCCESS)
     {
-        Logger::log("Couldn't open the command buffer. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        Logger::log("Couldn't open the command buffer. Error code: ", ULOG_LOG_TYPE_ERROR, result);
         std::terminate();
     }
 
@@ -186,13 +186,13 @@ void UImGui::VKDraw::recordCommands(void* drawData, VkSemaphore& imageAcquired, 
     result = vkEndCommandBuffer(fd->CommandBuffer);
     if (result != VK_SUCCESS)
     {
-        Logger::log("Couldn't close the command buffer. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        Logger::log("Couldn't close the command buffer. Error code: ", ULOG_LOG_TYPE_ERROR, result);
         std::terminate();
     }
     result = vkQueueSubmit(device->queue, 1, &submitInfo, fd->Fence);
     if (result != VK_SUCCESS)
     {
-        Logger::log("Couldn't submit to the queue. Error code: ", UVK_LOG_TYPE_ERROR, result);
+        Logger::log("Couldn't submit to the queue. Error code: ", ULOG_LOG_TYPE_ERROR, result);
         std::terminate();
     }
 }

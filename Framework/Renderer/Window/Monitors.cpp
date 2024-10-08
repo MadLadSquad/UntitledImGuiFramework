@@ -133,7 +133,7 @@ void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_pushEve
             return;
         }
     }
-    Logger::log("Invalid internal monitor address, used when pushing a monitor-local event! Address: ", UVK_LOG_TYPE_ERROR, data->monitor);
+    Logger::log("Invalid internal monitor address, used when pushing a monitor-local event! Address: ", ULOG_LOG_TYPE_ERROR, data->monitor);
 #endif
 }
 

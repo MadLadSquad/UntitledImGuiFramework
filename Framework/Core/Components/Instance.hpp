@@ -116,7 +116,7 @@ namespace UImGui
             }
             else
             {
-                Logger::log("Invalid UI component type provided for the getComponentByIDs function!", UVK_LOG_TYPE_ERROR);
+                Logger::log("Invalid UI component type provided for the getComponentByIDs function!", ULOG_LOG_TYPE_ERROR);
                 return nullptr;
             }
         }

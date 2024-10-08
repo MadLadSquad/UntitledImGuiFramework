@@ -25,7 +25,7 @@ void UImGui::VKDescriptorPools::allocate() noexcept
         .pPoolSizes = descriptorPoolSizes,
     };
     pool = device->get().createDescriptorPool(descriptorPoolCreateInfo, nullptr);
-    Logger::log("Allocated Vulkan descriptor pools!", UVK_LOG_TYPE_NOTE);
+    Logger::log("Allocated Vulkan descriptor pools!", ULOG_LOG_TYPE_NOTE);
 }
 
 void UImGui::VKDescriptorPools::destroy() const noexcept

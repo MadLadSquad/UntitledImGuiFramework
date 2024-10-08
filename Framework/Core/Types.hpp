@@ -5,10 +5,10 @@
 #include <C/CTypes.h>
 
 // Dependencies
-#include <ThirdParty/logger/src/UVKLog.h>
+#include <../ThirdParty/logger/ULog.hpp>
 #include <yaml-cpp/yaml.h>
 
-using namespace UVKLog;
+using namespace ULog;
 
 namespace UImGui
 {

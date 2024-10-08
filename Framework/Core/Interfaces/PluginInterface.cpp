@@ -7,7 +7,7 @@ bool UImGui::Plugins::load(String location) noexcept
     auto* handle = URLL::dlopen(location);
     if (handle == nullptr)
     {
-        Logger::log("Couldn't load the plugin at location: ", UVK_LOG_TYPE_WARNING, location, "', Error: ", URLL::dlerror());
+        Logger::log("Couldn't load the plugin at location: ", ULOG_LOG_TYPE_WARNING, location, "', Error: ", URLL::dlerror());
         return false;
     }
 
@@ -19,12 +19,12 @@ bool UImGui::Plugins::load(String location) noexcept
 
     if (URLL::dlsym(handle, "UImGui_Plugin_attach", temp.attach) != handle)
     {
-        Logger::log("Couldn't load the attach symbol from the plugin at location: '", UVK_LOG_TYPE_WARNING, location, "', Error: ", URLL::dlerror());
+        Logger::log("Couldn't load the attach symbol from the plugin at location: '", ULOG_LOG_TYPE_WARNING, location, "', Error: ", URLL::dlerror());
         return false;
     }
     if (URLL::dlsym(handle, "UImGui_Plugin_detach", temp.detach) != handle)
     {
-        Logger::log("Couldn't load the detach symbol from the plugin at location: ", UVK_LOG_TYPE_WARNING, location, "', Error: ", URLL::dlerror());
+        Logger::log("Couldn't load the detach symbol from the plugin at location: ", ULOG_LOG_TYPE_WARNING, location, "', Error: ", URLL::dlerror());
         return false;
     }
 
@@ -37,6 +37,7 @@ bool UImGui::Plugins::load(String location) noexcept
     PluginContext ctx
     {
         .global = &Global::get(),
+        .loggerContext = &LoggerInternal::get(),
         .imguiContext = ImGui::GetCurrentContext(),
         .allocFunc = &alloc,
         .freeFunc = &free,
@@ -54,7 +55,7 @@ bool UImGui::Plugins::load(String location) noexcept
     };
     temp.attach(&ctx);
     get().plugins.push_back(temp);
-    Logger::log("Loaded plugin at location: ", UVK_LOG_TYPE_SUCCESS, location);
+    Logger::log("Loaded plugin at location: ", ULOG_LOG_TYPE_SUCCESS, location);
     return true;
 }
 

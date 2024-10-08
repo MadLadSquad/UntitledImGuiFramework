@@ -103,6 +103,7 @@ void UImGui::Utility::loadContext(void* context) noexcept
 {
     const auto* ctx = static_cast<PluginContext*>(context);
     Global::get(ctx->global);
+    LoggerInternal::get(ctx->loggerContext);
     ImGui::SetCurrentContext(ctx->imguiContext);
     ImGui::SetAllocatorFunctions(*ctx->allocFunc, *ctx->freeFunc, *ctx->userData);
 
@@ -304,7 +305,7 @@ void UImGui::Utility::interruptSignalHandler() noexcept
             static bool bFirst = true;
             if (bFirst)
             {
-                Logger::log("SIGINT interrupted. Press CTRL+C again to forcefully terminate it!", UVK_LOG_TYPE_WARNING);
+                Logger::log("SIGINT interrupted. Press CTRL+C again to forcefully terminate it!", ULOG_LOG_TYPE_WARNING);
                 Instance::shutdown();
                 bFirst = false;
 #ifdef _WIN32
@@ -320,7 +321,7 @@ void UImGui::Utility::interruptSignalHandler() noexcept
         return FALSE;
     }, TRUE))
     {
-        Logger::log("Couldn't setup the Windows interrupt handler!", UVK_LOG_TYPE_WARNING);
+        Logger::log("Couldn't setup the Windows interrupt handler!", ULOG_LOG_TYPE_WARNING);
     }
 #else
     },

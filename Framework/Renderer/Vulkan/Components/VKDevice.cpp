@@ -73,14 +73,14 @@ void UImGui::VKDevice::create(RendererInternal& renderer) noexcept
     const auto result = physicalDevice.createDevice(&deviceCreateInfo, nullptr, &device);
     if (VK_NOT_SUCCESS(result))
     {
-        Logger::log("Failed to create a logical device! Error code: ", UVK_LOG_TYPE_ERROR, result);
+        Logger::log("Failed to create a logical device! Error code: ", ULOG_LOG_TYPE_ERROR, result);
         std::terminate();
     }
     // Get the queues
     queue = device.getQueue(indices.graphicsFamily, 0);
     presentationQueue = device.getQueue(indices.presentationFamily, 0);
 
-    Logger::log("Created Vulkan logical device!", UVK_LOG_TYPE_NOTE);
+    Logger::log("Created Vulkan logical device!", ULOG_LOG_TYPE_NOTE);
 
     descriptorPools.allocate();
 }
@@ -102,7 +102,7 @@ void UImGui::VKDevice::createPhysicalDevice() noexcept
     const auto devices = instance->data().enumeratePhysicalDevices();
     if (devices.empty())
     {
-        Logger::log("Could not find any graphics devices on this system!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Could not find any graphics devices on this system!", ULOG_LOG_TYPE_ERROR);
         std::terminate();
     }
 
@@ -202,7 +202,7 @@ continue_to_other_device_in_list:;
     setMSAASamples();
     indices = lastSavedIndex;
 
-    Logger::log("Loaded Vulkan device - ", UVK_LOG_TYPE_NOTE, deviceProperties.deviceName);
+    Logger::log("Loaded Vulkan device - ", ULOG_LOG_TYPE_NOTE, deviceProperties.deviceName);
 }
 
 void UImGui::VKDevice::setMSAASamples() const noexcept

@@ -10,11 +10,11 @@ void UImGui::VKSurface::create(VKInstance& instance) noexcept
     const auto result = glfwCreateWindowSurface(instance.data(), Window::get().data(), nullptr, &surf);
     if (result != VK_SUCCESS)
     {
-        Logger::log("Failed to create a window surface! Error code: ", UVK_LOG_TYPE_ERROR, result);
+        Logger::log("Failed to create a window surface! Error code: ", ULOG_LOG_TYPE_ERROR, result);
         std::terminate();
     }
     surface = surf;
-    Logger::log("Created Vulkan render surface!", UVK_LOG_TYPE_NOTE);
+    Logger::log("Created Vulkan render surface!", ULOG_LOG_TYPE_NOTE);
 }
 
 bool UImGui::VKSurface::getPhysicalDeviceSurfaceSupport(const vk::PhysicalDevice& device, const QueueFamilyIndices& indices) noexcept
