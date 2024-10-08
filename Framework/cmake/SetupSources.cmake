@@ -11,9 +11,15 @@ set(FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Source/" "${CMAKE_SOURCE_DIR}/Fr
 if (USE_KNOBS_MODULE)
     list(APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/Modules/Knobs/ThirdParty/imgui-knobs/")
 endif ()
+
 if (USE_TOGGLES_MODULE)
     list(APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/Modules/Toggles/ThirdParty/imgui_toggle/")
 endif ()
+
+if (USE_SPINNER_MODULE)
+    list (APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/Modules/Spinners/ThirdParty/imspinner/")
+endif ()
+
 include_directories(${FRAMEWORK_INCLUDE_DIRS})
 if (DEFINED PLUGIN_PREFIX)
     set(FRAMEWORK_INCLUDE_DIRS ${FRAMEWORK_INCLUDE_DIRS} PARENT_SCOPE) # Define once for parent and once for child
