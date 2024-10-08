@@ -99,6 +99,7 @@ endif ()
 
 if (WIN32)
     multicast(target_compile_definitions PRIVATE "UIMGUI_PLATFORM_WINDOWS")
+    multicast(target_compile_options PRIVATE "/Zc:__cplusplus")
 elseif (APPLE)
     multicast(target_compile_definitions PRIVATE "UIMGUI_PLATFORM_MACOS")
 elseif (EMSCRIPTEN)
