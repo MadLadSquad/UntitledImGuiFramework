@@ -33,11 +33,11 @@ void UImGui::WindowInternal::setWindowAlwaysOnTop() noexcept
 
     Atom wmStateAbove = XInternAtom(display, "_NET_WM_STATE_ABOVE", 1);
     if (wmStateAbove == None)
-        Logger::log("Cannot find atom for _NET_WM_STATE_ABOVE!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Cannot find atom for _NET_WM_STATE_ABOVE!", ULOG_LOG_TYPE_ERROR);
 
     Atom wmNetWmState = XInternAtom(display, "_NET_WM_STATE", 1);
     if (wmNetWmState == None)
-        Logger::log("Cannot find atom for _NET_WM_STATE!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Cannot find atom for _NET_WM_STATE!", ULOG_LOG_TYPE_ERROR);
 
     if (wmStateAbove != None)
     {
@@ -76,21 +76,21 @@ void UImGui::WindowInternal::setWindowAlwaysBelow() noexcept
     Atom wmNetWmState = XInternAtom(display, "_NET_WM_STATE", 1);
     if (wmNetWmState == None)
     {
-        Logger::log("Couldn't find the \"_NET_WM_STATE\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't find the \"_NET_WM_STATE\" Atom!", ULOGLog::ULOG_LOG_TYPE_ERROR);
         return;
     }
 
     Atom wmStateSticky = XInternAtom(display, "_NET_WM_STATE_STICKY", 1);
     if (wmStateSticky == None)
     {
-        Logger::log("Couldn't find the \"_NET_WM_STATE_STICKY\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't find the \"_NET_WM_STATE_STICKY\" Atom!", ULOGLog::ULOG_LOG_TYPE_ERROR);
         return;
     }
 
     Atom wmStateBelow = XInternAtom(display, "_NET_WM_STATE_BELOW", 1);
     if (wmStateBelow == None)
     {
-        Logger::log("Couldn't find the \"_NET_WM_STATE_BELOW\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't find the \"_NET_WM_STATE_BELOW\" Atom!", ULOGLog::ULOG_LOG_TYPE_ERROR);
         return;
     }
 
@@ -135,14 +135,14 @@ void UImGui::WindowInternal::setWindowType(const char* type) noexcept
     Atom windowType = XInternAtom(display, "_NET_WM_WINDOW_TYPE", 1);
     if (windowType == None)
     {
-        Logger::log("Couldn't find atom of type \"_NET_WM_WINDOW_TYPE\"!", UVKLog::UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't find atom of type \"_NET_WM_WINDOW_TYPE\"!", ULOGLog::ULOG_LOG_TYPE_ERROR);
         return;
     }
 
     Atom windowTypeT = XInternAtom(display, type, 1);
     if (windowTypeT == None)
     {
-        Logger::log("Couldn't find atom of type \"", UVKLog::UVK_LOG_TYPE_ERROR, type, "\"!");
+        Logger::log("Couldn't find atom of type \"", ULOGLog::ULOG_LOG_TYPE_ERROR, type, "\"!");
         return;
     }
 
@@ -163,14 +163,14 @@ void UImGui::WindowInternal::setShowWindowInPager(const bool bShowInPagerr) noex
         Atom wmNetWmState = XInternAtom(display, "_NET_WM_STATE", 1);
         if (wmNetWmState == None)
         {
-            Logger::log("Couldn't find the \"_NET_WM_STATE\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+            Logger::log("Couldn't find the \"_NET_WM_STATE\" Atom!", ULOGLog::ULOG_LOG_TYPE_ERROR);
             return;
         }
 
         Atom wmStateSkipPager = XInternAtom(display, "_NET_WM_STATE_SKIP_PAGER", 1);
         if (wmStateSkipPager == None)
         {
-            Logger::log("Couldn't find the \"_NET_WM_STATE_SKIP_PAGER\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+            Logger::log("Couldn't find the \"_NET_WM_STATE_SKIP_PAGER\" Atom!", ULOGLog::ULOG_LOG_TYPE_ERROR);
             return;
         }
         XClientMessageEvent xclient;
@@ -217,14 +217,14 @@ void UImGui::WindowInternal::setShowWindowOnTaskbar(const bool bShowOnTaskbarr) 
         Atom wmNetWmState = XInternAtom(display, "_NET_WM_STATE", 1);
         if (wmNetWmState == None)
         {
-            Logger::log("Couldn't find the \"_NET_WM_STATE\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+            Logger::log("Couldn't find the \"_NET_WM_STATE\" Atom!", ULOGLog::ULOG_LOG_TYPE_ERROR);
             return;
         }
 
         Atom wmStateSkipTaskbar = XInternAtom(display, "_NET_WM_STATE_SKIP_TASKBAR", 1);
         if (wmStateSkipTaskbar == None)
         {
-            Logger::log("Couldn't find the \"NET_WM_STATE_SKIP_TASKBAR\" Atom!", UVKLog::UVK_LOG_TYPE_ERROR);
+            Logger::log("Couldn't find the \"NET_WM_STATE_SKIP_TASKBAR\" Atom!", ULOGLog::ULOG_LOG_TYPE_ERROR);
             return;
         }
 
@@ -267,7 +267,7 @@ size_t UImGui::WindowInternal::getWindowID() noexcept
     Atom pid = XInternAtom(display, "_NET_WM_PID", 1);
     if (pid == None)
     {
-        Logger::log("Couldn't find the \"_NET_WM_PID\" Atom!", UVK_LOG_TYPE_ERROR);
+        Logger::log("Couldn't find the \"_NET_WM_PID\" Atom!", ULOG_LOG_TYPE_ERROR);
         return -1;
     }
     Atom type;
@@ -283,7 +283,7 @@ size_t UImGui::WindowInternal::getWindowID() noexcept
         XFree(propPID);
         return xid;
     }
-    Logger::log("Failed to get \"_NET_WM_PID\" of the current window or the XID is output by XGetWindowProperty is null.", UVK_LOG_TYPE_ERROR);
+    Logger::log("Failed to get \"_NET_WM_PID\" of the current window or the XID is output by XGetWindowProperty is null.", ULOG_LOG_TYPE_ERROR);
     return -1;
 #else
     #ifdef GLFW_EXPOSE_NATIVE_WIN32
