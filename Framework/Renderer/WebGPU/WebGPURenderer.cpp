@@ -31,7 +31,7 @@ static void errorCallback(WGPUErrorType errorType, const char* message, void*)
             errorTypeString = "Unknown";
             break;
     }
-    Logger::log("WebGPU ", UVK_LOG_TYPE_ERROR, errorTypeString, ": ", message);
+    Logger::log("WebGPU ", ULOG_LOG_TYPE_ERROR, errorTypeString, ": ", message);
 }
 
 void UImGui::WebGPURenderer::createSwapchain() noexcept
@@ -78,7 +78,7 @@ void UImGui::WebGPURenderer::init(RendererInternal& renderer) noexcept
     wgpuDeviceSetUncapturedErrorCallback(device, errorCallback, nullptr);
     createSwapchain();
 
-    Logger::log("Created the WebGPU renderer!", UVK_LOG_TYPE_SUCCESS);
+    Logger::log("Created the WebGPU renderer!", ULOG_LOG_TYPE_SUCCESS);
 }
 
 void UImGui::WebGPURenderer::renderStart(double deltaTime) noexcept
