@@ -48,7 +48,7 @@ void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, cons
     // * 4 because RGBA
     wgpuQueueWriteTexture(wgpuDeviceGetQueue(Renderer::get().wgpu.device), &destination, data, static_cast<uint32_t>(size.x * size.y * 4), &source, &textureDescriptor.size);
 
-    const WGPUTextureViewDescriptor textureViewDescriptor =
+    constexpr WGPUTextureViewDescriptor textureViewDescriptor =
     {
         .format = WGPUTextureFormat_RGBA8Unorm,
         .dimension = WGPUTextureViewDimension_2D,

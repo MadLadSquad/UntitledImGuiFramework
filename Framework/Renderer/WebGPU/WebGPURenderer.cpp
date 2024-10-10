@@ -94,10 +94,47 @@ void UImGui::WebGPURenderer::renderStart(double deltaTime) noexcept
 void UImGui::WebGPURenderer::renderEnd(double deltaTime) noexcept
 {
     const auto& colours = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
+
+    if (multisampledTexture == nullptr || multisampledTextureWidth != swapchainWidth || multisampledTextureHeight != swapchainHeight)
+    {
+        if (multisampledTexture != nullptr)
+        {
+            wgpuTextureViewRelease(multisampledTextureView);
+            wgpuTextureDestroy(multisampledTexture);
+            wgpuTextureRelease(multisampledTexture);
+        }
+        multisampledTextureDescriptor = WGPUTextureDescriptor
+        {
+            .nextInChain = nullptr,
+            .usage = WGPUTextureUsage_RenderAttachment,
+            .dimension = WGPUTextureDimension_2D,
+            .size = { multisampledTextureWidth, multisampledTextureHeight, 1 },
+            .format = preferredFormat,
+            .mipLevelCount = 1,
+            .sampleCount = static_cast<uint32_t>(Renderer::data().msaaSamples > 1 ? 4 : 1),
+            .viewFormatCount = 0,
+            .viewFormats = nullptr,
+        };
+        multisampledTexture = wgpuDeviceCreateTexture(device, &multisampledTextureDescriptor);
+
+        constexpr WGPUTextureViewDescriptor multisampledTextureViewDescriptor =
+        {
+            .format = WGPUTextureFormat_RGBA8Unorm,
+            .dimension = WGPUTextureViewDimension_2D,
+            .baseMipLevel = 0,
+            .mipLevelCount = 1,
+            .baseArrayLayer = 0,
+            .arrayLayerCount = 1,
+            .aspect = WGPUTextureAspect_All,
+        };
+        multisampledTextureView = wgpuTextureCreateView(multisampledTexture, &multisampledTextureViewDescriptor);
+    }
+
     const WGPURenderPassColorAttachment colourAttachments  =
     {
-        .view = wgpuSwapChainGetCurrentTextureView(swapchain),
+        .view = multisampledTextureView,
         .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+        .resolveTarget = wgpuSwapChainGetCurrentTextureView(swapchain),
         .loadOp = WGPULoadOp_Clear,
         .storeOp = WGPUStoreOp_Store,
         .clearValue = { colours.x, colours.y, colours.z, colours.w },
@@ -149,11 +186,15 @@ void UImGui::WebGPURenderer::ImGuiInit() noexcept
     ImGui_ImplGlfw_InitForOther(Window::get().data(), true);
     ImGui_ImplGlfw_InstallEmscriptenCallbacks(Window::get().data(), "canvas");
 
-    ImGui_ImplWGPU_InitInfo initInfo{};
-    initInfo.Device = device;
-    initInfo.NumFramesInFlight = 3;
-    initInfo.RenderTargetFormat = preferredFormat;
-    initInfo.DepthStencilFormat = WGPUTextureFormat_Undefined;
+    ImGui_ImplWGPU_InitInfo initInfo;
+    initInfo.Device = device,
+    initInfo.NumFramesInFlight = 3,
+    initInfo.RenderTargetFormat = preferredFormat,
+    initInfo.DepthStencilFormat = WGPUTextureFormat_Undefined,
+    initInfo.PipelineMultisampleState =
+    {
+        .count = static_cast<uint32_t>(Renderer::data().msaaSamples > 1 ? 4 : 1), // WebGPU currently only accepts 4 or 1 samples
+    };
     ImGui_ImplWGPU_Init(&initInfo);
 }
 

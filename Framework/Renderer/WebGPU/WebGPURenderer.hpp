@@ -34,6 +34,12 @@ namespace UImGui
         uint32_t swapchainWidth = 800;
         uint32_t swapchainHeight = 600;
 
+        WGPUTextureDescriptor multisampledTextureDescriptor{};
+        WGPUTexture multisampledTexture = nullptr;
+        WGPUTextureView multisampledTextureView = nullptr;
+        uint32_t multisampledTextureWidth = 800;
+        uint32_t multisampledTextureHeight = 600;
+
         void createSwapchain() noexcept;
 #endif
     };
