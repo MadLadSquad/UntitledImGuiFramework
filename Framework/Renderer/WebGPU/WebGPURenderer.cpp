@@ -103,6 +103,7 @@ void UImGui::WebGPURenderer::renderEnd(double deltaTime) noexcept
             wgpuTextureDestroy(multisampledTexture);
             wgpuTextureRelease(multisampledTexture);
         }
+
         multisampledTextureDescriptor = WGPUTextureDescriptor
         {
             .nextInChain = nullptr,
@@ -117,9 +118,9 @@ void UImGui::WebGPURenderer::renderEnd(double deltaTime) noexcept
         };
         multisampledTexture = wgpuDeviceCreateTexture(device, &multisampledTextureDescriptor);
 
-        constexpr WGPUTextureViewDescriptor multisampledTextureViewDescriptor =
+        const WGPUTextureViewDescriptor multisampledTextureViewDescriptor =
         {
-            .format = WGPUTextureFormat_RGBA8Unorm,
+            .format = preferredFormat,
             .dimension = WGPUTextureViewDimension_2D,
             .baseMipLevel = 0,
             .mipLevelCount = 1,
@@ -159,7 +160,7 @@ void UImGui::WebGPURenderer::renderEnd(double deltaTime) noexcept
     WGPUQueue queue = wgpuDeviceGetQueue(device);
     wgpuQueueSubmit(queue, 1, &commandBuffer);
 
-    wgpuTextureViewRelease(colourAttachments.view);
+    wgpuTextureViewRelease(colourAttachments.resolveTarget);
     wgpuRenderPassEncoderRelease(pass);
     wgpuCommandEncoderRelease(encoder);
     wgpuCommandBufferRelease(commandBuffer);
@@ -186,15 +187,13 @@ void UImGui::WebGPURenderer::ImGuiInit() noexcept
     ImGui_ImplGlfw_InitForOther(Window::get().data(), true);
     ImGui_ImplGlfw_InstallEmscriptenCallbacks(Window::get().data(), "canvas");
 
-    ImGui_ImplWGPU_InitInfo initInfo;
-    initInfo.Device = device,
-    initInfo.NumFramesInFlight = 3,
-    initInfo.RenderTargetFormat = preferredFormat,
-    initInfo.DepthStencilFormat = WGPUTextureFormat_Undefined,
-    initInfo.PipelineMultisampleState =
-    {
-        .count = static_cast<uint32_t>(Renderer::data().msaaSamples > 1 ? 4 : 1), // WebGPU currently only accepts 4 or 1 samples
-    };
+    ImGui_ImplWGPU_InitInfo initInfo{};
+    initInfo.Device = device;
+    initInfo.NumFramesInFlight = 3;
+    initInfo.RenderTargetFormat = preferredFormat;
+    initInfo.DepthStencilFormat = WGPUTextureFormat_Undefined;
+    initInfo.PipelineMultisampleState.count = static_cast<uint32_t>(Renderer::data().msaaSamples > 1 ? 4 : 1);
+
     ImGui_ImplWGPU_Init(&initInfo);
 }
 
