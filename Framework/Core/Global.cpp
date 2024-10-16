@@ -65,7 +65,7 @@ UImGui::Global* UImGui::Global::getWithCreate() noexcept
 {
     static Global global{};
 #ifdef _WIN32
-    hMapFile = CreateFileMappingA(
+    global.hMapFile = CreateFileMappingA(
                   INVALID_HANDLE_VALUE,             // use paging file
                   NULL,                             // default security
                   PAGE_READWRITE,                   // read/write access
@@ -73,27 +73,27 @@ UImGui::Global* UImGui::Global::getWithCreate() noexcept
                   WIN32_SHARED_MEMORY_BUFFER_SIZE,  // maximum object size (low-order DWORD)
                   WIN32_SHARED_MEMORY_FILE);
 
-    if (hMapFile == nullptr)
+    if (global.hMapFile == nullptr)
     {
         Logger::log("Could not create a shared memory segment. Error: ", ULOG_LOG_TYPE_WARNING, GetLastError());
-        hMapFile = nullptr;
+        global.hMapFile = nullptr;
         return &global;
     }
 
-    pBuf = (LPCSTR)MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, WIN32_SHARED_MEMORY_BUFFER_SIZE);
+    global.pBuf = (LPCSTR)MapViewOfFile(global.hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, WIN32_SHARED_MEMORY_BUFFER_SIZE);
     if (pBuf == nullptr)
     {
         Logger::log("Could not map view of file. Error: ", ULOG_LOG_TYPE_WARNING, GetLastError());
-        CloseHandle(hMapFile);
+        CloseHandle(global.hMapFile);
 
-        hMapFile = nullptr;
-        pBuf = nullptr;
+        global.hMapFile = nullptr;
+        global.pBuf = nullptr;
 
         return &global;
     }
 
-    CopyMemory((PVOID)pBuf, &global, sizeof(global));
-    return reinterpret_cast<Global*>(pBuf);
+    CopyMemory((PVOID)global.pBuf, &global, sizeof(global));
+    return reinterpret_cast<Global*>(global.pBuf);
 #endif
 
     return &global;
