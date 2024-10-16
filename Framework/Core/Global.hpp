@@ -40,7 +40,7 @@ namespace UImGui
 
 #ifdef _WIN32
         HANDLE hMapFile = nullptr;
-        LPCTSTR pBuf = nullptr;
+        LPCSTR pBuf = nullptr;
 #endif
 
         static Global* getWithCreate() noexcept;

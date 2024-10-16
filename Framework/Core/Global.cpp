@@ -31,16 +31,16 @@ void UImGui::Global::init() noexcept
 static UImGui::Global* windowsGetSharedGlobal(UImGui::Global* parent) noexcept
 {
     HANDLE hMapFile;
-    LPCTSTR pBuf;
+    LPCSTR pBuf;
 
-    hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, WIN32_SHARED_MEMORY_FILE);
+    hMapFile = OpenFileMappingA(FILE_MAP_ALL_ACCESS, FALSE, WIN32_SHARED_MEMORY_FILE);
     if (hMapFile == nullptr)
     {
         Logger::log("Couldn not open file mapping object. Error: ", ULOG_LOG_TYPE_WARNING, GetLastError());
         return parent;
     }
 
-    pBuf = (LPTSTR)MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, WIN32_SHARED_MEMORY_BUFFER_SIZE);
+    pBuf = (LPCSTR)MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, WIN32_SHARED_MEMORY_BUFFER_SIZE);
     if (pBuf == nullptr)
     {
         Logger::log("Couldn not map view of  file. Error: ", ULOG_LOG_TYPE_WARNING, GetLastError());
@@ -48,6 +48,7 @@ static UImGui::Global* windowsGetSharedGlobal(UImGui::Global* parent) noexcept
         return parent;
     }
     return reinterpret_cast<UImGui::Global*>(pBuf);
+}
 #endif
 
 UImGui::Global& UImGui::Global::get(Global* parent) noexcept
@@ -79,7 +80,7 @@ UImGui::Global* UImGui::Global::getWithCreate() noexcept
         return &global;
     }
 
-    pBuf = (LPTSTR)MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, WIN32_SHARED_MEMORY_BUFFER_SIZE);
+    pBuf = (LPCSTR)MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, WIN32_SHARED_MEMORY_BUFFER_SIZE);
     if (pBuf == nullptr)
     {
         Logger::log("Could not map view of file. Error: ", ULOG_LOG_TYPE_WARNING, GetLastError());
