@@ -3,6 +3,9 @@
 #include "Modules/Manager/ModulesManager.hpp"
 #include "CDeallocation.hpp"
 #include <Interfaces/PluginInterface.hpp>
+#ifdef _WIN32
+    #include <windows.h>
+#endif
 
 namespace UImGui
 {
@@ -34,6 +37,11 @@ namespace UImGui
         WindowInternal window{};
         ModulesManager modulesManagerr{};
         Plugins plugins{};
+
+#ifdef _WIN32
+        HANDLE hMapFile = nullptr;
+        LPCTSTR pBuf = nullptr;
+#endif
 
         static Global* getWithCreate() noexcept;
     };
