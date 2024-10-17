@@ -38,11 +38,6 @@ namespace UImGui
         ModulesManager modulesManagerr{};
         Plugins plugins{};
 
-#ifdef _WIN32
-        HANDLE hMapFile = nullptr;
-        LPCSTR pBuf = nullptr;
-#endif
-
         static Global* getWithCreate() noexcept;
     };
 }
