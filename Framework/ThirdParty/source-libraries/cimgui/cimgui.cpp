@@ -2146,6 +2146,11 @@ CIMGUI_API void cimgui::ImGui_SetKeyboardFocusHereEx(int offset)
     ::ImGui::SetKeyboardFocusHere(offset);
 }
 
+CIMGUI_API void cimgui::ImGui_SetNavCursorVisible(bool visible)
+{
+    ::ImGui::SetNavCursorVisible(visible);
+}
+
 CIMGUI_API void cimgui::ImGui_SetNextItemAllowOverlap(void)
 {
     ::ImGui::SetNextItemAllowOverlap();
