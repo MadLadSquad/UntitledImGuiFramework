@@ -1,7 +1,5 @@
 #pragma once
-#include <array>
-#include <vector>
-#include <Core/Defines.hpp>
+#include <Core/Types.hpp>
 
 #ifndef __EMSCRIPTEN__
 #include <vulkan/vulkan.hpp>
@@ -13,8 +11,8 @@ namespace UImGui
     struct UIMGUI_PUBLIC_API SwapchainDetails
     {
         vk::SurfaceCapabilitiesKHR surfaceCapabilities;
-        std::vector<vk::SurfaceFormatKHR> surfaceFormats;
-        std::vector<vk::PresentModeKHR> presentationModes;
+        TVector<vk::SurfaceFormatKHR> surfaceFormats;
+        TVector<vk::PresentModeKHR> presentationModes;
     };
 
     struct QueueFamilyIndices

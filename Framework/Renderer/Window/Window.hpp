@@ -52,7 +52,7 @@ namespace UImGui
         [[nodiscard]] FString getName() const noexcept;
 
         // Event safety - begin, style, post-begin
-        void pushEvent(const std::function<void(Monitor&, MonitorState)>& f) noexcept;
+        void pushEvent(const TFunction<void(Monitor&, MonitorState)>& f) noexcept;
 
         void* additionalData = nullptr;
         size_t additionalDataSize = 0;
@@ -74,7 +74,7 @@ namespace UImGui
         friend class Window;
         friend class WindowInternal;
 
-        std::vector<std::function<void(Monitor&, MonitorState)>> events;
+        TVector<TFunction<void(Monitor&, MonitorState)>> events;
         GLFWmonitor* monitor = nullptr;
     };
 
@@ -90,7 +90,7 @@ namespace UImGui
 
         void close() const noexcept;
 
-        std::vector<std::function<void(const char**, size_t size)>> dragDropPathCCallbackList;
+        TVector<TFunction<void(const char**, size_t size)>> dragDropPathCCallbackList;
     private:
         friend class Window;
         friend class Input;
@@ -103,8 +103,8 @@ namespace UImGui
         FVector2 windowSize = { 800.0f, 600.0f };
         FVector2 windowSizeInScreenCoords{};
 
-        std::array<uint16_t, 350> keys{};
-        std::vector<InputAction> inputActionList{};
+        TArray<uint16_t, 350> keys{};
+        TVector<InputAction> inputActionList{};
 
         void saveConfig(bool bSaveKeybindings) const noexcept;
         void openConfig();
@@ -166,24 +166,24 @@ namespace UImGui
         bool bShowOnPager = true;
         bool bShowOnTaskbar = true;
 
-        std::vector<std::function<void(int, int)>> windowResizeCallbackList;
-        std::vector<std::function<void(int, int)>> windowResizeInScreenCoordCallbackList;
-        std::vector<std::function<void(void)>> windowCloseCallbackList;
-        std::vector<std::function<void(bool)>> windowFocusCallbackList;
-        std::vector<std::function<void(bool)>> windowIconifiedCallbackList;
-        std::vector<std::function<void(FVector2)>> windowPositionChangeCallbackList;
-        std::vector<std::function<void(FVector2)>> windowContentScaleChangeCallbackList;
-        std::vector<std::function<void(void)>> windowRefreshCallbackList;
-        std::vector<std::function<void(bool)>> windowMaximisedCallbackList;
-        std::vector<std::function<void(Monitor&, MonitorState)>> windowMonitorCallbackList;
+        TVector<TFunction<void(int, int)>> windowResizeCallbackList;
+        TVector<TFunction<void(int, int)>> windowResizeInScreenCoordCallbackList;
+        TVector<TFunction<void(void)>> windowCloseCallbackList;
+        TVector<TFunction<void(bool)>> windowFocusCallbackList;
+        TVector<TFunction<void(bool)>> windowIconifiedCallbackList;
+        TVector<TFunction<void(FVector2)>> windowPositionChangeCallbackList;
+        TVector<TFunction<void(FVector2)>> windowContentScaleChangeCallbackList;
+        TVector<TFunction<void(void)>> windowRefreshCallbackList;
+        TVector<TFunction<void(bool)>> windowMaximisedCallbackList;
+        TVector<TFunction<void(Monitor&, MonitorState)>> windowMonitorCallbackList;
 
-        std::vector<std::function<void(std::vector<FString>&)>> dragDropPathCallbackList;
+        TVector<TFunction<void(TVector<FString>&)>> dragDropPathCallbackList;
 
-        std::vector<std::function<void(int, const char*)>> windowErrorCallbackList;
+        TVector<TFunction<void(int, const char*)>> windowErrorCallbackList;
 
-        std::vector<FString> dragDropPaths;
+        TVector<FString> dragDropPaths;
 
-        std::vector<Monitor> monitors;
+        TVector<Monitor> monitors;
 
         GLFWwindow* windowMain = nullptr;
         WindowData windowData;

@@ -33,7 +33,7 @@ void UImGui::GenericTexture::beginLoad(void** data, FVector2& size) noexcept
     }
 }
 
-void UImGui::GenericTexture::endLoad(void* data, const FVector2 size, const bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
+void UImGui::GenericTexture::endLoad(void* data, const FVector2 size, const bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept
 {
     dt.size = size;
     if (bFreeImageData)
@@ -63,5 +63,5 @@ void UImGui::GenericTexture::defaultClear() noexcept
 
     auto& strings = Global::get().deallocationStruct.keyStrings;
     if (!strings.empty() && dt.storageIndex < strings.size())
-        strings.erase(strings.begin() + static_cast<std::string::difference_type>(dt.storageIndex));
+        strings.erase(strings.begin() + static_cast<FString::difference_type>(dt.storageIndex));
 }

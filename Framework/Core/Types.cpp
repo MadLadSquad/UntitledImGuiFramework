@@ -1,5 +1,35 @@
 #include "Types.hpp"
 
+YAML::Emitter& UImGui::operator<<(YAML::Emitter& out, const FString& t) noexcept
+{
+    if (t.empty())
+        return out;
+    const std::string str(t);
+    out << str;
+    return out;
+}
+
+YAML::Emitter& UImGui::operator<<(YAML::Emitter& out, const FString16& t) noexcept
+{
+    if (t.empty())
+        return out;
+    const std::u16string str(t);
+    out << utf8::utf16to8(str);
+    return out;
+}
+
+YAML::Emitter& UImGui::operator<<(YAML::Emitter& out, const FString32& t) noexcept
+{
+    if (t.empty())
+        return out;
+    const std::u32string str(t);
+    out << utf8::utf32to8(str);
+    return out;
+}
+
+// ----------------------------------------------------- Vectors -----------------------------------------------------
+
+
 YAML::Emitter& UImGui::operator<<(YAML::Emitter& out, const FVector4& vect) noexcept
 {
     out << YAML::Flow;

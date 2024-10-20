@@ -21,9 +21,9 @@ namespace UImGui
      */
     struct UIMGUI_PUBLIC_API InitInfo
     {
-        std::vector<InlineComponent*> inlineComponents;
-        std::vector<TitlebarComponent*> titlebarComponents;
-        std::vector<WindowComponent*> windowComponents;
+        TVector<InlineComponent*> inlineComponents;
+        TVector<TitlebarComponent*> titlebarComponents;
+        TVector<WindowComponent*> windowComponents;
 
         // Provide a global data struct to be shared with all components
         void* globalData = nullptr;
@@ -165,7 +165,7 @@ namespace UImGui
          * @brief CLI arguments for the application
          * @note Event Safety - Any time
          */
-        std::vector<FString> arguments;
+        TVector<FString> arguments;
 
         /**
          * @brief The raw array of CLI arguments passed to the application

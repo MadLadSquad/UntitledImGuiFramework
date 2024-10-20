@@ -83,7 +83,6 @@ void UImGui::VKDraw::ImGuiPreDraw() noexcept
 
     if (width > 0 && height > 0 && (bRebuildSwapchain || window.Width != width || window.Height != height))
     {
-        //std::cout << "Resize" << std::endl;
         ImGui_ImplVulkan_SetMinImageCount(minimalImageCount);
         ImGui_ImplVulkanH_CreateOrResizeWindow(instance->data(), device->physicalDevice, device->device,
                                                &window, device->indices.graphicsFamily, nullptr, width, height,

@@ -32,7 +32,7 @@ UImGui::OpenGLTexture::~OpenGLTexture() noexcept
     clear();
 }
 
-void UImGui::OpenGLTexture::load(void* data, FVector2 size, const uint32_t depth, const bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
+void UImGui::OpenGLTexture::load(void* data, FVector2 size, const uint32_t depth, const bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept
 {
     beginLoad(&data, size);
 

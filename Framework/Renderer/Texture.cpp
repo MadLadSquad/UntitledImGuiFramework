@@ -12,7 +12,7 @@ void UImGui::Texture::init(const String location) noexcept
 }
 
 void UImGui::Texture::load(void* data, const FVector2 size, const uint32_t depth, const bool bFreeImageData,
-    const std::function<void(void*)>& freeFunc) noexcept
+    const TFunction<void(void*)>& freeFunc) noexcept
 {
     TEX_RUN(load(data, size, depth, bFreeImageData, freeFunc));
 }

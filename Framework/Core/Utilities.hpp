@@ -55,7 +55,7 @@ namespace UImGui
         friend class Global;
         static void interruptSignalHandler() noexcept;
 
-        typedef std::array<std::pair<FString, FString>, Keys_UnknownKey + 1> KeyStringsArrType;
+        typedef TArray<std::pair<FString, FString>, Keys_UnknownKey + 1> KeyStringsArrType;
         static void initializeKeyStrings(KeyStringsArrType& keyStrings) noexcept;
     };
 }

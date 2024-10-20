@@ -24,8 +24,8 @@ void UImGui::VKInstance::init() noexcept
     uint32_t glfwExtensionCount = 0;
     const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-    std::vector<const char*> instanceExtensions;
-    std::vector<const char*> instanceLayers;
+    TVector<const char*> instanceExtensions;
+    TVector<const char*> instanceLayers;
 
     instanceExtensions.resize(glfwExtensionCount);
     for (size_t i = 0; i < glfwExtensionCount; i++)
@@ -89,7 +89,7 @@ vk::Instance& UImGui::VKInstance::data() noexcept
     return instance;
 }
 
-bool UImGui::VKInstance::checkInstanceExtensionsSupport(const std::vector<const char*>& extensions) noexcept
+bool UImGui::VKInstance::checkInstanceExtensionsSupport(const TVector<const char*>& extensions) noexcept
 {
     auto extensionProperties = vk::enumerateInstanceExtensionProperties(nullptr);
     for (auto& a : extensions)
@@ -110,7 +110,7 @@ bool UImGui::VKInstance::checkInstanceExtensionsSupport(const std::vector<const 
     return true;
 }
 
-bool UImGui::VKInstance::checkValidationLayerSupport(const std::vector<const char*>& validationLayers) noexcept
+bool UImGui::VKInstance::checkValidationLayerSupport(const TVector<const char*>& validationLayers) noexcept
 {
     auto availableLayers = vk::enumerateInstanceLayerProperties();
     for (auto& a : validationLayers)

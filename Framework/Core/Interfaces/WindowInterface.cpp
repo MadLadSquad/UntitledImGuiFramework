@@ -107,17 +107,17 @@ UImGui::FVector4 UImGui::Window::getWindowDecorationFrameDistances() noexcept
     return val;
 }
 
-void UImGui::Window::pushWindowResizedInScreenCoordsCallback(const std::function<void(int, int)>& f) noexcept
+void UImGui::Window::pushWindowResizedInScreenCoordsCallback(const TFunction<void(int, int)>& f) noexcept
 {
     get().windowResizeInScreenCoordCallbackList.push_back(f);
 }
 
-void UImGui::Window::pushWindowResizeCallback(const std::function<void(int, int)>& f) noexcept
+void UImGui::Window::pushWindowResizeCallback(const TFunction<void(int, int)>& f) noexcept
 {
     get().windowResizeCallbackList.push_back(f);
 }
 
-void UImGui::Window::pushWindowCloseCallback(const std::function<void(void)>& f) noexcept
+void UImGui::Window::pushWindowCloseCallback(const TFunction<void(void)>& f) noexcept
 {
     get().windowCloseCallbackList.push_back(f);
 }
@@ -157,7 +157,7 @@ bool& UImGui::Window::getWindowFocusedSetting() noexcept
     return get().windowData.bFocused;
 }
 
-void UImGui::Window::pushWindowFocusCallback(const std::function<void(bool)>& f) noexcept
+void UImGui::Window::pushWindowFocusCallback(const TFunction<void(bool)>& f) noexcept
 {
     get().windowFocusCallbackList.push_back(f);
 }
@@ -182,7 +182,7 @@ void UImGui::Window::restoreWindowState() noexcept
     glfwRestoreWindow(get().windowMain);
 }
 
-void UImGui::Window::pushWindowIconifyCallback(const std::function<void(bool)>& f) noexcept
+void UImGui::Window::pushWindowIconifyCallback(const TFunction<void(bool)>& f) noexcept
 {
     get().windowIconifiedCallbackList.push_back(f);
 }
@@ -192,7 +192,7 @@ bool UImGui::Window::getWindowIconified() noexcept
     return glfwGetWindowAttrib(get().windowMain, GLFW_ICONIFIED);
 }
 
-void UImGui::Window::pushWindowPositionChangeCallback(const std::function<void(FVector2)>& f) noexcept
+void UImGui::Window::pushWindowPositionChangeCallback(const TFunction<void(FVector2)>& f) noexcept
 {
     get().windowPositionChangeCallbackList.push_back(f);
 }
@@ -204,7 +204,7 @@ UImGui::FVector2 UImGui::Window::getWindowContentScale() noexcept
     return ret;
 }
 
-void UImGui::Window::pushWindowContentScaleCallback(const std::function<void(FVector2)>& f) noexcept
+void UImGui::Window::pushWindowContentScaleCallback(const TFunction<void(FVector2)>& f) noexcept
 {
     get().windowContentScaleChangeCallbackList.push_back(f);
 }
@@ -259,7 +259,7 @@ void UImGui::Window::setWindowDecorated(const bool bDecorated) noexcept
     glfwSetWindowAttrib(get().windowMain, GLFW_DECORATED, bDecorated);
 }
 
-void UImGui::Window::pushWindowRefreshCallback(const std::function<void(void)>& f) noexcept
+void UImGui::Window::pushWindowRefreshCallback(const TFunction<void(void)>& f) noexcept
 {
     get().windowRefreshCallbackList.push_back(f);
 }
@@ -274,7 +274,7 @@ bool UImGui::Window::getWindowCurrentlyMaximised() noexcept
     return glfwGetWindowAttrib(get().windowMain, GLFW_MAXIMIZED);
 }
 
-void UImGui::Window::pushWindowMaximiseCallback(const std::function<void(bool)>& f) noexcept
+void UImGui::Window::pushWindowMaximiseCallback(const TFunction<void(bool)>& f) noexcept
 {
     get().windowMaximisedCallbackList.push_back(f);
 }
@@ -286,7 +286,7 @@ bool& UImGui::Window::getWindowMaximisedSetting() noexcept
 
 #ifndef __EMSCRIPTEN__
 
-std::vector<UImGui::Monitor>& UImGui::Window::getMonitors() noexcept
+UImGui::TVector<UImGui::Monitor>& UImGui::Window::getMonitors() noexcept
 {
     return get().monitors;
 }
@@ -308,26 +308,26 @@ void UImGui::Window::setWindowMonitor(const Monitor& monitor) noexcept
 }
 #endif
 
-std::vector<UImGui::FString>& UImGui::Window::getOSDragDropStrings() noexcept
+UImGui::TVector<UImGui::FString>& UImGui::Window::getOSDragDropStrings() noexcept
 {
     return get().dragDropPaths;
 }
 
-void UImGui::Window::pushWindowOSDragDropCallback(const std::function<void(std::vector<FString>&)>& f) noexcept
+void UImGui::Window::pushWindowOSDragDropCallback(const TFunction<void(TVector<FString>&)>& f) noexcept
 {
     get().dragDropPathCallbackList.push_back(f);
 }
 
 #ifndef __EMSCRIPTEN__
 
-void UImGui::Window::pushGlobalMonitorCallback(const std::function<void(Monitor&, MonitorState)>& f) noexcept
+void UImGui::Window::pushGlobalMonitorCallback(const TFunction<void(Monitor&, MonitorState)>& f) noexcept
 {
     get().windowMonitorCallbackList.push_back(f);
 }
 
 #endif
 
-void UImGui::Window::pushWindowErrorCallback(const std::function<void(int, String)>& f) noexcept
+void UImGui::Window::pushWindowErrorCallback(const TFunction<void(int, String)>& f) noexcept
 {
     get().windowErrorCallbackList.push_back(f);
 }

@@ -24,7 +24,7 @@ void UImGui::Utility::sanitiseFilepath(FString& str) noexcept
 void UImGui::Utility::keyToText(FString& text, const uint16_t& key, const bool bLong) noexcept
 {
     static bool bFirst = true;
-    static std::array<std::pair<FString, FString>, Keys_UnknownKey + 1> keyStrings{};
+    static TArray<std::pair<FString, FString>, Keys_UnknownKey + 1> keyStrings{};
     if (bFirst)
     {
         initializeKeyStrings(keyStrings);
@@ -59,7 +59,10 @@ UImGui::FString UImGui::Utility::toLower(const String str) noexcept
 #else
         a = std::tolower<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
 #endif
-    return utf8::utf32to8(tmp);
+    const auto tmp2 = utf8::utf32to8(tmp);
+    FString result;
+    result.assign(tmp2);
+    return result;
 }
 
 void UImGui::Utility::toLower(FString& str) noexcept
@@ -84,7 +87,10 @@ UImGui::FString UImGui::Utility::toUpper(const String str) noexcept
 #else
         a = std::toupper<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
 #endif
-    return utf8::utf32to8(tmp);
+    const auto tmp2 = utf8::utf32to8(tmp);
+    FString res;
+    res.assign(tmp2);
+    return res;
 }
 
 void UImGui::Utility::toUpper(FString& str) noexcept

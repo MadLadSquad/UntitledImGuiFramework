@@ -33,7 +33,7 @@ namespace UImGui
                 FVector2 size = { 0.0f, 0.0f },
                 uint32_t depth = 0,
                 bool bFreeImageData = false,
-                const std::function<void(void*)>& freeFunc = UImGui_Texture_defaultFreeFunc) noexcept;
+                const TFunction<void(void*)>& freeFunc = UImGui_Texture_defaultFreeFunc) noexcept;
 
         // Event Safety - Post-begin
         [[nodiscard]] void* get() noexcept;

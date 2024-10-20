@@ -6,7 +6,7 @@
 
 #define VK_KHR_PORTABILITY_SUBSET_NAME "VK_KHR_portability_subset"
 
-inline std::vector<const char*> deviceExtensions =
+inline UImGui::TVector<const char*> deviceExtensions =
 {
     VK_KHR_SWAPCHAIN_EXTENSION_NAME,
 #if defined(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME) && !defined(_WIN32)

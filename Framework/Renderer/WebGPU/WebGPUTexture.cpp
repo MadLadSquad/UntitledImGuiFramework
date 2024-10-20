@@ -12,7 +12,7 @@ void UImGui::WebGPUTexture::init(const String location) noexcept
 }
 
 void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, const bool bFreeImageData,
-    const std::function<void(void*)>& freeFunc) noexcept
+    const TFunction<void(void*)>& freeFunc) noexcept
 {
     beginLoad(&data, size);
 #ifdef __EMSCRIPTEN__

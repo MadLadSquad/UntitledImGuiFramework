@@ -23,7 +23,7 @@ namespace UImGui
 
         // The ID for the action
         FString name{};
-        std::vector<uint16_t> keyCodes;
+        TVector<uint16_t> keyCodes;
 
         // Set by the input system, do not set this manually
         uint8_t state{};
@@ -74,7 +74,7 @@ namespace UImGui
         static const InputAction& getAction(const UImGui::FString& name) noexcept;
 
         // Event Safety - Any time
-        static std::vector<InputAction>& getActions() noexcept;
+        static TVector<InputAction>& getActions() noexcept;
 
         // Event Safety - Any time
         static FVector2 getMousePositionChange() noexcept;

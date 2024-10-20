@@ -26,7 +26,7 @@ const UImGui::InputAction& UImGui::Input::getAction(const FString& name) noexcep
     std::terminate();
 }
 
-std::vector<UImGui::InputAction>& UImGui::Input::getActions() noexcept
+UImGui::TVector<UImGui::InputAction>& UImGui::Input::getActions() noexcept
 {
     return Window::get().inputActionList;
 }

@@ -90,7 +90,7 @@ if (USE_SPINNER_MODULE)
     if (WIN32)
         file(GLOB_RECURSE UGUI_SPINNER_HEAD "Framework/Modules/Spinners/*.h")
     else()
-        file(GLOB_RECURSE UGUI_SPINNER_HEAD "Framework/Modules/Spinners/*.h" ${IMGUI_SRC} "Framework/ThirdParty/imgui/core/*.cpp")
+        file(GLOB_RECURSE UGUI_SPINNER_HEAD "Framework/Modules/Spinners/*.h")
     endif()
 endif()
 

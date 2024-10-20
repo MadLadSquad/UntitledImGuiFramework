@@ -9,9 +9,9 @@ namespace UImGui
     // A struct for storing variables for the C API, that will be deallocated when the application closes
     struct UIMGUI_PUBLIC_API CDeallocationStruct
     {
-        std::vector<FString> keyStrings;
-        std::vector<UImGui_CMonitorData> monitors;
-        std::vector<Texture> textures;
-        std::vector<UImGui_CPlugin> plugins;
+        TVector<FString> keyStrings;
+        TVector<UImGui_CMonitorData> monitors;
+        TVector<Texture> textures;
+        TVector<UImGui_CPlugin> plugins;
     };
 }

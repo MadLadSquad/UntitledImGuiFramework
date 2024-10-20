@@ -19,7 +19,7 @@ namespace UImGui
         virtual void init(String location) noexcept override;
 
         virtual void load(void* data, FVector2 size, uint32_t depth, bool bFreeImageData,
-                                const std::function<void(void*)>& freeFunc) noexcept override;
+                                const TFunction<void(void*)>& freeFunc) noexcept override;
 
         // Event Safety - Post-begin
         virtual void* get() noexcept override;

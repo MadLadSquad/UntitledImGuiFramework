@@ -24,7 +24,7 @@ void UImGui::ModulesManager::init(const FString& configDir)
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile(configDir + "Core/Modules.yaml");
+        node = YAML::LoadFile((configDir + "Core/Modules.yaml").c_str());
     }
     catch (YAML::BadFile&)
     {
@@ -70,7 +70,7 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile(projectDir + "uvproj.yaml");
+        node = YAML::LoadFile((projectDir + "uvproj.yaml").c_str());
     }
     catch (YAML::BadFile&)
     {

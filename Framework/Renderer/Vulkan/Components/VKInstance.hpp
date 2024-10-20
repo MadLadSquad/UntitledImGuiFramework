@@ -2,7 +2,7 @@
 #ifndef __EMSCRIPTEN__
 #include <vulkan/vulkan.hpp>
 #include <vector>
-#include <Core/Defines.hpp>
+#include <Core/Types.hpp>
 
 #define VK_NOT_SUCCESS(x) x != vk::Result::eSuccess
 
@@ -19,8 +19,8 @@ namespace UImGui
 
         vk::Instance& data() noexcept;
     private:
-        static bool checkInstanceExtensionsSupport(const std::vector<const char*>& extensions) noexcept;
-        static bool checkValidationLayerSupport(const std::vector<const char*>& validationLayers) noexcept;
+        static bool checkInstanceExtensionsSupport(const TVector<const char*>& extensions) noexcept;
+        static bool checkValidationLayerSupport(const TVector<const char*>& validationLayers) noexcept;
 
         vk::Instance instance;
         VkDebugReportCallbackEXT callback{};

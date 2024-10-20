@@ -71,7 +71,7 @@ void UImGui::RendererInternal::loadConfig() noexcept
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile(Instance::get()->initInfo.configDir + "Core/Renderer.yaml");
+        node = YAML::LoadFile((Instance::get()->initInfo.configDir + "Core/Renderer.yaml").c_str());
     }
     catch (YAML::BadFile&)
     {

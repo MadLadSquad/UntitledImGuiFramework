@@ -230,7 +230,7 @@ void UImGui::WindowInternal::openConfig()
     const auto* instance = Instance::get();
     try
     {
-        out = YAML::LoadFile(instance->initInfo.configDir + "Core/Window.yaml");
+        out = YAML::LoadFile((instance->initInfo.configDir + "Core/Window.yaml").c_str());
     }
     catch (YAML::BadFile&)
     {
@@ -260,7 +260,7 @@ skip_window_config:
 
     try
     {
-        out = YAML::LoadFile(instance->initInfo.configDir + "Core/Keybindings.yaml");
+        out = YAML::LoadFile((instance->initInfo.configDir + "Core/Keybindings.yaml").c_str());
     }
     catch (YAML::BadFile&)
     {
@@ -274,8 +274,8 @@ skip_window_config:
         for (const YAML::Node& a : binds)
         {
             InputAction action;
-            action.name = a["key"].as<std::string>();
-            action.keyCodes = a["val"].as<std::vector<uint16_t>>();
+            action.name = a["key"].as<FString>();
+            action.keyCodes = a["val"].as<TVector<uint16_t>>();
             inputActionList.push_back(action);
         }
     }

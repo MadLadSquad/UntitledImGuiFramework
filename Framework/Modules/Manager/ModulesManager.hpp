@@ -27,8 +27,10 @@
 #endif
 
 #ifdef UIMGUI_SPINNERS_MODULE_ENABLED
-    #define IMSPINNER_DEMO
-    #include "Modules/Spinners/ThirdParty/imspinner/imspinner.h"
+    #ifndef UIMGUI_EXECUTABLE
+        #define IMSPINNER_DEMO
+        #include "Modules/Spinners/ThirdParty/imspinner/imspinner.h"
+    #endif
 #endif
 
 #ifdef UIMGUI_TOGGLES_MODULE_ENABLED

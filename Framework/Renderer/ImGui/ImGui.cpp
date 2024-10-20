@@ -69,6 +69,7 @@ void UImGui::GUIRenderer::shutdown(const FString& ini, GenericInternalRenderer* 
 
 void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* renderer) noexcept
 {
+    IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
     if (Modules::data().plotting)

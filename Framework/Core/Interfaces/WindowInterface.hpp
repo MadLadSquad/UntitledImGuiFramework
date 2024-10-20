@@ -31,7 +31,7 @@ namespace UImGui
         // Event Safety - begin, style, post-begin
         static void setCurrentWindowPosition(FVector2 pos) noexcept;
         // Event Safety - begin, style, post-begin
-        static void pushWindowPositionChangeCallback(const std::function<void(FVector2)>& f) noexcept;
+        static void pushWindowPositionChangeCallback(const TFunction<void(FVector2)>& f) noexcept;
 
         // Event Safety - begin, style, post-begin
         static FVector2& windowSize() noexcept;
@@ -54,7 +54,7 @@ namespace UImGui
         // Event Safety - begin, style, post-begin
         static void close() noexcept;
         // Event Safety - begin, style, post-begin
-        static void pushWindowCloseCallback(const std::function<void(void)>& f) noexcept;
+        static void pushWindowCloseCallback(const TFunction<void(void)>& f) noexcept;
 
         class Platform
         {
@@ -111,7 +111,7 @@ namespace UImGui
         static FVector2& getWindowSizeInScreenCoords() noexcept;
         // Event safety - begin, style, post-begin
         // Pushes a new callback to the event list
-        static void pushWindowResizedInScreenCoordsCallback(const std::function<void(int, int)>& f) noexcept;
+        static void pushWindowResizedInScreenCoordsCallback(const TFunction<void(int, int)>& f) noexcept;
         // Event safety - begin, style, post-begin
         // Changes resize-ability of the window, not the setting
         static void setWindowResizeable(bool bResizeable) noexcept;
@@ -124,7 +124,7 @@ namespace UImGui
 
         // Event safety - begin, style, post-begin
         // Pushes a new callback to the event list
-        static void pushWindowResizeCallback(const std::function<void(int, int)>& f) noexcept;
+        static void pushWindowResizeCallback(const TFunction<void(int, int)>& f) noexcept;
 
         // Event safety - begin, style, post-begin
         // x = left; y = top; z = right; w = bottom
@@ -159,7 +159,7 @@ namespace UImGui
         // Used to get the current window focus state
         static bool getWindowCurrentlyFocused() noexcept;
         // Event safety - begin, style, post-begin
-        static void pushWindowFocusCallback(const std::function<void(bool)>& f) noexcept;
+        static void pushWindowFocusCallback(const TFunction<void(bool)>& f) noexcept;
 
         // Event safety - begin, style, post-begin
         static void iconifyWindow() noexcept;
@@ -167,14 +167,14 @@ namespace UImGui
         // Restores window from iconification and maximisation
         static void restoreWindowState() noexcept;
         // Event safety - begin, style, post-begin
-        static void pushWindowIconifyCallback(const std::function<void(bool)>& f) noexcept;
+        static void pushWindowIconifyCallback(const TFunction<void(bool)>& f) noexcept;
         // Event safety - begin, style, post-begin
         static bool getWindowIconified() noexcept;
 
         // Event safety - begin, style, post-begin
         static FVector2 getWindowContentScale() noexcept;
         // Event safety - begin, style, post-begin
-        static void pushWindowContentScaleCallback(const std::function<void(FVector2)>& f) noexcept;
+        static void pushWindowContentScaleCallback(const TFunction<void(FVector2)>& f) noexcept;
 
         // Event safety - begin, style, post-begin
         // Calling without arguments resets to the default state
@@ -200,7 +200,7 @@ namespace UImGui
         static void setWindowDecorated(bool bDecorated) noexcept;
 
         // Event safety - begin, style, post-begin
-        static void pushWindowRefreshCallback(const std::function<void(void)>& f) noexcept;
+        static void pushWindowRefreshCallback(const TFunction<void(void)>& f) noexcept;
 
         // Event safety - begin, style, post-begin
         // This changes the current window maximisation state but doesn't change the setting
@@ -209,7 +209,7 @@ namespace UImGui
         // This changes the setting but doesn't change the current window maximisation state
         static bool& getWindowMaximisedSetting() noexcept;
         // Event safety - begin, style, post-begin
-        static void pushWindowMaximiseCallback(const std::function<void(bool)>& f) noexcept;
+        static void pushWindowMaximiseCallback(const TFunction<void(bool)>& f) noexcept;
         // Event safety - begin, style, post-begin
         static bool getWindowCurrentlyMaximised() noexcept;
 
@@ -227,20 +227,20 @@ namespace UImGui
         // Event safety - begin, style, post-begin
         // Returns a list of monitors, first monitor is the primary monitor, i.e. the monitor where global UI elements
         // like the taskbar spawns.
-        static std::vector<Monitor>& getMonitors() noexcept;
+        static TVector<Monitor>& getMonitors() noexcept;
 
         // Event safety - begin, style, post-begin
-        static void pushGlobalMonitorCallback(const std::function<void(Monitor&, MonitorState)>& f) noexcept;
+        static void pushGlobalMonitorCallback(const TFunction<void(Monitor&, MonitorState)>& f) noexcept;
 #endif
 
         // Event safety - begin, style, post-begin
         // Returns all the strings acquired by the application when the user drags in a file or an array of files
-        static std::vector<FString>& getOSDragDropStrings() noexcept;
+        static TVector<FString>& getOSDragDropStrings() noexcept;
         // Event safety - begin, style, post-begin
-        static void pushWindowOSDragDropCallback(const std::function<void(std::vector<FString>&)>& f) noexcept;
+        static void pushWindowOSDragDropCallback(const TFunction<void(TVector<FString>&)>& f) noexcept;
 
         // Event safety - begin, style, post-begin
-        static void pushWindowErrorCallback(const std::function<void(int, String)>& f) noexcept;
+        static void pushWindowErrorCallback(const TFunction<void(int, String)>& f) noexcept;
 
         // This is the internal window instance, DO NOT TOUCH IT
         static WindowInternal& get() noexcept;

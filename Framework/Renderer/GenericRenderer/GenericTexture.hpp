@@ -22,7 +22,7 @@ namespace UImGui
         virtual void* get() noexcept = 0;
 
         virtual void load(void* data, FVector2 size, uint32_t depth, bool bFreeImageData,
-                                const std::function<void(void*)>& freeFunc) noexcept = 0;
+                                const TFunction<void(void*)>& freeFunc) noexcept = 0;
         /**
          * @brief Outputs an image with a given format to a file. Only works if the image buffer is not freed
          * automatically when loading the image.
@@ -87,7 +87,7 @@ namespace UImGui
         friend class Texture;
 
         void beginLoad(void** data, FVector2& size) noexcept;
-        void endLoad(void* data, FVector2 size, bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept;
+        void endLoad(void* data, FVector2 size, bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept;
 
         void defaultInit(String location) noexcept;
         void defaultClear() noexcept;

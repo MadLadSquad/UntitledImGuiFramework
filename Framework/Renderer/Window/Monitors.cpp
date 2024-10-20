@@ -77,7 +77,7 @@ UImGui::FString UImGui::Monitor::getName() const noexcept
 #endif
 }
 
-void UImGui::Monitor::pushEvent(const std::function<void(Monitor&, MonitorState)>& f) noexcept
+void UImGui::Monitor::pushEvent(const TFunction<void(Monitor&, MonitorState)>& f) noexcept
 {
 #ifndef __EMSCRIPTEN__
     events.push_back(f);

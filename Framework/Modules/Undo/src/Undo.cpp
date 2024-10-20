@@ -2,7 +2,7 @@
 #include "Undo.hpp"
 #include <Modules/Manager/ModulesManager.hpp>
 
-void eraseWhenOverBufferSize(std::deque<UImGui::Transaction*>& container, const std::deque<UImGui::Transaction>& transactions, const size_t i) noexcept
+void eraseWhenOverBufferSize(TDequee<UImGui::Transaction*>& container, const TDeque<UImGui::Transaction>& transactions, const size_t i) noexcept
 {
     for (size_t j = 0; j < container.size(); j++)
         if (&transactions[i] == container[j])

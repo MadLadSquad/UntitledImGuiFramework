@@ -88,7 +88,7 @@ if (NOT EMSCRIPTEN)
         target_compile_definitions(${APP_LIB_TARGET} PRIVATE "URLL_USE_FUNCTIONAL" "MLS_EXPORT_LIBRARY")
     endif()
 endif()
-target_compile_definitions(${APP_TARGET} PRIVATE "MLS_EXPORT_LIBRARY" "URLL_USE_FUNCTIONAL")
+target_compile_definitions(${APP_TARGET} PRIVATE "MLS_EXPORT_LIBRARY" "URLL_USE_FUNCTIONAL" "UIMGUI_EXECUTABLE")
 
 custom_compile_step()
 

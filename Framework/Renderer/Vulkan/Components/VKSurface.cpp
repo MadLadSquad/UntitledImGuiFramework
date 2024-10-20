@@ -24,11 +24,11 @@ bool UImGui::VKSurface::getPhysicalDeviceSurfaceSupport(const vk::PhysicalDevice
         return false;
 
     details.surfaceCapabilities = device.getSurfaceCapabilitiesKHR(surface);
-    details.surfaceFormats = device.getSurfaceFormatsKHR(surface);
+    details.surfaceFormats = device.getSurfaceFormatsKHR<Allocator<vk::SurfaceFormatKHR>>(surface);
     if (details.surfaceFormats.empty())
         return false;
 
-    details.presentationModes = device.getSurfacePresentModesKHR(surface);
+    details.presentationModes = device.getSurfacePresentModesKHR<Allocator<vk::PresentModeKHR>>(surface);
     return !details.presentationModes.empty();
 }
 

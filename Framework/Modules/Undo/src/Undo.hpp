@@ -10,8 +10,8 @@ namespace UImGui
 
     struct UIMGUI_PUBLIC_API Transaction
     {
-        std::function<void(TransactionPayload&)> undofunc{};
-        std::function<void(TransactionPayload&)> redofunc{};
+        TFunction<void(TransactionPayload&)> undofunc{};
+        TFunction<void(TransactionPayload&)> redofunc{};
         TransactionPayload payload{};
     };
 
@@ -40,9 +40,9 @@ namespace UImGui
 
         size_t transactionSize = 100;
 
-        std::deque<Transaction*> undoStack;
-        std::deque<Transaction*> redoStack;
-        std::deque<Transaction> transactions;
+        TDeque<Transaction*> undoStack;
+        TDeque<Transaction*> redoStack;
+        TDeque<Transaction> transactions;
     };
 }
 #endif

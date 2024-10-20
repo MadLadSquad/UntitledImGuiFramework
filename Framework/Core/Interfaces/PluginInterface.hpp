@@ -29,8 +29,8 @@ namespace UImGui
         // 4. Dear imgui free function
         // 5. Dear imgui memory user data
         // 6. ImPlot context pointer(if enabled)
-        std::function<void(void*)> attach = [](void*) -> void {};
-        std::function<void()> detach = []() -> void {};
+        TFunction<void(void*)> attach = [](void*) -> void {};
+        TFunction<void()> detach = []() -> void {};
     };
 
     class UIMGUI_PUBLIC_API Plugins
@@ -51,7 +51,7 @@ namespace UImGui
          * @return A constant reference to an array of strings that represent the list of user-defined plugins, fetched
          * using the standard plugins interface
          */
-        static const std::vector<Plugin>& getPlugins() noexcept;
+        static const TVector<Plugin>& getPlugins() noexcept;
 
         /**
          * @brief A helper function that automatically loads all plugins that are added by the user through the standard
@@ -65,7 +65,7 @@ namespace UImGui
         friend class ModulesManager;
         static Plugins& get() noexcept;
 
-        std::vector<Plugin> plugins{};
-        std::vector<FString> standardPlugins{};
+        TVector<Plugin> plugins{};
+        TVector<FString> standardPlugins{};
     };
 }

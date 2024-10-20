@@ -59,7 +59,7 @@ bool UImGui::Plugins::load(String location) noexcept
     return true;
 }
 
-const std::vector<UImGui::Plugin>& UImGui::Plugins::getPlugins() noexcept
+const UImGui::TVector<UImGui::Plugin>& UImGui::Plugins::getPlugins() noexcept
 {
     return get().plugins;
 }
