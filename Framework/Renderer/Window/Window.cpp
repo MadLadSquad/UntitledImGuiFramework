@@ -34,7 +34,7 @@ bool& UImGui::WindowInternal::resized() noexcept
 void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) const noexcept
 {
     auto* instance = Instance::get();
-    std::ofstream fout(instance->initInfo.configDir + "Core/Window.yaml");
+    std::ofstream fout((instance->initInfo.configDir + "Core/Window.yaml").c_str());
     {
         YAML::Emitter out;
         out << YAML::BeginMap;
@@ -78,7 +78,7 @@ void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) const noexcept
         }
         out << YAML::EndSeq << YAML::EndMap;
 
-        fout = std::ofstream(instance->initInfo.configDir + "Core/Keybindings.yaml");
+        fout = std::ofstream((instance->initInfo.configDir + "Core/Keybindings.yaml").c_str());
         fout << out.c_str();
         fout.close();
     }

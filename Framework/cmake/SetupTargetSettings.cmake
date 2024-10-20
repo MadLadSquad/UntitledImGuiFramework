@@ -88,13 +88,15 @@ if (NOT EMSCRIPTEN)
         target_compile_definitions(${APP_LIB_TARGET} PRIVATE "URLL_USE_FUNCTIONAL" "MLS_EXPORT_LIBRARY")
     endif()
 endif()
-target_compile_definitions(${APP_TARGET} PRIVATE "MLS_EXPORT_LIBRARY" "URLL_USE_FUNCTIONAL" "UIMGUI_EXECUTABLE")
+target_compile_definitions(${APP_TARGET} PRIVATE "MLS_EXPORT_LIBRARY" "URLL_USE_FUNCTIONAL")
 
 custom_compile_step()
 
 if (EMSCRIPTEN)
     multicast(target_link_options PRIVATE -sUSE_WEBGPU=1 -sUSE_GLFW=3 -sALLOW_MEMORY_GROWTH=1 -fwasm-exceptions
             -sSUPPORT_LONGJMP=wasm)
+else ()
+    target_compile_definitions(${APP_TARGET} PRIVATE "UIMGUI_EXECUTABLE")
 endif ()
 
 if (WIN32)
