@@ -46,7 +46,7 @@ void UImGui::ModulesManager::save(const FString& configDir) const noexcept
     out << YAML::Key << "undo-max-transactions" << YAML::Value << settings.maxTransactions;
     out << YAML::EndMap;
 
-    std::ofstream fout(configDir + "Core/Modules.yaml");
+    std::ofstream fout((configDir + "Core/Modules.yaml").c_str());
     fout << out.c_str();
 }
 
