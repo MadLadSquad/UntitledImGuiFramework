@@ -16,11 +16,13 @@
 #endif
 
 #ifdef PRODUCTION
-    #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x)); \
-    logger.setCrashOnError(true); \
+    #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x));   \
+    UImGui::Global::get();                                          \
+    logger.setCrashOnError(true);                                   \
     UVK::Utility::removeConsole()
 #else
-    #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x))
+    #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x));   \
+    UImGui::Global::get()
 #endif
 
 #define CAST(x, y) static_cast<x>(y)

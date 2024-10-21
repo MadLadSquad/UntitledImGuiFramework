@@ -38,6 +38,5 @@ namespace UImGui
         {
             return false;
         }
-    private:
     };
 }
