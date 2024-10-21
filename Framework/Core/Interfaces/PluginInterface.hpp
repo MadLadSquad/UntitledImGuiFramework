@@ -9,6 +9,7 @@ namespace UImGui
     struct UIMGUI_PUBLIC_API PluginContext
     {
         Global* global = nullptr;
+        AllocatorFuncs* allocators = nullptr;
         LoggerInternal* loggerContext = nullptr;
         ImGuiContext* imguiContext = nullptr;
         ImGuiMemAllocFunc* allocFunc = nullptr;

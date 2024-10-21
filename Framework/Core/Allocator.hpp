@@ -3,6 +3,17 @@
 
 namespace UImGui
 {
+    class UIMGUI_PUBLIC_API AllocatorFuncs
+    {
+    public:
+        void*(*allocate)(size_t);
+        void(*deallocate)(void*);
+
+        static AllocatorFuncs& get(AllocatorFuncs* parent = nullptr) noexcept;
+    private:
+        static AllocatorFuncs* getWithCreate() noexcept;
+    };
+
     template<typename T>
     class UIMGUI_PUBLIC_API Allocator
     {

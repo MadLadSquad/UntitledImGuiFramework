@@ -108,6 +108,7 @@ void UImGui::Utility::toUpper(FString& str) noexcept
 void UImGui::Utility::loadContext(void* context) noexcept
 {
     const auto* ctx = static_cast<PluginContext*>(context);
+    AllocatorFuncs::get(ctx->allocators);
     Global::get(ctx->global);
     LoggerInternal::get(ctx->loggerContext);
     ImGui::SetCurrentContext(ctx->imguiContext);

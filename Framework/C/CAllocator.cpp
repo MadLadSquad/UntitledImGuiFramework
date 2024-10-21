@@ -13,11 +13,11 @@ void UImGui_Allocator_private_deallocate(void* ptr)
 
 void* UImGui_Allocator_allocate(const size_t n)
 {
-    return UImGui::Global::get().allocFunc(n);
+    return UImGui::AllocatorFuncs::get().allocate(n);
 }
 
 void UImGui_Allocator_deallocate(void* ptr)
 {
-    UImGui::Global::get().deallocFunc(ptr);
+    UImGui::AllocatorFuncs::get().deallocate(ptr);
 }
 

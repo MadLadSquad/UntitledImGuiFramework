@@ -37,6 +37,7 @@ bool UImGui::Plugins::load(String location) noexcept
     PluginContext ctx
     {
         .global = &Global::get(),
+        .allocators = &AllocatorFuncs::get(),
         .loggerContext = &LoggerInternal::get(),
         .imguiContext = ImGui::GetCurrentContext(),
         .allocFunc = &alloc,

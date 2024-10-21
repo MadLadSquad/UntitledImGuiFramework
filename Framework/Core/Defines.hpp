@@ -17,11 +17,13 @@
 
 #ifdef PRODUCTION
     #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x));   \
+    UImGui::AllocatorFuncs::get();                                  \
     UImGui::Global::get();                                          \
     logger.setCrashOnError(true);                                   \
     UVK::Utility::removeConsole()
 #else
     #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x));   \
+    UImGui::AllocatorFuncs::get();                                  \
     UImGui::Global::get()
 #endif
 

@@ -26,9 +26,6 @@ namespace UImGui
         RendererInternal* renderer = nullptr;
 
         CDeallocationStruct deallocationStruct;
-
-        void*(*allocFunc)(size_t) = UImGui_Allocator_private_allocate;
-        void(*deallocFunc)(void*) = UImGui_Allocator_private_deallocate;
     private:
         friend class Window;
         friend class Renderer;
