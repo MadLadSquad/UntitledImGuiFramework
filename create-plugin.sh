@@ -80,6 +80,8 @@ include_directories(\${FRAMEWORK_INCLUDE_DIRS})
 add_library(${plugin_name} SHARED plugin.cpp)
 if (NOT WIN32)
     target_link_libraries(${plugin_name} PUBLIC ${prjname}Lib)
+else()
+    target_compile_options(${plugin_name} PRIVATE \"/Zc:__cplusplus\")
 endif ()
 target_link_libraries(${plugin_name} PUBLIC UntitledImGuiFramework)" > CMakeLists.txt
 
