@@ -10,6 +10,8 @@ extern "C"
     typedef void UImGui_CGlobal;
 
     // Event Safety - Any time
+    // WARNING: Alling this function you become the owner of the string and your should dispose of it correctly using
+    // the UImGui_Allocator_deallocate function
     UIMGUI_PUBLIC_API UImGui_String UImGui_Utility_sanitiseFilepath(UImGui_String str);
 
     // Event Safety - Any time

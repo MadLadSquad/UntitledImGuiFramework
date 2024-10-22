@@ -12,15 +12,20 @@ UImGui_String UImGui_Utility_sanitiseFilepath(const UImGui_String str)
     UImGui::FString s = str;
     UImGui::Utility::sanitiseFilepath(s);
 
-    auto& global = UImGui::Global::get();
-    global.deallocationStruct.keyStrings.push_back(s);
-    return global.deallocationStruct.keyStrings.back().c_str();
+    auto* ss = static_cast<char*>(UImGui_Allocator_allocate(s.size()));
+    memcpy(ss, s.data(), s.size() + 1);
+    return ss;
 }
 
 UImGui_String UImGui_Utility_keyToText(const uint16_t key, const bool bLong)
 {
     auto& global = UImGui::Global::get();
-    global.deallocationStruct.keyStrings.push_back(UImGui::Utility::keyToText(key, bLong));
+    const auto text = UImGui::Utility::keyToText(key, bLong);
+    for (auto& f : global.deallocationStruct.keyStrings)
+        if (f == text)
+            return f.c_str();
+
+    global.deallocationStruct.keyStrings.push_back(text);
     return global.deallocationStruct.keyStrings.back().c_str();
 }
 
@@ -31,8 +36,12 @@ UImGui_String UImGui_Utility_keyToTextInputAction(const UImGui_CInputAction* act
     memcpy(a.keyCodes.data(), action->keyCodes, a.keyCodes.size() * sizeof(size_t));
 
     auto& deallocationStruct = UImGui::Global::get().deallocationStruct;
+    const auto text = UImGui::Utility::keyToText(a, bLong);
+    for (auto& f : deallocationStruct.keyStrings)
+        if (f == text)
+            return f.c_str();
 
-    deallocationStruct.keyStrings.push_back(UImGui::Utility::keyToText(a, bLong));
+    deallocationStruct.keyStrings.push_back(text);
     return deallocationStruct.keyStrings.back().c_str();
 }
 
@@ -74,7 +83,7 @@ UImGui_String UImGui_Utility_toLower(char* str)
     if (tmpRealloc == nullptr)
     {
         free(str);
-        tmpRealloc = static_cast<char*>(malloc(u8tmp.size()));
+        tmpRealloc = static_cast<char*>(UImGui_Allocator_allocate(u8tmp.size()));
     }
     return strcpy(tmpRealloc, u8tmp.data());
 }
@@ -96,7 +105,7 @@ UImGui_String UImGui_Utility_toUpper(char* str)
     if (tmpRealloc == nullptr)
     {
         free(str);
-        tmpRealloc = static_cast<char*>(malloc(u8tmp.size()));
+        tmpRealloc = static_cast<char*>(UImGui_Allocator_allocate(u8tmp.size()));
     }
     return strcpy(tmpRealloc, u8tmp.data());
 }
