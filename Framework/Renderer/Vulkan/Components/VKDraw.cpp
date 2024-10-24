@@ -1,4 +1,6 @@
 #include "VKDraw.hpp"
+
+#include "GLFW/glfw3.h"
 #ifndef __EMSCRIPTEN__
 #include <Interfaces/WindowInterface.hpp>
 #include <Interfaces/RendererInterface.hpp>
@@ -77,12 +79,21 @@ void UImGui::VKDraw::ImGuiInit() const noexcept
 
 void UImGui::VKDraw::ImGuiPreDraw() noexcept
 {
-    const auto size = Window::windowSize();
-    const auto width = CAST(int, size.x);
-    const auto height = CAST(int, size.y);
+    auto size = Window::windowSize();
+    auto width = CAST(int, size.x);
+    auto height = CAST(int, size.y);
 
-    if (width > 0 && height > 0 && (bRebuildSwapchain || window.Width != width || window.Height != height))
+    if (bRebuildSwapchain || window.Width != width || window.Height != height)
     {
+        while (width == 0 || height == 0)
+        {
+            size = Window::windowSize();
+            width = CAST(int, size.x);
+            height = CAST(int, size.y);
+            glfwWaitEvents();
+        }
+
+        device->device.waitIdle();
         ImGui_ImplVulkan_SetMinImageCount(minimalImageCount);
         ImGui_ImplVulkanH_CreateOrResizeWindow(instance->data(), device->physicalDevice, device->device,
                                                &window, device->indices.graphicsFamily, nullptr, width, height,
@@ -96,20 +107,23 @@ void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
 {
     VkSemaphore imageAcquired = window.FrameSemaphores[window.SemaphoreIndex].ImageAcquiredSemaphore;
     VkSemaphore renderComplete = window.FrameSemaphores[window.SemaphoreIndex].RenderCompleteSemaphore;
-    VkResult result = vkAcquireNextImageKHR(device->device, window.Swapchain, UINT64_MAX, imageAcquired, VK_NULL_HANDLE, &window.FrameIndex);
-    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
-    {
-        bRebuildSwapchain = true;
-        return;
-    }
 
     const ImGui_ImplVulkanH_Frame* fd = &window.Frames[window.FrameIndex];
-    result = vkWaitForFences(device->device, 1, &fd->Fence, VK_TRUE, UINT64_MAX);
+    VkResult result = vkWaitForFences(device->device, 1, &fd->Fence, VK_TRUE, UINT64_MAX);
     if (result != VK_SUCCESS)
     {
         Logger::log("Couldn't wait on fences. Error code: ", ULOG_LOG_TYPE_ERROR, result);
         std::terminate();
     }
+
+    result = vkAcquireNextImageKHR(device->device, window.Swapchain, UINT64_MAX, imageAcquired, VK_NULL_HANDLE, &window.FrameIndex);
+    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
+    {
+        bRebuildSwapchain = true;
+        ImGuiPreDraw();
+        return;
+    }
+    ImGuiPreDraw();
 
     result = vkResetFences(device->device, 1, &fd->Fence);
     if (result != VK_SUCCESS)
@@ -217,6 +231,7 @@ void UImGui::VKDraw::present() noexcept
     if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
     {
         bRebuildSwapchain = true;
+        ImGuiPreDraw();
         return;
     }
     window.SemaphoreIndex = (window.SemaphoreIndex + 1) % window.SemaphoreCount;
