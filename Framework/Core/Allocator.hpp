@@ -23,7 +23,7 @@ namespace UImGui
         Allocator() noexcept = default;
 
         template<typename T1>
-        explicit Allocator(const Allocator<T1>&) noexcept
+        Allocator(const Allocator<T1>&) noexcept
         {
         }
 
