@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 cpus=$(grep -c processor /proc/cpuinfo) || cpus=$(sysctl -n hw.ncpu)
 echo -e "\x1b[32mCompiling with ${cpus} jobs!\x1b[0m"
 

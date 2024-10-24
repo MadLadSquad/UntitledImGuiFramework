@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 VSVer=" "
 VSShortVer="1"
 cpus=" "
