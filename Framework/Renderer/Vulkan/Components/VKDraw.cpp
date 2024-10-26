@@ -85,7 +85,7 @@ void UImGui::VKDraw::ImGuiPreDraw() noexcept
 
     if (bRebuildSwapchain || window.Width != width || window.Height != height)
     {
-        while (width == 0 || height == 0)
+        while (width <= 0 || height <= 0)
         {
             size = Window::windowSize();
             width = CAST(int, size.x);

@@ -17,7 +17,7 @@ void UImGui::Texture::load(void* data, const FVector2 size, const uint32_t depth
     TEX_RUN(load(data, size, depth, bFreeImageData, freeFunc));
 }
 
-void* UImGui::Texture::get() noexcept
+uintptr_t UImGui::Texture::get() noexcept
 {
     TEX_RUN(get());
 }

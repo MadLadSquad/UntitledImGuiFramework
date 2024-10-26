@@ -15,9 +15,9 @@ void UImGui::OpenGLTexture::init(const String location) noexcept
     defaultInit(location);
 }
 
-void* UImGui::OpenGLTexture::get() noexcept
+uintptr_t UImGui::OpenGLTexture::get() noexcept
 {
-    return reinterpret_cast<void*>(static_cast<intptr_t>(id));
+    return id;
 }
 
 void UImGui::OpenGLTexture::clear() noexcept

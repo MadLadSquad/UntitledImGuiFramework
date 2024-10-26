@@ -63,12 +63,12 @@ void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, cons
     endLoad(data, size, bFreeImageData, freeFunc);
 }
 
-void* UImGui::WebGPUTexture::get() noexcept
+uintptr_t UImGui::WebGPUTexture::get() noexcept
 {
 #ifdef __EMSCRIPTEN__
-    return textureView;
+    return reinterpret_cast<uintptr_t>(textureView);
 #else
-    return nullptr;
+    return 0;
 #endif
 }
 

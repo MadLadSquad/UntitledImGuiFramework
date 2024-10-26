@@ -22,7 +22,7 @@ namespace UImGui
                                 const TFunction<void(void*)>& freeFunc) noexcept override;
 
         // Event Safety - Post-begin
-        virtual void* get() noexcept override;
+        virtual uintptr_t get() noexcept override;
 
         // Cleans up the image data
         // Event Safety - All initiated

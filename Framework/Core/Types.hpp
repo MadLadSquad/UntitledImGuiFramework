@@ -53,7 +53,7 @@ namespace UImGui
     using TVector = std::vector<T, Allocator<T>>;
 
     template<typename T>
-    using TDeque = std::deque<T, TVector<T>>;
+    using TDeque = std::deque<T, Allocator<T>>;
 
     template<typename T>
     using TQueue = std::queue<T, TDeque<T>>;

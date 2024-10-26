@@ -176,6 +176,9 @@ void UImGui::WindowInternal::windowOSDragDropCallback(GLFWwindow* window, const 
 
 void UImGui::WindowInternal::windowErrorCallback(int code, const char* description) noexcept
 {
+#ifndef DEVELOPMENT
+    if (code != GLFW_FEATURE_UNAVAILABLE)
+#endif
     Logger::log("Encountered GLFW window error, ", ULOG_LOG_TYPE_ERROR, code, ": ", description);
     for (auto& a : Window::get().windowErrorCallbackList)
         a(code, description);

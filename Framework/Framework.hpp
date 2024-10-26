@@ -21,5 +21,6 @@
 #include <Renderer/Texture.hpp>
 #include <Renderer/ImGui/ClientSideBar.hpp>
 #include <urll/urll.h>
+#include <Renderer/ImGui/UImGuiExtensions.hpp>
 
 #include <Modules/Modules.hpp>
