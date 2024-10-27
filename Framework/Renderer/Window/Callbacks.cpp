@@ -37,8 +37,10 @@ void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, const i
 
     if (!Renderer::data().bVulkan)
         glViewport(0, 0, width, height);
+#ifndef __EMSCRIPTEN__
     else
         Renderer::get().vulkan.draw.bRebuildSwapchain = true;
+#endif
 
     for (auto& a : windowInst->windowResizeCallbackList)
         a(width, height);

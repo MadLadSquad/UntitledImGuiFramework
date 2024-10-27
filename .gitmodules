@@ -9,9 +9,6 @@
 [submodule "Framework/ThirdParty/yaml-cpp"]
 	path = Framework/ThirdParty/yaml-cpp
 	url = https://github.com/MadLadSquad/yaml-cpp.git
-[submodule "Framework/ThirdParty/glew"]
-	path = Framework/ThirdParty/glew
-	url = https://github.com/MadLadSquad/glew-cmake.git
 [submodule "Framework/ThirdParty/imgui"]
 	path = Framework/ThirdParty/imgui
 	url = https://github.com/MadLadSquad/imgui.git

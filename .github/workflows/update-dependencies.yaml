@@ -51,7 +51,17 @@ jobs:
           mv cimgui.cpp cimgui.h ../
           cd .. || exit
           rm -rf dear_bindings
-          cd ../../../../ || exit
+          cd ../../glad || exit
+          rm -rf include src || exit
+          git clone https://github.com/Dav1dde/glad.git --recursive
+          cd glad
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          python3 -m glad --api gl:core,gles1, gles2, glsc2 --out-path ../
+          cd ..
+          rm -rf glad
+          cd ../../../ || exit
           (git add . && git commit -m "auto" && git push origin HEAD:auto && echo "out=s" >> $GITHUB_OUTPUT) || echo "out=?" >> $GITHUB_OUTPUT
       - name: Create PR
         if: "steps.mod.outputs.out != '?'"
