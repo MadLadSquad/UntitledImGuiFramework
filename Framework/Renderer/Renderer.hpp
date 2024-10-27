@@ -27,6 +27,7 @@ namespace UImGui
         friend class WebGPURenderer;
         friend class Texture;
         friend class WebGPUTexture;
+        friend class WindowInternal;
 
         static void tick(void* rendererInstance) noexcept;
 

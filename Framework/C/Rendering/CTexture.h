@@ -71,7 +71,7 @@ extern "C"
 
     // Returns the image buffer
     // Event Safety - Any time
-    UIMGUI_PUBLIC_API void* UImGui_Texture_get(UImGui_CTexture* texture);
+    UIMGUI_PUBLIC_API uintptr_t UImGui_Texture_get(UImGui_CTexture* texture);
 
     // Outputs an image with a given format to a file. Only works if the image buffer is not freed automatically
     // when loading the image.

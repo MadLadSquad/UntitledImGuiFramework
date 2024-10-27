@@ -1,7 +1,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "Window.hpp"
 #ifndef __APPLE__
-    #include <GL/glew.h>
+    #include <glad/include/glad/gl.h>
+#elif __EMSCRIPTEN__
+    #include <glad/include/glad/gles2.h>
 #else
     #include <OpenGL/GL.h>
 #endif
@@ -123,10 +125,6 @@ void UImGui::WindowInternal::createWindow() noexcept
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Have to set this to NO_API because that's how Vulkan is done in it
     else
     {
-#if !__APPLE__ && !__EMSCRIPTEN__
-        // Add GLFW window flags and enable OpenGL
-        glewExperimental = GL_TRUE;
-#endif
 #ifdef __EMSCRIPTEN__
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -199,13 +197,8 @@ void UImGui::WindowInternal::createWindow() noexcept
     if (!Renderer::data().bVulkan)
     {
 #if !__APPLE__ && !__EMSCRIPTEN__
-        if (glewInit() != GLEW_OK)
-        {
-            glfwDestroyWindow(windowMain);
-            glfwTerminate();
-            Logger::log("GLEW initialisation failed!", ULOG_LOG_TYPE_ERROR);
-            return;
-        }
+        const int version = gladLoadGL(glfwGetProcAddress);
+        Logger::log("Successfully loaded OpenGL ", ULOG_LOG_TYPE_SUCCESS, GLAD_VERSION_MAJOR(version), ".", GLAD_VERSION_MINOR(version));
 #endif
         glEnable(GL_MULTISAMPLE);
         glEnable(GL_DEPTH_TEST);

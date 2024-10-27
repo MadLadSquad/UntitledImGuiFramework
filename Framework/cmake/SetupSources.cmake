@@ -4,9 +4,10 @@ set(FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Source/" "${CMAKE_SOURCE_DIR}/Fr
         "${CMAKE_SOURCE_DIR}/Framework/Renderer/" "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/imgui/misc/"
         "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/imgui/" "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/logger/src/"
         "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/source-libraries/" ${GLFW_INCLUDE_DIRS} ${LM_INCLUDE_DIRS}
-        "${CMAKE_SOURCE_DIR}/Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser/ThirdParty/" ${GLEW_INCLUDE_DIRS}
+        "${CMAKE_SOURCE_DIR}/Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser/ThirdParty/"
         "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/vulkan-headers/include" "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/"
-        "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/source-libraries/cimgui/" ${YAML_CPP_INCLUDE_DIRS_T} ${FREETYPE_INCLUDE_DIRS})
+        "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/source-libraries/cimgui/" ${YAML_CPP_INCLUDE_DIRS_T}
+        ${FREETYPE_INCLUDE_DIRS})
 
 if (USE_KNOBS_MODULE)
     list(APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/Modules/Knobs/ThirdParty/imgui-knobs/")
@@ -17,17 +18,18 @@ if (USE_TOGGLES_MODULE)
 endif ()
 
 if (USE_SPINNER_MODULE)
-    list (APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/Modules/Spinners/ThirdParty/imspinner/")
+    list(APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/Modules/Spinners/ThirdParty/imspinner/")
 endif ()
+
+if (NOT APPLE)
+    list(APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/glad/include/")
+endif()
 
 include_directories(${FRAMEWORK_INCLUDE_DIRS})
 if (DEFINED PLUGIN_PREFIX)
     set(FRAMEWORK_INCLUDE_DIRS ${FRAMEWORK_INCLUDE_DIRS} PARENT_SCOPE) # Define once for parent and once for child
 endif ()
 
-if (NOT APPLE)
-    link_directories("ThirdParty/glew/lib")
-endif()
 link_directories("${CMAKE_SOURCE_DIR}/Framework/ThirdParty/vulkan" "UVKBuildTool/build")
 
 if (EMSCRIPTEN)
@@ -39,6 +41,9 @@ if (EMSCRIPTEN)
             "Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.h"
             "Framework/ThirdParty/imgui/backends/imgui_impl_wgpu.h"
             "Framework/ThirdParty/imgui/backends/imgui_impl_opengl3_loader.h")
+
+    file(GLOB_RECURSE GLAD_SRC "Framework/ThirdParty/glad/src/gles2.c")
+    file(GLOB_RECURSE GLAD_HEAD "Framework/ThirdParty/glad/include/*.h")
 else()
     file(GLOB_RECURSE IMGUI_SRC "Framework/ThirdParty/imgui/backends/imgui_impl_glfw.cpp"
             "Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.cpp"
@@ -49,15 +54,19 @@ else()
             "Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.h" "Framework/ThirdParty/imgui/misc/freetype/*.h"
             "Framework/ThirdParty/imgui/backends/imgui_impl_vulkan.h"
             "Framework/ThirdParty/imgui/backends/imgui_impl_opengl3_loader.h")
+    if (NOT APPLE)
+        file(GLOB_RECURSE GLAD_SRC "Framework/ThirdParty/glad/src/gl.c")
+        file(GLOB_RECURSE GLAD_HEAD "Framework/ThirdParty/glad/include/*.h")
+    endif()
 endif()
 
-file(GLOB_RECURSE UGUI_SRC "Framework/Core/*.cpp" "Framework/Renderer/*.cpp" ${IMGUI_SRC}
+file(GLOB_RECURSE UGUI_SRC "Framework/Core/*.cpp" "Framework/Renderer/*.cpp" ${IMGUI_SRC} ${GLAD_SRC}
         "Framework/ThirdParty/imgui/core/*.cpp" "Framework/ThirdParty/imgui/misc/cpp/*.cpp" "Framework/C/*.cpp"
-        "Framework/ThirdParty/logger/*.cpp" ${UIMGUI_CUSTOM_FRAMEWORK_SOURCES}
-        "Framework/ThirdParty/source-libraries/*.cpp" "Framework/Modules/i18n/src/*.cpp" "Framework/Modules/Modules.hpp"
-        "Framework/Modules/Undo/src/*.cpp" "Framework/Modules/Manager/*.cpp" "Framework/Modules/OS/src/*.cpp")
+        "Framework/ThirdParty/logger/*.cpp" ${UIMGUI_CUSTOM_FRAMEWORK_SOURCES} "Framework/Modules/i18n/src/*.cpp"
+        "Framework/ThirdParty/source-libraries/*.cpp" "Framework/Modules/Modules.hpp" "Framework/Modules/Undo/src/*.cpp"
+        "Framework/Modules/Manager/*.cpp" "Framework/Modules/OS/src/*.cpp")
 file(GLOB_RECURSE UGUI_HEAD "Framework/Core/*.hpp" "Framework/Renderer/*.hpp" ${IMGUI_HEAD} "Framework/Renderer/*.h"
-        "Framework/ThirdParty/imgui/core/*.h" "Framework/ThirdParty/imgui/core/*.hpp" "Framework/C/*.h"
+        "Framework/ThirdParty/imgui/core/*.h" "Framework/ThirdParty/imgui/core/*.hpp" "Framework/C/*.h" ${GLAD_HEAD}
         "Framework/ThirdParty/imgui/misc/cpp/*.h" "Framework/ThirdParty/logger/*.h" "Framework/ThirdParty/logger/*.hpp"
         "Framework/C/*.hpp" ${UIMGUI_CUSTOM_FRAMEWORK_HEADERS} "Framework/ThirdParty/source-libraries/*.h"
         "Framework/Modules/OS/src/*.h" "Framework/ThirdParty/source-libraries/*.hpp" "Framework/Modules/i18n/src/*.hpp"

@@ -85,7 +85,7 @@ void UImGui::VKDraw::ImGuiPreDraw() noexcept
 
     if (bRebuildSwapchain || window.Width != width || window.Height != height)
     {
-        while (width == 0 || height == 0)
+        while (width <= 0 || height <= 0)
         {
             size = Window::windowSize();
             width = CAST(int, size.x);
@@ -117,13 +117,12 @@ void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
     }
 
     result = vkAcquireNextImageKHR(device->device, window.Swapchain, UINT64_MAX, imageAcquired, VK_NULL_HANDLE, &window.FrameIndex);
-    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
+    if (bRebuildSwapchain || result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
     {
         bRebuildSwapchain = true;
         ImGuiPreDraw();
         return;
     }
-    ImGuiPreDraw();
 
     result = vkResetFences(device->device, 1, &fd->Fence);
     if (result != VK_SUCCESS)

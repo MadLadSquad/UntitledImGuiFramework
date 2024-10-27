@@ -19,7 +19,7 @@ namespace UImGui
         virtual void init(String location) noexcept = 0;
 
         // Event Safety - Post-begin
-        virtual void* get() noexcept = 0;
+        virtual uintptr_t get() noexcept = 0;
 
         virtual void load(void* data, FVector2 size, uint32_t depth, bool bFreeImageData,
                                 const TFunction<void(void*)>& freeFunc) noexcept = 0;

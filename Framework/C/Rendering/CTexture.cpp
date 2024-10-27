@@ -21,7 +21,7 @@ void UImGui_Texture_load(UImGui_CTexture* texture, void* data, const UImGui_FVec
     cast(texture)->load(data, size, depth, bFreeImageData, defaultFreeFunc);
 }
 
-void* UImGui_Texture_get(UImGui_CTexture* texture)
+uintptr_t UImGui_Texture_get(UImGui_CTexture* texture)
 {
     return cast(texture)->get();
 }

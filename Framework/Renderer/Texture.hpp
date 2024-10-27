@@ -36,7 +36,7 @@ namespace UImGui
                 const TFunction<void(void*)>& freeFunc = UImGui_Texture_defaultFreeFunc) noexcept;
 
         // Event Safety - Post-begin
-        [[nodiscard]] void* get() noexcept;
+        [[nodiscard]] uintptr_t get() noexcept;
 
         /**
          * @brief Outputs an image with a given format to a file. Only works if the image buffer is not freed

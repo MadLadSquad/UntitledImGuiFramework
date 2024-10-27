@@ -37,6 +37,10 @@ void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, const i
 
     if (!Renderer::data().bVulkan)
         glViewport(0, 0, width, height);
+#ifndef __EMSCRIPTEN__
+    else
+        Renderer::get().vulkan.draw.bRebuildSwapchain = true;
+#endif
 
     for (auto& a : windowInst->windowResizeCallbackList)
         a(width, height);
@@ -176,6 +180,9 @@ void UImGui::WindowInternal::windowOSDragDropCallback(GLFWwindow* window, const 
 
 void UImGui::WindowInternal::windowErrorCallback(int code, const char* description) noexcept
 {
+#ifndef DEVELOPMENT
+    if (code != GLFW_FEATURE_UNAVAILABLE)
+#endif
     Logger::log("Encountered GLFW window error, ", ULOG_LOG_TYPE_ERROR, code, ": ", description);
     for (auto& a : Window::get().windowErrorCallbackList)
         a(code, description);
