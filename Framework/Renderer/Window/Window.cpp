@@ -204,6 +204,7 @@ void UImGui::WindowInternal::createWindow() noexcept
     #endif
             ULOG_LOG_TYPE_SUCCESS, GLAD_VERSION_MAJOR(version), ".", GLAD_VERSION_MINOR(version));
 #endif
+        glfwSwapInterval(Renderer::data().bUsingVSync);
         glEnable(GL_MULTISAMPLE);
         glEnable(GL_DEPTH_TEST);
         // Set viewport and global pointer to use in callbacks

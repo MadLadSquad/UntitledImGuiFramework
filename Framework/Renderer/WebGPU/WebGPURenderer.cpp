@@ -47,7 +47,7 @@ void UImGui::WebGPURenderer::createSwapchain() noexcept
         .format = preferredFormat,
         .width = swapchainWidth,
         .height = swapchainHeight,
-        .presentMode = WGPUPresentMode_Fifo,
+        .presentMode = WGPUPresentMode_Fifo, // TODO: Add V-Sync handling when WebGPU allows us to do that
     };
 
     swapchain = wgpuDeviceCreateSwapChain(device, surface, &swapchainDescriptor);
