@@ -22,6 +22,7 @@ namespace UImGui
         static const FString& getDriverVersion() noexcept;
     private:
         friend class RendererInternal;
+        friend class WindowInternal;
         friend class WebGPUTexture;
         friend class Texture;
 

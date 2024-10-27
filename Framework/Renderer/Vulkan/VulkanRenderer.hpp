@@ -22,6 +22,8 @@ namespace UImGui
         virtual void ImGuiInit() noexcept override;
         virtual void ImGuiRenderData() noexcept override;
     private:
+        friend class WindowInternal;
+
 #ifndef __EMSCRIPTEN__
         VKInstance instance{};
         VKDevice device{ instance };

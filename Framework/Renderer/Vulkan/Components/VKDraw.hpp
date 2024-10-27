@@ -20,6 +20,8 @@ namespace UImGui
         void ImGuiPreDraw() noexcept;
         void ImGuiDraw(void* drawData) noexcept;
     private:
+        friend class WindowInternal;
+
         VKInstance* instance = nullptr;
         VKDevice* device = nullptr;
 
