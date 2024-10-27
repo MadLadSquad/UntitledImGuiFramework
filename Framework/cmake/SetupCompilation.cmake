@@ -35,6 +35,7 @@ if (BUILD_VARIANT_VENDOR OR WIN32)
         set(VULKAN_LIBRARIES_T "vulkan-1")
     elseif (APPLE)
         find_package(OpenGL REQUIRED)
+        set(OPENGL_LIBRARIES_T ${OPENGL_LIBRARIES})
 
         find_package(Vulkan REQUIRED)
         set(VULKAN_LIBRARIES_T Vulkan::Vulkan)
