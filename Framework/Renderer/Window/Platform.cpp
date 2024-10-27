@@ -13,13 +13,11 @@
     #endif
 #endif
 
-#ifndef __APPLE__
-    #include <glad/include/glad/gl.h>
-#elif __EMSCRIPTEN__
-    #include <glad/include/glad/gles2.h>
-#else
+#ifdef __APPLE__
     #include <OpenGL/GL.h>
     #include "macOS/MacOSWindowPlatform.h"
+#else
+    #include <glad/include/glad/gl.h>
 #endif
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>

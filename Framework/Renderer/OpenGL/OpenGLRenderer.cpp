@@ -2,12 +2,10 @@
 #include <Renderer.hpp>
 #include <ImGui/ImGui.hpp>
 #include <Interfaces/WindowInterface.hpp>
-#ifndef __APPLE__
-    #include <glad/include/glad/gl.h>
-#elif __EMSCRIPTEN__
-    #include <glad/include/glad/gles2.h>
-#else
+#ifdef __APPLE__
     #include <OpenGL/GL.h>
+#else
+    #include <glad/include/glad/gl.h>
 #endif
 #include <GLFW/glfw3.h>
 #include <imgui_impl_glfw.h>

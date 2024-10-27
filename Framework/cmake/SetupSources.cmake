@@ -23,6 +23,8 @@ endif ()
 
 if (NOT APPLE)
     list(APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/glad/include/")
+    file(GLOB_RECURSE GLAD_SRC "Framework/ThirdParty/glad/src/gl.c")
+    file(GLOB_RECURSE GLAD_HEAD "Framework/ThirdParty/glad/include/*.h")
 endif()
 
 include_directories(${FRAMEWORK_INCLUDE_DIRS})
@@ -41,9 +43,6 @@ if (EMSCRIPTEN)
             "Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.h"
             "Framework/ThirdParty/imgui/backends/imgui_impl_wgpu.h"
             "Framework/ThirdParty/imgui/backends/imgui_impl_opengl3_loader.h")
-
-    file(GLOB_RECURSE GLAD_SRC "Framework/ThirdParty/glad/src/gles2.c")
-    file(GLOB_RECURSE GLAD_HEAD "Framework/ThirdParty/glad/include/*.h")
 else()
     file(GLOB_RECURSE IMGUI_SRC "Framework/ThirdParty/imgui/backends/imgui_impl_glfw.cpp"
             "Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.cpp"
@@ -54,10 +53,6 @@ else()
             "Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.h" "Framework/ThirdParty/imgui/misc/freetype/*.h"
             "Framework/ThirdParty/imgui/backends/imgui_impl_vulkan.h"
             "Framework/ThirdParty/imgui/backends/imgui_impl_opengl3_loader.h")
-    if (NOT APPLE)
-        file(GLOB_RECURSE GLAD_SRC "Framework/ThirdParty/glad/src/gl.c")
-        file(GLOB_RECURSE GLAD_HEAD "Framework/ThirdParty/glad/include/*.h")
-    endif()
 endif()
 
 file(GLOB_RECURSE UGUI_SRC "Framework/Core/*.cpp" "Framework/Renderer/*.cpp" ${IMGUI_SRC} ${GLAD_SRC}

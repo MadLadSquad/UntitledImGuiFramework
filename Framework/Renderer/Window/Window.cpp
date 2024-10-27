@@ -1,11 +1,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "Window.hpp"
-#ifndef __APPLE__
-    #include <glad/include/glad/gl.h>
-#elif __EMSCRIPTEN__
-    #include <glad/include/glad/gles2.h>
-#else
+#ifdef __APPLE__
     #include <OpenGL/GL.h>
+#else
+    #include <glad/include/glad/gl.h>
 #endif
 #include <GLFW/glfw3.h>
 
@@ -196,9 +194,15 @@ void UImGui::WindowInternal::createWindow() noexcept
 
     if (!Renderer::data().bVulkan)
     {
-#if !__APPLE__ && !__EMSCRIPTEN__
+#if !__APPLE__
         const int version = gladLoadGL(glfwGetProcAddress);
-        Logger::log("Successfully loaded OpenGL ", ULOG_LOG_TYPE_SUCCESS, GLAD_VERSION_MAJOR(version), ".", GLAD_VERSION_MINOR(version));
+        Logger::log(
+    #ifdef EMSCRIPTEN
+            "Successfully loaded WebGL ",
+    #else
+            "Successfully loaded OpenGL ",
+    #endif
+            ULOG_LOG_TYPE_SUCCESS, GLAD_VERSION_MAJOR(version), ".", GLAD_VERSION_MINOR(version));
 #endif
         glEnable(GL_MULTISAMPLE);
         glEnable(GL_DEPTH_TEST);
