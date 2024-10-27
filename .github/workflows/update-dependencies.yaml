@@ -59,7 +59,7 @@ jobs:
           python3 -m venv venv
           source venv/bin/activate
           pip install -r requirements.txt
-          python3 -m glad --api gl:core,gles1, gles2, glsc2 --out-path ../
+          python3 -m glad --api gl:core,gles1,gles2,glsc2 --out-path ../
           cd ..
           rm -rf glad
           cd ../../../ || exit
