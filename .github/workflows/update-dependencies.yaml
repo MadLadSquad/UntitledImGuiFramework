@@ -50,6 +50,7 @@ jobs:
           python3 dear_bindings.py --imconfig-path ../../../imgui/core/imconfig.h -o cimgui ../../../imgui/core/imgui.h
           mv cimgui.cpp cimgui.h ../
           cd .. || exit
+          deactivate
           rm -rf dear_bindings
           cd ../../glad || exit
           rm -rf include src || exit
