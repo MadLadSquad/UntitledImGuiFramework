@@ -1,7 +1,7 @@
 #include "OpenGLTexture.hpp"
 #ifndef __APPLE__
     #include <glad/include/glad/gl.h>
-#elifdef __EMSCRIPTEN__
+#elif __EMSCRIPTEN__
     #include <glad/include/glad/gles2.h>
 #else
     #include <OpenGL/GL.h>
