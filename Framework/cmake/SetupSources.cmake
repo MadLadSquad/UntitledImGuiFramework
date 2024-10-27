@@ -7,7 +7,7 @@ set(FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Source/" "${CMAKE_SOURCE_DIR}/Fr
         "${CMAKE_SOURCE_DIR}/Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser/ThirdParty/"
         "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/vulkan-headers/include" "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/"
         "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/source-libraries/cimgui/" ${YAML_CPP_INCLUDE_DIRS_T}
-        ${FREETYPE_INCLUDE_DIRS} "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/glad/include/")
+        ${FREETYPE_INCLUDE_DIRS})
 
 if (USE_KNOBS_MODULE)
     list(APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/Modules/Knobs/ThirdParty/imgui-knobs/")
@@ -18,8 +18,12 @@ if (USE_TOGGLES_MODULE)
 endif ()
 
 if (USE_SPINNER_MODULE)
-    list (APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/Modules/Spinners/ThirdParty/imspinner/")
+    list(APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/Modules/Spinners/ThirdParty/imspinner/")
 endif ()
+
+if (NOT APPLE)
+    list(APPEND FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Framework/ThirdParty/glad/include/")
+endif()
 
 include_directories(${FRAMEWORK_INCLUDE_DIRS})
 if (DEFINED PLUGIN_PREFIX)
