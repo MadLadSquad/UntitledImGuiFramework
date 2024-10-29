@@ -220,8 +220,11 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
 
     const vk::BufferImageCopy region
     {
-        .imageSubresource.aspectMask = vk::ImageAspectFlagBits::eColor,
-        .imageSubresource.layerCount = 1,
+        .imageSubresource =
+        {
+            .aspectMask = vk::ImageAspectFlagBits::eColor,
+            .layerCount = 1,
+        },
         .imageExtent =
         {
             .width = static_cast<uint32_t>(dt.size.x),
