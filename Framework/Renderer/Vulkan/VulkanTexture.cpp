@@ -103,9 +103,9 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
         .addressModeU = vk::SamplerAddressMode::eRepeat,
         .addressModeV = vk::SamplerAddressMode::eRepeat,
         .addressModeW = vk::SamplerAddressMode::eRepeat,
+        .maxAnisotropy = 1.0f,
         .minLod = -1000,
         .maxLod = 1000,
-        .maxAnisotropy = 1.0f,
     };
     result = device.createSampler(&samplerCreateInfo, nullptr, &sampler);
     if (result != vk::Result::eSuccess)
@@ -177,8 +177,8 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
     const vk::CommandBufferAllocateInfo commandBufferAllocateInfo
     {
         .sType = vk::StructureType::eCommandBufferAllocateInfo,
-        .level = vk::CommandBufferLevel::ePrimary,
         .commandPool = commandPool,
+        .level = vk::CommandBufferLevel::ePrimary,
         .commandBufferCount = 1,
     };
     result = device.allocateCommandBuffers(&commandBufferAllocateInfo, &commandBuffer);
