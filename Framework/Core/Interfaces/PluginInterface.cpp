@@ -4,6 +4,7 @@
 
 bool UImGui::Plugins::load(String location) noexcept
 {
+#ifndef __EMSCRIPTEN__
     auto* handle = URLL::dlopen(location);
     if (handle == nullptr)
     {
@@ -57,6 +58,7 @@ bool UImGui::Plugins::load(String location) noexcept
     temp.attach(&ctx);
     get().plugins.push_back(temp);
     Logger::log("Loaded plugin at location: ", ULOG_LOG_TYPE_SUCCESS, location);
+#endif
     return true;
 }
 
