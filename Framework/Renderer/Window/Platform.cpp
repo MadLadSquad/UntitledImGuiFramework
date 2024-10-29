@@ -70,7 +70,7 @@ void UImGui::WindowInternal::setWindowAlwaysOnTop() const noexcept
 #ifdef GLFW_EXPOSE_NATIVE_WIN32
     auto window = glfwGetWin32Window(windowMain);
     SetWindowPos(window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-#elif GLFW_EXPOSE_NATIVE_COCOA
+#elif defined(GLFW_EXPOSE_NATIVE_COCOA)
     MacOSWindow::setWindowAlwaysAbove(glfwGetCocoaWindow(windowMain));
 #endif
 }
@@ -138,7 +138,7 @@ void UImGui::WindowInternal::setWindowAlwaysBelow() const noexcept
     auto window = glfwGetWin32Window(windowMain);
     SetWindowPos(window, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     //DefWindowProcA(window, WM_WINDOWPOSCHANGING, 0, 0);
-#elif GLFW_EXPOSE_NATIVE_COCOA
+#elif defined(GLFW_EXPOSE_NATIVE_COCOA)
     MacOSWindow::setWindowAlwaysBelow(glfwGetCocoaWindow(windowMain));
 #endif
 }
@@ -315,7 +315,7 @@ size_t UImGui::WindowInternal::getWindowID() const noexcept
 #endif
 #ifdef GLFW_EXPOSE_NATIVE_WIN32
         return GetWindowLong(glfwGetWin32Window(windowMain), GWL_ID);
-#elif GLFW_EXPOSE_NATIVE_COCOA
+#elif defined(GLFW_EXPOSE_NATIVE_COCOA)
         return (intptr_t)glfwGetCocoaWindow(windowMain);
 #endif
     return 0;
