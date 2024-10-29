@@ -21,6 +21,7 @@ namespace UImGui
         ~VKDevice() = default;
     private:
         friend class VKDraw;
+        friend class VulkanTexture;
 
         void createPhysicalDevice() noexcept;
         void setMSAASamples() const noexcept;

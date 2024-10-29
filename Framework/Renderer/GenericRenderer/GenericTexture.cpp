@@ -30,19 +30,19 @@ void UImGui::GenericTexture::beginLoad(void** data, FVector2& size) noexcept
         }
         size.x = static_cast<float>(x);
         size.y = static_cast<float>(y);
+        dt.size = size;
     }
 }
 
-void UImGui::GenericTexture::endLoad(void* data, const FVector2 size, const bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept
+void UImGui::GenericTexture::endLoad(void* data, const bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept
 {
-    dt.size = size;
     if (bFreeImageData)
         freeFunc(data);
     else
         dt.data = data;
 }
 
-void UImGui::GenericTexture::defaultInit(const String location) noexcept
+void UImGui::GenericTexture::defaultInit(const String location, const bool bFiltered) noexcept
 {
     auto& strings = Global::get().deallocationStruct.keyStrings;
 
@@ -52,6 +52,7 @@ void UImGui::GenericTexture::defaultInit(const String location) noexcept
 
     dt.size = { 0.0f, 0.0f };
     dt.channels = 0;
+    dt.bFiltered = bFiltered;
 
     dt.data = nullptr;
     dt.customSaveFunction = [](TextureData*, String) -> bool { return false; };

@@ -7,14 +7,14 @@
     #include <OpenGL/GL.h>
 #endif
 
-UImGui::OpenGLTexture::OpenGLTexture(const String location) noexcept
+UImGui::OpenGLTexture::OpenGLTexture(const String location, const bool bFiltered) noexcept
 {
-    init(location);
+    init(location, bFiltered);
 }
 
-void UImGui::OpenGLTexture::init(const String location) noexcept
+void UImGui::OpenGLTexture::init(const String location, const bool bFiltered) noexcept
 {
-    defaultInit(location);
+    defaultInit(location, bFiltered);
 }
 
 uintptr_t UImGui::OpenGLTexture::get() noexcept
@@ -41,8 +41,8 @@ void UImGui::OpenGLTexture::load(void* data, FVector2 size, const uint32_t depth
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_2D, id);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, dt.bFiltered ? GL_LINEAR : GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, dt.bFiltered ? GL_LINEAR : GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
@@ -55,5 +55,5 @@ void UImGui::OpenGLTexture::load(void* data, FVector2 size, const uint32_t depth
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(size.x), static_cast<int>(size.y), 0, GL_RGBA, dataType, data);
 
-    endLoad(data, size, bFreeImageData, freeFunc);
+    endLoad(data, bFreeImageData, freeFunc);
 }

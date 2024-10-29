@@ -7,10 +7,10 @@ namespace UImGui
     {
     public:
         OpenGLTexture() noexcept = default;
-        explicit OpenGLTexture(String location) noexcept;
+        OpenGLTexture(String location, bool bFiltered) noexcept;
 
         // Event Safety - Any time
-        virtual void init(String location) noexcept override;
+        virtual void init(String location, bool bFiltered) noexcept override;
 
         virtual void load(void* data, FVector2 size, uint32_t depth, bool bFreeImageData,
                                 const TFunction<void(void*)>& freeFunc) noexcept override;

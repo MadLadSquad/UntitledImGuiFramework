@@ -1,6 +1,7 @@
 #pragma once
 #include <OpenGL/OpenGLTexture.hpp>
 #include <WebGPU/WebGPUTexture.hpp>
+#include <Vulkan/VulkanTexture.hpp>
 
 #include "Interfaces/RendererInterface.hpp"
 
@@ -24,9 +25,9 @@ namespace UImGui
 
         Texture() noexcept = default;
         // Event Safety - Post-begin
-        explicit Texture(String location) noexcept;
+        Texture(String location, bool bFiltered = true) noexcept;
         // Event Safety - Post-begin
-        void init(String location) noexcept;
+        void init(String location, bool bFiltered = true) noexcept;
 
         // Event Safety - Post-begin
         void load(void* data = nullptr,
@@ -72,6 +73,6 @@ namespace UImGui
 
         OpenGLTexture opengl{};
         WebGPUTexture webgpu{};
-        OpenGLTexture vulkan{};
+        VulkanTexture vulkan{};
     };
 }

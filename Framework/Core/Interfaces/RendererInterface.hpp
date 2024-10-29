@@ -24,6 +24,7 @@ namespace UImGui
         friend class RendererInternal;
         friend class WindowInternal;
         friend class WebGPUTexture;
+        friend class VulkanTexture;
         friend class Texture;
 
         static RendererInternal& get() noexcept;

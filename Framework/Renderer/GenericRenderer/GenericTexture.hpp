@@ -16,7 +16,7 @@ namespace UImGui
         // Event Safety - Any time
         GenericTexture() noexcept = default;
         // Event Safety - Any time
-        virtual void init(String location) noexcept = 0;
+        virtual void init(String location, bool bFiltered) noexcept = 0;
 
         // Event Safety - Post-begin
         virtual uintptr_t get() noexcept = 0;
@@ -87,9 +87,9 @@ namespace UImGui
         friend class Texture;
 
         void beginLoad(void** data, FVector2& size) noexcept;
-        void endLoad(void* data, FVector2 size, bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept;
+        void endLoad(void* data, bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept;
 
-        void defaultInit(String location) noexcept;
+        void defaultInit(String location, bool bFiltered) noexcept;
         void defaultClear() noexcept;
         TextureData dt{};
     };

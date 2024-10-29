@@ -1,19 +1,16 @@
 #pragma once
 #include <GenericRenderer/GenericTexture.hpp>
-#ifdef __EMSCRIPTEN__
-    #include "imgui_impl_wgpu.h"
-    #include <emscripten.h>
-    #include <emscripten/html5.h>
-    #include <emscripten/html5_webgpu.h>
+#ifndef __EMSCRIPTEN__
+    #include <vulkan/vulkan.hpp>
 #endif
 
 namespace UImGui
 {
-    class UIMGUI_PUBLIC_API WebGPUTexture final : public GenericTexture
+    class UIMGUI_PUBLIC_API VulkanTexture final : public GenericTexture
     {
     public:
-        WebGPUTexture() noexcept = default;
-        WebGPUTexture(String location, bool bFiltered) noexcept;
+        VulkanTexture() noexcept = default;
+        VulkanTexture(String location, bool bFiltered) noexcept;
 
         // Event Safety - Any time
         virtual void init(String location, bool bFiltered) noexcept override;
@@ -27,14 +24,17 @@ namespace UImGui
         // Cleans up the image data
         // Event Safety - All initiated
         virtual void clear() noexcept override;
-        virtual ~WebGPUTexture() noexcept override;
+        virtual ~VulkanTexture() noexcept override;
     private:
-#ifdef __EMSCRIPTEN__
-        WGPUTextureDescriptor textureDescriptor{};
-        WGPUTexture texture = nullptr;
-        WGPUTextureView textureView = nullptr;
+#ifndef __EMSCRIPTEN__
+        VkDescriptorSet descriptorSet = nullptr;
 
+        vk::ImageView imageView{};
+        vk::Image image{};
+        vk::DeviceMemory imageMemory{};
+        vk::Sampler sampler{};
+        vk::Buffer uploadBuffer{};
+        vk::DeviceMemory uploadBufferMemory{};
 #endif
     };
-
 }

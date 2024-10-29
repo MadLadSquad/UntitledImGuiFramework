@@ -23,6 +23,7 @@ namespace UImGui
         virtual void ImGuiRenderData() noexcept override;
     private:
         friend class WindowInternal;
+        friend class VulkanTexture;
 
 #ifndef __EMSCRIPTEN__
         VKInstance instance{};

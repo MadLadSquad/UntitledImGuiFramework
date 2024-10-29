@@ -25,6 +25,7 @@ extern "C"
     {
         UImGui_String filename;
         UImGui_FVector2 size;
+        bool bFiltered;
         int channels;
 
         void* data;
@@ -56,7 +57,7 @@ extern "C"
     * @brief Equivalent to calling the constructor
     * @note Event Safety - Any time
     */
-    UIMGUI_PUBLIC_API UImGui_CTexture* UImGui_Texture_init(UImGui_String file);
+    UIMGUI_PUBLIC_API UImGui_CTexture* UImGui_Texture_init(UImGui_String file, bool bFiltered);
 
     // Loads the image for regular OpenGL/Vulkan usage.
     // Event Safety - Post-begin

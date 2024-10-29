@@ -1,14 +1,14 @@
 #include <WebGPU/WebGPUTexture.hpp>
 #include <Interfaces/RendererInterface.hpp>
 
-UImGui::WebGPUTexture::WebGPUTexture(const String location) noexcept
+UImGui::WebGPUTexture::WebGPUTexture(const String location, const bool bFiltered) noexcept
 {
-    init(location);
+    init(location, bFiltered);
 }
 
-void UImGui::WebGPUTexture::init(const String location) noexcept
+void UImGui::WebGPUTexture::init(const String location, const bool bFiltered) noexcept
 {
-    defaultInit(location);
+    defaultInit(location, bFiltered);
 }
 
 void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, const bool bFreeImageData,
@@ -60,7 +60,7 @@ void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, cons
     };
     textureView = wgpuTextureCreateView(texture, &textureViewDescriptor);
 #endif
-    endLoad(data, size, bFreeImageData, freeFunc);
+    endLoad(data, bFreeImageData, freeFunc);
 }
 
 uintptr_t UImGui::WebGPUTexture::get() noexcept

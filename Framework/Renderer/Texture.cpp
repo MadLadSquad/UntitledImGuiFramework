@@ -1,14 +1,14 @@
 #include "Texture.hpp"
 
-UImGui::Texture::Texture(const String location) noexcept
+UImGui::Texture::Texture(const String location, const bool bFiltered) noexcept
 {
-    init(location);
+    init(location, bFiltered);
 }
 
-void UImGui::Texture::init(const String location) noexcept
+void UImGui::Texture::init(const String location, const bool bFiltered) noexcept
 {
     bCleared = false;
-    TEX_RUN(init(location));
+    TEX_RUN(init(location, bFiltered));
 }
 
 void UImGui::Texture::load(void* data, const FVector2 size, const uint32_t depth, const bool bFreeImageData,

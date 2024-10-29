@@ -21,6 +21,7 @@ namespace UImGui
         void ImGuiDraw(void* drawData) noexcept;
     private:
         friend class WindowInternal;
+        friend class VulkanTexture;
 
         VKInstance* instance = nullptr;
         VKDevice* device = nullptr;
