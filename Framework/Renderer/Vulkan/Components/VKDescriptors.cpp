@@ -14,13 +14,13 @@ void UImGui::VKDescriptorPools::allocate() noexcept
     {
         {
             .type = vk::DescriptorType::eCombinedImageSampler,
-            .descriptorCount = 1
+            .descriptorCount = 2000
         },
     };
     const vk::DescriptorPoolCreateInfo descriptorPoolCreateInfo =
     {
         .flags = vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet,
-        .maxSets = 1,
+        .maxSets = 2000,
         .poolSizeCount = CARRAY_SIZE(descriptorPoolSizes),
         .pPoolSizes = descriptorPoolSizes,
     };

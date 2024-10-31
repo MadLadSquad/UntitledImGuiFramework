@@ -21,6 +21,8 @@ namespace UImGui
         virtual void ImGuiShutdown() noexcept override;
         virtual void ImGuiInit() noexcept override;
         virtual void ImGuiRenderData() noexcept override;
+
+        virtual void waitOnGPU() noexcept override;
     private:
         friend class WindowInternal;
         friend class VulkanTexture;

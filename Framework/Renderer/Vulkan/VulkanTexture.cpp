@@ -269,6 +269,7 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
     }
     Renderer::get().vulkan.device.queue.waitIdle();
     device.freeCommandBuffers(commandPool, 1, &commandBuffer);
+    bCreated = true;
 #endif
 }
 
@@ -284,7 +285,7 @@ uintptr_t UImGui::VulkanTexture::get() noexcept
 void UImGui::VulkanTexture::clear() noexcept
 {
 #ifndef __EMSCRIPTEN__
-    if (Renderer::data().bVulkan)
+    if (Renderer::data().bVulkan && bCreated)
     {
         auto& device = Renderer::get().vulkan.device.get();
 
@@ -295,6 +296,7 @@ void UImGui::VulkanTexture::clear() noexcept
         device.destroyImage(image, nullptr);
         device.freeMemory(imageMemory, nullptr);
         ImGui_ImplVulkan_RemoveTexture(descriptorSet);
+        bCreated = false;
     }
 #endif
 }

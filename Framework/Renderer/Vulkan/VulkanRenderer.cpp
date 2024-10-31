@@ -58,3 +58,10 @@ void UImGui::VulkanRenderer::ImGuiRenderData() noexcept
 {
 
 }
+
+void UImGui::VulkanRenderer::waitOnGPU() noexcept
+{
+#ifndef __EMSCRPITEN__
+    draw.waitOnGPU();
+#endif
+}

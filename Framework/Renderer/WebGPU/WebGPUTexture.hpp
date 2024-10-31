@@ -33,7 +33,7 @@ namespace UImGui
         WGPUTextureDescriptor textureDescriptor{};
         WGPUTexture texture = nullptr;
         WGPUTextureView textureView = nullptr;
-
+        bool bCreated = false;
 #endif
     };
 

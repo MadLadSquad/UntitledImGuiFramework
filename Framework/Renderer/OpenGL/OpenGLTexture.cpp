@@ -6,6 +6,7 @@
 #else
     #include <OpenGL/GL.h>
 #endif
+#include <Interfaces/RendererInterface.hpp>
 
 UImGui::OpenGLTexture::OpenGLTexture(const String location, const bool bFiltered) noexcept
 {
@@ -24,7 +25,8 @@ uintptr_t UImGui::OpenGLTexture::get() noexcept
 
 void UImGui::OpenGLTexture::clear() noexcept
 {
-    glDeleteTextures(1, &id);
+    if (!Renderer::data().bVulkan)
+        glDeleteTextures(1, &id);
     id = 0;
     defaultClear();
 }

@@ -22,6 +22,8 @@ namespace UImGui
         virtual void ImGuiInit() noexcept override;
         virtual void ImGuiRenderData() noexcept override;
 
+        virtual void waitOnGPU() noexcept override;
+
         virtual ~WebGPURenderer() noexcept = default;
     private:
         friend class WebGPUTexture;

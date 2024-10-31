@@ -27,6 +27,7 @@ namespace UImGui
         virtual ~VulkanTexture() noexcept override;
     private:
 #ifndef __EMSCRIPTEN__
+        bool bCreated = false;
         VkDescriptorSet descriptorSet = nullptr;
 
         vk::ImageView imageView{};

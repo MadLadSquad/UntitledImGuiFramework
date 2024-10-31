@@ -44,6 +44,7 @@ void UImGui::VKDraw::init() noexcept
 
 void UImGui::VKDraw::destroy() noexcept
 {
+    device->queue.waitIdle();
     ImGui_ImplVulkanH_DestroyWindow(instance->data(), device->device, &window, nullptr);
 }
 
@@ -61,7 +62,8 @@ void UImGui::VKDraw::ImGuiInit() const noexcept
         .RenderPass = window.RenderPass,
         .MinImageCount = CAST(uint32_t, minimalImageCount),
         .ImageCount = window.ImageCount,
-        .MSAASamples = VK_SAMPLE_COUNT_1_BIT,//CAST(VkSampleCountFlagBits, Renderer::data().msaaSamples),
+        .MSAASamples = VK_SAMPLE_COUNT_1_BIT,
+        //.MSAASamples = CAST(VkSampleCountFlagBits, Renderer::data().msaaSamples),
         .PipelineCache = VK_NULL_HANDLE,
         .Subpass = 0,
         .Allocator = nullptr,
@@ -107,14 +109,7 @@ void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
 {
     VkSemaphore imageAcquired = window.FrameSemaphores[window.SemaphoreIndex].ImageAcquiredSemaphore;
     VkSemaphore renderComplete = window.FrameSemaphores[window.SemaphoreIndex].RenderCompleteSemaphore;
-
-    const ImGui_ImplVulkanH_Frame* fd = &window.Frames[window.FrameIndex];
-    VkResult result = vkWaitForFences(device->device, 1, &fd->Fence, VK_TRUE, UINT64_MAX);
-    if (result != VK_SUCCESS)
-    {
-        Logger::log("Couldn't wait on fences. Error code: ", ULOG_LOG_TYPE_ERROR, result);
-        std::terminate();
-    }
+    VkResult result;
 
     result = vkAcquireNextImageKHR(device->device, window.Swapchain, UINT64_MAX, imageAcquired, VK_NULL_HANDLE, &window.FrameIndex);
     if (bRebuildSwapchain || result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
@@ -122,6 +117,14 @@ void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
         bRebuildSwapchain = true;
         ImGuiPreDraw();
         return;
+    }
+
+    const ImGui_ImplVulkanH_Frame* fd = &window.Frames[window.FrameIndex];
+    result = vkWaitForFences(device->device, 1, &fd->Fence, VK_TRUE, UINT64_MAX);
+    if (result != VK_SUCCESS)
+    {
+        Logger::log("Couldn't wait on fences. Error code: ", ULOG_LOG_TYPE_ERROR, result);
+        std::terminate();
     }
 
     result = vkResetFences(device->device, 1, &fd->Fence);
@@ -133,6 +136,12 @@ void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
 
     recordCommands(drawData, imageAcquired, renderComplete);
     present();
+}
+
+void UImGui::VKDraw::waitOnGPU() const noexcept
+{
+    device->device.waitIdle();
+    device->queue.waitIdle();
 }
 
 void UImGui::VKDraw::recordCommands(void* drawData, VkSemaphore& imageAcquired, VkSemaphore& renderComplete) noexcept

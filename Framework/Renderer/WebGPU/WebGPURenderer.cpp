@@ -212,3 +212,5 @@ void UImGui::WebGPURenderer::ImGuiShutdown() noexcept {}
 void UImGui::WebGPURenderer::ImGuiInit() noexcept {}
 void UImGui::WebGPURenderer::ImGuiRenderData() noexcept {}
 #endif
+
+void UImGui::WebGPURenderer::waitOnGPU() noexcept{}

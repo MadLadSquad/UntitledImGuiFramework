@@ -15,6 +15,7 @@ void UImGui::GUIRenderer::beginFrame() noexcept
 
 void UImGui::GUIRenderer::shutdown(const FString& ini, GenericInternalRenderer* renderer) noexcept
 {
+    renderer->waitOnGPU();
     const auto& initInfo = Instance::get()->initInfo;
 
     for (const auto& a : initInfo.titlebarComponents)

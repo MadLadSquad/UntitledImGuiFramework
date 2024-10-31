@@ -59,6 +59,7 @@ void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, cons
         .aspect = WGPUTextureAspect_All,
     };
     textureView = wgpuTextureCreateView(texture, &textureViewDescriptor);
+    bCreated = true;
 #endif
     endLoad(data, bFreeImageData, freeFunc);
 }
@@ -75,9 +76,13 @@ uintptr_t UImGui::WebGPUTexture::get() noexcept
 void UImGui::WebGPUTexture::clear() noexcept
 {
 #ifdef __EMSCRIPTEN__
-    wgpuTextureViewRelease(textureView);
-    wgpuTextureDestroy(texture);
-    wgpuTextureRelease(texture);
+    if (Renderer::data().bVulkan && bCreated)
+    {
+        wgpuTextureViewRelease(textureView);
+        wgpuTextureDestroy(texture);
+        wgpuTextureRelease(texture);
+        bCreated = false;
+    }
 #endif
     defaultClear();
 }

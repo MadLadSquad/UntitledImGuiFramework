@@ -19,6 +19,8 @@ namespace UImGui
         void ImGuiInit() const noexcept;
         void ImGuiPreDraw() noexcept;
         void ImGuiDraw(void* drawData) noexcept;
+
+        void waitOnGPU() const noexcept;
     private:
         friend class WindowInternal;
         friend class VulkanTexture;

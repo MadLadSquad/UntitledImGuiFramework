@@ -73,3 +73,7 @@ void UImGui::OpenGLRenderer::ImGuiRenderData() noexcept
 {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
+
+void UImGui::OpenGLRenderer::waitOnGPU() noexcept
+{
+}

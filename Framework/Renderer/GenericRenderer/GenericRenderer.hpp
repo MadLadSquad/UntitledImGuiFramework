@@ -20,6 +20,8 @@ namespace UImGui
         virtual void ImGuiInit() noexcept = 0;
         virtual void ImGuiRenderData() noexcept = 0;
 
+        virtual void waitOnGPU() noexcept = 0;
+
         virtual ~GenericInternalRenderer() noexcept = default;
     };
 }
