@@ -61,7 +61,7 @@ void UImGui::VulkanRenderer::ImGuiRenderData() noexcept
 
 void UImGui::VulkanRenderer::waitOnGPU() noexcept
 {
-#ifndef __EMSCRPITEN__
+#ifndef __EMSCRIPTEN__
     draw.waitOnGPU();
 #endif
 }
