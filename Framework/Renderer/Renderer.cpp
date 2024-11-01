@@ -100,8 +100,6 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     out << YAML::Key << "vulkan" << YAML::Value << data.bVulkan;
     out << YAML::Key << "v-sync" << YAML::Value << data.bUsingVSync;
     out << YAML::Key << "msaa-samples" << YAML::Value << data.msaaSamples;
-    out << YAML::Key << "sample-rate-shading" << YAML::Value << data.bSampleRateShading;
-    out << YAML::Key << "sample-rate-shading-mult" << YAML::Value << data.sampleRateShadingMult;
 
     std::ofstream fout((Instance::get()->initInfo.configDir + "Core/Renderer.yaml").c_str());
     fout << out.c_str();

@@ -18,8 +18,6 @@ extern "C"
         bool bVulkan;
         bool bUsingVSync;
         uint32_t msaaSamples;
-        bool bSampleRateShading;
-        float sampleRateShadingMult;
     } UImGui_RendererData;
 #ifdef __cplusplus
 }

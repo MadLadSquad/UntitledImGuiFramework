@@ -52,9 +52,9 @@ void UImGui::VKDevice::create(RendererInternal& renderer) noexcept
     };
 
     // Enable physical device features
-    const vk::PhysicalDeviceFeatures deviceFeatures =
+    constexpr vk::PhysicalDeviceFeatures deviceFeatures =
     {
-        .sampleRateShading = static_cast<VkBool32>(Renderer::data().bSampleRateShading),
+        .sampleRateShading = VK_FALSE,
         .samplerAnisotropy = VK_TRUE,           // We're using Anisotropy
     };
 
