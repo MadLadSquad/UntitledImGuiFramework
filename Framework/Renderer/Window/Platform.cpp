@@ -4,10 +4,10 @@
 #elif __APPLE__
     #define GLFW_EXPOSE_NATIVE_COCOA
 #elif !__EMSCRIPTEN__
-    #ifdef __has_include(<wayland-client.h>)
+    #if __has_include(<wayland-client.h>)
         #define GLFW_EXPOSE_NATIVE_WAYLAND
     #endif
-    #ifdef __has_include(<X11/Xatom.h>)
+    #if __has_include(<X11/Xatom.h>)
         #define GLFW_EXPOSE_NATIVE_X11
         #include <X11/Xatom.h>
         #define _NET_WM_STATE_ADD 1
