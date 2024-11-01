@@ -20,6 +20,8 @@ namespace UImGui
         virtual void ImGuiInit() noexcept = 0;
         virtual void ImGuiRenderData() noexcept = 0;
 
+        // Only called on Vulkan, because there we need to wait for resources to be used before freeing resources,
+        // like textures
         virtual void waitOnGPU() noexcept = 0;
 
         virtual ~GenericInternalRenderer() noexcept = default;

@@ -90,10 +90,6 @@ void UImGui::RendererInternal::loadConfig() noexcept
         data.bUsingVSync = node["v-sync"].as<bool>();
     if (node["msaa-samples"])
         data.msaaSamples = node["msaa-samples"].as<uint32_t>();
-    if (node["sample-rate-shading"])
-        data.bSampleRateShading = node["sample-rate-shading"].as<bool>();
-    if (node["sample-rate-shading-mult"])
-        data.sampleRateShadingMult = node["sample-rate-shading-mult"].as<float>();
 }
 
 void UImGui::RendererInternal::saveConfig() const noexcept

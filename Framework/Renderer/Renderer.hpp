@@ -52,9 +52,7 @@ namespace UImGui
         {
             .bVulkan = false,
             .bUsingVSync = true,
-            .msaaSamples = 8,
-            .bSampleRateShading = false,
-            .sampleRateShadingMult = 0.0f,
+            .msaaSamples = 1,
         };
     };
 

@@ -170,9 +170,6 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer
     else
         dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
 
-    if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-        window_flags |= ImGuiWindowFlags_NoBackground;
-
     static bool bIsOpen = true;
 
     if (!opt_padding)

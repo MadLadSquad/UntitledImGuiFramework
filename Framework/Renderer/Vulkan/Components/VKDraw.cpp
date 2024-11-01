@@ -38,7 +38,7 @@ void UImGui::VKDraw::init() noexcept
     window.PresentMode = ImGui_ImplVulkanH_SelectPresentMode(device->physicalDevice, window.Surface, &presentationModes[0], CAST(int, presentationModesSize));
 
     // Create Swapchain, RenderPass, Framebuffer, etc.
-    ImGui_ImplVulkanH_CreateOrResizeWindow(instance->data(), device->physicalDevice, device->device, &window, device->indices.graphicsFamily, nullptr, CAST(int, Window::windowSize().x), CAST(int, Window::windowSize().y), minimalImageCount);
+    ImGui_ImplVulkanH_CreateOrResizeWindow(instance->data(), device->physicalDevice, device->device, &window, device->indices.graphicsFamily, nullptr, CAST(int, Window::windowSize().x), CAST(int, Window::windowSize().y), minimalImageCount, CAST(VkSampleCountFlagBits, Renderer::data().msaaSamples));
     Logger::log("Started Vulkan renderer!", ULOG_LOG_TYPE_SUCCESS);
 }
 
@@ -62,8 +62,7 @@ void UImGui::VKDraw::ImGuiInit() const noexcept
         .RenderPass = window.RenderPass,
         .MinImageCount = CAST(uint32_t, minimalImageCount),
         .ImageCount = window.ImageCount,
-        .MSAASamples = VK_SAMPLE_COUNT_1_BIT,
-        //.MSAASamples = CAST(VkSampleCountFlagBits, Renderer::data().msaaSamples),
+        .MSAASamples = CAST(VkSampleCountFlagBits, Renderer::data().msaaSamples),
         .PipelineCache = VK_NULL_HANDLE,
         .Subpass = 0,
         .Allocator = nullptr,
@@ -99,7 +98,7 @@ void UImGui::VKDraw::ImGuiPreDraw() noexcept
         ImGui_ImplVulkan_SetMinImageCount(minimalImageCount);
         ImGui_ImplVulkanH_CreateOrResizeWindow(instance->data(), device->physicalDevice, device->device,
                                                &window, device->indices.graphicsFamily, nullptr, width, height,
-                                               minimalImageCount);
+                                               minimalImageCount, CAST(VkSampleCountFlagBits, Renderer::data().msaaSamples));
         window.FrameIndex = 0;
         bRebuildSwapchain = false;
     }
