@@ -2,7 +2,7 @@
 // **DO NOT EDIT DIRECTLY**
 // https://github.com/dearimgui/dear_bindings
 
-// dear imgui, v1.91.5 WIP
+// dear imgui, v1.91.5
 // (headers)
 
 // Help:
@@ -32,8 +32,8 @@
 
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
-#define IMGUI_VERSION       "1.91.5 WIP"
-#define IMGUI_VERSION_NUM   19144
+#define IMGUI_VERSION       "1.91.5"
+#define IMGUI_VERSION_NUM   19150
 #define IMGUI_HAS_TABLE
 #define IMGUI_HAS_VIEWPORT           // Viewport WIP branch
 #define IMGUI_HAS_DOCK               // Docking WIP branch
@@ -140,6 +140,7 @@ extern "C"
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"   // warning: zero as null pointer constant
 #pragma clang diagnostic ignored "-Wreserved-identifier"             // warning: identifier '_Xxx' is reserved because it starts with '_' followed by a capital letter
 #pragma clang diagnostic ignored "-Wunsafe-buffer-usage"             // warning: 'xxx' is an unsafe pointer used for buffer access
+#pragma clang diagnostic ignored "-Wnontrivial-memaccess"            // warning: first argument in call to 'memset' is a pointer to non-trivially copyable type
 #else
 #if defined(__GNUC__)
 #pragma GCC diagnostic push
@@ -3418,12 +3419,13 @@ CIMGUI_API void ImFontGlyphRangesBuilder_BuildRanges(ImFontGlyphRangesBuilder* s
 // See ImFontAtlas::AddCustomRectXXX functions.
 typedef struct ImFontAtlasCustomRect_t
 {
-    unsigned short Width, Height;  // Input    // Desired rectangle dimension
-    unsigned short X, Y;           // Output   // Packed position in Atlas
-    unsigned int   GlyphID;        // Input    // For custom font glyphs only (ID < 0x110000)
-    float          GlyphAdvanceX;  // Input    // For custom font glyphs only: glyph xadvance
-    ImVec2         GlyphOffset;    // Input    // For custom font glyphs only: glyph display offset
-    ImFont*        Font;           // Input    // For custom font glyphs only: target font
+    unsigned short Width, Height;     // Input    // Desired rectangle dimension
+    unsigned short X, Y;              // Output   // Packed position in Atlas
+    unsigned int   GlyphID : 31;      // Input    // For custom font glyphs only (ID < 0x110000)
+    unsigned int   GlyphColored : 1;  // Input  // For custom font glyphs only: glyph is colored, removed tinting.
+    float          GlyphAdvanceX;     // Input    // For custom font glyphs only: glyph xadvance
+    ImVec2         GlyphOffset;       // Input    // For custom font glyphs only: glyph display offset
+    ImFont*        Font;              // Input    // For custom font glyphs only: target font
 } ImFontAtlasCustomRect;
 CIMGUI_API bool ImFontAtlasCustomRect_IsPacked(const ImFontAtlasCustomRect* self);
 
