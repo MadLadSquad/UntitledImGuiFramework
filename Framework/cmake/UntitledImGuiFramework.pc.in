@@ -1,0 +1,13 @@
+prefix="@CMAKE_INSTALL_PREFIX@"
+exec_prefix="${prefix}"
+libdir="${prefix}/lib64"
+includedir="${prefix}/include"
+compile_defs="@compile_defs@"
+
+Name: UntitledImGuiFramework
+Description: Cross-platform desktop application framework based on dear imgui
+URL: https://github.com/MadLadSquad/UntitledImGuiFramework
+Version: @UIMGUI_FRAMEWORK_VERSION@
+Cflags: -I"${includedir}"
+Libs: -L"${libdir}" -l@PROJECT_NAME@
+Libs.private: -L"${libdir}" -l@PROJECT_NAME@

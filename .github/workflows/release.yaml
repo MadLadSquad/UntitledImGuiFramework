@@ -19,6 +19,27 @@ jobs:
         run: |
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: "Import bot's GPG key for signing commits"
+        id: import-gpg
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.ACTION_COMMIT_SING_PRIVATE_KEY }}
+          passphrase: ${{ secrets.ACTION_COMMIT_SING_PASS }}
+          git_config_global: true
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+      - name: Extract commit data
+        uses: rlespinasse/git-commit-data-action@v1.x
+      - name: Get tag
+        shell: bash
+        run: |
+          git config --global user.name "Madman10K"
+          git config --global user.email "contact@madladsquad.com"
+          git fetch --all
+          git submodule update --remote --merge --init --recursive
+          tag="${{ github.ref_name }}"
+          sed -i "s/set(UIMGUI_FRAMEWORK_VERSION.*/set(UIMGUI_FRAMEWORK_VERSION ${tag: 1})/g" Framework/cmake/Version.cmake
+          git add . && git commit -m "Automatically bump version" && git push origin HEAD:master
       - name: Create archive
         shell: bash
         run: |

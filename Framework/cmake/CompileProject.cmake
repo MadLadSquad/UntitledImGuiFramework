@@ -66,3 +66,5 @@ if (NOT EMSCRIPTEN)
         target_link_libraries(UntitledImGuiFramework ${f})
     endforeach()
 endif()
+
+configure_file(Framework/cmake/UntitledImGuiFramework.pc.in UntitledImGuiFramework.pc @ONLY)
