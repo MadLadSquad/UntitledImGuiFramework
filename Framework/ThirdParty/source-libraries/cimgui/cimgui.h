@@ -2,7 +2,7 @@
 // **DO NOT EDIT DIRECTLY**
 // https://github.com/dearimgui/dear_bindings
 
-// dear imgui, v1.91.5
+// dear imgui, v1.91.6 WIP
 // (headers)
 
 // Help:
@@ -32,8 +32,8 @@
 
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
-#define IMGUI_VERSION       "1.91.5"
-#define IMGUI_VERSION_NUM   19150
+#define IMGUI_VERSION       "1.91.6 WIP"
+#define IMGUI_VERSION_NUM   19151
 #define IMGUI_HAS_TABLE
 #define IMGUI_HAS_VIEWPORT           // Viewport WIP branch
 #define IMGUI_HAS_DOCK               // Docking WIP branch
@@ -2521,6 +2521,7 @@ typedef struct ImGuiIO_t
     // (the imgui_impl_xxxx backend files are setting those up for you)
     //------------------------------------------------------------------
 
+    // Nowadays those would be stored in ImGuiPlatformIO but we are leaving them here for legacy reasons.
     // Optional: Platform/Renderer backend name (informational only! will be displayed in About Window) + User data for backend/wrappers to store their own stuff.
     const char*       BackendPlatformName;                 // = NULL
     const char*       BackendRendererName;                 // = NULL
@@ -3419,8 +3420,10 @@ CIMGUI_API void ImFontGlyphRangesBuilder_BuildRanges(ImFontGlyphRangesBuilder* s
 // See ImFontAtlas::AddCustomRectXXX functions.
 typedef struct ImFontAtlasCustomRect_t
 {
-    unsigned short Width, Height;     // Input    // Desired rectangle dimension
     unsigned short X, Y;              // Output   // Packed position in Atlas
+
+    // [Internal]
+    unsigned short Width, Height;     // Input    // Desired rectangle dimension
     unsigned int   GlyphID : 31;      // Input    // For custom font glyphs only (ID < 0x110000)
     unsigned int   GlyphColored : 1;  // Input  // For custom font glyphs only: glyph is colored, removed tinting.
     float          GlyphAdvanceX;     // Input    // For custom font glyphs only: glyph xadvance
@@ -3565,8 +3568,9 @@ typedef struct ImFont_t
     const ImFontGlyph*   FallbackGlyph;                                         // 4-8   // out // = FindGlyph(FontFallbackChar)
 
     // Members: Cold ~32/40 bytes
+    // Conceptually ConfigData[] is the list of font sources merged to create this font.
     ImFontAtlas*         ContainerAtlas;                                        // 4-8   // out //            // What we has been loaded into
-    const ImFontConfig*  ConfigData;                                            // 4-8   // in  //            // Pointer within ContainerAtlas->ConfigData
+    const ImFontConfig*  ConfigData;                                            // 4-8   // in  //            // Pointer within ContainerAtlas->ConfigData to ConfigDataCount instances
     short                ConfigDataCount;                                       // 2     // in  // ~ 1        // Number of ImFontConfig involved in creating this font. Bigger than 1 when merging multiple font sources into one ImFont.
     ImWchar              FallbackChar;                                          // 2     // out // = FFFD/'?' // Character used if a glyph isn't found.
     ImWchar              EllipsisChar;                                          // 2     // out // = '...'/'.'// Character used for ellipsis rendering.
