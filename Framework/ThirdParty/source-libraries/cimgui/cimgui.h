@@ -2,7 +2,7 @@
 // **DO NOT EDIT DIRECTLY**
 // https://github.com/dearimgui/dear_bindings
 
-// dear imgui, v1.91.5
+// dear imgui, v1.91.6 WIP
 // (headers)
 
 // Help:
@@ -32,8 +32,8 @@
 
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
-#define IMGUI_VERSION       "1.91.5"
-#define IMGUI_VERSION_NUM   19150
+#define IMGUI_VERSION       "1.91.6 WIP"
+#define IMGUI_VERSION_NUM   19152
 #define IMGUI_HAS_TABLE
 #define IMGUI_HAS_VIEWPORT           // Viewport WIP branch
 #define IMGUI_HAS_DOCK               // Docking WIP branch
@@ -598,6 +598,7 @@ CIMGUI_API void ImGui_TextLinkOpenURLEx(const char* label, const char* url /* = 
 // - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
 // - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
 // - Note that Image() may add +2.0f to provided size if a border is visible, ImageButton() adds style.FramePadding*2.0f to provided size.
+// - ImageButton() draws a background based on regular Button() color + optionally an inner background if specified.
 CIMGUI_API void ImGui_Image(ImTextureID user_texture_id, ImVec2 image_size);                            // Implied uv0 = ImVec2(0, 0), uv1 = ImVec2(1, 1), tint_col = ImVec4(1, 1, 1, 1), border_col = ImVec4(0, 0, 0, 0)
 CIMGUI_API void ImGui_ImageEx(ImTextureID user_texture_id, ImVec2 image_size, ImVec2 uv0 /* = ImVec2(0, 0) */, ImVec2 uv1 /* = ImVec2(1, 1) */, ImVec4 tint_col /* = ImVec4(1, 1, 1, 1) */, ImVec4 border_col /* = ImVec4(0, 0, 0, 0) */);
 CIMGUI_API bool ImGui_ImageButton(const char* str_id, ImTextureID user_texture_id, ImVec2 image_size);  // Implied uv0 = ImVec2(0, 0), uv1 = ImVec2(1, 1), bg_col = ImVec4(0, 0, 0, 0), tint_col = ImVec4(1, 1, 1, 1)
@@ -2521,6 +2522,7 @@ typedef struct ImGuiIO_t
     // (the imgui_impl_xxxx backend files are setting those up for you)
     //------------------------------------------------------------------
 
+    // Nowadays those would be stored in ImGuiPlatformIO but we are leaving them here for legacy reasons.
     // Optional: Platform/Renderer backend name (informational only! will be displayed in About Window) + User data for backend/wrappers to store their own stuff.
     const char*       BackendPlatformName;                 // = NULL
     const char*       BackendRendererName;                 // = NULL
@@ -2886,7 +2888,8 @@ IM_MSVC_RUNTIME_CHECKS_OFF
 IM_MSVC_RUNTIME_CHECKS_RESTORE
 #endif // #ifdef IMGUI_DEFINE_MATH_OPERATORS
 // Helpers macros to generate 32-bit encoded colors
-// User can declare their own format by #defining the 5 _SHIFT/_MASK macros in their imconfig file.
+// - User can declare their own format by #defining the 5 _SHIFT/_MASK macros in their imconfig file.
+// - Any setting other than the default will need custom backend support. The only standard backend that supports anything else than the default is DirectX9.
 #ifndef IM_COL32_R_SHIFT
 #ifdef IMGUI_USE_BGRA_PACKED_COLOR
 #define IM_COL32_R_SHIFT    16
@@ -3373,8 +3376,8 @@ typedef struct ImFontConfig_t
     float          SizePixels;            //          // Size in pixels for rasterizer (more or less maps to the resulting font height).
     int            OversampleH;           // 2        // Rasterize at higher quality for sub-pixel positioning. Note the difference between 2 and 3 is minimal. You can reduce this to 1 for large glyphs save memory. Read https://github.com/nothings/stb/blob/master/tests/oversample/README.md for details.
     int            OversampleV;           // 1        // Rasterize at higher quality for sub-pixel positioning. This is not really useful as we don't use sub-pixel positions on the Y axis.
-    bool           PixelSnapH;            // false    // Align every glyph to pixel boundary. Useful e.g. if you are merging a non-pixel aligned font with the default font. If enabled, you can set OversampleH/V to 1.
-    ImVec2         GlyphExtraSpacing;     // 0, 0     // Extra spacing (in pixels) between glyphs. Only X axis is supported for now.
+    bool           PixelSnapH;            // false    // Align every glyph AdvanceX to pixel boundaries. Useful e.g. if you are merging a non-pixel aligned font with the default font. If enabled, you can set OversampleH/V to 1.
+    ImVec2         GlyphExtraSpacing;     // 0, 0     // Extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->AdvanceX. Only X axis is supported for now.
     ImVec2         GlyphOffset;           // 0, 0     // Offset all glyphs from this font input.
     const ImWchar* GlyphRanges;           // NULL     // THE ARRAY DATA NEEDS TO PERSIST AS LONG AS THE FONT IS ALIVE. Pointer to a user-provided list of Unicode range (2 value per range, values are inclusive, zero-terminated list).
     float          GlyphMinAdvanceX;      // 0        // Minimum AdvanceX for glyphs, set Min to align font icons, set both Min/Max to enforce mono-space font
@@ -3419,8 +3422,10 @@ CIMGUI_API void ImFontGlyphRangesBuilder_BuildRanges(ImFontGlyphRangesBuilder* s
 // See ImFontAtlas::AddCustomRectXXX functions.
 typedef struct ImFontAtlasCustomRect_t
 {
-    unsigned short Width, Height;     // Input    // Desired rectangle dimension
     unsigned short X, Y;              // Output   // Packed position in Atlas
+
+    // [Internal]
+    unsigned short Width, Height;     // Input    // Desired rectangle dimension
     unsigned int   GlyphID : 31;      // Input    // For custom font glyphs only (ID < 0x110000)
     unsigned int   GlyphColored : 1;  // Input  // For custom font glyphs only: glyph is colored, removed tinting.
     float          GlyphAdvanceX;     // Input    // For custom font glyphs only: glyph xadvance
@@ -3472,7 +3477,7 @@ typedef struct ImFontAtlas_t
     ImFontAtlasFlags       Flags;                                          // Build flags (see ImFontAtlasFlags_)
     ImTextureID            TexID;                                          // User data to refer to the texture once it has been uploaded to user's graphic systems. It is passed back to you during rendering via the ImDrawCmd structure.
     int                    TexDesiredWidth;                                // Texture width desired by user before Build(). Must be a power-of-two. If have many glyphs your graphics API have texture size restrictions you may want to increase texture width to decrease height.
-    int                    TexGlyphPadding;                                // Padding between glyphs within texture in pixels. Defaults to 1. If your rendering method doesn't rely on bilinear filtering you may set this to 0 (will also need to set AntiAliasedLinesUseTex = false).
+    int                    TexGlyphPadding;                                // FIXME: Should be called "TexPackPadding". Padding between glyphs within texture in pixels. Defaults to 1. If your rendering method doesn't rely on bilinear filtering you may set this to 0 (will also need to set AntiAliasedLinesUseTex = false).
     bool                   Locked;                                         // Marked as Locked by ImGui::NewFrame() so attempt to modify the atlas will assert.
     void*                  UserData;                                       // Store your own atlas related user-data (if e.g. you have multiple font atlas).
 
@@ -3565,8 +3570,9 @@ typedef struct ImFont_t
     const ImFontGlyph*   FallbackGlyph;                                         // 4-8   // out // = FindGlyph(FontFallbackChar)
 
     // Members: Cold ~32/40 bytes
+    // Conceptually ConfigData[] is the list of font sources merged to create this font.
     ImFontAtlas*         ContainerAtlas;                                        // 4-8   // out //            // What we has been loaded into
-    const ImFontConfig*  ConfigData;                                            // 4-8   // in  //            // Pointer within ContainerAtlas->ConfigData
+    const ImFontConfig*  ConfigData;                                            // 4-8   // in  //            // Pointer within ContainerAtlas->ConfigData to ConfigDataCount instances
     short                ConfigDataCount;                                       // 2     // in  // ~ 1        // Number of ImFontConfig involved in creating this font. Bigger than 1 when merging multiple font sources into one ImFont.
     ImWchar              FallbackChar;                                          // 2     // out // = FFFD/'?' // Character used if a glyph isn't found.
     ImWchar              EllipsisChar;                                          // 2     // out // = '...'/'.'// Character used for ellipsis rendering.
