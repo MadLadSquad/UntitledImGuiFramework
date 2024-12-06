@@ -10,7 +10,7 @@ git pull origin master
 git submodule update --remote --merge --init --recursive
 
 cd build || exit
-cmake .. || exit
+cmake .. -DUBT_FRAMEWORK_DIR="$(realpath ../../)" || exit
 MSBuild.exe UVKBuildTool.sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || make -j "${cpus}" || exit
 
 cd ../../ || exit
