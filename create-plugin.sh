@@ -61,29 +61,14 @@ cmake_minimum_required(VERSION 3.21)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_C_STANDARD 99)
 
-if (WIN32)
-    set(LIBRARY_OUTPUT_PATH \"\${CMAKE_BINARY_DIR}\")
-    set(EXECUTABLE_OUTPUT_PATH \"\${CMAKE_BINARY_DIR}\")
-endif()
+set(UIMGUI_PLUGIN_APP_NAME \"${prjname}\")
+set(UIMGUI_PLUGIN_NAME \"${plugin_name}\")
+set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \"\${CMAKE_SOURCE_DIR}/\${UIMGUI_PLUGIN_APP_NAME}/Framework/cmake/\")
 
+include(PluginDefaultsInit)
 project(${plugin_name})
-include_directories(. ${prjname}/Source ${prjname}/Generated ${prjname}/Framework ${prjname}/)
-
-set(OLD_SRC \"\${CMAKE_SOURCE_DIR}\")
-set(PLUGIN_PREFIX \"\${CMAKE_SOURCE_DIR}/${prjname}\")
-
-add_subdirectory(${prjname})
-
-set(CMAKE_SOURCE_DIR \"\${OLD_SRC}\")
-include_directories(\${FRAMEWORK_INCLUDE_DIRS})
-
-add_library(${plugin_name} SHARED plugin.cpp)
-if (NOT WIN32)
-    target_link_libraries(${plugin_name} PUBLIC ${prjname}Lib)
-else()
-    target_compile_options(${plugin_name} PRIVATE \"/Zc:__cplusplus\")
-endif ()
-target_link_libraries(${plugin_name} PUBLIC UntitledImGuiFramework)" > CMakeLists.txt
+include(PluginDefaultsPostInst)
+" > CMakeLists.txt
 
   # Create symbolic links
   if [ "${windows}" == true ]; then

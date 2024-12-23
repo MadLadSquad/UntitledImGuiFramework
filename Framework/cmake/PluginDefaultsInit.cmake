@@ -1,0 +1,15 @@
+if (WIN32)
+    set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+    set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+endif()
+include(UImGuiHeader)
+
+include_directories(. ${UIMGUI_PLUGIN_APP_NAME}/Source ${UIMGUI_PLUGIN_APP_NAME}/Generated ${UIMGUI_PLUGIN_APP_NAME}/Framework ${UIMGUI_PLUGIN_APP_NAME}/)
+
+set(OLD_SRC "${CMAKE_SOURCE_DIR}")
+set(PLUGIN_PREFIX "${CMAKE_SOURCE_DIR}/${UIMGUI_PLUGIN_APP_NAME}")
+
+add_subdirectory(${UIMGUI_PLUGIN_APP_NAME})
+
+set(CMAKE_SOURCE_DIR "${OLD_SRC}")
+include_directories(${FRAMEWORK_INCLUDE_DIRS})
