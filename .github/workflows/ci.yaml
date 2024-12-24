@@ -108,7 +108,7 @@ jobs:
           cd Projects || exit
           git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive
           cd ../UVKBuildTool/build || exit
-          ./UVKBuildTool --generate ../../UImGuiDemo
+          ./UVKBuildTool --generate ../../UImGuiDemo/
           cd ../../ || exit
       - name: Create plugin
         shell: bash
@@ -137,8 +137,10 @@ jobs:
         run: |
           cd Projects || exit
           git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive
+          ls
+          ls UImGuiDemo/
           cd ../UVKBuildTool/build || exit
-          ./UVKBuildTool --generate ../../UImGuiDemo
+          ./UVKBuildTool --generate ../../UImGuiDemo/
           cd ../../ || exit
       - name: Create plugin
         shell: bash
@@ -166,7 +168,7 @@ jobs:
             cd Projects || exit
             git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive
             cd ../UVKBuildTool/build || exit
-            ./UVKBuildTool.exe --generate ../../UImGuiDemo
+            ./UVKBuildTool.exe --generate ../../UImGuiDemo/
             cd ../../ || exit
         - name: Create plugin
           shell: bash
