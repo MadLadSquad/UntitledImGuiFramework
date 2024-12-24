@@ -3,7 +3,7 @@ env:
   BUILD_CONFIGURATION: Release
 on: [ push, pull_request ]
 jobs:
-  macOS:
+  macOS-new-project:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
       - name: Install project
         shell: bash
         run: ./create-project.sh t ci
-  Linux:
+  Linux-new-project:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
       - name: Install project
         shell: bash
         run: ./create-project.sh t ci
-  Windows:
+  Windows-new-project:
     runs-on: windows-latest
     steps:
         - uses: actions/checkout@v4
@@ -63,7 +63,7 @@ jobs:
           run: bash install.sh ci
         - name: Install project
           run: bash create-project.sh t ci
-  WASM:
+  WASM-new-project:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -83,3 +83,88 @@ jobs:
         run: ./install.sh ci
       - name: Install project
         run: ./create-project.sh t ci wasm
+  macOS-plugin:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          submodules: true
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: Get dependencies
+        run: |
+          brew install glfw yaml-cpp vulkan-headers vulkan-loader vulkan-tools vulkan-utility-libraries vulkan-validationlayers vulkan-extensionlayer
+      - name: Install framework
+        shell: bash
+        run: ./install.sh ci
+      - name: Clone example project
+        shell: bash
+        run: |
+          cd Projects || exit
+          git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive || exit
+          cd ../UVKBuildTool/build || exit
+          ./UVKBuildTool --generate ../../UImGuiDemo
+          cd ../../
+      - name: Create plugin
+        shell: bash
+        run: ./create-plugin.sh t UImGuiDemo
+  Linux-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          submodules: true
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: Get dependencies
+        run: | 
+          sudo apt update && sudo apt-get install x11-xserver-utils libgl1-mesa-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev gcc make g++ libxmu-dev libxi-dev libgl-dev libglu1-mesa-dev libvulkan1 mesa-vulkan-drivers vulkan-tools libvulkan-dev libasound2-dev libflac-dev libogg-dev libtool libvorbis-dev libopus-dev libsndfile1-dev libssl-dev zlib1g zlib1g-dev libglfw3 libglfw3-dev libyaml-cpp-dev libxkbcommon-dev
+      - name: Install framework
+        shell: bash
+        run: ./install.sh ci
+      - name: Clone example project
+        shell: bash
+        run: |
+          cd Projects || exit
+          git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive || exit
+          cd ../UVKBuildTool/build || exit
+          ./UVKBuildTool --generate ../../UImGuiDemo
+          cd ../../
+      - name: Create plugin
+        shell: bash
+        run: ./create-plugin.sh t UImGuiDemo
+  Windows-plugin:
+    runs-on: windows-latest
+    steps:
+        - uses: actions/checkout@v4
+          with:
+            lfs: true
+            submodules: true
+        - name: Set MSBuild env
+          uses: microsoft/setup-msbuild@main
+        - name: Checkout submodules
+          shell: bash
+          run: |
+            git submodule sync --recursive
+            git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+        - name: Install framework
+          run: bash install.sh ci
+        - name: Clone example project
+          shell: bash
+          run: |
+            cd Projects || exit
+            git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive || exit
+            cd ../UVKBuildTool/build || exit
+            ./UVKBuildTool.exe --generate ../../UImGuiDemo
+            cd ../../
+        - name: Create plugin
+          shell: bash
+          run: bash create-plugin.sh t UImGuiDemo
