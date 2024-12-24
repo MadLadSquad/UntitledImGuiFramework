@@ -90,6 +90,7 @@ jobs:
         with:
           lfs: false
           submodules: true
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout submodules
         shell: bash
         run: |
@@ -119,6 +120,7 @@ jobs:
         with:
           lfs: false
           submodules: true
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout submodules
         shell: bash
         run: |
@@ -148,6 +150,7 @@ jobs:
           with:
             lfs: true
             submodules: true
+            token: ${{ secrets.GITHUB_TOKEN }}
         - name: Set MSBuild env
           uses: microsoft/setup-msbuild@main
         - name: Checkout submodules
