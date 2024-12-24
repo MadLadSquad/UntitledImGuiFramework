@@ -3,7 +3,7 @@ env:
   BUILD_CONFIGURATION: Release
 on: [ push, pull_request ]
 jobs:
-  macOS-new-project:
+  macOS:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
       - name: Install project
         shell: bash
         run: ./create-project.sh t ci
-  Linux-new-project:
+  Linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
       - name: Install project
         shell: bash
         run: ./create-project.sh t ci
-  Windows-new-project:
+  Windows:
     runs-on: windows-latest
     steps:
         - uses: actions/checkout@v4
@@ -63,7 +63,7 @@ jobs:
           run: bash install.sh ci
         - name: Install project
           run: bash create-project.sh t ci
-  WASM-new-project:
+  WASM:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -105,10 +105,10 @@ jobs:
         shell: bash
         run: |
           cd Projects || exit
-          git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive || exit
+          git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive
           cd ../UVKBuildTool/build || exit
           ./UVKBuildTool --generate ../../UImGuiDemo
-          cd ../../
+          cd ../../ || exit
       - name: Create plugin
         shell: bash
         run: ./create-plugin.sh t UImGuiDemo
@@ -134,10 +134,10 @@ jobs:
         shell: bash
         run: |
           cd Projects || exit
-          git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive || exit
+          git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive
           cd ../UVKBuildTool/build || exit
           ./UVKBuildTool --generate ../../UImGuiDemo
-          cd ../../
+          cd ../../ || exit
       - name: Create plugin
         shell: bash
         run: ./create-plugin.sh t UImGuiDemo
@@ -161,10 +161,10 @@ jobs:
           shell: bash
           run: |
             cd Projects || exit
-            git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive || exit
+            git clone https://github.com/MadLadSquad/UImGuiDemo.git --recursive
             cd ../UVKBuildTool/build || exit
             ./UVKBuildTool.exe --generate ../../UImGuiDemo
-            cd ../../
+            cd ../../ || exit
         - name: Create plugin
           shell: bash
           run: bash create-plugin.sh t UImGuiDemo
