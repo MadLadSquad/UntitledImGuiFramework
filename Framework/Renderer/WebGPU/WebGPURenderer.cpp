@@ -104,6 +104,9 @@ void UImGui::WebGPURenderer::renderEnd(double deltaTime) noexcept
             wgpuTextureRelease(multisampledTexture);
         }
 
+        multisampledTextureWidth = swapchainWidth;
+        multisampledTextureHeight = swapchainHeight;
+
         multisampledTextureDescriptor = WGPUTextureDescriptor
         {
             .nextInChain = nullptr,
