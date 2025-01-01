@@ -39,14 +39,14 @@ jobs:
           git submodule update --remote --merge --init --recursive
           tag="${{ github.ref_name }}"
           sed -i "s/set(UIMGUI_FRAMEWORK_VERSION.*/set(UIMGUI_FRAMEWORK_VERSION ${tag: 1})/g" Framework/cmake/Version.cmake
-          git add . && git commit -m "Automatically bump version" && git push origin HEAD:master
+          (git add . && git commit -m "Automatically bump version" && git push origin HEAD:master) || echo "Nothing to commit"
       - name: Create archive
         shell: bash
         run: |
           rm -rf .git/
           tar cfJ untitled-imgui-framework.tar.xz . || echo "Might have failed"
       - name: Create Release
-        uses: softprops/action-gh-release@master
+        uses: softprops/action-gh-release@v2
         with:
           body: |
             Check our discord for patch notes: https://discord.gg/4kyWu2Vu
