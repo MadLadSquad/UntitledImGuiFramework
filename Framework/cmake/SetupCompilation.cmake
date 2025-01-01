@@ -1,25 +1,12 @@
 include("${APP_TARGET}Modules")
 
-option(UIMGUI_USE_PKGCONF_FOR_INSTALL "Uses pkgconf to look for the framework to remove the requirement for applications
-    to bundle the framework source code with the compilation steps of their package" OFF)
 option(UIMGUI_INSTALL_FRAMEWORK "Whether to install the framework" OFF)
 option(UIMGUI_INSTALL "Installs all libraries" OFF)
 option(BUILD_VARIANT_STATIC "Builds the Framework, application library(exists only on Unix) and executable into a single
     executable binary" OFF)
 
-
-set(UIMGUI_SRC_PREFIX "${CMAKE_SOURCE_DIR}")
-if (UIMGUI_USE_PKGCONF_FOR_INSTALL AND UIMGUI_INSTALL_FRAMEWORK)
-    find_package(PkgConfig)
-
-    if (PKG_CONFIG_FOUND)
-        pkg_check_modules(UntitledImGuiFramework UntitledImGuiFramework)
-        if (UntitledImGuiFramework_FOUND)
-            pkg_get_variable(UIMGUI_SRC_PREFIX UntitledImGuiFramework "includedir")
-            link_directories("${UntitledImGuiFramework_LIBRARY_DIRS}")
-            include_directories("${UntitledImGuiFramework_INCLUDE_DIRS}")
-        endif ()
-    endif()
+if (NOT DEFINED UIMGUI_SRC_PREFIX)
+    set(UIMGUI_SRC_PREFIX "${CMAKE_SOURCE_DIR}")
 endif()
 
 if (EMSCRIPTEN)
