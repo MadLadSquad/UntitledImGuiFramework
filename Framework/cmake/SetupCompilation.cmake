@@ -7,20 +7,20 @@ option(UIMGUI_INSTALL "Installs all libraries" OFF)
 option(BUILD_VARIANT_STATIC "Builds the Framework, application library(exists only on Unix) and executable into a single
     executable binary" OFF)
 
-if (UIMGUI_USE_PKGCONF_FOR_INSTALL)
+
+set(UIMGUI_SRC_PREFIX "${CMAKE_SOURCE_DIR}")
+if (UIMGUI_USE_PKGCONF_FOR_INSTALL AND UIMGUI_INSTALL_FRAMEWORK)
     find_package(PkgConfig)
 
     if (PKG_CONFIG_FOUND)
-        pkg_check_modules(UntitledImGuiFramework REQUIRED UntitledImGuiFramework)
-        link_directories("${UntitledImGuiFramework_LIBRARY_DIRS}")
-        include_directories("${UntitledImGuiFramework_INCLUDE_DIRS}")
-
-    else()
-        set(UIMGUI_SRC_PREFIX "${CMAKE_SOURCE_DIR}")
+        pkg_check_modules(UntitledImGuiFramework UntitledImGuiFramework)
+        if (UntitledImGuiFramework_FOUND)
+            pkg_get_variable(UIMGUI_SRC_PREFIX UntitledImGuiFramework "includedir")
+            link_directories("${UntitledImGuiFramework_LIBRARY_DIRS}")
+            include_directories("${UntitledImGuiFramework_INCLUDE_DIRS}")
+        endif ()
     endif()
-else()
-    set(UIMGUI_SRC_PREFIX "${CMAKE_SOURCE_DIR}")
-endif ()
+endif()
 
 if (EMSCRIPTEN)
     option(USE_HTML_GENERATION "Automatically generate HTML" ON)
