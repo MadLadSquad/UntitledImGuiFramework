@@ -12,7 +12,7 @@
 
 #define CHECK_MODULE_ENABLED(x)     if (mod[#x])    \
 {                                                   \
-    Modules::data().x = mod[#x].as<bool>();         \
+    settings.x = mod[#x].as<bool>();                \
 }
 
 #include <Utilities.hpp>
@@ -107,27 +107,27 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
     CHECK_MODULE_ENABLED(cli_parser);
     CHECK_MODULE_ENABLED(xdg);
     CHECK_MODULE_ENABLED(open);
-    
+
     // Fix up double forms
     if (mod["undo-redo"])
-        Modules::data().undo_redo = mod["undo-redo"].as<bool>();
+        settings.undo_redo = mod["undo-redo"].as<bool>();
     if (mod["text-utils"])
-        Modules::data().text_utils = mod["text-utils"].as<bool>();
+        settings.text_utils = mod["text-utils"].as<bool>();
     if (mod["cli-parser"])
-        Modules::data().cli_parser = mod["cli-parser"].as<bool>();
+        settings.cli_parser = mod["cli-parser"].as<bool>();
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
-    if (Modules::data().undo_redo)
+    if (settings.undo_redo)
         stateTracker.init();
 #endif
 #ifdef UIMGUI_I18N_MODULE_ENABLED
-    if (Modules::data().i18n)
+    if (settings.i18n)
         if (const auto result = translationEngine.init((Instance::get()->initInfo.configDir + "Translations").c_str()) != UI18N_INIT_RESULT_SUCCESS)
             Logger::log("I18N module: There was an issue with loading or processing the translations. Error code: ", ULOG_LOG_TYPE_WARNING, CAST(int, result));
 #endif
 #ifdef UIMGUI_OS_MODULE_ENABLED
     #ifdef UIMGUI_OPEN_SUBMODULE_ENABLED
-        if (Modules::data().open)
+        if (settings.open)
             UOpen::init();
     #endif
 #endif
@@ -145,11 +145,27 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
 #endif
 }
 
-void UImGui::ModulesManager::destroy() noexcept
+void UImGui::ModulesManager::initialiseWithImGuiContext() const noexcept
+{
+#ifdef UIMGUI_PLOTTING_MODULE_ENABLED
+    if (settings.plotting)
+        ImPlot::CreateContext();
+#endif
+}
+
+void UImGui::ModulesManager::applyCustomisations() const noexcept
+{
+#ifdef UIMGUI_THEME_MODULE_ENABLED
+    if (settings.theming && (Modules::data().themeLocation != nullptr || Modules::data().themeLocation != ""))
+        Theme::load((Instance::get()->initInfo.configDir + "Theme/" + Modules::data().themeLocation + ".theme.yaml").c_str());
+#endif
+}
+
+void UImGui::ModulesManager::destroy() const noexcept
 {
 #ifdef UIMGUI_OS_MODULE_ENABLED
     #ifdef UIMGUI_OPEN_SUBMODULE_ENABLED
-        if (Modules::data().open)
+        if (settings.open)
             UOpen::destroy();
     #endif
 #endif

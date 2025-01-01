@@ -40,6 +40,8 @@ void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) const noexcept
         out << YAML::BeginMap;
 
         SAVE_CONFIG_YAML_BASIC(layout-location, layoutLocation);
+        SAVE_CONFIG_YAML_BASIC(load-layout, bLoadLayout);
+        SAVE_CONFIG_YAML_BASIC(save-layout, bSaveLayout);
         SAVE_CONFIG_YAML_BASIC(icon, iconLocation);
 
         out << YAML::Key << "width" << YAML::Value << windowSize.x;
@@ -244,6 +246,8 @@ void UImGui::WindowInternal::openConfig()
 
     OPEN_CONFIG_GET_YAML_BASIC(icon, iconLocation, FString);
     OPEN_CONFIG_GET_YAML_BASIC(layout-location, layoutLocation, FString);
+    OPEN_CONFIG_GET_YAML_BASIC(load-layout, bLoadLayout, bool);
+    OPEN_CONFIG_GET_YAML_BASIC(save-layout, bSaveLayout, bool);
     OPEN_CONFIG_GET_YAML_BASIC(fullscreen, fullscreen, bool);
     OPEN_CONFIG_GET_YAML_BASIC(window-name, name, FString);
     OPEN_CONFIG_GET_YAML_BASIC(resizeable, bResizeable, bool);

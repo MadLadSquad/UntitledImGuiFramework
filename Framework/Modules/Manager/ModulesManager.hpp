@@ -62,6 +62,7 @@ namespace UImGui
         friend class Modules;
         friend class Global;
         friend class RendererInternal;
+        friend class GUIRenderer;
 
         friend class Locale;
         friend class LocaleManager;
@@ -71,6 +72,7 @@ namespace UImGui
         ModuleSettings settings =
         {
             .maxTransactions = 100,
+            .themeLocation = "",
             .os = false,
             .dbus = false,
             .uexec = false,
@@ -97,7 +99,13 @@ namespace UImGui
 
         void init(const FString& configDir);
         void initModules(const FString& projectDir);
-        void destroy() noexcept;
+
+        // Runs directly after creating the dear imgui context
+        void initialiseWithImGuiContext() const noexcept;
+        // Runs after the dear imgui context is created, but after everything is set up to be used by the user
+        void applyCustomisations() const noexcept;
+
+        void destroy() const noexcept;
 
         void save(const FString& configDir) const noexcept;
     };

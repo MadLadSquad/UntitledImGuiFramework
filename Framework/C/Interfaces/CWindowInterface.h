@@ -51,8 +51,6 @@ extern "C"
     UIMGUI_PUBLIC_API UImGui_String UImGui_Window_name();
     // Event Safety - begin, style, post-begin
     UIMGUI_PUBLIC_API UImGui_String UImGui_Window_iconLocation();
-    // Event Safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API UImGui_String UImGui_Window_layoutLocation();
 
     // Event Safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_saveSettings(bool bSaveKeybinds);

@@ -63,11 +63,6 @@ UImGui_String UImGui_Window_iconLocation()
     return UImGui::Window::iconLocation().c_str();
 }
 
-UImGui_String UImGui_Window_layoutLocation()
-{
-    return UImGui::Window::layoutLocation().c_str();
-}
-
 void UImGui_Window_saveSettings(const bool bSaveKeybinds)
 {
     UImGui::Window::saveSettings(bSaveKeybinds);

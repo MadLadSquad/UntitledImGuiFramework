@@ -79,11 +79,6 @@ void UImGui::Window::setIcon(const String name) noexcept
     get().setIcon(name);
 }
 
-UImGui::FString& UImGui::Window::layoutLocation() noexcept
-{
-    return get().windowData.layoutLocation;
-}
-
 void UImGui::Window::setCurrentWindowPosition(const FVector2 pos) noexcept
 {
     glfwSetWindowPos(get().windowMain, CAST(int, pos.x), CAST(int, pos.y));

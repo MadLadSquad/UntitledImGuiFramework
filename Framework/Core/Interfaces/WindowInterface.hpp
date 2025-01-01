@@ -42,8 +42,6 @@ namespace UImGui
         static FString& name() noexcept;
         // Event Safety - begin, style, post-begin
         static FString& iconLocation() noexcept;
-        // Event Safety - begin, style, post-begin
-        static FString& layoutLocation() noexcept;
 
         // Event Safety - begin, style, post-begin
         static void saveSettings(bool bSaveKeybinds) noexcept;

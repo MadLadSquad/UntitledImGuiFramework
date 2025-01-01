@@ -7,75 +7,14 @@
 #include <Core/Components/Instance.hpp>
 #include <Core/Platform/WASM.hpp>
 
-void UImGui::GUIRenderer::beginFrame() noexcept
-{
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-}
+#include "Interfaces/LayoutsInterface.hpp"
 
-void UImGui::GUIRenderer::shutdown(const FString& ini, GenericInternalRenderer* renderer) noexcept
-{
-    renderer->waitOnGPU();
-    const auto& initInfo = Instance::get()->initInfo;
-
-    for (const auto& a : initInfo.titlebarComponents)
-        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
-            a->end();
-    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->titlebarComponents != nullptr)
-    {
-        for (size_t i = 0; i < initInfo.cInitInfo->titlebarComponentsSize; i++)
-        {
-            auto* component = static_cast<TitlebarComponent*>(initInfo.cInitInfo->titlebarComponents[i]);
-            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
-                component->end();
-        }
-    }
-
-    for (const auto& a : initInfo.windowComponents)
-        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
-            a->end();
-    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->windowComponents != nullptr)
-    {
-        for (size_t i = 0; i < initInfo.cInitInfo->windowComponentsSize; i++)
-        {
-            auto* component = static_cast<WindowComponent*>(initInfo.cInitInfo->windowComponents[i]);
-            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
-                component->end();
-        }
-    }
-
-    for (const auto& a : initInfo.inlineComponents)
-        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
-            a->end();
-    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->inlineComponents != nullptr)
-    {
-        for (size_t i = 0; i < initInfo.cInitInfo->inlineComponentsSize; i++)
-        {
-            auto* component = static_cast<InlineComponent*>(initInfo.cInitInfo->inlineComponents[i]);
-            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
-                component->end();
-        }
-    }
-
-    ImGui::SaveIniSettingsToDisk((Instance::get()->initInfo.configDir + "Core/" + ini + ".ini").c_str());
-    renderer->ImGuiShutdown();
-    ImGui_ImplGlfw_Shutdown();
-#ifdef UIMGUI_PLOTTING_MODULE_ENABLED
-    if (Modules::data().plotting)
-        ImPlot::DestroyContext();
-#endif
-    ImGui::DestroyContext();
-    Instance::get()->end();
-}
-
-void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* renderer) noexcept
+void UImGui::GUIRenderer::init(GenericInternalRenderer* renderer) noexcept
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-#ifdef UIMGUI_PLOTTING_MODULE_ENABLED
-    if (Modules::data().plotting)
-        ImPlot::CreateContext();
-#endif
+    Modules::get().initialiseWithImGuiContext();
+
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
@@ -84,14 +23,12 @@ void UImGui::GUIRenderer::init(const FString& ini, GenericInternalRenderer* rend
     io.ConfigViewportsNoTaskBarIcon = true;
     io.ConfigMacOSXBehaviors = em_is_on_macOS();
 
-    ImGui::LoadIniSettingsFromDisk((Instance::get()->initInfo.configDir + "Core/" + ini + ".ini").c_str());
+    if (Layouts::getLoadLayout() && !Layouts::layoutLocation().empty())
+        ImGui::LoadIniSettingsFromDisk((Instance::get()->initInfo.configDir + "Core/" + Layouts::layoutLocation() + ".ini").c_str());
     ImGui::StyleColorsDark();
 
     ImGuiStyle& style = ImGui::GetStyle();
-#ifdef UIMGUI_THEME_MODULE_ENABLED
-    if (Modules::data().theming)
-        Theme::load((Instance::get()->initInfo.configDir + "Theme/default.theme.yaml").c_str());
-#endif
+    Modules::get().applyCustomisations();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 
@@ -244,4 +181,66 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer
         ImGui::RenderPlatformWindowsDefault();
         glfwMakeContextCurrent(backup_current_context);
     }
+}
+
+void UImGui::GUIRenderer::beginFrame() noexcept
+{
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+}
+
+void UImGui::GUIRenderer::shutdown(GenericInternalRenderer* renderer) noexcept
+{
+    renderer->waitOnGPU();
+    const auto& initInfo = Instance::get()->initInfo;
+
+    for (const auto& a : initInfo.titlebarComponents)
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->end();
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->titlebarComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->titlebarComponentsSize; i++)
+        {
+            auto* component = static_cast<TitlebarComponent*>(initInfo.cInitInfo->titlebarComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->end();
+        }
+    }
+
+    for (const auto& a : initInfo.windowComponents)
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->end();
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->windowComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->windowComponentsSize; i++)
+        {
+            auto* component = static_cast<WindowComponent*>(initInfo.cInitInfo->windowComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->end();
+        }
+    }
+
+    for (const auto& a : initInfo.inlineComponents)
+        if (a->state != UIMGUI_COMPONENT_STATE_OFF)
+            a->end();
+    if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->inlineComponents != nullptr)
+    {
+        for (size_t i = 0; i < initInfo.cInitInfo->inlineComponentsSize; i++)
+        {
+            auto* component = static_cast<InlineComponent*>(initInfo.cInitInfo->inlineComponents[i]);
+            if (component->state != UIMGUI_COMPONENT_STATE_OFF)
+                component->end();
+        }
+    }
+
+    if (Layouts::getLoadLayout() && !Layouts::layoutLocation().empty())
+        ImGui::SaveIniSettingsToDisk((Instance::get()->initInfo.configDir + "Core/" + Layouts::layoutLocation() + ".ini").c_str());
+    renderer->ImGuiShutdown();
+    ImGui_ImplGlfw_Shutdown();
+#ifdef UIMGUI_PLOTTING_MODULE_ENABLED
+    if (Modules::data().plotting)
+        ImPlot::DestroyContext();
+#endif
+    ImGui::DestroyContext();
+    Instance::get()->end();
 }

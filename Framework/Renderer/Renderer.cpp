@@ -30,7 +30,7 @@ void UImGui::RendererInternal::start()
     renderer->init(*this);
 
     global.modulesManagerr.init(global.instance->initInfo.configDir);
-    GUIRenderer::init(Window::get().windowData.layoutLocation, renderer);
+    GUIRenderer::init(renderer);
 
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop_arg(tick, this, 0, true);
@@ -42,7 +42,7 @@ void UImGui::RendererInternal::start()
 
 void UImGui::RendererInternal::stop() const noexcept
 {
-    GUIRenderer::shutdown(Window::get().windowData.layoutLocation, renderer);
+    GUIRenderer::shutdown(renderer);
     renderer->destroy();
     Global::get().modulesManagerr.destroy();
     Window::get().destroyWindow();

@@ -12,6 +12,9 @@ namespace UImGui
         FString iconLocation = "example-icon.png";
         FString layoutLocation = "DefaultLayout";
 
+        bool bLoadLayout = true;
+        bool bSaveLayout = true;
+
         bool fullscreen = false;
         bool bResizeable = true;
         bool bSurfaceTransparent = false;
@@ -27,7 +30,7 @@ namespace UImGui
 
     typedef UImGui_MonitorState MonitorState;
 
-    // WARNING: THIS WILL NOT WORK ON EMSCRIPTEN
+    // CAUTION: THIS WILL NOT WORK ON EMSCRIPTEN
     struct UIMGUI_PUBLIC_API Monitor
     {
     public:
@@ -97,6 +100,7 @@ namespace UImGui
         friend class RendererInternal;
         friend class Global;
         friend class OpenGLRenderer;
+        friend class Layouts;
 
         void updateKeyState() noexcept;
 
