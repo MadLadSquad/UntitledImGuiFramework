@@ -5,10 +5,6 @@ option(UIMGUI_INSTALL "Installs all libraries" OFF)
 option(BUILD_VARIANT_STATIC "Builds the Framework, application library(exists only on Unix) and executable into a single
     executable binary" OFF)
 
-if (NOT DEFINED UIMGUI_SRC_PREFIX)
-    set(UIMGUI_SRC_PREFIX "${CMAKE_SOURCE_DIR}")
-endif()
-
 if (EMSCRIPTEN)
     option(USE_HTML_GENERATION "Automatically generate HTML" ON)
     set(BUILD_VARIANT_STATIC ON)
