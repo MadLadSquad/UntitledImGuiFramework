@@ -7,6 +7,7 @@ set(FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Source/" "${UIMGUI_SRC_PREFIX}/F
         "${UIMGUI_SRC_PREFIX}/Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser/ThirdParty/"
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/vulkan-headers/include" "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/"
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/source-libraries/cimgui/" ${YAML_CPP_INCLUDE_DIRS_T}
+        "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/utfcpp/" "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/utfcpp/source/"
         ${FREETYPE_INCLUDE_DIRS})
 
 if (USE_KNOBS_MODULE)
@@ -58,25 +59,23 @@ endif()
 
 file(GLOB_RECURSE UGUI_SRC "${UIMGUI_SRC_PREFIX}/Framework/Core/*.cpp"
         "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.cpp" ${IMGUI_SRC} ${GLAD_SRC}
-        "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/core/*.cpp"
+        "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/core/*.cpp" ${UIMGUI_CUSTOM_FRAMEWORK_SOURCES}
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/misc/cpp/*.cpp" "${UIMGUI_SRC_PREFIX}/Framework/C/*.cpp"
-        "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/logger/*.cpp" ${UIMGUI_CUSTOM_FRAMEWORK_SOURCES}
-        "${UIMGUI_SRC_PREFIX}/Framework/Modules/i18n/src/*.cpp"
+        "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/logger/*.cpp" "${UIMGUI_SRC_PREFIX}/Framework/Modules/Undo/src/*.cpp"
+        "${UIMGUI_SRC_PREFIX}/Framework/Modules/i18n/src/*.cpp" "${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/src/*.cpp"
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/source-libraries/*.cpp"
-        "${UIMGUI_SRC_PREFIX}/Framework/Modules/Modules.hpp" "${UIMGUI_SRC_PREFIX}/Framework/Modules/Undo/src/*.cpp"
-        "${UIMGUI_SRC_PREFIX}/Framework/Modules/Manager/*.cpp" "${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/src/*.cpp")
+        "${UIMGUI_SRC_PREFIX}/Framework/Modules/Modules.hpp" "${UIMGUI_SRC_PREFIX}/Framework/Modules/Manager/*.cpp")
 file(GLOB_RECURSE UGUI_HEAD "${UIMGUI_SRC_PREFIX}/Framework/Core/*.hpp" "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.hpp"
-        ${IMGUI_HEAD} "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.h"
-        "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/core/*.h"
+        ${IMGUI_HEAD} "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.h" "${UIMGUI_SRC_PREFIX}/Framework/C/*.hpp"
+        "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/core/*.h" ${UIMGUI_CUSTOM_FRAMEWORK_HEADERS}
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/core/*.hpp" "${UIMGUI_SRC_PREFIX}/Framework/C/*.h" ${GLAD_HEAD}
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/misc/cpp/*.h"
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/logger/*.h" "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/logger/*.hpp"
-        "${UIMGUI_SRC_PREFIX}/Framework/C/*.hpp" ${UIMGUI_CUSTOM_FRAMEWORK_HEADERS}
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/source-libraries/*.h"
         "${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/src/*.h" "${UIMGUI_SRC_PREFIX}/Framework/Modules/i18n/src/*.hpp"
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/source-libraries/*.hpp"
         "${UIMGUI_SRC_PREFIX}/Framework/Modules/Undo/src/*.hpp" "${UIMGUI_SRC_PREFIX}/Framework/Modules/Manager/*.hpp"
-        "${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/src/*.hpp")
+        "${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/src/*.hpp" "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/utfcpp/*.h")
 
 file(GLOB_RECURSE UGUI_APP_SRC "Source/*.cpp" "${UIMGUI_CUSTOM_APP_SOURCES}")
 file(GLOB_RECURSE UGUI_APP_HEAD "Source/*.hpp" "Generated/Config.hpp" "${UIMGUI_CUSTOM_APP_HEADERS}")

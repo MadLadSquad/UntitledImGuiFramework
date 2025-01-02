@@ -209,8 +209,6 @@ if (USE_CLI_PARSER_MODULE)
     endif()
 endif()
 
-add_subdirectory("${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/utfcpp")
-
 if (USE_I18N_MODULE)
     if (BUILD_VARIANT_VENDOR)
         set(USE_PRECONFIGURED_YAML ON)
