@@ -73,13 +73,15 @@ else()
 endif()
 
 if (NOT EMSCRIPTEN)
-    target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_COMPILE_LIB" "YAML_CPP_DLL" "URLL_USE_FUNCTIONAL"
-            "MLS_EXPORT_LIBRARY" "MLS_LIB_COMPILE" "VULKAN_HPP_NO_STRUCT_CONSTRUCTORS")
+    if (NOT)
+        target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_COMPILE_LIB" "YAML_CPP_DLL" "URLL_USE_FUNCTIONAL"
+                "MLS_EXPORT_LIBRARY" "MLS_LIB_COMPILE" "VULKAN_HPP_NO_STRUCT_CONSTRUCTORS")
+    endif ()
     if (APPLE)
         multicast(target_compile_definitions PRIVATE "GL_SILENCE_DEPRECATION")
     endif()
 
-    if (WIN32)
+    if (WIN32 AND NOT UIMGUI_SKIP_FRAMEWORK)
         target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_PUBLIC_API=__declspec(dllexport)"
                 "IMGUI_API=__declspec(dllexport)" "CIMGUI_API=__declspec(dllexport)"
                 "MLS_PUBLIC_API=__declspec(dllexport)"
