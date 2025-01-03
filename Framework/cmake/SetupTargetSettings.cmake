@@ -73,7 +73,7 @@ else()
 endif()
 
 if (NOT EMSCRIPTEN)
-    if (NOT)
+    if (NOT UIMGUI_SKIP_FRAMEWORK)
         target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_COMPILE_LIB" "YAML_CPP_DLL" "URLL_USE_FUNCTIONAL"
                 "MLS_EXPORT_LIBRARY" "MLS_LIB_COMPILE" "VULKAN_HPP_NO_STRUCT_CONSTRUCTORS")
     endif ()
