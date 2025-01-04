@@ -91,6 +91,8 @@ if (NOT EMSCRIPTEN)
     endif()
 endif()
 target_compile_definitions(${APP_TARGET} PRIVATE "MLS_EXPORT_LIBRARY" "URLL_USE_FUNCTIONAL")
+multicast(target_compile_definitions PRIVATE "UIMGUI_FRAMEWORK_VERSION=\"${UIMGUI_FRAMEWORK_VERSION}\""
+        "UIMGUI_FRAMEWORK_VERSION_NUMERIC=${UIMGUI_FRAMEWORK_VERSION_NUMERIC}")
 
 custom_compile_step()
 

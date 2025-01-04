@@ -38,7 +38,12 @@ jobs:
           git fetch --all
           git submodule update --remote --merge --init --recursive
           tag="${{ github.ref_name }}"
-          sed -i "s/set(UIMGUI_FRAMEWORK_VERSION.*/set(UIMGUI_FRAMEWORK_VERSION ${tag: 1})/g" Framework/cmake/Version.cmake
+          tag="${tag:1}"
+          numeric_tag="${tag//.}"
+          numeric_tag="$(echo \"${numeric_tag}\" | sed \"s/^0*//)"
+          
+          sed -i "s/set(UIMGUI_FRAMEWORK_VERSION .*/set(UIMGUI_FRAMEWORK_VERSION ${tag})/g" Framework/cmake/Version.cmake
+          sed -i "s/set(UIMGUI_FRAMEWORK_VERSION_NUMERIC .*)/set(UIMGUI_FRAMEWORK_VERSION_NUMERIC ${numeric_tag})/g" Framework/cmake/Version.cmake
           (git add . && git commit -m "Automatically bump version" && git push origin HEAD:master) || echo "Nothing to commit"
       - name: Create archive
         shell: bash

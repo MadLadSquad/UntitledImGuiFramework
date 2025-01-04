@@ -61,3 +61,23 @@ UImGui::Instance* UImGui::Instance::get() noexcept
 {
     return Global::get().instance;
 }
+
+void UImGui::Instance::reloadApplicationMetadata() noexcept
+{
+    YAML::Node node;
+    try
+    {
+        node = YAML::LoadFile((initInfo.projectDir + "uvproj.yaml").c_str());
+    }
+    catch (YAML::BadFile&)
+    {
+        Logger::log("Couldn't open the uvproj.yaml file. Application name, application, version and engine version not available!", ULOG_LOG_TYPE_WARNING);
+        return;
+    }
+    if (node["name"])
+        applicationName = node["name"].as<FString>();
+    if (node["version"])
+        applicationVersion = node["version"].as<FString>();
+    if (node["engine-version"])
+        engineVersion = node["engine-version"].as<FString>();
+}

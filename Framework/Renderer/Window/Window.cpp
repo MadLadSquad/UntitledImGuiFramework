@@ -149,6 +149,13 @@ void UImGui::WindowInternal::createWindow() noexcept
     glfwWindowHint(GLFW_FOCUSED, windowData.bFocused);
     glfwWindowHint(GLFW_DECORATED, windowData.bDecorated);
     glfwWindowHint(GLFW_MAXIMIZED, windowData.bMaximised);
+
+    #ifdef GLFW_PLATFORM_X11
+        glfwWindowHintString(GLFW_X11_CLASS_NAME, Instance::get()->applicationName.c_str());
+    #endif
+    #ifdef GLFW_PLATFORM_WAYLAND
+        glfwWindowHintString(GLFW_WAYLAND_APP_ID, Instance::get()->applicationName.c_str());
+    #endif
 #endif
 
     Logger::log("Window settings configured", ULOG_LOG_TYPE_NOTE);

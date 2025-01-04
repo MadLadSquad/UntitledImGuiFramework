@@ -124,7 +124,7 @@ namespace UImGui
         /**
          * @brief Casts the active instance struct to a subclass of it
          * @tparam T - The type of the subclass
-         * @return The pointer of the active instance casted from Instance* to T*
+         * @return The pointer of the active instance cast from Instance* to T*
          * @note Event Safety - Any time
          */
         template<typename T>
@@ -178,8 +178,32 @@ namespace UImGui
          */
         int argc{};
 
+        /**
+         * @brief The name of the application as defined in the uvproj.yaml file
+         * @note Influences the WM_CLASS/Wayland app ID on Linux
+         * @note Event Safety - post-construct
+         */
+        FString applicationName{};
+
+        /**
+         * @brief The application version as a string, as defined in the uvproj.yaml file
+         * @note Event Safety - post-construct
+         */
+        FString applicationVersion{};
+
+        /**
+         * @brief The engine version as a string, as defined in the uvproj.yaml file. The engine version may refer to
+         * the framework version, or to the version of some other base library you're using under the hood
+         * @note Event Safety - post-construct
+         */
+        FString engineVersion{};
+
         // Event Safety - Any time
         static Instance* get() noexcept;
+
+        // Reopens uvproj.yaml and reads in the application metadata
+        // Event Safety - Any time
+        void reloadApplicationMetadata() noexcept;
     private:
         friend class GUIRenderer;
         friend class RendererInternal;
