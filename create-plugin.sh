@@ -81,7 +81,7 @@ function compile()
 {
   mkdir build || exit
   cd build || exit
-  cp ../"${prjname}"/Framework/ThirdParty/vulkan/vulkan-1.lib . || exit
+  cp ../"${prjname}"/Framework/ThirdParty/vulkan/vulkan-1.lib ../"${prjname}"/Framework/ThirdParty/vulkan/libvulkan.dylib . || exit
   if [ "${windows}" == true ]; then
     cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE || exit
     MSBuild.exe "${plugin_name}".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || exit

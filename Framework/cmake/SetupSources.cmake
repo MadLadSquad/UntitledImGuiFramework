@@ -77,8 +77,13 @@ file(GLOB_RECURSE UGUI_HEAD "${UIMGUI_SRC_PREFIX}/Framework/Core/*.hpp" "${UIMGU
         "${UIMGUI_SRC_PREFIX}/Framework/Modules/Undo/src/*.hpp" "${UIMGUI_SRC_PREFIX}/Framework/Modules/Manager/*.hpp"
         "${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/src/*.hpp" "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/utfcpp/*.h")
 
-file(GLOB_RECURSE UGUI_APP_SRC "Source/*.cpp" "${UIMGUI_CUSTOM_APP_SOURCES}")
-file(GLOB_RECURSE UGUI_APP_HEAD "Source/*.hpp" "Generated/Config.hpp" "${UIMGUI_CUSTOM_APP_HEADERS}")
+file(GLOB_RECURSE UGUI_APP_SRC "Source/*.cpp" "Source/*.c" "${UIMGUI_CUSTOM_APP_SOURCES}")
+file(GLOB_RECURSE UGUI_APP_HEAD "Source/*.hpp" "Source/*.h" "Generated/Config.hpp" "${UIMGUI_CUSTOM_APP_HEADERS}")
+
+if (APPLE)
+    file(GLOB_RECURSE UGUI_APP_SRC_APPLE "Source/*.m" "Source/*.mm")
+    list(APPEND UGUI_APP_HEAD ${UGUI_APP_SRC_APPLE})
+endif()
 
 file(GLOB_RECURSE EXEC_SRC "${UIMGUI_CUSTOM_EXEC_SOURCES}")
 

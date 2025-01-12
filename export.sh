@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 windows=false
+macos=false
+
+if [ "$(uname)" == "Darwin" ]; then
+  macos=true
+fi
 
 oldpwd=$(pwd)
 
@@ -88,6 +93,15 @@ jobs=$(grep -c processor /proc/cpuinfo 2> /dev/null) || jobs=$(sysctl -n hw.ncpu
 real_framework_path=$(realpath Framework)
 mv Framework FrameworkSym || die_
 cp -r "${real_framework_path}" . || die_
+
+while true; do
+  if [ "$macos" = true ]; then
+    cd Config/macOS || break
+    iconutil -c icns Icon.iconset || break
+    cd ../../ || break
+  fi
+  break
+done
 
 cd Exported/ || die_
 
