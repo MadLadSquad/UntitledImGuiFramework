@@ -40,7 +40,7 @@ jobs:
           tag="${{ github.ref_name }}"
           tag="${tag:1}"
           numeric_tag="${tag//.}"
-          numeric_tag="$(echo \"${numeric_tag}\" | sed \"s/^0*//)"
+          numeric_tag="$(echo ${numeric_tag} | sed 's/^0*//')"
           
           sed -i "s/set(UIMGUI_FRAMEWORK_VERSION .*/set(UIMGUI_FRAMEWORK_VERSION ${tag})/g" Framework/cmake/Version.cmake
           sed -i "s/set(UIMGUI_FRAMEWORK_VERSION_NUMERIC .*)/set(UIMGUI_FRAMEWORK_VERSION_NUMERIC ${numeric_tag})/g" Framework/cmake/Version.cmake
