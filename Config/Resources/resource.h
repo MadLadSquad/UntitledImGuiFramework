@@ -1,0 +1,2 @@
+#define IDI_APP_ICON 101
+#define IDS_APP_TITLE 102

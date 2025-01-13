@@ -107,11 +107,7 @@ if (USE_KNOBS_MODULE)
 endif()
 
 if (USE_SPINNER_MODULE)
-    if (WIN32)
-        file(GLOB_RECURSE UGUI_SPINNER_HEAD "${UIMGUI_SRC_PREFIX}/Framework/Modules/Spinners/*.h")
-    else()
-        file(GLOB_RECURSE UGUI_SPINNER_HEAD "${UIMGUI_SRC_PREFIX}/Framework/Modules/Spinners/*.h")
-    endif()
+    file(GLOB_RECURSE UGUI_SPINNER_HEAD "${UIMGUI_SRC_PREFIX}/Framework/Modules/Spinners/*.h")
 endif()
 
 if (USE_TOGGLES_MODULE)

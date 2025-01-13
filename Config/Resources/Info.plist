@@ -4,13 +4,13 @@
 <dict>
     <!-- Application Metadata -->
     <key>CFBundleName</key>
-    <string>MyApp</string>
+    <string>UImGuiDemo</string>
 
     <key>CFBundleDisplayName</key>
-    <string>MyApp</string>
+    <string>UntitledImGuiFramework Demo</string>
 
     <key>CFBundleIdentifier</key>
-    <string>com.example.MyApp</string>
+    <string>com.madladsquad.UImGuiDemo</string>
 
     <key>CFBundleVersion</key>
     <string>1.0</string>
@@ -20,7 +20,7 @@
 
     <!-- Executable -->
     <key>CFBundleExecutable</key>
-    <string>Icons</string>
+    <string>UImGuiDemo</string>
 
     <key>CFBundlePackageType</key>
     <string>APPL</string>

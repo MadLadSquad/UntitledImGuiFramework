@@ -96,8 +96,12 @@ cp -r "${real_framework_path}" . || die_
 
 while true; do
   if [ "$macos" = true ]; then
-    cd Config/macOS || break
+    cd Config/Resources || break
     iconutil -c icns Icon.iconset || break
+    cd ../../ || break
+  elif [ "$windows" = true ]; then
+    cd Config/Resources || break
+    whick magick && magick Icon.iconset/* Icon.ico
     cd ../../ || break
   fi
   break
