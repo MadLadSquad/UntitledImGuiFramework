@@ -3554,14 +3554,14 @@ CIMGUI_API void                   cimgui::ImFontAtlas_ClearInputData(cimgui::ImF
     reinterpret_cast<::ImFontAtlas*>(self)->ClearInputData();
 }
 
-CIMGUI_API void                   cimgui::ImFontAtlas_ClearTexData(cimgui::ImFontAtlas* self)
-{
-    reinterpret_cast<::ImFontAtlas*>(self)->ClearTexData();
-}
-
 CIMGUI_API void                   cimgui::ImFontAtlas_ClearFonts(cimgui::ImFontAtlas* self)
 {
     reinterpret_cast<::ImFontAtlas*>(self)->ClearFonts();
+}
+
+CIMGUI_API void                   cimgui::ImFontAtlas_ClearTexData(cimgui::ImFontAtlas* self)
+{
+    reinterpret_cast<::ImFontAtlas*>(self)->ClearTexData();
 }
 
 CIMGUI_API void                   cimgui::ImFontAtlas_Clear(cimgui::ImFontAtlas* self)
