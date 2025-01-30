@@ -262,6 +262,7 @@ int GLAD_GL_NV_shading_rate_image = 0;
 int GLAD_GL_NV_shadow_samplers_array = 0;
 int GLAD_GL_NV_shadow_samplers_cube = 0;
 int GLAD_GL_NV_stereo_view_rendering = 0;
+int GLAD_GL_NV_texture_barrier = 0;
 int GLAD_GL_NV_texture_border_clamp = 0;
 int GLAD_GL_NV_texture_compression_s3tc_update = 0;
 int GLAD_GL_NV_texture_npot_2D_mipmap = 0;
@@ -1129,6 +1130,7 @@ PFNGLTEXSUBIMAGE2DPROC glad_glTexSubImage2D = NULL;
 PFNGLTEXSUBIMAGE3DPROC glad_glTexSubImage3D = NULL;
 PFNGLTEXSUBIMAGE3DOESPROC glad_glTexSubImage3DOES = NULL;
 PFNGLTEXTUREATTACHMEMORYNVPROC glad_glTextureAttachMemoryNV = NULL;
+PFNGLTEXTUREBARRIERNVPROC glad_glTextureBarrierNV = NULL;
 PFNGLTEXTUREFOVEATIONPARAMETERSQCOMPROC glad_glTextureFoveationParametersQCOM = NULL;
 PFNGLTEXTUREPAGECOMMITMENTMEMNVPROC glad_glTexturePageCommitmentMemNV = NULL;
 PFNGLTEXTURESTORAGE1DEXTPROC glad_glTextureStorage1DEXT = NULL;
@@ -2377,6 +2379,10 @@ static void glad_gl_load_GL_NV_shading_rate_image( GLADuserptrloadfunc load, voi
     glad_glShadingRateSampleOrderCustomNV = (PFNGLSHADINGRATESAMPLEORDERCUSTOMNVPROC) load(userptr, "glShadingRateSampleOrderCustomNV");
     glad_glShadingRateSampleOrderNV = (PFNGLSHADINGRATESAMPLEORDERNVPROC) load(userptr, "glShadingRateSampleOrderNV");
 }
+static void glad_gl_load_GL_NV_texture_barrier( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_NV_texture_barrier) return;
+    glad_glTextureBarrierNV = (PFNGLTEXTUREBARRIERNVPROC) load(userptr, "glTextureBarrierNV");
+}
 static void glad_gl_load_GL_NV_timeline_semaphore( GLADuserptrloadfunc load, void* userptr) {
     if(!GLAD_GL_NV_timeline_semaphore) return;
     glad_glCreateSemaphoresNV = (PFNGLCREATESEMAPHORESNVPROC) load(userptr, "glCreateSemaphoresNV");
@@ -2910,6 +2916,7 @@ static int glad_gl_find_extensions_gles2(void) {
     GLAD_GL_NV_shadow_samplers_array = glad_gl_has_extension(exts, exts_i, "GL_NV_shadow_samplers_array");
     GLAD_GL_NV_shadow_samplers_cube = glad_gl_has_extension(exts, exts_i, "GL_NV_shadow_samplers_cube");
     GLAD_GL_NV_stereo_view_rendering = glad_gl_has_extension(exts, exts_i, "GL_NV_stereo_view_rendering");
+    GLAD_GL_NV_texture_barrier = glad_gl_has_extension(exts, exts_i, "GL_NV_texture_barrier");
     GLAD_GL_NV_texture_border_clamp = glad_gl_has_extension(exts, exts_i, "GL_NV_texture_border_clamp");
     GLAD_GL_NV_texture_compression_s3tc_update = glad_gl_has_extension(exts, exts_i, "GL_NV_texture_compression_s3tc_update");
     GLAD_GL_NV_texture_npot_2D_mipmap = glad_gl_has_extension(exts, exts_i, "GL_NV_texture_npot_2D_mipmap");
@@ -3145,6 +3152,7 @@ int gladLoadGLES2UserPtr( GLADuserptrloadfunc load, void *userptr) {
     glad_gl_load_GL_NV_sample_locations(load, userptr);
     glad_gl_load_GL_NV_scissor_exclusive(load, userptr);
     glad_gl_load_GL_NV_shading_rate_image(load, userptr);
+    glad_gl_load_GL_NV_texture_barrier(load, userptr);
     glad_gl_load_GL_NV_timeline_semaphore(load, userptr);
     glad_gl_load_GL_NV_viewport_array(load, userptr);
     glad_gl_load_GL_NV_viewport_swizzle(load, userptr);
