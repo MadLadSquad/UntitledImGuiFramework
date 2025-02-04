@@ -2,7 +2,7 @@
 // **DO NOT EDIT DIRECTLY**
 // https://github.com/dearimgui/dear_bindings
 
-// dear imgui, v1.91.8
+// dear imgui, v1.91.9 WIP
 // (headers)
 
 // Help:
@@ -32,8 +32,8 @@
 
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
-#define IMGUI_VERSION       "1.91.8"
-#define IMGUI_VERSION_NUM   19180
+#define IMGUI_VERSION       "1.91.9 WIP"
+#define IMGUI_VERSION_NUM   19182
 #define IMGUI_HAS_TABLE
 #define IMGUI_HAS_VIEWPORT           // Viewport WIP branch
 #define IMGUI_HAS_DOCK               // Docking WIP branch
@@ -3405,7 +3405,7 @@ struct ImFontConfig_t
     int            OversampleH;           // 0 (2)    // Rasterize at higher quality for sub-pixel positioning. 0 == auto == 1 or 2 depending on size. Note the difference between 2 and 3 is minimal. You can reduce this to 1 for large glyphs save memory. Read https://github.com/nothings/stb/blob/master/tests/oversample/README.md for details.
     int            OversampleV;           // 0 (1)    // Rasterize at higher quality for sub-pixel positioning. 0 == auto == 1. This is not really useful as we don't use sub-pixel positions on the Y axis.
     float          SizePixels;            //          // Size in pixels for rasterizer (more or less maps to the resulting font height).
-    ImVec2         GlyphExtraSpacing;     // 0, 0     // Extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->AdvanceX. Only X axis is supported for now.
+    //ImVec2        GlyphExtraSpacing;      // 0, 0     // (REMOVED AT IT SEEMS LARGELY OBSOLETE. PLEASE REPORT IF YOU WERE USING THIS). Extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->AdvanceX. Only X axis is supported for now.
     ImVec2         GlyphOffset;           // 0, 0     // Offset all glyphs from this font input.
     const ImWchar* GlyphRanges;           // NULL     // THE ARRAY DATA NEEDS TO PERSIST AS LONG AS THE FONT IS ALIVE. Pointer to a user-provided list of Unicode range (2 value per range, values are inclusive, zero-terminated list).
     float          GlyphMinAdvanceX;      // 0        // Minimum AdvanceX for glyphs, set Min to align font icons, set both Min/Max to enforce mono-space font
@@ -3427,7 +3427,7 @@ struct ImFontGlyph_t
     unsigned int Colored : 1;     // Flag to indicate glyph is colored and should generally ignore tinting (make it usable with no shift on little-endian as this is used in loops)
     unsigned int Visible : 1;     // Flag to indicate glyph has no visible pixels (e.g. space). Allow early out when rendering.
     unsigned int Codepoint : 30;  // 0x0000..0x10FFFF
-    float        AdvanceX;        // Distance to next character (= data from font + ImFontConfig::GlyphExtraSpacing.x baked in)
+    float        AdvanceX;        // Horizontal distance to advance layout with
     float        X0, Y0, X1, Y1;  // Glyph corners
     float        U0, V0, U1, V1;  // Texture coordinates
 };
@@ -3630,7 +3630,6 @@ CIMGUI_API void               ImFont_ClearOutputData(ImFont* self);
 CIMGUI_API void               ImFont_GrowIndex(ImFont* self, int new_size);
 CIMGUI_API void               ImFont_AddGlyph(ImFont* self, const ImFontConfig* src_cfg, ImWchar c, float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, float advance_x);
 CIMGUI_API void               ImFont_AddRemapChar(ImFont* self, ImWchar dst, ImWchar src, bool overwrite_dst /* = true */);                       // Makes 'dst' character/glyph points to 'src' character/glyph. Currently needs to be called AFTER fonts have been built.
-CIMGUI_API void               ImFont_SetGlyphVisible(ImFont* self, ImWchar c, bool visible);
 CIMGUI_API bool               ImFont_IsGlyphRangeUnused(ImFont* self, unsigned int c_begin, unsigned int c_last);
 
 //-----------------------------------------------------------------------------
