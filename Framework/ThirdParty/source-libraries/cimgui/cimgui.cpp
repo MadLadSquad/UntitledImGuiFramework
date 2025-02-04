@@ -3745,11 +3745,6 @@ CIMGUI_API void               cimgui::ImFont_AddRemapChar(cimgui::ImFont* self, 
     reinterpret_cast<::ImFont*>(self)->AddRemapChar(dst, src, overwrite_dst);
 }
 
-CIMGUI_API void               cimgui::ImFont_SetGlyphVisible(cimgui::ImFont* self, ImWchar c, bool visible)
-{
-    reinterpret_cast<::ImFont*>(self)->SetGlyphVisible(c, visible);
-}
-
 CIMGUI_API bool               cimgui::ImFont_IsGlyphRangeUnused(cimgui::ImFont* self, unsigned int c_begin, unsigned int c_last)
 {
     return reinterpret_cast<::ImFont*>(self)->IsGlyphRangeUnused(c_begin, c_last);
