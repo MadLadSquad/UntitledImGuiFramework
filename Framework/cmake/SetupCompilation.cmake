@@ -30,9 +30,12 @@ if (BUILD_VARIANT_VENDOR OR WIN32)
     endif()
     set(GLFW_INCLUDE_DIRS "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/glfw/include/")
     set(GLFW_LIBRARIES_T "glfw")
+    
     if (WIN32)
         set(OPENGL_LIBRARIES_T "opengl32")
         set(VULKAN_LIBRARIES_T "vulkan-1")
+        
+        add_subdirectory("${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/vulkan-headers")
     elseif (APPLE)
         find_package(OpenGL REQUIRED)
         set(OPENGL_LIBRARIES_T ${OPENGL_LIBRARIES})
@@ -43,9 +46,10 @@ if (BUILD_VARIANT_VENDOR OR WIN32)
         set(OPENGL_LIBRARIES_T "OpenGL")
         set(X11_LIBRARIES "X11")
         set(VULKAN_LIBRARIES_T "vulkan")
-    else ()
+        
+        add_subdirectory("${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/vulkan-headers")
     endif()
-    add_subdirectory("${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/vulkan-headers")
+    
     if (NOT BUILD_VARIANT_STATIC)
         set(BUILD_SHARED_LIBS ON)
     endif()
@@ -67,12 +71,15 @@ if (BUILD_VARIANT_VENDOR OR WIN32)
 else()
     find_package(PkgConfig REQUIRED)
     find_package(OpenGL REQUIRED)
+    
     if (NOT EMSCRIPTEN)
         find_package(Freetype REQUIRED)
     endif()
+    
     if (NOT WIN32)
         find_package(X11 REQUIRED)
     endif()
+    
     # Re-enable when yaml-cpp 0.8 is released
     if (BUILD_VARIANT_STATIC)
         set(YamlCpp_STATIC ON)
@@ -83,12 +90,14 @@ else()
     set(YAML_CPP_LIBRARIES_T "${YamlCpp_LIBRARY}")
 
     set(OPENGL_LIBRARIES_T "${OPENGL_gl_LIBRARY}" "${OPENGL_LIBRARIES}")
+    
     pkg_check_modules(GLFW REQUIRED glfw3)
     if (BUILD_VARIANT_STATIC)
         set(GLFW_LIBRARIES_T ${GLFW_STATIC_LIBRARIES})
     else()
         set(GLFW_LIBRARIES_T ${GLFW_LIBRARIES})
     endif()
+    
     pkg_check_modules(Vulkan REQUIRED vulkan)
     set(VULKAN_LIBRARIES_T ${Vulkan_LINK_LIBRARIES})
 endif()
