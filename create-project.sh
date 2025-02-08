@@ -79,6 +79,8 @@ enabled-modules:
   fi
   ln -s "../../Framework/" Framework 2> /dev/null || cp -r ../../Framework .
   ln -s "../../UVKBuildTool/" UVKBuildTool 2> /dev/null || cp -r ../../UVKBuildTool .
+
+  cp ../../example.gitignore .gitignore
 }
 
 function generate_files()

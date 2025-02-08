@@ -5,7 +5,7 @@ namespace UImGui
 {
     class RendererInternal;
 
-    class GenericInternalRenderer
+    class UIMGUI_PUBLIC_API GenericInternalRenderer
     {
     public:
         GenericInternalRenderer() noexcept = default;

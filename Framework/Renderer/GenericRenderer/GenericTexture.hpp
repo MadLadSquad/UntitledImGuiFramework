@@ -8,7 +8,7 @@ namespace UImGui
     typedef UImGui_TextureData TextureData;
     typedef UImGui_TextureFormat TextureFormat;
 
-    class GenericTexture
+    class UIMGUI_PUBLIC_API GenericTexture
     {
     public:
         typedef UImGui_Texture_CustomSaveFunction CustomSaveFunction;

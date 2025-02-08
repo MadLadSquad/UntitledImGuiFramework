@@ -70,6 +70,8 @@ project(${plugin_name})
 include(PluginDefaultsPostInst)
 " > CMakeLists.txt
 
+  cp ../../example.gitignore .gitignore
+
   # Create symbolic links
   if [ "${windows}" == true ]; then
     cmd //c mklink //d .\\"${prjname}" ..\\"${prjname}" && return
