@@ -53,7 +53,10 @@ namespace UImGui
             .bVulkan = false,
             .bUsingVSync = true,
             .msaaSamples = 1,
+            .bEnablePowerSavingMode = false,
+            .idleFrameRate = 9.0f
         };
+        bool bIdling = false;
     };
 
 }

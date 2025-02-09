@@ -35,3 +35,8 @@ const UImGui::FString& UImGui::Renderer::getDriverVersion() noexcept
 {
     return get().driverVersion;
 }
+
+void UImGui::Renderer::forceUpdate() noexcept
+{
+    get().bIdling = false;
+}

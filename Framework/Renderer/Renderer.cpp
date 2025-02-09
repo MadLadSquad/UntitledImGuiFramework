@@ -52,6 +52,27 @@ void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
 {
     auto& inst = *(static_cast<RendererInternal*>(rendererInstance));
     static double deltaTime = 0.0f;
+
+#ifndef __EMSCRIPTEN__
+    inst.bIdling = false;
+    if (inst.data.idleFrameRate > 0.0f && inst.data.bEnablePowerSavingMode)
+    {
+        const double waitTimeout = 1.0 / inst.data.idleFrameRate;
+
+        Timer timer;
+        timer.start();
+
+        glfwWaitEventsTimeout(waitTimeout);
+
+        timer.stop();
+        const double elapsed = timer.get();
+        const double duration = elapsed - waitTimeout;
+        const double idleExpected = 1.0 / inst.data.idleFrameRate;
+
+        inst.bIdling = duration > (idleExpected * 0.9);
+    }
+#endif
+
     glfwPollEvents();
 
     const double now = glfwGetTime();
@@ -60,6 +81,48 @@ void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
 
     // Updates the state of the keybindings
     Global::get().window.updateKeyState();
+
+#ifdef __EMSCRIPTEN__
+    if (inst.data.idleFrameRate > 0.0f && inst.data.bEnablePowerSavingMode)
+    {
+        ImGuiContext& g = *ImGui::GetCurrentContext();
+        bool bHasInputEvent = !g.InputEventsQueue.empty();
+
+        static double lastRefreshTime = 0.0f;
+        static double accumulatedTime = 0.0f;
+        accumulatedTime += deltaTime;
+
+        bool bShouldIdle = false;
+        if (bHasInputEvent)
+        {
+            inst.bIdling = false;
+            bShouldIdle = false;
+        }
+        else
+        {
+            inst.bIdling = true;
+            if ((accumulatedTime - lastRefreshTime) < 1.0 / inst.data.idleFrameRate)
+                bShouldIdle = true;
+            else
+                bShouldIdle = false;
+        }
+
+        if (!bShouldIdle)
+        {
+            lastRefreshTime = accumulatedTime;
+            accumulatedTime = 0.0f;
+        }
+        else
+        {
+            lastRefreshTime = 0.0f;
+            return;
+        }
+    }
+#endif
+
+    // Do not render if the window is minimised
+    if (Window::getWindowIconified())
+        glfwWaitEvents();
 
     inst.renderer->renderStart(deltaTime);
     GUIRenderer::beginUI(static_cast<float>(deltaTime), inst.renderer);
@@ -90,6 +153,15 @@ void UImGui::RendererInternal::loadConfig() noexcept
         data.bUsingVSync = node["v-sync"].as<bool>();
     if (node["msaa-samples"])
         data.msaaSamples = node["msaa-samples"].as<uint32_t>();
+
+    const auto& powerSaving = node["power-saving"];
+    if (powerSaving)
+    {
+        if (powerSaving["enabled"])
+            data.bEnablePowerSavingMode = powerSaving["enabled"].as<bool>();
+        if (powerSaving["idle-frames"])
+            data.idleFrameRate = powerSaving["idle-frames"].as<float>();
+    }
 }
 
 void UImGui::RendererInternal::saveConfig() const noexcept
@@ -100,6 +172,10 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     out << YAML::Key << "vulkan" << YAML::Value << data.bVulkan;
     out << YAML::Key << "v-sync" << YAML::Value << data.bUsingVSync;
     out << YAML::Key << "msaa-samples" << YAML::Value << data.msaaSamples;
+    out << YAML::Key << "power-saving" << YAML::Value << YAML::BeginMap;
+    out << YAML::Key << "enabled" << YAML::Value << data.bEnablePowerSavingMode;
+    out << YAML::Key << "idle-frames" << YAML::Value << data.idleFrameRate;
+    out << YAML::EndMap;
 
     std::ofstream fout((Instance::get()->initInfo.configDir + "Core/Renderer.yaml").c_str());
     fout << out.c_str();

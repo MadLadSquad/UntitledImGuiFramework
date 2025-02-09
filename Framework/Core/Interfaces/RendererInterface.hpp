@@ -20,6 +20,10 @@ namespace UImGui
         static const FString& getGPUName() noexcept;
         // Event Safety - begin, post-begin
         static const FString& getDriverVersion() noexcept;
+
+        // Forces an update even when idling in power saving mode
+        // Event Safety - begin, post-begin
+        static void forceUpdate() noexcept;
     private:
         friend class RendererInternal;
         friend class WindowInternal;

@@ -20,6 +20,9 @@ extern "C"
     UIMGUI_PUBLIC_API UImGui_String UImGui_Renderer_getGPUName();
     // Event Safety - begin, post-begin
     UIMGUI_PUBLIC_API UImGui_String UImGui_Renderer_getDriverVersion();
+
+    // Event Safety - begin, post-begin
+    UIMGUI_PUBLIC_API void UImGui_Renderer_forceUpdate();
 #ifdef __cplusplus
 }
 #endif
