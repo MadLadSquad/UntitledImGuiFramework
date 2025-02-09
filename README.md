@@ -14,12 +14,10 @@ Building UI using a traditional GUI application framework is hard and tedious. O
 out the scaffold, layout, and logic. Most GUI application frameworks are also retained-mode, which introduces bugs with tracking state, especially
 when the application you're building is multithreaded.
 
-We also wanted a small and light core, which provides most-minimal features, yet can be extended for large-scale application development. 
-
-Another motivating factor was simply our decision to create our own desktop environment for Freedesktop-based systems, that also had general compatibility
+Another motivating factor was our decision to create our own independent desktop environment for Freedesktop-based systems, that also has general compatibility
 with other operating systems, such as Windows and macOS.
 
-Finally, we wanted to also be able to distribute the core to basically any platform.
+Finally, we wanted to also be able to distribute the core to most popular consumer platforms.
 
 [Dear imgui](https://github.com/ocornut/imgui) filled all our requirements. It provides a GUI layer which provides the following benefits:
 
@@ -29,22 +27,6 @@ Finally, we wanted to also be able to distribute the core to basically any platf
 - Your styling, layout, scaffold and scripting is all in your source code
 - Easy to work with
 - Used by a multitude of high profile developers, an incomplete list can be seen [here](https://github.com/ocornut/imgui/wiki/Software-using-dear-imgui)
-
-### But the UntitledImGuiFramework provides many of the features that QT and GTK provides, how can you say that it is lighter then them!?
-Yes, the framework provides many of the features that can be found in larger toolkits such as QT and GTK. The difference is that the UntitledImGuiFramework
-only provides a minimal renderer, component system and some interfaces for things like input out of the box. 
-
-To enable additional features, you need to enable modules, which can be compiled out of your application, as opposed to toolkits like QT and GTK, where many 
-of the features that are modules here, are actually part of the core toolkit and cannot be removed. Here is a short list of features that we provide as modules
-that other libraries provide as part of their core:
-
-1. System font querying
-1. CLI parsing
-1. System theme fetching
-1. Rich text rendering
-1. Undo/Redo
-1. URL & default file/folder opening
-1. I18N features
 
 ## Framework features
 The above section says a lot, but let's talk features.
