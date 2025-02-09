@@ -1,6 +1,7 @@
 #include "Renderer.hpp"
 #ifdef __EMSCRIPTEN__
     #include <emscripten.h>
+    #include <imgui_internal.h>
 #endif
 #include <yaml-cpp/yaml.h>
 #include <Core/Components/Instance.hpp>
