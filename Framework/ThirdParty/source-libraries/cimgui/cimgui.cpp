@@ -3659,17 +3659,6 @@ CIMGUI_API void                   cimgui::ImFontAtlas_CalcCustomRectUV(const cim
     reinterpret_cast<const ::ImFontAtlas*>(self)->CalcCustomRectUV(reinterpret_cast<const ::ImFontAtlasCustomRect*>(rect), reinterpret_cast<::ImVec2*>(out_uv_min), reinterpret_cast<::ImVec2*>(out_uv_max));
 }
 
-CIMGUI_API bool                   cimgui::ImFontAtlas_GetMouseCursorTexData(cimgui::ImFontAtlas* self, ImGuiMouseCursor cursor, cimgui::ImVec2* out_offset, cimgui::ImVec2* out_size, cimgui::ImVec2 out_uv_border[2], cimgui::ImVec2 out_uv_fill[2])
-{
-    ::ImVec2 out_uv_border_converted_array[2];
-    for (int i=0; i<2; i++)
-        out_uv_border_converted_array[i] = ConvertToCPP_ImVec2(out_uv_border[i]);
-    ::ImVec2 out_uv_fill_converted_array[2];
-    for (int i=0; i<2; i++)
-        out_uv_fill_converted_array[i] = ConvertToCPP_ImVec2(out_uv_fill[i]);
-    return reinterpret_cast<::ImFontAtlas*>(self)->GetMouseCursorTexData(cursor, reinterpret_cast<::ImVec2*>(out_offset), reinterpret_cast<::ImVec2*>(out_size), out_uv_border_converted_array, out_uv_fill_converted_array);
-}
-
 CIMGUI_API cimgui::ImFontGlyph* cimgui::ImFont_FindGlyph(cimgui::ImFont* self, ImWchar c)
 {
     return reinterpret_cast<::cimgui::ImFontGlyph*>(reinterpret_cast<::ImFont*>(self)->FindGlyph(c));

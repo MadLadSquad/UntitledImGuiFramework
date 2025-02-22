@@ -2077,6 +2077,8 @@ typedef enum
     ImGuiMouseCursor_ResizeNESW,  // When hovering over the bottom-left corner of a window
     ImGuiMouseCursor_ResizeNWSE,  // When hovering over the bottom-right corner of a window
     ImGuiMouseCursor_Hand,        // (Unused by Dear ImGui functions. Use for e.g. hyperlinks)
+    ImGuiMouseCursor_Wait,        // When waiting for something to process/load.
+    ImGuiMouseCursor_Progress,    // When waiting for something to process/load, but application is still interactive.
     ImGuiMouseCursor_NotAllowed,  // When hovering something with disallowed interaction. Usually a crossed circle.
     ImGuiMouseCursor_COUNT,
 } ImGuiMouseCursor_;
@@ -3545,33 +3547,33 @@ CIMGUI_API ImFont*                ImFontAtlas_AddFontFromFileTTF(ImFontAtlas* se
 CIMGUI_API ImFont*                ImFontAtlas_AddFontFromMemoryTTF(ImFontAtlas* self, void* font_data, int font_data_size, float size_pixels, const ImFontConfig* font_cfg /* = NULL */, const ImWchar* glyph_ranges /* = NULL */); // Note: Transfer ownership of 'ttf_data' to ImFontAtlas! Will be deleted after destruction of the atlas. Set font_cfg->FontDataOwnedByAtlas=false to keep ownership of your data and it won't be freed.
 CIMGUI_API ImFont*                ImFontAtlas_AddFontFromMemoryCompressedTTF(ImFontAtlas* self, const void* compressed_font_data, int compressed_font_data_size, float size_pixels, const ImFontConfig* font_cfg /* = NULL */, const ImWchar* glyph_ranges /* = NULL */); // 'compressed_font_data' still owned by caller. Compress with binary_to_compressed_c.cpp.
 CIMGUI_API ImFont*                ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(ImFontAtlas* self, const char* compressed_font_data_base85, float size_pixels, const ImFontConfig* font_cfg /* = NULL */, const ImWchar* glyph_ranges /* = NULL */); // 'compressed_font_data_base85' still owned by caller. Compress with binary_to_compressed_c.cpp with -base85 parameter.
-CIMGUI_API void                   ImFontAtlas_ClearInputData(ImFontAtlas* self);                                                                                     // Clear input data (all ImFontConfig structures including sizes, TTF data, glyph ranges, etc.) = all the data used to build the texture and fonts.
-CIMGUI_API void                   ImFontAtlas_ClearFonts(ImFontAtlas* self);                                                                                         // Clear input+output font data (same as ClearInputData() + glyphs storage, UV coordinates).
-CIMGUI_API void                   ImFontAtlas_ClearTexData(ImFontAtlas* self);                                                                                       // Clear output texture data (CPU side). Saves RAM once the texture has been copied to graphics memory.
-CIMGUI_API void                   ImFontAtlas_Clear(ImFontAtlas* self);                                                                                              // Clear all input and output.
+CIMGUI_API void                   ImFontAtlas_ClearInputData(ImFontAtlas* self);                               // Clear input data (all ImFontConfig structures including sizes, TTF data, glyph ranges, etc.) = all the data used to build the texture and fonts.
+CIMGUI_API void                   ImFontAtlas_ClearFonts(ImFontAtlas* self);                                   // Clear input+output font data (same as ClearInputData() + glyphs storage, UV coordinates).
+CIMGUI_API void                   ImFontAtlas_ClearTexData(ImFontAtlas* self);                                 // Clear output texture data (CPU side). Saves RAM once the texture has been copied to graphics memory.
+CIMGUI_API void                   ImFontAtlas_Clear(ImFontAtlas* self);                                        // Clear all input and output.
 // Build atlas, retrieve pixel data.
 // User is in charge of copying the pixels into graphics memory (e.g. create a texture with your engine). Then store your texture handle with SetTexID().
 // The pitch is always = Width * BytesPerPixels (1 or 4)
 // Building in RGBA32 format is provided for convenience and compatibility, but note that unless you manually manipulate or copy color data into
 // the texture (e.g. when using the AddCustomRect*** api), then the RGB pixels emitted will always be white (~75% of memory/bandwidth waste.
-CIMGUI_API bool                   ImFontAtlas_Build(ImFontAtlas* self);                                                                                              // Build pixels data. This is called automatically for you by the GetTexData*** functions.
+CIMGUI_API bool                   ImFontAtlas_Build(ImFontAtlas* self);                                        // Build pixels data. This is called automatically for you by the GetTexData*** functions.
 CIMGUI_API void                   ImFontAtlas_GetTexDataAsAlpha8(ImFontAtlas* self, unsigned char** out_pixels, int* out_width, int* out_height, int* out_bytes_per_pixel /* = NULL */); // 1 byte per-pixel
 CIMGUI_API void                   ImFontAtlas_GetTexDataAsRGBA32(ImFontAtlas* self, unsigned char** out_pixels, int* out_width, int* out_height, int* out_bytes_per_pixel /* = NULL */); // 4 bytes-per-pixel
-CIMGUI_API bool                   ImFontAtlas_IsBuilt(const ImFontAtlas* self);                                                                                      // Bit ambiguous: used to detect when user didn't build texture but effectively we should check TexID != 0 except that would be backend dependent...
+CIMGUI_API bool                   ImFontAtlas_IsBuilt(const ImFontAtlas* self);                                // Bit ambiguous: used to detect when user didn't build texture but effectively we should check TexID != 0 except that would be backend dependent...
 CIMGUI_API void                   ImFontAtlas_SetTexID(ImFontAtlas* self, ImTextureID id);
 // Helpers to retrieve list of common Unicode ranges (2 value per range, values are inclusive, zero-terminated list)
 // NB: Make sure that your string are UTF-8 and NOT in your local code page.
 // Read https://github.com/ocornut/imgui/blob/master/docs/FONTS.md/#about-utf-8-encoding for details.
 // NB: Consider using ImFontGlyphRangesBuilder to build glyph ranges from textual data.
-CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesDefault(ImFontAtlas* self);                                                                              // Basic Latin, Extended Latin
-CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesGreek(ImFontAtlas* self);                                                                                // Default + Greek and Coptic
-CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesKorean(ImFontAtlas* self);                                                                               // Default + Korean characters
-CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesJapanese(ImFontAtlas* self);                                                                             // Default + Hiragana, Katakana, Half-Width, Selection of 2999 Ideographs
-CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesChineseFull(ImFontAtlas* self);                                                                          // Default + Half-Width + Japanese Hiragana/Katakana + full set of about 21000 CJK Unified Ideographs
-CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesChineseSimplifiedCommon(ImFontAtlas* self);                                                              // Default + Half-Width + Japanese Hiragana/Katakana + set of 2500 CJK Unified Ideographs for common simplified Chinese
-CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesCyrillic(ImFontAtlas* self);                                                                             // Default + about 400 Cyrillic characters
-CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesThai(ImFontAtlas* self);                                                                                 // Default + Thai characters
-CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesVietnamese(ImFontAtlas* self);                                                                           // Default + Vietnamese characters
+CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesDefault(ImFontAtlas* self);                        // Basic Latin, Extended Latin
+CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesGreek(ImFontAtlas* self);                          // Default + Greek and Coptic
+CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesKorean(ImFontAtlas* self);                         // Default + Korean characters
+CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesJapanese(ImFontAtlas* self);                       // Default + Hiragana, Katakana, Half-Width, Selection of 2999 Ideographs
+CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesChineseFull(ImFontAtlas* self);                    // Default + Half-Width + Japanese Hiragana/Katakana + full set of about 21000 CJK Unified Ideographs
+CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesChineseSimplifiedCommon(ImFontAtlas* self);        // Default + Half-Width + Japanese Hiragana/Katakana + set of 2500 CJK Unified Ideographs for common simplified Chinese
+CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesCyrillic(ImFontAtlas* self);                       // Default + about 400 Cyrillic characters
+CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesThai(ImFontAtlas* self);                           // Default + Thai characters
+CIMGUI_API const ImWchar*         ImFontAtlas_GetGlyphRangesVietnamese(ImFontAtlas* self);                     // Default + Vietnamese characters
 // You can request arbitrary rectangles to be packed into the atlas, for your own purposes.
 // - After calling Build(), you can query the rectangle position and render your pixels.
 // - If you render colored output, set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of preferred texture format.
@@ -3584,7 +3586,6 @@ CIMGUI_API int                    ImFontAtlas_AddCustomRectFontGlyph(ImFontAtlas
 CIMGUI_API ImFontAtlasCustomRect* ImFontAtlas_GetCustomRectByIndex(ImFontAtlas* self, int index);
 // [Internal]
 CIMGUI_API void                   ImFontAtlas_CalcCustomRectUV(const ImFontAtlas* self, const ImFontAtlasCustomRect* rect, ImVec2* out_uv_min, ImVec2* out_uv_max);
-CIMGUI_API bool                   ImFontAtlas_GetMouseCursorTexData(ImFontAtlas* self, ImGuiMouseCursor cursor, ImVec2* out_offset, ImVec2* out_size, ImVec2 out_uv_border[2], ImVec2 out_uv_fill[2]);
 
 // Font runtime data and rendering
 // ImFontAtlas automatically loads a default embedded font for you when you call GetTexDataAsAlpha8() or GetTexDataAsRGBA32().
