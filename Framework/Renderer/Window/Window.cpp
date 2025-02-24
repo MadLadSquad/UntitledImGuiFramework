@@ -152,6 +152,7 @@ void UImGui::WindowInternal::createWindow() noexcept
 
     #ifdef GLFW_PLATFORM_X11
         glfwWindowHintString(GLFW_X11_CLASS_NAME, Instance::get()->applicationName.c_str());
+        glfwWindowHintString(GLFW_X11_INSTANCE_NAME, Instance::get()->applicationName.c_str());
     #endif
     #ifdef GLFW_PLATFORM_WAYLAND
         glfwWindowHintString(GLFW_WAYLAND_APP_ID, Instance::get()->applicationName.c_str());
