@@ -33,7 +33,7 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #define IMGUI_VERSION       "1.91.9 WIP"
-#define IMGUI_VERSION_NUM   19185
+#define IMGUI_VERSION_NUM   19186
 #define IMGUI_HAS_TABLE
 #define IMGUI_HAS_VIEWPORT           // Viewport WIP branch
 #define IMGUI_HAS_DOCK               // Docking WIP branch
@@ -1018,7 +1018,7 @@ CIMGUI_API void ImGui_PushClipRect(ImVec2 clip_rect_min, ImVec2 clip_rect_max, b
 CIMGUI_API void ImGui_PopClipRect(void);
 
 // Focus, Activation
-CIMGUI_API void ImGui_SetItemDefaultFocus(void);                     // make last item the default focused item of of a newly appearing window.
+CIMGUI_API void ImGui_SetItemDefaultFocus(void);                     // make last item the default focused item of a newly appearing window.
 CIMGUI_API void ImGui_SetKeyboardFocusHere(void);                    // Implied offset = 0
 CIMGUI_API void ImGui_SetKeyboardFocusHereEx(int offset /* = 0 */);  // focus keyboard on the next widget. Use positive 'offset' to access sub components of a multiple component widget. Use -1 to access previous widget.
 
