@@ -74,7 +74,6 @@ functions for easily rendering bold, italic, underlined and other types of text
 - OS Module for core OS interaction
   - URL and file/folder opener with default application using the [UntitledOpen](https://github.com/MadLadSquad/UntitledOpen) library ✅
   - Exec integration using the [UntitledExec](https://github.com/MadLadSquad/UntitledExec) library ✅
-  - Cross-platform system font querying using the [UntitledFontUtils](https://github.com/MadLadSquad/UntitledFontUtils) library ✅
   - Freedesktop: ✅
     - [XDG Basedir](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) integration ✅
     - [dbus](https://www.freedesktop.org/wiki/Software/dbus/) integration ✅
