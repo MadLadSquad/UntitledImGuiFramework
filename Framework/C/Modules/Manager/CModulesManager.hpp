@@ -23,7 +23,6 @@ extern "C"
         bool dbus;
         bool uexec;
         bool theming;
-        bool ufont;
         bool i18n;
         bool undo_redo;
         bool plotting;

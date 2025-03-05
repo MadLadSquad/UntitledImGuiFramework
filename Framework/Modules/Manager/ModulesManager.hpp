@@ -77,7 +77,6 @@ namespace UImGui
             .dbus = false,
             .uexec = false,
             .theming = false,
-            .ufont = false,
             .i18n = false,
             .undo_redo = false,
             .plotting = false,
