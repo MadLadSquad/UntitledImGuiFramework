@@ -33,7 +33,7 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #define IMGUI_VERSION       "1.91.9 WIP"
-#define IMGUI_VERSION_NUM   19186
+#define IMGUI_VERSION_NUM   19187
 #define IMGUI_HAS_TABLE
 #define IMGUI_HAS_VIEWPORT           // Viewport WIP branch
 #define IMGUI_HAS_DOCK               // Docking WIP branch
@@ -2811,6 +2811,7 @@ CIMGUI_API const char* ImGuiTextBuffer_end(const ImGuiTextBuffer* self);        
 CIMGUI_API int         ImGuiTextBuffer_size(const ImGuiTextBuffer* self);
 CIMGUI_API bool        ImGuiTextBuffer_empty(const ImGuiTextBuffer* self);
 CIMGUI_API void        ImGuiTextBuffer_clear(ImGuiTextBuffer* self);
+CIMGUI_API void        ImGuiTextBuffer_resize(ImGuiTextBuffer* self, int size);                                           // Similar to resize(0) on ImVector: empty string but don't free buffer.
 CIMGUI_API void        ImGuiTextBuffer_reserve(ImGuiTextBuffer* self, int capacity);
 CIMGUI_API const char* ImGuiTextBuffer_c_str(const ImGuiTextBuffer* self);
 CIMGUI_API void        ImGuiTextBuffer_append(ImGuiTextBuffer* self, const char* str, const char* str_end /* = NULL */);

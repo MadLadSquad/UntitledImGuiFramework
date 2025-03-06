@@ -2827,6 +2827,11 @@ CIMGUI_API void        cimgui::ImGuiTextBuffer_clear(cimgui::ImGuiTextBuffer* se
     reinterpret_cast<::ImGuiTextBuffer*>(self)->clear();
 }
 
+CIMGUI_API void        cimgui::ImGuiTextBuffer_resize(cimgui::ImGuiTextBuffer* self, int size)
+{
+    reinterpret_cast<::ImGuiTextBuffer*>(self)->resize(size);
+}
+
 CIMGUI_API void        cimgui::ImGuiTextBuffer_reserve(cimgui::ImGuiTextBuffer* self, int capacity)
 {
     reinterpret_cast<::ImGuiTextBuffer*>(self)->reserve(capacity);
