@@ -270,7 +270,7 @@ namespace YAML
     {
         static Node encode(const UImGui::FString& rhs) noexcept
         {
-            return Node(rhs);
+            return Node(rhs.c_str());
         }
 
         static bool decode(const Node& node, UImGui::FString& rhs) noexcept

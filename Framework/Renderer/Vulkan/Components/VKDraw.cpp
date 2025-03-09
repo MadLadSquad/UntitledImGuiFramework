@@ -28,7 +28,7 @@ void UImGui::VKDraw::init() noexcept
     constexpr VkColorSpaceKHR requestSurfaceColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
     window.SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(device->physicalDevice, window.Surface, requestSurfaceImageFormat, CARRAY_SIZE(requestSurfaceImageFormat), requestSurfaceColorSpace);
 
-    VkPresentModeKHR presentationModes[] = { VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR };
+    VkPresentModeKHR presentationModes[] = { VK_PRESENT_MODE_FIFO_KHR, VK_PRESENT_MODE_MAILBOX_KHR, VK_PRESENT_MODE_IMMEDIATE_KHR };
     size_t presentationModesSize = CARRAY_SIZE(presentationModes);
     if (!Renderer::data().bUsingVSync)
     {
