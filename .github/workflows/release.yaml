@@ -43,7 +43,7 @@ jobs:
           numeric_tag="${tag//.}"
           numeric_tag="$(echo ${numeric_tag} | sed 's/^0*//')"
 
-          echo "out=untitled-imgui-framework-${tag}.tar.xz" >> $GITHUB_OUTPUT
+          echo "out=untitled-imgui-framework-${tag}" >> $GITHUB_OUTPUT
           
           sed -i "s/set(UIMGUI_FRAMEWORK_VERSION .*/set(UIMGUI_FRAMEWORK_VERSION ${tag})/g" Framework/cmake/Version.cmake
           sed -i "s/set(UIMGUI_FRAMEWORK_VERSION_NUMERIC .*)/set(UIMGUI_FRAMEWORK_VERSION_NUMERIC ${numeric_tag})/g" Framework/cmake/Version.cmake
@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           rm -rf .git/
-          tar cfJ ${{ steps.tag.outputs.tag }} . --transform "s,^,${{ steps.tag.outputs.tag }}/," * || echo "Might have failed"
+          tar cfJ ${{ steps.tag.outputs.tag }}.tar.xz . --transform "s,^,${{ steps.tag.outputs.tag }}/," * || echo "Might have failed"
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -61,5 +61,5 @@ jobs:
             More on what is done this month can be found on the latest newsletter entry: https://madladsquad.com/#monthly-newsletter
           draft: false
           prerelease: false
-          files: ${{ steps.tag.outputs.tag }}
+          files: ${{ steps.tag.outputs.tag }}.tar.xz
           generate_release_notes: false
