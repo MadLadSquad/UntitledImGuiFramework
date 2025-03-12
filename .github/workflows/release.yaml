@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           rm -rf .git/
-          tar cfJ ${{ steps.tag.outputs.tag }}.tar.xz . --transform "s,^,${{ steps.tag.outputs.tag }}/," * || echo "Might have failed"
+          tar cfJ ${{ steps.tag.outputs.out }}.tar.xz . --transform "s,^,${{ steps.tag.outputs.tag }}/," * || echo "Might have failed"
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -61,5 +61,5 @@ jobs:
             More on what is done this month can be found on the latest newsletter entry: https://madladsquad.com/#monthly-newsletter
           draft: false
           prerelease: false
-          files: ${{ steps.tag.outputs.tag }}.tar.xz
+          files: ${{ steps.tag.outputs.out }}.tar.xz
           generate_release_notes: false
