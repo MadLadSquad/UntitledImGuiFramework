@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           rm -rf .git/
-          tar cfJ ${{ steps.tag.outputs.out }}.tar.xz . --transform "s,^,${{ steps.tag.outputs.tag }}/," * || echo "Might have failed"
+          tar cfJ ${{ steps.tag.outputs.out }}.tar.xz . --transform "s,^,${{ steps.tag.outputs.out }}/," * || echo "Might have failed"
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
