@@ -31,6 +31,7 @@ jobs:
       - name: Extract commit data
         uses: rlespinasse/git-commit-data-action@v1.x
       - name: Get tag
+        id: tag
         shell: bash
         run: |
           git config --global user.name "Madman10K"
@@ -41,6 +42,8 @@ jobs:
           tag="${tag:1}"
           numeric_tag="${tag//.}"
           numeric_tag="$(echo ${numeric_tag} | sed 's/^0*//')"
+
+          echo "out=untitled-imgui-framework-${tag}.tar.xz" >> $GITHUB_OUTPUT
           
           sed -i "s/set(UIMGUI_FRAMEWORK_VERSION .*/set(UIMGUI_FRAMEWORK_VERSION ${tag})/g" Framework/cmake/Version.cmake
           sed -i "s/set(UIMGUI_FRAMEWORK_VERSION_NUMERIC .*)/set(UIMGUI_FRAMEWORK_VERSION_NUMERIC ${numeric_tag})/g" Framework/cmake/Version.cmake
@@ -49,7 +52,7 @@ jobs:
         shell: bash
         run: |
           rm -rf .git/
-          tar cfJ untitled-imgui-framework.tar.xz . || echo "Might have failed"
+          tar cfJ ${{ steps.tag.outputs.tag }} . || echo "Might have failed"
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -58,5 +61,5 @@ jobs:
             More on what is done this month can be found on the latest newsletter entry: https://madladsquad.com/#monthly-newsletter
           draft: false
           prerelease: false
-          files: untitled-imgui-framework.tar.xz
+          files: ${{ steps.tag.outputs.tag }}
           generate_release_notes: false
