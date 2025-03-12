@@ -4,6 +4,10 @@
 [![trello](https://img.shields.io/badge/Trello-UDE-blue])](https://trello.com/b/HmfuRY2K/untitleddesktop)
 [![Discord](https://img.shields.io/discord/717037253292982315.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/4wgH8ZE)
 
+<img width="200px" height="200px" src="https://github.com/user-attachments/assets/ad33fc85-4f31-4f73-bf50-e0704a88d53e"/>
+
+*<sub>Logo designed and created by <a href="https://www.instagram.com/_.insekhta._/">insekhta</a>.</sub>*
+
 A desktop software development framework that uses dear imgui as its UI and rendering library.
 
 ## NEW: Interactive web demo
