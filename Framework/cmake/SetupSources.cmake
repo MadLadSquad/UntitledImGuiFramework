@@ -38,12 +38,14 @@ link_directories("${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/vulkan" "UVKBuildToo
 if (EMSCRIPTEN)
     file(GLOB_RECURSE IMGUI_SRC "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_glfw.cpp"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.cpp"
-            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_wgpu.cpp")
+            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_wgpu.cpp"
+            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/misc/freetype/*.cpp")
 
     file(GLOB_RECURSE IMGUI_HEAD "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_glfw.h"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.h"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_wgpu.h"
-            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3_loader.h")
+            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3_loader.h"
+            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/misc/freetype/*.h")
 else()
     file(GLOB_RECURSE IMGUI_SRC "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_glfw.cpp"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.cpp"
