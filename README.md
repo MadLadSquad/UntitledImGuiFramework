@@ -8,7 +8,7 @@
 
 *<sub>Logo designed and created by <a href="https://www.instagram.com/_.insekhta._/">insekhta</a>.</sub>*
 
-A desktop software development framework that uses dear imgui as its UI and rendering library.
+An independent cross-platform desktop application development framework that uses dear imgui as its UI and rendering library.
 
 ## NEW: Interactive web demo
 You can try out the demo [here](https://uimgui.madladsquad.com).
@@ -23,14 +23,16 @@ with other operating systems, such as Windows and macOS.
 
 Finally, we wanted to also be able to distribute the core to most popular consumer platforms.
 
-[Dear imgui](https://github.com/ocornut/imgui) filled all our requirements. It provides a GUI layer which provides the following benefits:
+The [dear imgui](https://github.com/ocornut/imgui) library filled all our requirements, so we decided to create a wrapper around it and all other boilerplate-ey components of creating a GUI application. 
+
+[dear imgui](https://github.com/ocornut/imgui) provides a GUI layer which has the following benefits over other solutions:
 
 - Light
 - Fast(graphically accelerated)
 - Immediate(rendering is done in the source code using function calls)
 - Your styling, layout, scaffold and scripting is all in your source code
 - Easy to work with
-- Used by a multitude of high profile developers, an incomplete list can be seen [here](https://github.com/ocornut/imgui/wiki/Software-using-dear-imgui)
+- Used by a multitude of high profile developers, an list can be found [on dear imgui's wiki](https://github.com/ocornut/imgui/wiki/Software-using-dear-imgui)
 
 ## Framework features
 The above section says a lot, but let's talk features.
@@ -131,7 +133,7 @@ the documentation also covers topics such as:
 1. Collaboration tips
 
 ## Showcase and Progress
-Coming soon, follow the [UntitledDesktopEnvironment webpage](https://madladsquad.com/desktop) for updates 
+Follow the [UntitledDesktopEnvironment webpage](https://madladsquad.com/desktop) for updates 
 and some feature highlights.
 
 Try out the new interactive web demo [here](https://uimgui.madladsquad.com/).
@@ -139,6 +141,3 @@ Try out the new interactive web demo [here](https://uimgui.madladsquad.com/).
 There are many applications, already in production, that use the framework. A list can be found 
 [here](https://github.com/MadLadSquad/UntitledImGuiFramework/wiki/Applications-using-the-framework). If your application 
 uses the framework, please contribute to the list!
-
-The organization trello board can be found [here](https://trello.com/b/HmfuRY2K/untitleddesktop). It
-contains organization information on all projects related to UDE. The framework can be found in its corresponding cards.
