@@ -152,8 +152,6 @@ extern "C"
 #endif // #if defined(__clang__)
 //-----------------------------------------------------------------------------
 // [SECTION] Forward declarations and basic types
-//-----------------------------------------------------------------------------
-
 // Auto-generated forward declarations for C header
 typedef struct ImVec2_t ImVec2;
 typedef struct ImVec4_t ImVec4;
@@ -183,6 +181,14 @@ typedef struct ImVector_ImGuiViewportPtr_t ImVector_ImGuiViewportPtr;
 typedef struct ImGuiTextFilter_ImGuiTextRange_t ImGuiTextFilter_ImGuiTextRange;
 typedef struct ImDrawCmdHeader_t ImDrawCmdHeader;
 typedef struct ImFontAtlasCustomRect_t ImFontAtlasCustomRect;
+// ImDrawIdx: vertex index. [Compile-time configurable type]
+// - To use 16-bit indices + allow large meshes: backend need to set 'io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset' and handle ImDrawCmd::VtxOffset (recommended).
+// - To use 32-bit indices: override with '#define ImDrawIdx unsigned int' in your imconfig.h file.
+#ifndef ImDrawIdx
+typedef unsigned short ImDrawIdx;  // Default: 16-bit (for maximum compatibility with renderer backends)
+#endif // #ifndef ImDrawIdx
+//-----------------------------------------------------------------------------
+
 // Scalar data types
 typedef unsigned int ImGuiID;      // A unique ID used by widgets (typically the result of hashing a stack of string)
 typedef signed char ImS8;          // 8-bit signed integer
@@ -3111,12 +3117,6 @@ CIMGUI_API void ImGuiSelectionExternalStorage_ApplyRequests(ImGuiSelectionExtern
 #ifndef IM_DRAWLIST_TEX_LINES_WIDTH_MAX
 #define IM_DRAWLIST_TEX_LINES_WIDTH_MAX     (32)
 #endif // #ifndef IM_DRAWLIST_TEX_LINES_WIDTH_MAX
-// ImDrawIdx: vertex index. [Compile-time configurable type]
-// - To use 16-bit indices + allow large meshes: backend need to set 'io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset' and handle ImDrawCmd::VtxOffset (recommended).
-// - To use 32-bit indices: override with '#define ImDrawIdx unsigned int' in your imconfig.h file.
-#ifndef ImDrawIdx
-typedef unsigned short ImDrawIdx;  // Default: 16-bit (for maximum compatibility with renderer backends)
-#endif // #ifndef ImDrawIdx
 // ImDrawCallback: Draw callbacks for advanced uses [configurable type: override in imconfig.h]
 // NB: You most likely do NOT need to use draw callbacks just to create your own widget or customized UI rendering,
 // you can poke into the draw list for that! Draw callback may be useful for example to:
