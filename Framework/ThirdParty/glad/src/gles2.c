@@ -201,6 +201,7 @@ int GLAD_GL_MESA_framebuffer_swap_xy = 0;
 int GLAD_GL_MESA_program_binary_formats = 0;
 int GLAD_GL_MESA_sampler_objects = 0;
 int GLAD_GL_MESA_shader_integer_functions = 0;
+int GLAD_GL_MESA_texture_const_bandwidth = 0;
 int GLAD_GL_NVX_blend_equation_advanced_multi_draw_buffers = 0;
 int GLAD_GL_NV_bindless_texture = 0;
 int GLAD_GL_NV_blend_equation_advanced = 0;
@@ -2855,6 +2856,7 @@ static int glad_gl_find_extensions_gles2(void) {
     GLAD_GL_MESA_program_binary_formats = glad_gl_has_extension(exts, exts_i, "GL_MESA_program_binary_formats");
     GLAD_GL_MESA_sampler_objects = glad_gl_has_extension(exts, exts_i, "GL_MESA_sampler_objects");
     GLAD_GL_MESA_shader_integer_functions = glad_gl_has_extension(exts, exts_i, "GL_MESA_shader_integer_functions");
+    GLAD_GL_MESA_texture_const_bandwidth = glad_gl_has_extension(exts, exts_i, "GL_MESA_texture_const_bandwidth");
     GLAD_GL_NVX_blend_equation_advanced_multi_draw_buffers = glad_gl_has_extension(exts, exts_i, "GL_NVX_blend_equation_advanced_multi_draw_buffers");
     GLAD_GL_NV_bindless_texture = glad_gl_has_extension(exts, exts_i, "GL_NV_bindless_texture");
     GLAD_GL_NV_blend_equation_advanced = glad_gl_has_extension(exts, exts_i, "GL_NV_blend_equation_advanced");

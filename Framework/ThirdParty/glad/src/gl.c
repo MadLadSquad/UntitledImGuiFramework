@@ -449,6 +449,7 @@ int GLAD_GL_MESA_pack_invert = 0;
 int GLAD_GL_MESA_program_binary_formats = 0;
 int GLAD_GL_MESA_resize_buffers = 0;
 int GLAD_GL_MESA_shader_integer_functions = 0;
+int GLAD_GL_MESA_texture_const_bandwidth = 0;
 int GLAD_GL_MESA_tile_raster_order = 0;
 int GLAD_GL_MESA_window_pos = 0;
 int GLAD_GL_MESA_ycbcr_texture = 0;
@@ -7754,6 +7755,7 @@ static int glad_gl_find_extensions_gl(void) {
     GLAD_GL_MESA_program_binary_formats = glad_gl_has_extension(exts, exts_i, "GL_MESA_program_binary_formats");
     GLAD_GL_MESA_resize_buffers = glad_gl_has_extension(exts, exts_i, "GL_MESA_resize_buffers");
     GLAD_GL_MESA_shader_integer_functions = glad_gl_has_extension(exts, exts_i, "GL_MESA_shader_integer_functions");
+    GLAD_GL_MESA_texture_const_bandwidth = glad_gl_has_extension(exts, exts_i, "GL_MESA_texture_const_bandwidth");
     GLAD_GL_MESA_tile_raster_order = glad_gl_has_extension(exts, exts_i, "GL_MESA_tile_raster_order");
     GLAD_GL_MESA_window_pos = glad_gl_has_extension(exts, exts_i, "GL_MESA_window_pos");
     GLAD_GL_MESA_ycbcr_texture = glad_gl_has_extension(exts, exts_i, "GL_MESA_ycbcr_texture");
