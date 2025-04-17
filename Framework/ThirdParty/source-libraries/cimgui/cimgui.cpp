@@ -3719,6 +3719,11 @@ CIMGUI_API void         cimgui::ImFont_RenderChar(cimgui::ImFont* self, cimgui::
     reinterpret_cast<::ImFont*>(self)->RenderChar(reinterpret_cast<::ImDrawList*>(draw_list), size, ConvertToCPP_ImVec2(pos), col, c);
 }
 
+CIMGUI_API void         cimgui::ImFont_RenderCharEx(cimgui::ImFont* self, cimgui::ImDrawList* draw_list, float size, cimgui::ImVec2 pos, ImU32 col, ImWchar c, const cimgui::ImVec4* cpu_fine_clip)
+{
+    reinterpret_cast<::ImFont*>(self)->RenderChar(reinterpret_cast<::ImDrawList*>(draw_list), size, ConvertToCPP_ImVec2(pos), col, c, reinterpret_cast<const ::ImVec4*>(cpu_fine_clip));
+}
+
 CIMGUI_API void         cimgui::ImFont_RenderText(cimgui::ImFont* self, cimgui::ImDrawList* draw_list, float size, cimgui::ImVec2 pos, ImU32 col, cimgui::ImVec4 clip_rect, const char* text_begin, const char* text_end, float wrap_width, bool cpu_fine_clip)
 {
     reinterpret_cast<::ImFont*>(self)->RenderText(reinterpret_cast<::ImDrawList*>(draw_list), size, ConvertToCPP_ImVec2(pos), col, ConvertToCPP_ImVec4(clip_rect), text_begin, text_end, wrap_width, cpu_fine_clip);
