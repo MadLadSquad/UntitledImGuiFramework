@@ -1981,6 +1981,7 @@ typedef enum
     ImGuiStyleVar_TableAngledHeadersAngle,      // float     TableAngledHeadersAngle
     ImGuiStyleVar_TableAngledHeadersTextAlign,  // ImVec2  TableAngledHeadersTextAlign
     ImGuiStyleVar_TreeLinesSize,                // float     TreeLinesSize
+    ImGuiStyleVar_TreeLinesRounding,            // float     TreeLinesRounding
     ImGuiStyleVar_ButtonTextAlign,              // ImVec2    ButtonTextAlign
     ImGuiStyleVar_SelectableTextAlign,          // ImVec2    SelectableTextAlign
     ImGuiStyleVar_SeparatorTextBorderSize,      // float     SeparatorTextBorderSize
@@ -2402,6 +2403,7 @@ struct ImGuiStyle_t
     ImVec2             TableAngledHeadersTextAlign;       // Alignment of angled headers within the cell
     ImGuiTreeNodeFlags TreeLinesFlags;                    // Default way to draw lines connecting TreeNode hierarchy. ImGuiTreeNodeFlags_DrawLinesNone or ImGuiTreeNodeFlags_DrawLinesFull or ImGuiTreeNodeFlags_DrawLinesToNodes.
     float              TreeLinesSize;                     // Thickness of outlines when using ImGuiTreeNodeFlags_DrawLines.
+    float              TreeLinesRounding;                 // Radius of lines connecting child nodes to the vertical line.
     ImGuiDir           ColorButtonPosition;               // Side of the color button in the ColorEdit4 widget (left/right). Defaults to ImGuiDir_Right.
     ImVec2             ButtonTextAlign;                   // Alignment of button text when button is larger than text. Defaults to (0.5f, 0.5f) (centered).
     ImVec2             SelectableTextAlign;               // Alignment of selectable text. Defaults to (0.0f, 0.0f) (top-left aligned). It's generally important to keep this left-aligned if you want to lay multiple items on a same line.
@@ -3650,17 +3652,18 @@ CIMGUI_API const char*  ImFont_GetDebugName(const ImFont* self);
 // [Internal] Don't use!
 // 'max_width' stops rendering after a certain width (could be turned into a 2d size). FLT_MAX to disable.
 // 'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
-CIMGUI_API ImVec2       ImFont_CalcTextSizeA(ImFont* self, float size, float max_width, float wrap_width, const char* text_begin);          // Implied text_end = NULL, remaining = NULL
+CIMGUI_API ImVec2       ImFont_CalcTextSizeA(ImFont* self, float size, float max_width, float wrap_width, const char* text_begin);                                         // Implied text_end = NULL, remaining = NULL
 CIMGUI_API ImVec2       ImFont_CalcTextSizeAEx(ImFont* self, float size, float max_width, float wrap_width, const char* text_begin, const char* text_end /* = NULL */, const char** remaining /* = NULL */); // utf8
 CIMGUI_API const char*  ImFont_CalcWordWrapPositionA(ImFont* self, float scale, const char* text, const char* text_end, float wrap_width);
-CIMGUI_API void         ImFont_RenderChar(ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImWchar c);
+CIMGUI_API void         ImFont_RenderChar(ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImWchar c);                                              // Implied cpu_fine_clip = NULL
+CIMGUI_API void         ImFont_RenderCharEx(ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImWchar c, const ImVec4* cpu_fine_clip /* = NULL */);
 CIMGUI_API void         ImFont_RenderText(ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImVec4 clip_rect, const char* text_begin, const char* text_end, float wrap_width /* = 0.0f */, bool cpu_fine_clip /* = false */);
 // [Internal] Don't use!
 CIMGUI_API void         ImFont_BuildLookupTable(ImFont* self);
 CIMGUI_API void         ImFont_ClearOutputData(ImFont* self);
 CIMGUI_API void         ImFont_GrowIndex(ImFont* self, int new_size);
 CIMGUI_API void         ImFont_AddGlyph(ImFont* self, const ImFontConfig* src_cfg, ImWchar c, float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, float advance_x);
-CIMGUI_API void         ImFont_AddRemapChar(ImFont* self, ImWchar dst, ImWchar src, bool overwrite_dst /* = true */);                       // Makes 'dst' character/glyph points to 'src' character/glyph. Currently needs to be called AFTER fonts have been built.
+CIMGUI_API void         ImFont_AddRemapChar(ImFont* self, ImWchar dst, ImWchar src, bool overwrite_dst /* = true */);                                                      // Makes 'dst' character/glyph points to 'src' character/glyph. Currently needs to be called AFTER fonts have been built.
 CIMGUI_API bool         ImFont_IsGlyphRangeUnused(ImFont* self, unsigned int c_begin, unsigned int c_last);
 
 //-----------------------------------------------------------------------------
