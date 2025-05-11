@@ -58,6 +58,7 @@ and submodules they want or don't want to include in their application. Module l
     - OpenGL ✅
     - Vulkan ✅
     - WebGPU ✅
+    - Custom pluggable renderer ✅
 - I18N module ✅
   - Adds the [UntitledI18N](https://github.com/MadLadSquad/UntitledI18N) library for internationalisation support
 - Plotting Module ✅
