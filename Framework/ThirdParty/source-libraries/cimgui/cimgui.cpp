@@ -3749,9 +3749,9 @@ CIMGUI_API void         cimgui::ImFont_AddGlyph(cimgui::ImFont* self, const cimg
     reinterpret_cast<::ImFont*>(self)->AddGlyph(reinterpret_cast<const ::ImFontConfig*>(src_cfg), c, x0, y0, x1, y1, u0, v0, u1, v1, advance_x);
 }
 
-CIMGUI_API void         cimgui::ImFont_AddRemapChar(cimgui::ImFont* self, ImWchar dst, ImWchar src, bool overwrite_dst)
+CIMGUI_API void         cimgui::ImFont_AddRemapChar(cimgui::ImFont* self, ImWchar from_codepoint, ImWchar to_codepoint, bool overwrite_dst)
 {
-    reinterpret_cast<::ImFont*>(self)->AddRemapChar(dst, src, overwrite_dst);
+    reinterpret_cast<::ImFont*>(self)->AddRemapChar(from_codepoint, to_codepoint, overwrite_dst);
 }
 
 CIMGUI_API bool         cimgui::ImFont_IsGlyphRangeUnused(cimgui::ImFont* self, unsigned int c_begin, unsigned int c_last)
