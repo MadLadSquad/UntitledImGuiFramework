@@ -2972,11 +2972,6 @@ CIMGUI_API void cimgui::ImGuiListClipper_IncludeRangeByIndices(cimgui::ImGuiList
     reinterpret_cast<::ImGuiListClipper*>(self)->IncludeRangeByIndices(item_begin, item_end);
 }
 
-CIMGUI_API void cimgui::ImGuiListClipper_ForceDisplayRangeByIndices(cimgui::ImGuiListClipper* self, int item_begin, int item_end)
-{
-    reinterpret_cast<::ImGuiListClipper*>(self)->ForceDisplayRangeByIndices(item_begin, item_end);
-}
-
 #endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
 CIMGUI_API void    cimgui::ImColor_SetHSV(cimgui::ImColor* self, float h, float s, float v, float a)
@@ -3854,16 +3849,6 @@ CIMGUI_API bool   cimgui::ImGui_ListBoxObsoleteEx(const char* label, int* curren
 CIMGUI_API void   cimgui::ImGui_SetItemAllowOverlap(void)
 {
     ::ImGui::SetItemAllowOverlap();
-}
-
-CIMGUI_API void   cimgui::ImGui_PushAllowKeyboardFocus(bool tab_stop)
-{
-    ::ImGui::PushAllowKeyboardFocus(tab_stop);
-}
-
-CIMGUI_API void   cimgui::ImGui_PopAllowKeyboardFocus(void)
-{
-    ::ImGui::PopAllowKeyboardFocus();
 }
 
 #endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
