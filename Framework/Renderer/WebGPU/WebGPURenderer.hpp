@@ -7,7 +7,7 @@
 
 namespace UImGui
 {
-    class UIMGUI_PUBLIC_API WebGPURenderer final : public GenericInternalRenderer
+    class UIMGUI_PUBLIC_API WebGPURenderer final : public GenericRenderer
     {
     public:
         WebGPURenderer() noexcept = default;

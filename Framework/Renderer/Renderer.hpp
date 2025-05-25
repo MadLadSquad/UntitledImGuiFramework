@@ -12,6 +12,7 @@
 namespace UImGui
 {
     typedef UImGui_RendererData RendererData;
+    typedef UImGui_RendererType RendererType;
 
     class UIMGUI_PUBLIC_API RendererInternal
     {
@@ -32,25 +33,40 @@ namespace UImGui
 
         static void tick(void* rendererInstance) noexcept;
 
-        OpenGLRenderer opengl{};
-        VulkanRenderer vulkan{};
-        WebGPURenderer wgpu{};
+        void loadConfig() noexcept;
+        void saveConfig() const noexcept;
 
-        GenericInternalRenderer* renderer = nullptr;
+        OpenGLRenderer opengl{};
+#ifdef __EMSCRIPTEN__
+        WebGPURenderer wgpu{};
+#else
+        VulkanRenderer vulkan{};
+#endif
+        GenericRenderer* custom = nullptr;
+
+        GenericRenderer* renderers[UIMGUI_RENDERER_TYPE_COUNT] =
+        {
+            &opengl,
+#ifdef __EMSCRIPTEN__
+            &wgpu,
+#else
+            &vulkan,
+#endif
+            custom
+        };
+
+        GenericRenderer* renderer = nullptr;
 
         FString vendorString;
         FString apiVersion;
         FString driverVersion;
         FString gpuName;
 
-        void loadConfig() noexcept;
-        void saveConfig() const noexcept;
-
         double lastTime = 0.0f;
 
         RendererData data =
         {
-            .bVulkan = false,
+            .rendererType = UIMGUI_RENDERER_TYPE_OPENGL,
             .bUsingVSync = true,
             .msaaSamples = 1,
             .bEnablePowerSavingMode = false,

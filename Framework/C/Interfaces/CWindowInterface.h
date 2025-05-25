@@ -6,6 +6,8 @@ extern "C"
 #include <C/CTypes.h>
 #include <C/CDefines.h>
 #include <C/Internal/CMonitor.h>
+    struct GLFWwindow;
+
     typedef void(*UImGui_Window_pushWindowPositionChangeCallbackFun)(UImGui_FVector2);
     typedef void(*UImGui_Window_pushWindowCloseCallbackFun)();
     typedef void(*UImGui_Window_pushWindowResizedInScreenCoordsCallbackFun)(int, int);
@@ -227,6 +229,9 @@ extern "C"
 
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_pushWindowErrorCallback(UImGui_Window_pushWindowErrorCallbackFun f);
+
+    // Event safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API GLFWwindow* UImGui_Window_getInternal();
 #ifdef __cplusplus
 };
 #endif

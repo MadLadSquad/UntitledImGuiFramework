@@ -76,7 +76,7 @@ uintptr_t UImGui::WebGPUTexture::get() noexcept
 void UImGui::WebGPUTexture::clear() noexcept
 {
 #ifdef __EMSCRIPTEN__
-    if (Renderer::data().bVulkan && bCreated)
+    if (Renderer::data().rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU && bCreated)
     {
         wgpuTextureViewRelease(textureView);
         wgpuTextureDestroy(texture);

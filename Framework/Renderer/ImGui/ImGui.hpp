@@ -12,9 +12,9 @@ namespace UImGui
     public:
         GUIRenderer() = default;
 
-        static void init(GenericInternalRenderer* renderer) noexcept;
-        static void beginUI(float deltaTime, GenericInternalRenderer* renderer) noexcept;
+        static void init(GenericRenderer* renderer) noexcept;
+        static void beginUI(float deltaTime, GenericRenderer* renderer) noexcept;
         static void beginFrame() noexcept;
-        static void shutdown(GenericInternalRenderer* renderer) noexcept;
+        static void shutdown(GenericRenderer* renderer) noexcept;
     };
 }

@@ -337,3 +337,8 @@ void UImGui_Window_pushWindowErrorCallback(const UImGui_Window_pushWindowErrorCa
 {
     UImGui::Window::pushWindowErrorCallback(f);
 }
+
+GLFWwindow* UImGui_Window_getInternal()
+{
+    return UImGui::Window::getInternal();
+}

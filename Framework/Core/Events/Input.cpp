@@ -53,43 +53,43 @@ UImGui::FVector2 UImGui::Input::getScroll() noexcept
 
 void UImGui::Input::setCursorVisibility(const CursorVisibilityState visibility) noexcept
 {
-    glfwSetInputMode(Window::get().windowMain, GLFW_CURSOR, visibility);
+    glfwSetInputMode(Window::getInternal(), GLFW_CURSOR, visibility);
 }
 
 UImGui::CursorVisibilityState UImGui::Input::getCurrentCursorVisibility() noexcept
 {
-    return static_cast<CursorVisibilityState>(glfwGetInputMode(Window::get().windowMain, GLFW_CURSOR));
+    return static_cast<CursorVisibilityState>(glfwGetInputMode(Window::getInternal(), GLFW_CURSOR));
 }
 
 void UImGui::Input::setStickyKeys(const bool bEnable) noexcept
 {
-    glfwSetInputMode(Window::get().windowMain, GLFW_STICKY_KEYS, bEnable);
-    glfwSetInputMode(Window::get().windowMain, GLFW_STICKY_MOUSE_BUTTONS, bEnable);
+    glfwSetInputMode(Window::getInternal(), GLFW_STICKY_KEYS, bEnable);
+    glfwSetInputMode(Window::getInternal(), GLFW_STICKY_MOUSE_BUTTONS, bEnable);
 }
 
 bool UImGui::Input::getStickyKeys() noexcept
 {
     // Use this since we set both anyway
-    return glfwGetInputMode(Window::get().windowMain, GLFW_STICKY_KEYS);
+    return glfwGetInputMode(Window::getInternal(), GLFW_STICKY_KEYS);
 }
 
 void UImGui::Input::setRawMouseMotion(const bool bEnable) noexcept
 {
     if (glfwRawMouseMotionSupported())
-        glfwSetInputMode(Window::get().windowMain, GLFW_RAW_MOUSE_MOTION, bEnable);
+        glfwSetInputMode(Window::getInternal(), GLFW_RAW_MOUSE_MOTION, bEnable);
 }
 
 bool UImGui::Input::getRawMouseMotion() noexcept
 {
-    return glfwGetInputMode(Window::get().windowMain, GLFW_RAW_MOUSE_MOTION);
+    return glfwGetInputMode(Window::getInternal(), GLFW_RAW_MOUSE_MOTION);
 }
 
 void UImGui::Input::setLockKeyMods(const bool bEnable) noexcept
 {
-    glfwSetInputMode(Window::get().windowMain, GLFW_LOCK_KEY_MODS, bEnable);
+    glfwSetInputMode(Window::getInternal(), GLFW_LOCK_KEY_MODS, bEnable);
 }
 
 bool UImGui::Input::getLockKeyMods() noexcept
 {
-    return glfwGetInputMode(Window::get().windowMain, GLFW_LOCK_KEY_MODS);
+    return glfwGetInputMode(Window::getInternal(), GLFW_LOCK_KEY_MODS);
 }

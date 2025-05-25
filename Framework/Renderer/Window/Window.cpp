@@ -121,7 +121,7 @@ void UImGui::WindowInternal::createWindow() noexcept
     }
     Logger::log("Setting up the window", ULOG_LOG_TYPE_NOTE);
 
-    if (Renderer::data().bVulkan)
+    if (Renderer::data().rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU)
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Have to set this to NO_API because that's how Vulkan is done in it
     else
     {
@@ -202,7 +202,7 @@ void UImGui::WindowInternal::createWindow() noexcept
     // Set callbacks
     configureCallbacks();
 
-    if (!Renderer::data().bVulkan)
+    if (Renderer::data().rendererType != UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU)
     {
 #if !__APPLE__
         const int version = gladLoadGL(glfwGetProcAddress);

@@ -50,7 +50,7 @@ void UImGui::VKDraw::destroy() noexcept
 
 void UImGui::VKDraw::ImGuiInit() const noexcept
 {
-    ImGui_ImplGlfw_InitForVulkan(Window::get().data(), true);
+    ImGui_ImplGlfw_InitForVulkan(Window::getInternal(), true);
     ImGui_ImplVulkan_InitInfo initInfo =
     {
         .Instance = instance->data(),

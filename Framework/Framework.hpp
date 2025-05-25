@@ -24,3 +24,5 @@
 #include <Renderer/ImGui/UImGuiExtensions.hpp>
 
 #include <Modules/Modules.hpp>
+
+#include <GLFW/glfw3.h>

@@ -3,7 +3,7 @@
 
 namespace UImGui
 {
-    class UIMGUI_PUBLIC_API OpenGLRenderer final : public GenericInternalRenderer
+    class UIMGUI_PUBLIC_API OpenGLRenderer final : public GenericRenderer
     {
     public:
         OpenGLRenderer() noexcept = default;

@@ -9,7 +9,7 @@
 
 #include "Interfaces/LayoutsInterface.hpp"
 
-void UImGui::GUIRenderer::init(GenericInternalRenderer* renderer) noexcept
+void UImGui::GUIRenderer::init(GenericRenderer* renderer) noexcept
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -80,7 +80,7 @@ void UImGui::GUIRenderer::init(GenericInternalRenderer* renderer) noexcept
     }
 }
 
-void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericInternalRenderer* renderer) noexcept
+void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericRenderer* renderer) noexcept
 {
     renderer->ImGuiNewFrame();
 
@@ -189,7 +189,7 @@ void UImGui::GUIRenderer::beginFrame() noexcept
     ImGui::NewFrame();
 }
 
-void UImGui::GUIRenderer::shutdown(GenericInternalRenderer* renderer) noexcept
+void UImGui::GUIRenderer::shutdown(GenericRenderer* renderer) noexcept
 {
     renderer->waitOnGPU();
     const auto& initInfo = Instance::get()->initInfo;

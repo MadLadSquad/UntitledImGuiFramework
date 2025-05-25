@@ -25,7 +25,7 @@ uintptr_t UImGui::OpenGLTexture::get() noexcept
 
 void UImGui::OpenGLTexture::clear() noexcept
 {
-    if (!Renderer::data().bVulkan)
+    if (Renderer::data().rendererType == UIMGUI_RENDERER_TYPE_OPENGL)
         glDeleteTextures(1, &id);
     id = 0;
     defaultClear();

@@ -285,7 +285,7 @@ uintptr_t UImGui::VulkanTexture::get() noexcept
 void UImGui::VulkanTexture::clear() noexcept
 {
 #ifndef __EMSCRIPTEN__
-    if (Renderer::data().bVulkan && bCreated)
+    if (Renderer::data().rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU && bCreated)
     {
         auto& device = Renderer::get().vulkan.device.get();
 

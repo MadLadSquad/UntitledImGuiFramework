@@ -7,7 +7,7 @@
 void UImGui::VKSurface::create(VKInstance& instance) noexcept
 {
     VkSurfaceKHR surf;
-    const auto result = glfwCreateWindowSurface(instance.data(), Window::get().data(), nullptr, &surf);
+    const auto result = glfwCreateWindowSurface(instance.data(), Window::getInternal(), nullptr, &surf);
     if (result != VK_SUCCESS)
     {
         Logger::log("Failed to create a window surface! Error code: ", ULOG_LOG_TYPE_ERROR, result);

@@ -1,4 +1,4 @@
-vulkan: false                 # Enables Vulkan/WebGPU renderers
+renderer: opengl              # For built-in OpenGL(opengl, gl, ogl or legacy), for built-in Vulkan/WebGPU(vulkan, vk, webgpu, wgpu), custom for custom renderers
 v-sync: true                  # To run or not to run in V-Sync mode
 msaa-samples: 8               # Multisampling sample count
 power-saving:                 # The power saving mode limits the number of frames that are drawn when idling. Will not work for applications with live plots or animations

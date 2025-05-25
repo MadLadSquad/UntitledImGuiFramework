@@ -2,7 +2,9 @@
 #include <Core/Types.hpp>
 #include "Window/Window.hpp"
 #include <C/Interfaces/CWindowInterface.h>
+#include <Core/Components/Instance.hpp>
 
+struct GLFWwindow;
 namespace UImGui
 {
     class UIMGUI_PUBLIC_API Window
@@ -233,8 +235,17 @@ namespace UImGui
         // Event safety - begin, style, post-begin
         static void pushWindowErrorCallback(const TFunction<void(int, String)>& f) noexcept;
 
+        // Event safety - begin, style, post-begin
         // This is the internal window instance, DO NOT TOUCH IT
-        static WindowInternal& get() noexcept;
+        static GLFWwindow* getInternal() noexcept;
     private:
+        friend class Layouts;
+        friend class Input;
+        friend class WindowInternal;
+        friend class UImGui::Instance;
+        friend class RendererInternal;
+        friend void ::UImGui_Window_pushWindowOSDragDropCallback(UImGui_Window_pushWindowOSDragDropCallbackFun);
+
+        static WindowInternal& get() noexcept;
     };
 }

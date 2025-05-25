@@ -366,3 +366,8 @@ size_t UImGui::Window::Platform::getWindowID() noexcept
 {
     return get().getWindowID();
 }
+
+GLFWwindow* UImGui::Window::getInternal() noexcept
+{
+    return get().data();
+}

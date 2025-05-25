@@ -35,7 +35,7 @@ void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, const i
     windowInst->windowSize.x = static_cast<float>(width);
     windowInst->windowSize.y = static_cast<float>(height);
 
-    if (!Renderer::data().bVulkan)
+    if (Renderer::data().rendererType != UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU)
         glViewport(0, 0, width, height);
 #ifndef __EMSCRIPTEN__
     else

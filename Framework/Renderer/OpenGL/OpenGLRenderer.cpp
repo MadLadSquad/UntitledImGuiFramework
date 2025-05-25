@@ -36,7 +36,7 @@ void UImGui::OpenGLRenderer::renderStart(double deltaTime) noexcept
 
 void UImGui::OpenGLRenderer::renderEnd(double deltaTime) noexcept
 {
-    glfwSwapBuffers(Window::get().windowMain);
+    glfwSwapBuffers(Window::getInternal());
 }
 
 void UImGui::OpenGLRenderer::destroy() noexcept
@@ -58,11 +58,11 @@ void UImGui::OpenGLRenderer::ImGuiShutdown() noexcept
 
 void UImGui::OpenGLRenderer::ImGuiInit() noexcept
 {
-    ImGui_ImplGlfw_InitForOpenGL(Window::get().data(), true);
+    ImGui_ImplGlfw_InitForOpenGL(Window::getInternal(), true);
 #ifdef __APPLE__
     ImGui_ImplOpenGL3_Init("#version 410");
 #elif __EMSCRIPTEN__
-    ImGui_ImplGlfw_InstallEmscriptenCallbacks(Window::get().data(), "canvas");
+    ImGui_ImplGlfw_InstallEmscriptenCallbacks(Window::getInternal(), "canvas");
     ImGui_ImplOpenGL3_Init("#version 100");
 #else
     ImGui_ImplOpenGL3_Init("#version 450");

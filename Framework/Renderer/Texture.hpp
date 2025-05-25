@@ -5,16 +5,7 @@
 
 #include "Interfaces/RendererInterface.hpp"
 
-#ifdef __EMSCRIPTEN__
-    #define TEX_BACKEND_VK webgpu
-#else
-    #define TEX_BACKEND_VK vulkan
-#endif
-
-#define TEX_RUN(x) if (Renderer::data().bVulkan)    \
-    return TEX_BACKEND_VK.x;                        \
-return opengl.x;
-
+#define TEX_RUN(x) return textures[static_cast<int>(Renderer::data().rendererType)]->x;
 
 namespace UImGui
 {
@@ -72,7 +63,22 @@ namespace UImGui
         bool bCleared = false;
 
         OpenGLTexture opengl{};
+#ifdef __EMSCRIPTEN__
         WebGPUTexture webgpu{};
+#else
         VulkanTexture vulkan{};
+#endif
+        GenericTexture* custom = nullptr;
+
+        GenericTexture* textures[UIMGUI_RENDERER_TYPE_COUNT] =
+        {
+            &opengl,
+#ifdef __EMSCRIPTEN__
+            &webgpu,
+#else
+            &vulkan,
+#endif
+            custom
+        };
     };
 }

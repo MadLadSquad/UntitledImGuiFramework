@@ -5,10 +5,10 @@ namespace UImGui
 {
     class RendererInternal;
 
-    class UIMGUI_PUBLIC_API GenericInternalRenderer
+    class UIMGUI_PUBLIC_API GenericRenderer
     {
     public:
-        GenericInternalRenderer() noexcept = default;
+        GenericRenderer() noexcept = default;
 
         virtual void init(RendererInternal& renderer) noexcept = 0;
         virtual void renderStart(double deltaTime) noexcept = 0;
@@ -24,6 +24,6 @@ namespace UImGui
         // like textures
         virtual void waitOnGPU() noexcept = 0;
 
-        virtual ~GenericInternalRenderer() noexcept = default;
+        virtual ~GenericRenderer() noexcept = default;
     };
 }

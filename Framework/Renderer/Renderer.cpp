@@ -12,6 +12,14 @@
 
 #include <Platform/WASM.hpp>
 
+// 1:1 string binding with C/Internal/RendererData.h
+static constexpr const char* RENDERER_TYPE_STRINGS[UIMGUI_RENDERER_TYPE_COUNT][UIMGUI_RENDERER_TYPE_ALT_NAMES_COUNT] =
+{
+    { "opengl",     "gl",       "legacy",   "ogl"       },
+    { "vulkan",     "vk",       "webgpu",   "wgpu"      },
+    { "custom",     "custom",   "custom",   "custom"    }
+};
+
 void UImGui::RendererInternal::start()
 {
     loadConfig();
@@ -23,11 +31,7 @@ void UImGui::RendererInternal::start()
     global.renderer = this;
     global.init();
 
-#ifdef __EMSCRIPTEN__
-    renderer = data.bVulkan ? CAST(decltype(renderer), &wgpu) : CAST(decltype(renderer), &opengl);
-#else
-    renderer = data.bVulkan ? CAST(decltype(renderer), &vulkan) : CAST(decltype(renderer), &opengl);
-#endif
+    renderer = CAST(decltype(renderer), renderers[static_cast<int>(data.rendererType)]);
     renderer->init(*this);
 
     global.modulesManagerr.init(global.instance->initInfo.configDir);
@@ -36,7 +40,7 @@ void UImGui::RendererInternal::start()
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop_arg(tick, this, 0, true);
 #else
-    while (!glfwWindowShouldClose(Window::get().windowMain))
+    while (!glfwWindowShouldClose(Window::getInternal()))
         tick(this);
 #endif
 }
@@ -143,13 +147,27 @@ void UImGui::RendererInternal::loadConfig() noexcept
         return;
     }
 
-    if (node["vulkan"])
-        data.bVulkan = node["vulkan"].as<bool>() &&
+    if (node["renderer"])
+    {
+        auto tmp = node["renderer"].as<FString>();
+        Utility::toLower(tmp);
+
+        for (char i = 0; i < UIMGUI_RENDERER_TYPE_COUNT; i++)
+        {
+            for (char j = 0; j < UIMGUI_RENDERER_TYPE_ALT_NAMES_COUNT; j++)
+            {
+                if (tmp == RENDERER_TYPE_STRINGS[i][j])
+                {
+                    data.rendererType = static_cast<RendererType>(i);
+                    goto escape_render_type_loop;
+                }
+            }
+        }
+escape_render_type_loop:;
 #ifdef __EMSCRIPTEN__
-            em_supports_wgpu();
-#else
-            true;
+        data.rendererType = data.rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU ? static_cast<RendererType>(em_supports_wgpu()) : data.rendererType;
 #endif
+    }
     if (node["v-sync"])
         data.bUsingVSync = node["v-sync"].as<bool>();
     if (node["msaa-samples"])
@@ -163,6 +181,8 @@ void UImGui::RendererInternal::loadConfig() noexcept
         if (powerSaving["idle-frames"])
             data.idleFrameRate = powerSaving["idle-frames"].as<float>();
     }
+
+    renderer = renderers[static_cast<int>(data.rendererType)];
 }
 
 void UImGui::RendererInternal::saveConfig() const noexcept
@@ -170,7 +190,7 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     YAML::Emitter out;
     out << YAML::BeginMap;
 
-    out << YAML::Key << "vulkan" << YAML::Value << data.bVulkan;
+    out << YAML::Key << "renderer" << YAML::Value << RENDERER_TYPE_STRINGS[data.rendererType];
     out << YAML::Key << "v-sync" << YAML::Value << data.bUsingVSync;
     out << YAML::Key << "msaa-samples" << YAML::Value << data.msaaSamples;
     out << YAML::Key << "power-saving" << YAML::Value << YAML::BeginMap;
