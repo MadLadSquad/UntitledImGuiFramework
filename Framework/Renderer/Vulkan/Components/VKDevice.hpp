@@ -7,14 +7,15 @@
 
 namespace UImGui
 {
-    class RendererInternal;
+    struct RendererInternalMetadata;
+
     class UIMGUI_PUBLIC_API VKDevice
     {
     public:
         VKDevice() = default;
         explicit VKDevice(VKInstance& inst) noexcept;
 
-        void create(RendererInternal& renderer) noexcept;
+        void create(RendererInternalMetadata& metadata) noexcept;
         [[nodiscard]] const vk::Device& get() const noexcept;
         void destroy() const noexcept;
 

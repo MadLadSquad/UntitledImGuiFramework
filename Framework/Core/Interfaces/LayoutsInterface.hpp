@@ -6,7 +6,9 @@ namespace UImGui
     class UIMGUI_PUBLIC_API Layouts
     {
     public:
-        Layouts() noexcept = default;
+        Layouts() = delete;
+        Layouts(const Layouts&) = delete;
+        void operator=(Layouts const&) = delete;
 
         // Event Safety - begin, style, post-begin
         static bool& getLoadLayout() noexcept;

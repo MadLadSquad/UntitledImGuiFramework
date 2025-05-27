@@ -18,22 +18,22 @@ UImGui::RendererInternal& UImGui::Renderer::get() noexcept
 
 const UImGui::FString& UImGui::Renderer::getVendorString() noexcept
 {
-    return get().vendorString;
+    return get().metadata.vendorString;
 }
 
 const UImGui::FString& UImGui::Renderer::getAPIVersion() noexcept
 {
-    return get().apiVersion;
+    return get().metadata.apiVersion;
 }
 
 const UImGui::FString& UImGui::Renderer::getGPUName() noexcept
 {
-    return get().gpuName;
+    return get().metadata.gpuName;
 }
 
 const UImGui::FString& UImGui::Renderer::getDriverVersion() noexcept
 {
-    return get().driverVersion;
+    return get().metadata.driverVersion;
 }
 
 void UImGui::Renderer::forceUpdate() noexcept

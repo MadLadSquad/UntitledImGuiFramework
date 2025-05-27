@@ -4,13 +4,17 @@
 namespace UImGui
 {
     class RendererInternal;
+    struct RendererInternalMetadata;
 
     class UIMGUI_PUBLIC_API GenericRenderer
     {
     public:
         GenericRenderer() noexcept = default;
 
-        virtual void init(RendererInternal& renderer) noexcept = 0;
+        virtual void setupWindowIntegration() noexcept = 0;
+        virtual void setupPostWindowCreation() noexcept = 0;
+
+        virtual void init(RendererInternalMetadata& metadata) noexcept = 0;
         virtual void renderStart(double deltaTime) noexcept = 0;
         virtual void renderEnd(double deltaTime) noexcept = 0;
         virtual void destroy() noexcept = 0;

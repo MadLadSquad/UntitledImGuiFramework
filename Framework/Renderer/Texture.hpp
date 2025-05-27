@@ -2,8 +2,8 @@
 #include <OpenGL/OpenGLTexture.hpp>
 #include <WebGPU/WebGPUTexture.hpp>
 #include <Vulkan/VulkanTexture.hpp>
-
-#include "Interfaces/RendererInterface.hpp"
+#include <Renderer/RendererUtils.hpp>
+#include <Interfaces/RendererInterface.hpp>
 
 #define TEX_RUN(x) return textures[static_cast<int>(Renderer::data().rendererType)]->x;
 

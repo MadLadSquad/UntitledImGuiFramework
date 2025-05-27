@@ -19,21 +19,21 @@ UImGui::VKDevice::VKDevice(VKInstance& inst) noexcept
     instance = &inst;
 }
 
-void UImGui::VKDevice::create(RendererInternal& renderer) noexcept
+void UImGui::VKDevice::create(RendererInternalMetadata& metadata) noexcept
 {
     surface.create(*instance);
     createPhysicalDevice();
     auto queueFamilyList = physicalDevice.getQueueFamilyProperties();
 
     const auto properties = physicalDevice.getProperties();
-    renderer.gpuName = properties.deviceName.data();
-    renderer.apiVersion = std::to_string(VK_VERSION_MAJOR(properties.apiVersion)) + "."
+    metadata.gpuName = properties.deviceName.data();
+    metadata.apiVersion = std::to_string(VK_VERSION_MAJOR(properties.apiVersion)) + "."
                         + std::to_string(VK_VERSION_MINOR(properties.apiVersion)) + "."
                         + std::to_string(VK_VERSION_PATCH(properties.apiVersion));
-    renderer.driverVersion = std::to_string(VK_VERSION_MAJOR(properties.driverVersion)) + "."
+    metadata.driverVersion = std::to_string(VK_VERSION_MAJOR(properties.driverVersion)) + "."
                            + std::to_string(VK_VERSION_MINOR(properties.driverVersion)) + "."
                            + std::to_string(VK_VERSION_PATCH(properties.driverVersion));
-    renderer.vendorString = properties.deviceName.data();
+    metadata.vendorString = properties.deviceName.data();
 
     constexpr float priority = 1.0f;
 

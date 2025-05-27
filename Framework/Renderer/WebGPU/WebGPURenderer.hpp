@@ -12,7 +12,10 @@ namespace UImGui
     public:
         WebGPURenderer() noexcept = default;
 
-        virtual void init(RendererInternal& renderer) noexcept override;
+        virtual void setupWindowIntegration() noexcept override;
+        virtual void setupPostWindowCreation() noexcept override;
+
+        virtual void init(RendererInternalMetadata& metadata) noexcept override;
         virtual void renderStart(double deltaTime) noexcept override;
         virtual void renderEnd(double deltaTime) noexcept override;
         virtual void destroy() noexcept override;

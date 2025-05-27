@@ -7,6 +7,10 @@ namespace UImGui
     class UIMGUI_PUBLIC_API Renderer
     {
     public:
+        Renderer() = delete;
+        Renderer(const Renderer&) = delete;
+        void operator=(Renderer const&) = delete;
+
         // Event Safety - Any time
         static RendererData& data() noexcept;
         // Event Safety - Any time
@@ -26,10 +30,8 @@ namespace UImGui
         static void forceUpdate() noexcept;
     private:
         friend class RendererInternal;
+        friend class RendererUtils;
         friend class WindowInternal;
-        friend class WebGPUTexture;
-        friend class VulkanTexture;
-        friend class Texture;
 
         static RendererInternal& get() noexcept;
     };

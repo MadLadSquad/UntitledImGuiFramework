@@ -24,6 +24,7 @@ namespace UImGui
     private:
         friend class WindowInternal;
         friend class VulkanTexture;
+        friend class VulkanRenderer;
 
         VKInstance* instance = nullptr;
         VKDevice* device = nullptr;

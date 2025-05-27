@@ -1,12 +1,27 @@
 #include "VulkanRenderer.hpp"
 #include <ImGui/ImGui.hpp>
+#include <Renderer/RendererUtils.hpp>
 
-void UImGui::VulkanRenderer::init(RendererInternal& renderer) noexcept
+#include "Framework/Core/Interfaces/WindowInterface.hpp"
+
+void UImGui::VulkanRenderer::setupWindowIntegration() noexcept
+{
+    RendererUtils::setupManually();
+}
+
+void UImGui::VulkanRenderer::setupPostWindowCreation() noexcept{};
+
+void UImGui::VulkanRenderer::init(RendererInternalMetadata& metadata) noexcept
 {
 #ifndef __EMSCRIPTEN__
     instance.init();
-    device.create(renderer);
+    device.create(metadata);
     draw.init();
+
+    Window::pushWindowResizeCallback([&](const int, const int) -> void
+    {
+        draw.bRebuildSwapchain = true;
+    });
 #endif
 }
 

@@ -1,4 +1,5 @@
 #include <WebGPU/WebGPUTexture.hpp>
+#include <Renderer/RendererUtils.hpp>
 #include <Interfaces/RendererInterface.hpp>
 
 UImGui::WebGPUTexture::WebGPUTexture(const String location, const bool bFiltered) noexcept
@@ -28,7 +29,8 @@ void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, cons
         .viewFormatCount = 0,
         .viewFormats = nullptr,
     };
-    texture = wgpuDeviceCreateTexture(Renderer::get().wgpu.device, &textureDescriptor);
+    auto* renderer = dynamic_cast<WebGPURenderer*>(RendererUtils::getRenderer());
+    texture = wgpuDeviceCreateTexture(renderer->device, &textureDescriptor);
 
     const WGPUImageCopyTexture destination =
     {
@@ -46,7 +48,7 @@ void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, cons
     };
 
     // * 4 because RGBA
-    wgpuQueueWriteTexture(wgpuDeviceGetQueue(Renderer::get().wgpu.device), &destination, data, static_cast<uint32_t>(size.x * size.y * 4), &source, &textureDescriptor.size);
+    wgpuQueueWriteTexture(wgpuDeviceGetQueue(renderer->device), &destination, data, static_cast<uint32_t>(size.x * size.y * 4), &source, &textureDescriptor.size);
 
     constexpr WGPUTextureViewDescriptor textureViewDescriptor =
     {

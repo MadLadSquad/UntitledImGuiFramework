@@ -5,6 +5,7 @@
 #else
     #include <glad/include/glad/gl.h>
 #endif
+#include <Global.hpp>
 #include <GLFW/glfw3.h>
 
 #include <ThirdParty/source-libraries/stb_image.h>
@@ -121,29 +122,11 @@ void UImGui::WindowInternal::createWindow() noexcept
     }
     Logger::log("Setting up the window", ULOG_LOG_TYPE_NOTE);
 
-    if (Renderer::data().rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU)
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Have to set this to NO_API because that's how Vulkan is done in it
-    else
-    {
-#ifdef __EMSCRIPTEN__
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-#else
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        #ifdef __APPLE__
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-        #else
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-        #endif
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
-#endif
-        glfwWindowHint(GLFW_SAMPLES, static_cast<int>(Renderer::data().msaaSamples));
-    }
+    // This is used to set up window hints for the renderer. Read up on creating custom renderers.
+    RendererUtils::getRenderer()->setupWindowIntegration();
 
-#ifndef __EMSCRIPTEN__
     glfwWindowHint(GLFW_RESIZABLE, windowData.bResizeable);
+#ifndef __EMSCRIPTEN__
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, windowData.bSurfaceTransparent);
     glfwWindowHint(GLFW_VISIBLE, !windowData.bHidden);
     glfwWindowHint(GLFW_FOCUSED, windowData.bFocused);
@@ -184,42 +167,24 @@ void UImGui::WindowInternal::createWindow() noexcept
     Logger::log("Window was created successfully", ULOG_LOG_TYPE_SUCCESS);
 
     // Set framebuffer size
-    int tempx = static_cast<int>(windowSize.x);
-    int tempy = static_cast<int>(windowSize.y);
+    int tempx = CAST(int, windowSize.x);
+    int tempy = CAST(int, windowSize.y);
 
     glfwGetFramebufferSize(windowMain, &tempx, &tempy);
 
-    windowSize.x = static_cast<float>(tempx);
-    windowSize.y = static_cast<float>(tempy);
+    windowSize.x = CAST(float, tempx);
+    windowSize.y = CAST(float, tempy);
 
     // Set the context
     glfwMakeContextCurrent(windowMain);
 
     // Set swap interval
-    if (Renderer::data().bUsingVSync)
-        glfwSwapInterval(1);
+    glfwSwapInterval(Renderer::data().bUsingVSync);
 
     // Set callbacks
     configureCallbacks();
 
-    if (Renderer::data().rendererType != UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU)
-    {
-#if !__APPLE__
-        const int version = gladLoadGL(glfwGetProcAddress);
-        Logger::log(
-    #ifdef EMSCRIPTEN
-            "Successfully loaded WebGL ",
-    #else
-            "Successfully loaded OpenGL ",
-    #endif
-            ULOG_LOG_TYPE_SUCCESS, GLAD_VERSION_MAJOR(version), ".", GLAD_VERSION_MINOR(version));
-#endif
-        glfwSwapInterval(Renderer::data().bUsingVSync);
-        glEnable(GL_MULTISAMPLE);
-        glEnable(GL_DEPTH_TEST);
-        // Set viewport and global pointer to use in callbacks
-        glViewport(0, 0, tempx, tempy);
-    }
+    RendererUtils::getRenderer()->setupPostWindowCreation();
     glfwSetWindowUserPointer(windowMain, this);
 }
 

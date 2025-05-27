@@ -1,5 +1,6 @@
 #include "VulkanTexture.hpp"
-#include "Interfaces/RendererInterface.hpp"
+#include <Renderer/RendererUtils.hpp>
+#include <Interfaces/RendererInterface.hpp>
 
 #ifndef __EMSCRIPTEN__
 static uint32_t findMemoryType(const vk::PhysicalDevice& physicalDevice, const uint32_t type_filter, const vk::MemoryPropertyFlags properties)
@@ -29,8 +30,10 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
     beginLoad(&data, size);
 #ifndef __EMSCRIPTEN__
     vk::DeviceSize deviceSize = static_cast<vk::DeviceSize>(size.x * size.y) * 4;
-    auto& windowData = Renderer::get().vulkan.draw.window;
-    auto& device = Renderer::get().vulkan.device.get();
+    auto* renderer = dynamic_cast<VulkanRenderer*>(RendererUtils::getRenderer());
+
+    auto& windowData = renderer->draw.window;
+    auto& device = renderer->device.get();
 
     const vk::ImageCreateInfo info
     {
@@ -63,7 +66,7 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
     {
         .sType = vk::StructureType::eMemoryAllocateInfo,
         .allocationSize = requirements.size,
-        .memoryTypeIndex = findMemoryType(Renderer::get().vulkan.device.physicalDevice, requirements.memoryTypeBits, vk::MemoryPropertyFlagBits::eDeviceLocal),
+        .memoryTypeIndex = findMemoryType(renderer->device.physicalDevice, requirements.memoryTypeBits, vk::MemoryPropertyFlagBits::eDeviceLocal),
     };
     result = device.allocateMemory(&allocationInfo, nullptr, &imageMemory);
     if (result != vk::Result::eSuccess)
@@ -135,7 +138,7 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
     {
         .sType = vk::StructureType::eMemoryAllocateInfo,
         .allocationSize = requirements.size,
-        .memoryTypeIndex = findMemoryType(Renderer::get().vulkan.device.physicalDevice, requirements.memoryTypeBits, vk::MemoryPropertyFlagBits::eHostVisible),
+        .memoryTypeIndex = findMemoryType(renderer->device.physicalDevice, requirements.memoryTypeBits, vk::MemoryPropertyFlagBits::eHostVisible),
     };
     result = device.allocateMemory(&memoryAllocateInfo, nullptr, &uploadBufferMemory);
     if (result != vk::Result::eSuccess)
@@ -261,13 +264,13 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
     };
     commandBuffer.end();
 
-    result = Renderer::get().vulkan.device.queue.submit(1, &endInfo, VK_NULL_HANDLE);
+    result = renderer->device.queue.submit(1, &endInfo, VK_NULL_HANDLE);
     if (result != vk::Result::eSuccess)
     {
         Logger::log("Couldn't submit to the queue for the Vulkan texture at location: ", ULOG_LOG_TYPE_WARNING, dt.filename);
         return;
     }
-    Renderer::get().vulkan.device.queue.waitIdle();
+    renderer->device.queue.waitIdle();
     device.freeCommandBuffers(commandPool, 1, &commandBuffer);
     bCreated = true;
 #endif
@@ -287,7 +290,7 @@ void UImGui::VulkanTexture::clear() noexcept
 #ifndef __EMSCRIPTEN__
     if (Renderer::data().rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU && bCreated)
     {
-        auto& device = Renderer::get().vulkan.device.get();
+        auto& device = dynamic_cast<VulkanRenderer*>(RendererUtils::getRenderer())->device.get();
 
         device.freeMemory(uploadBufferMemory, nullptr);
         device.destroyBuffer(uploadBuffer, nullptr);

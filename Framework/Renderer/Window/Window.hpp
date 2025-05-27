@@ -99,7 +99,6 @@ namespace UImGui
         friend class Input;
         friend class RendererInternal;
         friend class Global;
-        friend class OpenGLRenderer;
         friend class Layouts;
 
         void updateKeyState() noexcept;

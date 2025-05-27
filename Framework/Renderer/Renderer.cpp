@@ -23,16 +23,14 @@ static constexpr const char* RENDERER_TYPE_STRINGS[UIMGUI_RENDERER_TYPE_COUNT][U
 void UImGui::RendererInternal::start()
 {
     loadConfig();
+    renderer = CAST(decltype(renderer), renderers[static_cast<int>(data.rendererType)]);
 
+    // Global should be initialised before the renderer is started because global starts the window and the window
     auto& global = Global::get();
-
-    // Normally we would just use the Renderer::get but since we assign a pointer here we need to avoid the SEGFAULT and
-    // other madness the normal solution entails
     global.renderer = this;
     global.init();
 
-    renderer = CAST(decltype(renderer), renderers[static_cast<int>(data.rendererType)]);
-    renderer->init(*this);
+    renderer->init(metadata);
 
     global.modulesManagerr.init(global.instance->initInfo.configDir);
     GUIRenderer::init(renderer);

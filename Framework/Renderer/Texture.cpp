@@ -37,7 +37,7 @@ void UImGui::Texture::clear() noexcept
     if (!bCleared)
     {
         bCleared = true;
-        Renderer::get().renderer->waitOnGPU();
+        RendererUtils::getRenderer()->waitOnGPU();
         TEX_RUN(clear());
     }
 }

@@ -14,6 +14,14 @@ namespace UImGui
     typedef UImGui_RendererData RendererData;
     typedef UImGui_RendererType RendererType;
 
+    struct UIMGUI_PUBLIC_API RendererInternalMetadata
+    {
+        FString vendorString;
+        FString apiVersion;
+        FString driverVersion;
+        FString gpuName;
+    };
+
     class UIMGUI_PUBLIC_API RendererInternal
     {
     public:
@@ -23,13 +31,7 @@ namespace UImGui
         void stop() const noexcept;
     private:
         friend class Renderer;
-        friend class OpenGLRenderer;
-        friend class VKDevice;
-        friend class WebGPURenderer;
-        friend class Texture;
-        friend class WebGPUTexture;
-        friend class VulkanTexture;
-        friend class WindowInternal;
+        friend class RendererUtils;
 
         static void tick(void* rendererInstance) noexcept;
 
@@ -57,13 +59,7 @@ namespace UImGui
 
         GenericRenderer* renderer = nullptr;
 
-        FString vendorString;
-        FString apiVersion;
-        FString driverVersion;
-        FString gpuName;
-
-        double lastTime = 0.0f;
-
+        RendererInternalMetadata metadata;
         RendererData data =
         {
             .rendererType = UIMGUI_RENDERER_TYPE_OPENGL,
@@ -72,6 +68,8 @@ namespace UImGui
             .bEnablePowerSavingMode = false,
             .idleFrameRate = 9.0f
         };
+
+        double lastTime = 0.0f;
         bool bIdling = false;
     };
 

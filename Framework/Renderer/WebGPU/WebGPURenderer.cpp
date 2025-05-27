@@ -53,7 +53,8 @@ void UImGui::WebGPURenderer::createSwapchain() noexcept
     swapchain = wgpuDeviceCreateSwapChain(device, surface, &swapchainDescriptor);
 }
 
-void UImGui::WebGPURenderer::init(RendererInternal& renderer) noexcept
+// TODO: Implement setting the renderer metadata structure when WebGPU allows for it
+void UImGui::WebGPURenderer::init(RendererInternalMetadata&) noexcept
 {
     wgpu::Instance inst = wgpuCreateInstance(nullptr);
     device = emscripten_webgpu_get_device();
@@ -205,7 +206,7 @@ void UImGui::WebGPURenderer::ImGuiRenderData() noexcept
 
 }
 #else
-void UImGui::WebGPURenderer::init(RendererInternal& renderer) noexcept {}
+void UImGui::WebGPURenderer::init(RendererInternalMetadata& metadata) noexcept {}
 void UImGui::WebGPURenderer::renderStart(double deltaTime) noexcept {}
 void UImGui::WebGPURenderer::renderEnd(double deltaTime) noexcept {}
 void UImGui::WebGPURenderer::destroy() noexcept {}
@@ -215,5 +216,12 @@ void UImGui::WebGPURenderer::ImGuiShutdown() noexcept {}
 void UImGui::WebGPURenderer::ImGuiInit() noexcept {}
 void UImGui::WebGPURenderer::ImGuiRenderData() noexcept {}
 #endif
+#include <Renderer/RendererUtils.hpp>
 
+void UImGui::WebGPURenderer::setupWindowIntegration() noexcept
+{
+    RendererUtils::setupManually();
+}
+
+void UImGui::WebGPURenderer::setupPostWindowCreation() noexcept{};
 void UImGui::WebGPURenderer::waitOnGPU() noexcept{}
