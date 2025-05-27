@@ -2414,6 +2414,10 @@ static void glad_gl_load_GL_OES_EGL_image( GLADuserptrloadfunc load, void* userp
     glad_glEGLImageTargetRenderbufferStorageOES = (PFNGLEGLIMAGETARGETRENDERBUFFERSTORAGEOESPROC) load(userptr, "glEGLImageTargetRenderbufferStorageOES");
     glad_glEGLImageTargetTexture2DOES = (PFNGLEGLIMAGETARGETTEXTURE2DOESPROC) load(userptr, "glEGLImageTargetTexture2DOES");
 }
+static void glad_gl_load_GL_OES_EGL_image_external( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_OES_EGL_image_external) return;
+    glad_glEGLImageTargetTexture2DOES = (PFNGLEGLIMAGETARGETTEXTURE2DOESPROC) load(userptr, "glEGLImageTargetTexture2DOES");
+}
 static void glad_gl_load_GL_OES_copy_image( GLADuserptrloadfunc load, void* userptr) {
     if(!GLAD_GL_OES_copy_image) return;
     glad_glCopyImageSubDataOES = (PFNGLCOPYIMAGESUBDATAOESPROC) load(userptr, "glCopyImageSubDataOES");
@@ -3159,6 +3163,7 @@ int gladLoadGLES2UserPtr( GLADuserptrloadfunc load, void *userptr) {
     glad_gl_load_GL_NV_viewport_array(load, userptr);
     glad_gl_load_GL_NV_viewport_swizzle(load, userptr);
     glad_gl_load_GL_OES_EGL_image(load, userptr);
+    glad_gl_load_GL_OES_EGL_image_external(load, userptr);
     glad_gl_load_GL_OES_copy_image(load, userptr);
     glad_gl_load_GL_OES_draw_buffers_indexed(load, userptr);
     glad_gl_load_GL_OES_draw_elements_base_vertex(load, userptr);

@@ -633,6 +633,10 @@ static void glad_gl_load_GL_OES_EGL_image( GLADuserptrloadfunc load, void* userp
     glad_glEGLImageTargetRenderbufferStorageOES = (PFNGLEGLIMAGETARGETRENDERBUFFERSTORAGEOESPROC) load(userptr, "glEGLImageTargetRenderbufferStorageOES");
     glad_glEGLImageTargetTexture2DOES = (PFNGLEGLIMAGETARGETTEXTURE2DOESPROC) load(userptr, "glEGLImageTargetTexture2DOES");
 }
+static void glad_gl_load_GL_OES_EGL_image_external( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_OES_EGL_image_external) return;
+    glad_glEGLImageTargetTexture2DOES = (PFNGLEGLIMAGETARGETTEXTURE2DOESPROC) load(userptr, "glEGLImageTargetTexture2DOES");
+}
 static void glad_gl_load_GL_OES_blend_equation_separate( GLADuserptrloadfunc load, void* userptr) {
     if(!GLAD_GL_OES_blend_equation_separate) return;
     glad_glBlendEquationSeparateOES = (PFNGLBLENDEQUATIONSEPARATEOESPROC) load(userptr, "glBlendEquationSeparateOES");
@@ -1023,6 +1027,7 @@ int gladLoadGLES1UserPtr( GLADuserptrloadfunc load, void *userptr) {
     glad_gl_load_GL_IMG_user_clip_plane(load, userptr);
     glad_gl_load_GL_NV_fence(load, userptr);
     glad_gl_load_GL_OES_EGL_image(load, userptr);
+    glad_gl_load_GL_OES_EGL_image_external(load, userptr);
     glad_gl_load_GL_OES_blend_equation_separate(load, userptr);
     glad_gl_load_GL_OES_blend_func_separate(load, userptr);
     glad_gl_load_GL_OES_blend_subtract(load, userptr);
