@@ -12,6 +12,8 @@ namespace UImGui
     public:
         WebGPURenderer() noexcept = default;
 
+        virtual void parseCustomConfig(YAML::Node&) noexcept override;
+
         virtual void setupWindowIntegration() noexcept override;
         virtual void setupPostWindowCreation() noexcept override;
 

@@ -2,6 +2,7 @@
 #include <C/CTypes.h>
 #include <C/CDefines.h>
 #include "CComponentCommon.h"
+#include <C/Internal/RendererData.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -44,6 +45,8 @@ extern "C"
 
         void* globalData;
         bool bGlobalAllocatedOnHeap;
+
+        UImGui_CGenericRenderer* customRenderer;
     } UImGui_CInitInfo;
 
     // Event Safety - Any time

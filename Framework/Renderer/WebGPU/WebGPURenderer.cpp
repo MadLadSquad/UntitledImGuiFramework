@@ -225,3 +225,4 @@ void UImGui::WebGPURenderer::setupWindowIntegration() noexcept
 
 void UImGui::WebGPURenderer::setupPostWindowCreation() noexcept{};
 void UImGui::WebGPURenderer::waitOnGPU() noexcept{}
+void UImGui::WebGPURenderer::parseCustomConfig(YAML::Node&) noexcept{};

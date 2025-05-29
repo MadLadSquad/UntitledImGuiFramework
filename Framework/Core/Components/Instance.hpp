@@ -11,6 +11,8 @@
 
 namespace UImGui
 {
+    class GenericRenderer;
+
     /**
      * @brief A struct that defines initialization information for the framework, instantiated automatically in the Instance
      * @var inlineComponents - A list of inline component base class pointers
@@ -18,6 +20,11 @@ namespace UImGui
      * @var windowComponents - A list of window component base class pointers
      * @var globalData - A void pointer that points to a global data struct defined by the user to be accessed at whatever
      * location it is needed
+     * @var bGlobalAllocatedOnHeap - whether to automatically free the global data if it's heap-allocated
+     * @var customRenderer - A pointer to a custom renderer that can later be used by the renderer router if the
+     * renderer field in Config/Core/Renderer.yaml is set to "custom"
+     * @var cInitInfo - a pointer to the C version of this structure. This allows users of the C API to attach their
+     * own components to the init info
      */
     struct UIMGUI_PUBLIC_API InitInfo
     {
@@ -28,6 +35,8 @@ namespace UImGui
         // Provide a global data struct to be shared with all components
         void* globalData = nullptr;
         bool bGlobalAllocatedOnHeap = true; // Set this to false if the global is a stack pointer
+
+        GenericRenderer* customRenderer = nullptr;
 
         UImGui_CInitInfo* cInitInfo = nullptr;
 

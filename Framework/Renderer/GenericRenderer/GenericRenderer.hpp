@@ -11,6 +11,8 @@ namespace UImGui
     public:
         GenericRenderer() noexcept = default;
 
+        virtual void parseCustomConfig(YAML::Node& config) noexcept = 0;
+
         virtual void setupWindowIntegration() noexcept = 0;
         virtual void setupPostWindowCreation() noexcept = 0;
 

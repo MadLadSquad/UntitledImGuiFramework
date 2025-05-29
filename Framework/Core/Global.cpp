@@ -1,5 +1,4 @@
 #include "Global.hpp"
-#include <Components/Instance.hpp>
 #include <Utilities.hpp>
 
 UImGui::Global::Global() noexcept
@@ -12,11 +11,6 @@ UImGui::Global::~Global() noexcept
 #ifdef _WIN32
     ExitProcess(0);
 #endif
-}
-
-void UImGui::Global::init() noexcept
-{
-    window.createWindow();
 }
 
 UImGui::Global& UImGui::Global::get(Global* parent) noexcept

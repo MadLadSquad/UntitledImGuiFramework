@@ -69,6 +69,8 @@ namespace UImGui
             .idleFrameRate = 9.0f
         };
 
+        YAML::Node customConfig;
+
         double lastTime = 0.0f;
         bool bIdling = false;
     };

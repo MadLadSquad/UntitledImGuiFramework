@@ -1,5 +1,5 @@
 #include "CInput.h"
-#include "Events/Input.hpp"
+#include "Interfaces/Input.hpp"
 
 void UImGui_Input_setCursorVisibility(const UImGui_CursorVisibilityState visibility)
 {

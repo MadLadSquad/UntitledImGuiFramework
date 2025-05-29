@@ -1,5 +1,6 @@
 #include "CRendererInterface.h"
 #include "Interfaces/RendererInterface.hpp"
+#include "Renderer/GenericRenderer/GenericRenderer.hpp"
 
 UImGui_RendererData* UImGui_Renderer_data()
 {

@@ -51,6 +51,8 @@ namespace UImGui
             WebGPU(const WebGPU&) = delete;
             void operator=(WebGPU const&) = delete;
 
+            // Check for WebGPU support
+            // Event safety - any time
             static bool supported() noexcept;
         };
     private:

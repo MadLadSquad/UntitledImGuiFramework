@@ -1,4 +1,4 @@
-#include "Input.hpp"
+#include <Interfaces/Input.hpp>
 #include <Interfaces/WindowInterface.hpp>
 #include <GLFW/glfw3.h>
 

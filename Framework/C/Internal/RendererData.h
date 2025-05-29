@@ -5,6 +5,8 @@
 extern "C"
 {
 #endif
+    typedef void UImGui_CGenericRenderer;
+
     // Keep in sync with the strings in Renderer.cpp
     typedef enum UImGui_RendererType
     {

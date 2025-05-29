@@ -85,7 +85,7 @@ fi
 
 function cmake_i()
 {
-  cmake -DUIMGUI_INSTALL=ON "$@" || die_
+  cmake -DUIMGUI_INSTALL=ON -DUIMGUI_PRODUCTION_BUILD=ON "$@" || die_
 }
 
 jobs=$(grep -c processor /proc/cpuinfo 2> /dev/null) || jobs=$(sysctl -n hw.ncpu)

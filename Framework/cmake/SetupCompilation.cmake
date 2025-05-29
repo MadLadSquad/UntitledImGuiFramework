@@ -4,6 +4,7 @@ option(UIMGUI_INSTALL_FRAMEWORK "Whether to install the framework" OFF)
 option(UIMGUI_INSTALL "Installs all libraries" OFF)
 option(BUILD_VARIANT_STATIC "Builds the Framework, application library(exists only on Unix) and executable into a single
     executable binary" OFF)
+option(UIMGUI_PRODUCTION_BUILD "Whether the current compilation is going to be targeting a production environment. Read the documentation for more information" OFF)
 
 if (EMSCRIPTEN)
     option(USE_HTML_GENERATION "Automatically generate HTML" ON)

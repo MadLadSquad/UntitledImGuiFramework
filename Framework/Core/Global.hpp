@@ -18,8 +18,6 @@ namespace UImGui
         Global() noexcept;
         ~Global() noexcept;
 
-        void init() noexcept;
-
         static Global& get(Global* parent = nullptr) noexcept;
 
         Instance* instance = nullptr;

@@ -22,19 +22,21 @@ static constexpr const char* RENDERER_TYPE_STRINGS[UIMGUI_RENDERER_TYPE_COUNT][U
 
 void UImGui::RendererInternal::start()
 {
-    loadConfig();
-    renderer = CAST(decltype(renderer), renderers[static_cast<int>(data.rendererType)]);
-
-    // Global should be initialised before the renderer is started because global starts the window and the window
+    // Doing this first because a lot of internal code reuses interface functions so the earlier, the better
     auto& global = Global::get();
     global.renderer = this;
-    global.init();
 
+    loadConfig();
+
+    // The window gets created after getting the renderer settings but before starting the renderer, because depending
+    // on the API we need to configure our renderer with different properties
+    Window::get().createWindow();
     renderer->init(metadata);
 
     global.modulesManagerr.init(global.instance->initInfo.configDir);
     GUIRenderer::init(renderer);
 
+    // The need to conform to the JS event loop is the main reason the stop method is separate from start
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop_arg(tick, this, 0, true);
 #else
@@ -134,10 +136,12 @@ void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
 
 void UImGui::RendererInternal::loadConfig() noexcept
 {
+    auto& initInfo = Instance::get()->initInfo;
+
     YAML::Node node;
     try
     {
-        node = YAML::LoadFile((Instance::get()->initInfo.configDir + "Core/Renderer.yaml").c_str());
+        node = YAML::LoadFile((initInfo.configDir + "Core/Renderer.yaml").c_str());
     }
     catch (YAML::BadFile&)
     {
@@ -165,6 +169,24 @@ escape_render_type_loop:;
 #ifdef __EMSCRIPTEN__
         data.rendererType = data.rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU ? static_cast<RendererType>(em_supports_wgpu()) : data.rendererType;
 #endif
+
+        if (data.rendererType == UIMGUI_RENDERER_TYPE_CUSTOM)
+        {
+            if (initInfo.customRenderer != nullptr)
+                custom = initInfo.customRenderer;
+            else if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->customRenderer != nullptr)
+                custom = static_cast<GenericRenderer*>(initInfo.cInitInfo->customRenderer);
+            else
+            {
+                Logger::log("Renderer set to \"custom\" but an invalid custom renderer was provided.\n"
+                    "Make sure to provide one in the init info struct of your instance in the constructor of the instance!", ULOG_LOG_TYPE_ERROR);
+                Logger::log("Switching to the OpenGL renderer.", ULOG_LOG_TYPE_NOTE);
+
+                custom = nullptr;
+                data.rendererType = UIMGUI_RENDERER_TYPE_OPENGL;
+            }
+            renderers[UIMGUI_RENDERER_TYPE_CUSTOM] = custom;
+        }
     }
     if (node["v-sync"])
         data.bUsingVSync = node["v-sync"].as<bool>();
@@ -180,7 +202,12 @@ escape_render_type_loop:;
             data.idleFrameRate = powerSaving["idle-frames"].as<float>();
     }
 
-    renderer = renderers[static_cast<int>(data.rendererType)];
+    renderer = CAST(decltype(renderer), renderers[static_cast<int>(data.rendererType)]);
+    if (node["custom-renderer"])
+    {
+        customConfig = node["custom-renderer"];
+        renderer->parseCustomConfig(customConfig);
+    }
 }
 
 void UImGui::RendererInternal::saveConfig() const noexcept
@@ -188,13 +215,15 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     YAML::Emitter out;
     out << YAML::BeginMap;
 
-    out << YAML::Key << "renderer" << YAML::Value << RENDERER_TYPE_STRINGS[data.rendererType];
+    out << YAML::Key << "renderer" << YAML::Value << RENDERER_TYPE_STRINGS[data.rendererType][0];
     out << YAML::Key << "v-sync" << YAML::Value << data.bUsingVSync;
     out << YAML::Key << "msaa-samples" << YAML::Value << data.msaaSamples;
     out << YAML::Key << "power-saving" << YAML::Value << YAML::BeginMap;
     out << YAML::Key << "enabled" << YAML::Value << data.bEnablePowerSavingMode;
     out << YAML::Key << "idle-frames" << YAML::Value << data.idleFrameRate;
     out << YAML::EndMap;
+    if (customConfig && !customConfig.IsNull())
+        out << YAML::Key << "custom-renderer" << YAML::Value << customConfig;
 
     std::ofstream fout((Instance::get()->initInfo.configDir + "Core/Renderer.yaml").c_str());
     fout << out.c_str();

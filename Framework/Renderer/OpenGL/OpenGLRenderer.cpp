@@ -15,6 +15,8 @@
 #include <Renderer/RendererUtils.hpp>
 #include <Interfaces/RendererInterface.hpp>
 
+void UImGui::OpenGLRenderer::parseCustomConfig(YAML::Node&) noexcept{}
+
 void UImGui::OpenGLRenderer::setupWindowIntegration() noexcept
 {
     RendererUtils::OpenGL::setHints

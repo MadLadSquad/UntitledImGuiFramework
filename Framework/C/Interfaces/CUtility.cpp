@@ -1,6 +1,6 @@
 #include "CUtility.h"
 #include <Core/Utilities.hpp>
-#include <Events/Input.hpp>
+#include <Interfaces/Input.hpp>
 #include <cstring>
 #include <Core/Global.hpp>
 #include <utfcpp/source/utf8.h>

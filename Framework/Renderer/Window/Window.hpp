@@ -1,5 +1,5 @@
 #pragma once
-#include <Core/Events/Input.hpp>
+#include <Core/Interfaces/Input.hpp>
 #include <array>
 #include <C/Internal/CMonitor.h>
 

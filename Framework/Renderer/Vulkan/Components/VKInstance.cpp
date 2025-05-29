@@ -18,7 +18,7 @@ void UImGui::VKInstance::init() noexcept
         .applicationVersion = VK_MAKE_VERSION(1, 0, 0),
         .pEngineName = "UntitledImGuiFramework",
         .engineVersion = VK_MAKE_VERSION(1, 0, 0),
-        .apiVersion = VK_API_VERSION_1_3
+        .apiVersion = VK_API_VERSION_1_4
     };
 
     uint32_t glfwExtensionCount = 0;

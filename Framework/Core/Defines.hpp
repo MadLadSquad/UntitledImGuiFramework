@@ -17,14 +17,14 @@
 
 #ifdef PRODUCTION
     #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x));   \
-    UImGui::AllocatorFuncs::get();                                  \
-    UImGui::Global::get();                                          \
+    UNUSED(UImGui::AllocatorFuncs::get());                                  \
+    UNUSED(UImGui::Global::get());                                          \
     logger.setCrashOnError(true);                                   \
-    UVK::Utility::removeConsole()
+    UImGui::Utility::removeConsole()
 #else
     #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x));   \
-    UImGui::AllocatorFuncs::get();                                  \
-    UImGui::Global::get()
+    UNUSED(UImGui::AllocatorFuncs::get());                                  \
+    UNUSED(UImGui::Global::get())
 #endif
 
 #define CAST(x, y) static_cast<x>(y)

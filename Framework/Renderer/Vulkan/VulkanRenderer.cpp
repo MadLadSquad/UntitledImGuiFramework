@@ -4,6 +4,8 @@
 
 #include "Framework/Core/Interfaces/WindowInterface.hpp"
 
+void UImGui::VulkanRenderer::parseCustomConfig(YAML::Node&) noexcept{};
+
 void UImGui::VulkanRenderer::setupWindowIntegration() noexcept
 {
     RendererUtils::setupManually();
