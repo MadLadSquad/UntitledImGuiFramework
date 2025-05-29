@@ -75,8 +75,6 @@ void UImGui::Plugins::loadStandard() noexcept
 
 UImGui::Plugins::~Plugins() noexcept
 {
-    for (const auto& a : plugins)
-        a.detach();
 }
 
 UImGui::Plugins& UImGui::Plugins::get() noexcept

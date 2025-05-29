@@ -24,6 +24,9 @@ UImGui::Instance::~Instance() noexcept
         free(initInfo.globalData);
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->bGlobalAllocatedOnHeap)
         free(initInfo.cInitInfo->globalData);
+
+    for (auto& a : Plugins::getPlugins())
+        a.detach();
 }
 
 void UImGui::Instance::beginAutohandle() const noexcept
