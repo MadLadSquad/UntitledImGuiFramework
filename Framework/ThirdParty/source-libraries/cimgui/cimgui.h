@@ -33,7 +33,7 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #define IMGUI_VERSION       "1.92.0 WIP"
-#define IMGUI_VERSION_NUM   19196
+#define IMGUI_VERSION_NUM   19197
 #define IMGUI_HAS_TABLE
 #define IMGUI_HAS_VIEWPORT           // Viewport WIP branch
 #define IMGUI_HAS_DOCK               // Docking WIP branch
@@ -600,14 +600,15 @@ CIMGUI_API bool ImGui_RadioButtonIntPtr(const char* label, int* v, int v_button)
 CIMGUI_API void ImGui_ProgressBar(float fraction, ImVec2 size_arg /* = ImVec2(-FLT_MIN, 0) */, const char* overlay /* = NULL */);
 CIMGUI_API void ImGui_Bullet(void);                                                                            // draw a small circle + keep the cursor on the same line. advance cursor x position by GetTreeNodeToLabelSpacing(), same distance that TreeNode() uses
 CIMGUI_API bool ImGui_TextLink(const char* label);                                                             // hyperlink text button, return true when clicked
-CIMGUI_API void ImGui_TextLinkOpenURL(const char* label);                                                      // Implied url = NULL
-CIMGUI_API void ImGui_TextLinkOpenURLEx(const char* label, const char* url /* = NULL */);                      // hyperlink text button, automatically open file/url when clicked
+CIMGUI_API bool ImGui_TextLinkOpenURL(const char* label);                                                      // Implied url = NULL
+CIMGUI_API bool ImGui_TextLinkOpenURLEx(const char* label, const char* url /* = NULL */);                      // hyperlink text button, automatically open file/url when clicked
 
 // Widgets: Images
 // - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
 // - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
 // - Image() pads adds style.ImageBorderSize on each side, ImageButton() adds style.FramePadding on each side.
 // - ImageButton() draws a background based on regular Button() color + optionally an inner background if specified.
+// - An obsolete version of Image(), before 1.91.9 (March 2025), had a 'tint_col' parameter which is now supported by the ImageWithBg() function.
 CIMGUI_API void ImGui_Image(ImTextureID user_texture_id, ImVec2 image_size);                                                                      // Implied uv0 = ImVec2(0, 0), uv1 = ImVec2(1, 1)
 CIMGUI_API void ImGui_ImageEx(ImTextureID user_texture_id, ImVec2 image_size, ImVec2 uv0 /* = ImVec2(0, 0) */, ImVec2 uv1 /* = ImVec2(1, 1) */);
 CIMGUI_API void ImGui_ImageWithBg(ImTextureID user_texture_id, ImVec2 image_size);                                                                // Implied uv0 = ImVec2(0, 0), uv1 = ImVec2(1, 1), bg_col = ImVec4(0, 0, 0, 0), tint_col = ImVec4(1, 1, 1, 1)
@@ -2915,7 +2916,7 @@ struct ImGuiListClipper_t
     int           DisplayEnd;        // End of items to display (exclusive)
     int           ItemsCount;        // [Internal] Number of items
     float         ItemsHeight;       // [Internal] Height of item after a first step and item submission can calculate it
-    float         StartPosY;         // [Internal] Cursor position at the time of Begin() or after table frozen rows are all processed
+    double        StartPosY;         // [Internal] Cursor position at the time of Begin() or after table frozen rows are all processed
     double        StartSeekOffsetY;  // [Internal] Account for frozen rows in a table and initial loss of precision in very large windows.
     void*         TempData;          // [Internal] Internal data
 };
@@ -3654,10 +3655,13 @@ CIMGUI_API const char*  ImFont_GetDebugName(const ImFont* self);
 // 'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
 CIMGUI_API ImVec2       ImFont_CalcTextSizeA(ImFont* self, float size, float max_width, float wrap_width, const char* text_begin);                                         // Implied text_end = NULL, remaining = NULL
 CIMGUI_API ImVec2       ImFont_CalcTextSizeAEx(ImFont* self, float size, float max_width, float wrap_width, const char* text_begin, const char* text_end /* = NULL */, const char** remaining /* = NULL */); // utf8
-CIMGUI_API const char*  ImFont_CalcWordWrapPositionA(ImFont* self, float scale, const char* text, const char* text_end, float wrap_width);
+CIMGUI_API const char*  ImFont_CalcWordWrapPosition(ImFont* self, float size, const char* text, const char* text_end, float wrap_width);
 CIMGUI_API void         ImFont_RenderChar(ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImWchar c);                                              // Implied cpu_fine_clip = NULL
 CIMGUI_API void         ImFont_RenderCharEx(ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImWchar c, const ImVec4* cpu_fine_clip /* = NULL */);
 CIMGUI_API void         ImFont_RenderText(ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImVec4 clip_rect, const char* text_begin, const char* text_end, float wrap_width /* = 0.0f */, bool cpu_fine_clip /* = false */);
+#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+CIMGUI_API const char* ImFont_CalcWordWrapPositionA(ImFont* self, float scale, const char* text, const char* text_end, float wrap_width);
+#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 // [Internal] Don't use!
 CIMGUI_API void         ImFont_BuildLookupTable(ImFont* self);
 CIMGUI_API void         ImFont_ClearOutputData(ImFont* self);
@@ -3902,7 +3906,7 @@ struct ImGuiPlatformImeData_t
 
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 // OBSOLETED in 1.91.9 (from February 2025)
-CIMGUI_API void   ImGui_ImageImVec4(ImTextureID user_texture_id, ImVec2 image_size, ImVec2 uv0, ImVec2 uv1, ImVec4 tint_col, ImVec4 border_col); // <-- border_col was removed in favor of ImGuiCol_ImageBorder.
+CIMGUI_API void   ImGui_ImageImVec4(ImTextureID user_texture_id, ImVec2 image_size, ImVec2 uv0, ImVec2 uv1, ImVec4 tint_col, ImVec4 border_col); // <-- 'border_col' was removed in favor of ImGuiCol_ImageBorder. If you use 'tint_col', use ImageWithBg() instead.
 // OBSOLETED in 1.91.0 (from July 2024)
 CIMGUI_API void   ImGui_PushButtonRepeat(bool repeat);
 CIMGUI_API void   ImGui_PopButtonRepeat(void);
