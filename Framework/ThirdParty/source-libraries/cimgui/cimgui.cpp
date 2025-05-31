@@ -950,14 +950,14 @@ CIMGUI_API bool cimgui::ImGui_TextLink(const char* label)
     return ::ImGui::TextLink(label);
 }
 
-CIMGUI_API void cimgui::ImGui_TextLinkOpenURL(const char* label)
+CIMGUI_API bool cimgui::ImGui_TextLinkOpenURL(const char* label)
 {
-    ::ImGui::TextLinkOpenURL(label);
+    return ::ImGui::TextLinkOpenURL(label);
 }
 
-CIMGUI_API void cimgui::ImGui_TextLinkOpenURLEx(const char* label, const char* url)
+CIMGUI_API bool cimgui::ImGui_TextLinkOpenURLEx(const char* label, const char* url)
 {
-    ::ImGui::TextLinkOpenURL(label, url);
+    return ::ImGui::TextLinkOpenURL(label, url);
 }
 
 CIMGUI_API void cimgui::ImGui_Image(ImTextureID user_texture_id, cimgui::ImVec2 image_size)
@@ -3704,9 +3704,9 @@ CIMGUI_API cimgui::ImVec2 cimgui::ImFont_CalcTextSizeAEx(cimgui::ImFont* self, f
     return ConvertFromCPP_ImVec2(reinterpret_cast<::ImFont*>(self)->CalcTextSizeA(size, max_width, wrap_width, text_begin, text_end, remaining));
 }
 
-CIMGUI_API const char*  cimgui::ImFont_CalcWordWrapPositionA(cimgui::ImFont* self, float scale, const char* text, const char* text_end, float wrap_width)
+CIMGUI_API const char*  cimgui::ImFont_CalcWordWrapPosition(cimgui::ImFont* self, float size, const char* text, const char* text_end, float wrap_width)
 {
-    return reinterpret_cast<::ImFont*>(self)->CalcWordWrapPositionA(scale, text, text_end, wrap_width);
+    return reinterpret_cast<::ImFont*>(self)->CalcWordWrapPosition(size, text, text_end, wrap_width);
 }
 
 CIMGUI_API void         cimgui::ImFont_RenderChar(cimgui::ImFont* self, cimgui::ImDrawList* draw_list, float size, cimgui::ImVec2 pos, ImU32 col, ImWchar c)
@@ -3723,6 +3723,15 @@ CIMGUI_API void         cimgui::ImFont_RenderText(cimgui::ImFont* self, cimgui::
 {
     reinterpret_cast<::ImFont*>(self)->RenderText(reinterpret_cast<::ImDrawList*>(draw_list), size, ConvertToCPP_ImVec2(pos), col, ConvertToCPP_ImVec4(clip_rect), text_begin, text_end, wrap_width, cpu_fine_clip);
 }
+
+#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+
+CIMGUI_API const char* cimgui::ImFont_CalcWordWrapPositionA(cimgui::ImFont* self, float scale, const char* text, const char* text_end, float wrap_width)
+{
+    return reinterpret_cast<::ImFont*>(self)->CalcWordWrapPositionA(scale, text, text_end, wrap_width);
+}
+
+#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
 CIMGUI_API void         cimgui::ImFont_BuildLookupTable(cimgui::ImFont* self)
 {
