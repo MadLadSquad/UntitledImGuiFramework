@@ -5,7 +5,7 @@
 #include <Renderer/RendererUtils.hpp>
 #include <Interfaces/RendererInterface.hpp>
 
-#define TEX_RUN(x) return textures[static_cast<int>(Renderer::data().rendererType)]->x;
+#define TEX_RUN(x) return textures[static_cast<int>(Renderer::data().textureRendererType)]->x;
 
 namespace UImGui
 {
@@ -18,7 +18,7 @@ namespace UImGui
         // Event Safety - Post-begin
         Texture(String location, bool bFiltered = true) noexcept;
         // Event Safety - Post-begin
-        void init(String location, bool bFiltered = true) noexcept;
+        bool init(String location, bool bFiltered = true) noexcept;
 
         // Event Safety - Post-begin
         void load(void* data = nullptr,
@@ -34,7 +34,7 @@ namespace UImGui
          * @brief Outputs an image with a given format to a file. Only works if the image buffer is not freed
          * automatically when loading the image.
          * @tparam format - The format of an image
-         * @param location -
+         * @param location - File location
          * @param fmt - Format of the image, defaults to the value of the template argument. If template argument is set
          * to UIMGUI_TEXTURE_FORMAT_OTHER, it will check this value. If it reaches OTHER again, the custom save function
          * is called
@@ -42,9 +42,9 @@ namespace UImGui
          * argument sets it to 100
          */
         template<TextureFormat format>
-        bool saveToFile(const String location, const TextureFormat fmt = format, const uint8_t jpegQuality = 100) noexcept
+        bool saveToFile(const String location, const TextureFormat fmt = format, const uint8_t jpegQuality = 100) const noexcept
         {
-            TEX_RUN(saveToFile<format>(location, fmt, jpegQuality));
+            return GenericTexture::saveToFile<format>(dt, location, fmt, jpegQuality);
         }
 
         // Set a function for saving custom image file formats
@@ -53,7 +53,10 @@ namespace UImGui
 
         // Returns the size of the image
         // Event Safety - Any time
-        [[nodiscard]] const FVector2& size() const noexcept;
+        [[nodiscard]] FVector2 size() const noexcept;
+
+        // Event Safety - Any time
+        TextureData& getData() noexcept;
 
         // Cleans up the image data
         // Event Safety - All initiated
@@ -80,5 +83,6 @@ namespace UImGui
 #endif
             custom
         };
+        TextureData dt{};
     };
 }

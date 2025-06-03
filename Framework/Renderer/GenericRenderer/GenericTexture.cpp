@@ -1,21 +1,10 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-
 #include "GenericTexture.hpp"
 #include <Utilities.hpp>
 #include <Global.hpp>
 #include <stb_image.h>
 
-void UImGui::GenericTexture::setCustomSaveFunction(const CustomSaveFunction f) noexcept
-{
-    dt.customSaveFunction = f;
-}
-
-const UImGui::FVector2& UImGui::GenericTexture::size() const noexcept
-{
-    return dt.size;
-}
-
-void UImGui::GenericTexture::beginLoad(void** data, FVector2& size) noexcept
+void UImGui::GenericTexture::beginLoad(TextureData& dt, void** data, FVector2& size) noexcept
 {
     if (*data == nullptr || (size.x == 0 && size.y == 0))
     {
@@ -34,7 +23,7 @@ void UImGui::GenericTexture::beginLoad(void** data, FVector2& size) noexcept
     }
 }
 
-void UImGui::GenericTexture::endLoad(void* data, const bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept
+void UImGui::GenericTexture::endLoad(TextureData& dt, void* data, const bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept
 {
     if (bFreeImageData)
         freeFunc(data);
@@ -42,7 +31,7 @@ void UImGui::GenericTexture::endLoad(void* data, const bool bFreeImageData, cons
         dt.data = data;
 }
 
-void UImGui::GenericTexture::defaultInit(const String location, const bool bFiltered) noexcept
+void UImGui::GenericTexture::defaultInit(TextureData& dt, const String location, const bool bFiltered) noexcept
 {
     auto& strings = Global::get().deallocationStruct.keyStrings;
 
@@ -56,9 +45,10 @@ void UImGui::GenericTexture::defaultInit(const String location, const bool bFilt
 
     dt.data = nullptr;
     dt.customSaveFunction = [](TextureData*, String) -> bool { return false; };
+    dt.id = 0;
 }
 
-void UImGui::GenericTexture::defaultClear() noexcept
+void UImGui::GenericTexture::defaultClear(TextureData& dt) noexcept
 {
     dt.size = { 0.0f, 0.0f };
 

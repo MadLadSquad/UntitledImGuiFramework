@@ -101,7 +101,7 @@ void UImGui::OpenGLRenderer::destroy() noexcept
 void UImGui::OpenGLRenderer::ImGuiNewFrame() noexcept
 {
     ImGui_ImplOpenGL3_NewFrame();
-    GUIRenderer::beginFrame();
+    RendererUtils::beginImGuiFrame();
     glUseProgram(0);
 }
 

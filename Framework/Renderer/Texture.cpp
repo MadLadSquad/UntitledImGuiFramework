@@ -1,35 +1,50 @@
 #include "Texture.hpp"
+#include <Core/Components/Instance.hpp>
 
 UImGui::Texture::Texture(const String location, const bool bFiltered) noexcept
 {
     init(location, bFiltered);
 }
 
-void UImGui::Texture::init(const String location, const bool bFiltered) noexcept
+bool UImGui::Texture::init(const String location, const bool bFiltered) noexcept
 {
+    if (Renderer::data().textureRendererType == UIMGUI_RENDERER_TYPE_CUSTOM)
+    {
+        auto& initInfo = Instance::get()->initInfo;
+        if (initInfo.customTexture != nullptr)
+            textures[UIMGUI_RENDERER_TYPE_CUSTOM] = initInfo.customTexture;
+        else if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->customTexture != nullptr)
+            textures[UIMGUI_RENDERER_TYPE_CUSTOM] = static_cast<GenericTexture*>(initInfo.cInitInfo->customTexture);
+        else
+        {
+            Logger::log("Invalid custom renderer backend!", ULOG_LOG_TYPE_ERROR);
+            return false;
+        }
+    }
     bCleared = false;
-    TEX_RUN(init(location, bFiltered));
+    textures[Renderer::data().textureRendererType]->init(dt, location, bFiltered);
+    return true;
 }
 
 void UImGui::Texture::load(void* data, const FVector2 size, const uint32_t depth, const bool bFreeImageData,
     const TFunction<void(void*)>& freeFunc) noexcept
 {
-    TEX_RUN(load(data, size, depth, bFreeImageData, freeFunc));
+    TEX_RUN(load(dt, data, size, depth, bFreeImageData, freeFunc));
 }
 
 uintptr_t UImGui::Texture::get() noexcept
 {
-    TEX_RUN(get());
+    TEX_RUN(get(dt));
 }
 
 void UImGui::Texture::setCustomSaveFunction(const CustomSaveFunction f) noexcept
 {
-    TEX_RUN(setCustomSaveFunction(f));
+    dt.customSaveFunction = f;
 }
 
-const UImGui::FVector2& UImGui::Texture::size() const noexcept
+UImGui::FVector2 UImGui::Texture::size() const noexcept
 {
-    TEX_RUN(size());
+    return dt.size;
 }
 
 void UImGui::Texture::clear() noexcept
@@ -38,11 +53,16 @@ void UImGui::Texture::clear() noexcept
     {
         bCleared = true;
         RendererUtils::getRenderer()->waitOnGPU();
-        TEX_RUN(clear());
+        TEX_RUN(clear(dt));
     }
 }
 
 UImGui::Texture::~Texture() noexcept
 {
     clear();
+}
+
+UImGui::TextureData& UImGui::Texture::getData() noexcept
+{
+    return dt;
 }

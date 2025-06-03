@@ -66,6 +66,10 @@ extern "C"
     // Check for WebGPU support
     // Event safety - any time
     UIMGUI_PUBLIC_API bool UImGui_RendererUtils_WebGPU_supported();
+
+    // Renderer a new dear imgui frame
+    // Event safety - tick
+    UIMGUI_PUBLIC_API void UImGui_RendererUtils_beginImGuiFrame();
 #ifdef __cplusplus
 }
 #endif

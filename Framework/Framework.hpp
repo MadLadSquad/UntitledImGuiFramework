@@ -26,4 +26,14 @@
 #include <Modules/Modules.hpp>
 #include <Core/FrameworkMain.hpp>
 
+#include <ThirdParty/imgui/backends/imgui_impl_opengl3.h>
+#ifdef __EMSCRIPTEN__
+#include <ThirdParty/imgui/backends/imgui_impl_wgpu.h>
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#include <emscripten/html5_webgpu.h>
+#else
+#include <ThirdParty/imgui/backends/imgui_impl_vulkan.h>
+#endif
 #include <GLFW/glfw3.h>
+#include <ThirdParty/imgui/backends/imgui_impl_glfw.h>

@@ -10,32 +10,34 @@ namespace UImGui
     {
     public:
         VulkanTexture() noexcept = default;
-        VulkanTexture(String location, bool bFiltered) noexcept;
 
         // Event Safety - Any time
-        virtual void init(String location, bool bFiltered) noexcept override;
+        virtual void init(TextureData& dt, String location, bool bFiltered) noexcept override;
 
-        virtual void load(void* data, FVector2 size, uint32_t depth, bool bFreeImageData,
+        virtual void load(TextureData& dt, void* data, FVector2 size, uint32_t depth, bool bFreeImageData,
                                 const TFunction<void(void*)>& freeFunc) noexcept override;
 
         // Event Safety - Post-begin
-        virtual uintptr_t get() noexcept override;
+        virtual uintptr_t get(TextureData& dt) noexcept override;
 
         // Cleans up the image data
         // Event Safety - All initiated
-        virtual void clear() noexcept override;
-        virtual ~VulkanTexture() noexcept override;
+        virtual void clear(TextureData& dt) noexcept override;
+        virtual ~VulkanTexture() noexcept override = default;
     private:
 #ifndef __EMSCRIPTEN__
-        bool bCreated = false;
-        VkDescriptorSet descriptorSet = nullptr;
+        struct VulkanTextureData
+        {
+            bool bCreated = false;
+            VkDescriptorSet descriptorSet = nullptr;
 
-        vk::ImageView imageView{};
-        vk::Image image{};
-        vk::DeviceMemory imageMemory{};
-        vk::Sampler sampler{};
-        vk::Buffer uploadBuffer{};
-        vk::DeviceMemory uploadBufferMemory{};
+            vk::ImageView imageView{};
+            vk::Image image{};
+            vk::DeviceMemory imageMemory{};
+            vk::Sampler sampler{};
+            vk::Buffer uploadBuffer{};
+            vk::DeviceMemory uploadBufferMemory{};
+        };
 #endif
     };
 }

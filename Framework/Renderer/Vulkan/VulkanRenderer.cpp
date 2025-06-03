@@ -52,7 +52,7 @@ void UImGui::VulkanRenderer::ImGuiNewFrame() noexcept
 {
 #ifndef __EMSCRIPTEN__
     ImGui_ImplVulkan_NewFrame();
-    GUIRenderer::beginFrame();
+    RendererUtils::beginImGuiFrame();
 #endif
 }
 

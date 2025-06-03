@@ -1,4 +1,5 @@
 #include "WebGPURenderer.hpp"
+#include <Renderer/RendererUtils.hpp>
 #ifdef __EMSCRIPTEN__
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -178,7 +179,7 @@ void UImGui::WebGPURenderer::destroy() noexcept
 void UImGui::WebGPURenderer::ImGuiNewFrame() noexcept
 {
     ImGui_ImplWGPU_NewFrame();
-    GUIRenderer::beginFrame();
+    RendererUtils::beginImGuiFrame();
 }
 
 void UImGui::WebGPURenderer::ImGuiShutdown() noexcept
@@ -216,7 +217,6 @@ void UImGui::WebGPURenderer::ImGuiShutdown() noexcept {}
 void UImGui::WebGPURenderer::ImGuiInit() noexcept {}
 void UImGui::WebGPURenderer::ImGuiRenderData() noexcept {}
 #endif
-#include <Renderer/RendererUtils.hpp>
 
 void UImGui::WebGPURenderer::setupWindowIntegration() noexcept
 {

@@ -32,6 +32,7 @@ namespace UImGui
         friend class RendererInternal;
         friend class RendererUtils;
         friend class WindowInternal;
+        friend class Texture;
 
         static RendererInternal& get() noexcept;
     };

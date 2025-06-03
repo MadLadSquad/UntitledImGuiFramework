@@ -47,14 +47,33 @@ if (EMSCRIPTEN)
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3_loader.h"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/misc/freetype/*.h")
 else()
+    if (APPLE AND IMGUI_BUILD_WITH_METAL)
+        file(GLOB_RECURSE IMGUI_ADDITIONAL_BACKENDS_SRC
+                "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_metal.mm")
+        file(GLOB_RECURSE IMGUI_ADDITIONAL_BACKENDS_HEAD
+                "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_metal.h")
+    elseif(WIN32)
+        if (IMGUI_BUILD_WITH_DX12)
+            file(GLOB_RECURSE IMGUI_DX12_SRC "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_dx12.cpp")
+            file(GLOB_RECURSE IMGUI_DX12_HEAD "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_dx12.h")
+        endif()
+
+        if (IMGUI_BUILD_WITH_DX11)
+            file(GLOB_RECURSE IMGUI_DX11_SRC "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_dx11.cpp")
+            file(GLOB_RECURSE IMGUI_DX11_HEAD "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_dx11.h")
+        endif()
+
+        file(GLOB_RECURSE IMGUI_ADDITIONAL_BACKENDS_SRC ${IMGUI_DX11_SRC} ${IMGUI_DX12_SRC})
+        file(GLOB_RECURSE IMGUI_ADDITIONAL_BACKENDS_HEAD ${IMGUI_DX11_HEAD} ${IMGUI_DX12_HEAD})
+    endif ()
     file(GLOB_RECURSE IMGUI_SRC "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_glfw.cpp"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.cpp"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_vulkan.cpp"
-            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/misc/freetype/*.cpp")
+            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/misc/freetype/*.cpp" ${IMGUI_ADDITIONAL_BACKENDS_SRC})
 
     file(GLOB_RECURSE IMGUI_HEAD "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_glfw.h"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.h"
-            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/misc/freetype/*.h"
+            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/misc/freetype/*.h" ${IMGUI_ADDITIONAL_BACKENDS_HEAD}
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_vulkan.h"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3_loader.h")
 endif()

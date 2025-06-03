@@ -29,6 +29,8 @@ namespace UImGui
 
         void start();
         void stop() const noexcept;
+
+        RendererInternalMetadata metadata;
     private:
         friend class Renderer;
         friend class RendererUtils;
@@ -58,11 +60,10 @@ namespace UImGui
         };
 
         GenericRenderer* renderer = nullptr;
-
-        RendererInternalMetadata metadata;
         RendererData data =
         {
             .rendererType = UIMGUI_RENDERER_TYPE_OPENGL,
+            .textureRendererType = UIMGUI_RENDERER_TYPE_OPENGL,
             .bUsingVSync = true,
             .msaaSamples = 1,
             .bEnablePowerSavingMode = false,

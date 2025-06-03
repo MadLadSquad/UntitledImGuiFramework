@@ -8,6 +8,7 @@
 
 // This includes the C API, which contains the C version of the init info struct
 #include <C/Components/CInstance.h>
+#include <Renderer/GenericRenderer/GenericTexture.hpp>
 
 namespace UImGui
 {
@@ -37,6 +38,7 @@ namespace UImGui
         bool bGlobalAllocatedOnHeap = true; // Set this to false if the global is a stack pointer
 
         GenericRenderer* customRenderer = nullptr;
+        GenericTexture* customTexture = nullptr;
 
         UImGui_CInitInfo* cInitInfo = nullptr;
 

@@ -41,6 +41,13 @@ if (WIN32)
                 ${YAML_CPP_LIBRARIES_T} ${FREETYPE_LIBRARIES} ${VULKAN_LIBRARIES_T})
     endif()
     target_link_libraries(${APP_TARGET} UntitledImGuiFramework ${YAML_CPP_LIBRARIES_T})
+
+    if (IMGUI_BUILD_WITH_DX12)
+        multicast(target_link_libraries d3d12 d3dcompiler dxgi)
+    endif ()
+    if (IMGUI_BUILD_WITH_DX11)
+        multicast(target_link_libraries d3d11 d3dcompiler)
+    endif ()
 elseif (EMSCRIPTEN)
     target_link_libraries(${APP_TARGET} ${GLFW_LIBRARIES_T} ${OPENGL_LIBRARIES_T} pthread dl
             ${YAML_CPP_LIBRARIES_T} ${FREETYPE_LIBRARIES} ${VULKAN_LIBRARIES_T} ${X11_LIBRARIES})
@@ -59,6 +66,9 @@ else ()
     if (APPLE AND NOT UIMGUI_SKIP_FRAMEWORK)
         target_link_libraries(UntitledImGuiFramework "-framework Cocoa" "-framework IOKit" "-framework CoreFoundation"
                 "-framework QuartzCore")
+        if (IMGUI_BUILD_WITH_METAL)
+            multicast(target_link_libraries "-framework Metal")
+        endif()
     endif ()
 
     foreach(f IN ITEMS ${ENABLED_LIBRARIES})

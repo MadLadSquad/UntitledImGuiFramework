@@ -8,40 +8,35 @@
 #endif
 #include <Interfaces/RendererInterface.hpp>
 
-UImGui::OpenGLTexture::OpenGLTexture(const String location, const bool bFiltered) noexcept
+void UImGui::OpenGLTexture::init(TextureData& dt, const String location, const bool bFiltered) noexcept
 {
-    init(location, bFiltered);
+    defaultInit(dt, location, bFiltered);
 }
 
-void UImGui::OpenGLTexture::init(const String location, const bool bFiltered) noexcept
+uintptr_t UImGui::OpenGLTexture::get(TextureData& dt) noexcept
 {
-    defaultInit(location, bFiltered);
+    return dt.id;
 }
 
-uintptr_t UImGui::OpenGLTexture::get() noexcept
+void UImGui::OpenGLTexture::clear(TextureData& dt) noexcept
 {
-    return id;
+    const GLuint tmp = dt.id;
+    if (Renderer::data().textureRendererType == UIMGUI_RENDERER_TYPE_OPENGL)
+        glDeleteTextures(1, &tmp);
+    dt.id = 0;
+    defaultClear(dt);
 }
 
-void UImGui::OpenGLTexture::clear() noexcept
+void UImGui::OpenGLTexture::load(TextureData& dt, void* data, FVector2 size, const uint32_t depth, const bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept
 {
-    if (Renderer::data().rendererType == UIMGUI_RENDERER_TYPE_OPENGL)
-        glDeleteTextures(1, &id);
-    id = 0;
-    defaultClear();
-}
+    beginLoad(dt, &data, size);
 
-UImGui::OpenGLTexture::~OpenGLTexture() noexcept
-{
-    clear();
-}
+    GLuint tmp = 0;
 
-void UImGui::OpenGLTexture::load(void* data, FVector2 size, const uint32_t depth, const bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept
-{
-    beginLoad(&data, size);
+    glGenTextures(1, &tmp);
+    glBindTexture(GL_TEXTURE_2D, tmp);
 
-    glGenTextures(1, &id);
-    glBindTexture(GL_TEXTURE_2D, id);
+    dt.id = tmp;
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, dt.bFiltered ? GL_LINEAR : GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, dt.bFiltered ? GL_LINEAR : GL_NEAREST);
@@ -57,5 +52,5 @@ void UImGui::OpenGLTexture::load(void* data, FVector2 size, const uint32_t depth
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(size.x), static_cast<int>(size.y), 0, GL_RGBA, dataType, data);
 
-    endLoad(data, bFreeImageData, freeFunc);
+    endLoad(dt, data, bFreeImageData, freeFunc);
 }

@@ -2,22 +2,23 @@
 #include <Renderer/RendererUtils.hpp>
 #include <Interfaces/RendererInterface.hpp>
 
-UImGui::WebGPUTexture::WebGPUTexture(const String location, const bool bFiltered) noexcept
+void UImGui::WebGPUTexture::init(TextureData& dt, const String location, const bool bFiltered) noexcept
 {
-    init(location, bFiltered);
+    defaultInit(dt, location, bFiltered);
+#ifdef __EMSCRIPTEN__
+    dt.context = new WebGPUTextureData{};
+    dt.contextSize = sizeof(WebGPUTextureData);
+#endif
 }
 
-void UImGui::WebGPUTexture::init(const String location, const bool bFiltered) noexcept
-{
-    defaultInit(location, bFiltered);
-}
-
-void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, const bool bFreeImageData,
+void UImGui::WebGPUTexture::load(TextureData& dt, void* data, FVector2 size, uint32_t depth, const bool bFreeImageData,
     const TFunction<void(void*)>& freeFunc) noexcept
 {
-    beginLoad(&data, size);
+    beginLoad(dt, &data, size);
 #ifdef __EMSCRIPTEN__
-    textureDescriptor = WGPUTextureDescriptor
+    auto* texDt = static_cast<WebGPUTextureData*>(dt.context);
+
+    texDt->textureDescriptor = WGPUTextureDescriptor
     {
         .nextInChain = nullptr,
         .usage = WGPUTextureUsage_TextureBinding | WGPUTextureUsage_CopyDst,
@@ -30,11 +31,11 @@ void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, cons
         .viewFormats = nullptr,
     };
     auto* renderer = dynamic_cast<WebGPURenderer*>(RendererUtils::getRenderer());
-    texture = wgpuDeviceCreateTexture(renderer->device, &textureDescriptor);
+    texDt->texture = wgpuDeviceCreateTexture(renderer->device, &texDt->textureDescriptor);
 
     const WGPUImageCopyTexture destination =
     {
-        .texture = texture,
+        .texture = texDt->texture,
         .mipLevel = 0,
         .origin = { 0, 0, 0 },
         .aspect = WGPUTextureAspect_All,
@@ -43,12 +44,12 @@ void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, cons
     const WGPUTextureDataLayout source =
     {
         .offset = 0,
-        .bytesPerRow = 4 * textureDescriptor.size.width,
-        .rowsPerImage = textureDescriptor.size.height,
+        .bytesPerRow = 4 * texDt->textureDescriptor.size.width,
+        .rowsPerImage = texDt->textureDescriptor.size.height,
     };
 
     // * 4 because RGBA
-    wgpuQueueWriteTexture(wgpuDeviceGetQueue(renderer->device), &destination, data, static_cast<uint32_t>(size.x * size.y * 4), &source, &textureDescriptor.size);
+    wgpuQueueWriteTexture(wgpuDeviceGetQueue(renderer->device), &destination, data, static_cast<uint32_t>(size.x * size.y * 4), &source, &texDt->textureDescriptor.size);
 
     constexpr WGPUTextureViewDescriptor textureViewDescriptor =
     {
@@ -60,36 +61,32 @@ void UImGui::WebGPUTexture::load(void* data, FVector2 size, uint32_t depth, cons
         .arrayLayerCount = 1,
         .aspect = WGPUTextureAspect_All,
     };
-    textureView = wgpuTextureCreateView(texture, &textureViewDescriptor);
-    bCreated = true;
+    texDt->textureView = wgpuTextureCreateView(texDt->texture, &textureViewDescriptor);
+    texDt->bCreated = true;
 #endif
-    endLoad(data, bFreeImageData, freeFunc);
+    endLoad(dt, data, bFreeImageData, freeFunc);
 }
 
-uintptr_t UImGui::WebGPUTexture::get() noexcept
+uintptr_t UImGui::WebGPUTexture::get(TextureData& dt) noexcept
 {
 #ifdef __EMSCRIPTEN__
-    return reinterpret_cast<uintptr_t>(textureView);
+    return reinterpret_cast<uintptr_t>(static_cast<WebGPUTextureData*>(dt.context)->textureView);
 #else
     return 0;
 #endif
 }
 
-void UImGui::WebGPUTexture::clear() noexcept
+void UImGui::WebGPUTexture::clear(TextureData& dt) noexcept
 {
 #ifdef __EMSCRIPTEN__
-    if (Renderer::data().rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU && bCreated)
+    auto* texDt = static_cast<WebGPUTextureData*>(dt.context);
+    if (Renderer::data().textureRendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU && texDt->bCreated)
     {
-        wgpuTextureViewRelease(textureView);
-        wgpuTextureDestroy(texture);
-        wgpuTextureRelease(texture);
-        bCreated = false;
+        wgpuTextureViewRelease(texDt->textureView);
+        wgpuTextureDestroy(texDt->texture);
+        wgpuTextureRelease(texDt->texture);
+        texDt->bCreated = false;
     }
 #endif
-    defaultClear();
-}
-
-UImGui::WebGPUTexture::~WebGPUTexture() noexcept
-{
-    clear();
+    defaultClear(dt);
 }

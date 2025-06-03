@@ -3,15 +3,15 @@
 #include <C/CDefines.h>
 #include "CComponentCommon.h"
 #include <C/Internal/RendererData.h>
+#include <C/Rendering/CGenericTexture.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-    typedef struct UImGui_CInitInfo UImGui_CInitInfo;
-
-    typedef void(*UImGui_CInstanceRegularFun)(UImGui_CInitInfo*);
-    typedef void(*UImGui_CInstanceTickFun)(UImGui_CInitInfo*, float);
+    struct UImGui_CInitInfo;
+    typedef void(*UImGui_CInstanceRegularFun)(struct UImGui_CInitInfo*);
+    typedef void(*UImGui_CInstanceTickFun)(struct UImGui_CInitInfo*, float);
 
     /**
      * @brief C alternative of the InitInfo struct. std::vector members are replaced by pointers and size variables
@@ -47,6 +47,7 @@ extern "C"
         bool bGlobalAllocatedOnHeap;
 
         UImGui_CGenericRenderer* customRenderer;
+        UImGui_CGenericTexture* customTexture;
     } UImGui_CInitInfo;
 
     // Event Safety - Any time

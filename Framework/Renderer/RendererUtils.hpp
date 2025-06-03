@@ -21,6 +21,10 @@ namespace UImGui
         // Event safety - any-time
         static GenericRenderer* getRenderer() noexcept;
 
+        // Renderer a new dear imgui frame
+        // Event safety - post-begin
+        static void beginImGuiFrame() noexcept;
+
         class UIMGUI_PUBLIC_API OpenGL
         {
         public:

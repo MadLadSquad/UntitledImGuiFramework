@@ -234,4 +234,11 @@ if (USE_I18N_MODULE)
     endif()
 endif()
 
+if (APPLE)
+    option(IMGUI_BUILD_WITH_METAL "Include Apple's Metal graphics API for use in custom renderers." OFF)
+elseif (WIN32)
+    option(IMGUI_BUILD_WITH_DX12 "Include the DirectX 12 graphics API for use in custom renderers." OFF)
+    option(IMGUI_BUILD_WITH_DX11 "Include the DirectX 11 graphics API for use in custom renderers." OFF)
+endif()
+
 custom_setup_step()

@@ -1,6 +1,7 @@
 #include "CRendererInterface.h"
 #include "Interfaces/RendererInterface.hpp"
 #include "Renderer/GenericRenderer/GenericRenderer.hpp"
+#include "Global.hpp"
 
 UImGui_RendererData* UImGui_Renderer_data()
 {
@@ -30,4 +31,26 @@ UImGui_String UImGui_Renderer_getGPUName()
 UImGui_String UImGui_Renderer_getDriverVersion()
 {
     return UImGui::Renderer::getDriverVersion().c_str();
+}
+
+void UImGui_RendererInternalMetadata_setVendorString(UImGui_String str)
+{
+    UImGui::Global::get().renderer->metadata.vendorString = str;
+}
+
+void UImGui_RendererInternalMetadata_setApiVersion(UImGui_String str)
+{
+    UImGui::Global::get().renderer->metadata.apiVersion = str;
+
+}
+
+void UImGui_RendererInternalMetadata_setDriverVersion(UImGui_String str)
+{
+    UImGui::Global::get().renderer->metadata.driverVersion = str;
+
+}
+
+void UImGui_RendererInternalMetadata_setGPUName(UImGui_String str)
+{
+    UImGui::Global::get().renderer->metadata.gpuName = str;
 }

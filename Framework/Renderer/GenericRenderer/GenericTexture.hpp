@@ -16,26 +16,29 @@ namespace UImGui
         // Event Safety - Any time
         GenericTexture() noexcept = default;
         // Event Safety - Any time
-        virtual void init(String location, bool bFiltered) noexcept = 0;
+        virtual void init(TextureData& dt, String location, bool bFiltered) noexcept = 0;
 
         // Event Safety - Post-begin
-        virtual uintptr_t get() noexcept = 0;
+        virtual uintptr_t get(TextureData& dt) noexcept = 0;
 
-        virtual void load(void* data, FVector2 size, uint32_t depth, bool bFreeImageData,
+        // Event Safety - Post-begin
+        virtual void load(TextureData& dt, void* data, FVector2 size, uint32_t depth, bool bFreeImageData,
                                 const TFunction<void(void*)>& freeFunc) noexcept = 0;
         /**
          * @brief Outputs an image with a given format to a file. Only works if the image buffer is not freed
          * automatically when loading the image.
          * @tparam format - The format of an image
-         * @param location -
+         * @param dt - The texture data structure
+         * @param location - File location
          * @param fmt - Format of the image, defaults to the value of the template argument. If template argument is set
          * to UIMGUI_TEXTURE_FORMAT_OTHER, it will check this value. If it reaches OTHER again, the custom save function
          * is called
          * @param jpegQuality - Quality of the output of the JPEG image from 0(lowest) and 100(highest). Default
          * argument sets it to 100
+         * @note Event safety - Post-begin
          */
         template<TextureFormat format>
-        bool saveToFile(const String location, const TextureFormat fmt = format, const uint8_t jpegQuality = 100) noexcept
+        static bool saveToFile(TextureData& dt, const String location, const TextureFormat fmt = format, const uint8_t jpegQuality = 100) noexcept
         {
             if (dt.data != nullptr)
             {
@@ -71,26 +74,17 @@ namespace UImGui
             return false;
         }
 
-        // Set a function for saving custom image file formats
-        // Event Safety - All initiated
-        void setCustomSaveFunction(CustomSaveFunction f) noexcept;
-
-        // Returns the size of the image
-        // Event Safety - Any time
-        [[nodiscard]] const FVector2& size() const noexcept;
-
         // Cleans up the image data
         // Event Safety - All initiated
-        virtual void clear() noexcept = 0;
+        virtual void clear(TextureData& dt) noexcept = 0;
         virtual ~GenericTexture() noexcept = default;
     protected:
         friend class Texture;
 
-        void beginLoad(void** data, FVector2& size) noexcept;
-        void endLoad(void* data, bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept;
+        static void beginLoad(TextureData& dt, void** data, FVector2& size) noexcept;
+        static void endLoad(TextureData& dt, void* data, bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept;
 
-        void defaultInit(String location, bool bFiltered) noexcept;
-        void defaultClear() noexcept;
-        TextureData dt{};
+        static void defaultInit(TextureData& dt, String location, bool bFiltered) noexcept;
+        static void defaultClear(TextureData& dt) noexcept;
     };
 }

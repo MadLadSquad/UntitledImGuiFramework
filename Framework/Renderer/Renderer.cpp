@@ -169,6 +169,7 @@ escape_render_type_loop:;
 #ifdef __EMSCRIPTEN__
         data.rendererType = data.rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU ? static_cast<RendererType>(em_supports_wgpu()) : data.rendererType;
 #endif
+        data.textureRendererType = data.rendererType;
 
         if (data.rendererType == UIMGUI_RENDERER_TYPE_CUSTOM)
         {

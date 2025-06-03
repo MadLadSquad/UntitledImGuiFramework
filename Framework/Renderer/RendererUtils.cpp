@@ -2,6 +2,7 @@
 #include <Interfaces/WindowInterface.hpp>
 #include <GLFW/glfw3.h>
 #include <Core/Platform/WASM.hpp>
+#include <ImGui/ImGui.hpp>
 #include <Renderer/GenericRenderer/GenericRenderer.hpp>
 #include <Interfaces/RendererInterface.hpp>
 
@@ -36,4 +37,9 @@ bool UImGui::RendererUtils::WebGPU::supported() noexcept
 #else
     return false;
 #endif
+}
+
+void UImGui::RendererUtils::beginImGuiFrame() noexcept
+{
+    GUIRenderer::beginFrame();
 }

@@ -1,13 +1,14 @@
 #pragma once
 #include <C/CTypes.h>
 #include <C/CDefines.h>
+#include <C/Internal/RendererData.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-    typedef struct UImGui_TextureData UImGuiTextureData;
-    typedef bool(*UImGui_Texture_CustomSaveFunction)(UImGui_TextureData* data, UImGui_String location);
+    struct UImGui_TextureData;
+    typedef bool(*UImGui_Texture_CustomSaveFunction)(struct UImGui_TextureData* data, UImGui_String location);
 
     typedef void UImGui_CTexture;
 
@@ -20,6 +21,9 @@ extern "C"
      * @var data - Custom texture data, can be left null if loading from a file
      * @var storageIndex - Internal variable part of the C garbage collection system
      * @var customSaveFunction - Callback for saving the image to a file
+     * @var context - A void* to a user-defined data context
+     * @var contextSize - The size of user-defined data structure
+     * @var id - A texture ID for use by dear imgui
      */
     typedef struct UIMGUI_PUBLIC_API UImGui_TextureData
     {
@@ -34,6 +38,11 @@ extern "C"
         size_t storageIndex;
 
         UImGui_Texture_CustomSaveFunction customSaveFunction;
+
+        // Data for each custom texture renderer backend
+        void* context;
+        size_t contextSize;
+        uintptr_t id;
     } UImGui_TextureData;
 
     /**

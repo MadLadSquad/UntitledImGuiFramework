@@ -10,9 +10,10 @@ void UImGui_Texture_defaultFreeFunc(void* data)
     stbi_image_free(data);
 }
 
-UImGui_CTexture* UImGui_Texture_init(const UImGui_String file)
+UImGui_CTexture* UImGui_Texture_init(const UImGui_String file, const bool bFiltered)
 {
-    return &UImGui::Global::get().deallocationStruct.textures.emplace_back(file);
+    UImGui::Texture tex(file);
+    return tex.init(file, bFiltered) ? &UImGui::Global::get().deallocationStruct.textures.emplace_back(tex) : nullptr;
 }
 
 void UImGui_Texture_load(UImGui_CTexture* texture, void* data, const UImGui_FVector2 size, const uint32_t depth,
@@ -38,7 +39,7 @@ void UImGui_Texture_clear(UImGui_CTexture* texture)
 
 bool UImGui_Texture_saveToFile(UImGui_CTexture* texture, const UImGui_String location, const UImGui_TextureFormat fmt, const uint8_t jpegQuality)
 {
-    return cast(texture)->saveToFile<UIMGUI_TEXTURE_FORMAT_OTHER>(location, fmt, jpegQuality);
+    return UImGui::GenericTexture::saveToFile<UIMGUI_TEXTURE_FORMAT_OTHER>(cast(texture)->getData(), location, fmt, jpegQuality);
 }
 
 void UImGui_Texture_setCustomSaveFunction(UImGui_CTexture* texture, const UImGui_Texture_CustomSaveFunction f)

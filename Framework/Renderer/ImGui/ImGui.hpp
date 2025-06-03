@@ -7,10 +7,14 @@ struct GLFWwindow;
 namespace UImGui
 {
     class Window;
-    class GUIRenderer
+    class UIMGUI_PUBLIC_API GUIRenderer
     {
     public:
         GUIRenderer() = default;
+
+    private:
+        friend class RendererUtils;
+        friend class RendererInternal;
 
         static void init(GenericRenderer* renderer) noexcept;
         static void beginUI(float deltaTime, GenericRenderer* renderer) noexcept;

@@ -6,7 +6,7 @@ extern "C"
 #include <C/CTypes.h>
 #include <C/CDefines.h>
 #include <C/Internal/CMonitor.h>
-    struct GLFWwindow;
+    typedef struct GLFWwindow GLFWwindow;
 
     typedef void(*UImGui_Window_pushWindowPositionChangeCallbackFun)(UImGui_FVector2);
     typedef void(*UImGui_Window_pushWindowCloseCallbackFun)();

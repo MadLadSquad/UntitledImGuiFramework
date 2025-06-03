@@ -15,20 +15,21 @@ static uint32_t findMemoryType(const vk::PhysicalDevice& physicalDevice, const u
 }
 #endif
 
-UImGui::VulkanTexture::VulkanTexture(const String location, const bool bFiltered) noexcept
+void UImGui::VulkanTexture::init(TextureData& dt, const String location, const bool bFiltered) noexcept
 {
-    init(location, bFiltered);
-}
-
-void UImGui::VulkanTexture::init(const String location, const bool bFiltered) noexcept
-{
-    defaultInit(location, bFiltered);
-}
-
-void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, const bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
-{
-    beginLoad(&data, size);
+    defaultInit(dt, location, bFiltered);
 #ifndef __EMSCRIPTEN__
+    dt.context = new VulkanTextureData{};
+    dt.contextSize = sizeof(VulkanTextureData);
+#endif
+}
+
+void UImGui::VulkanTexture::load(TextureData& dt, void* data, FVector2 size, uint32_t depth, const bool bFreeImageData, const std::function<void(void*)>& freeFunc) noexcept
+{
+    beginLoad(dt, &data, size);
+#ifndef __EMSCRIPTEN__
+    auto* texDt = static_cast<VulkanTextureData*>(dt.context);
+
     vk::DeviceSize deviceSize = static_cast<vk::DeviceSize>(size.x * size.y) * 4;
     auto* renderer = dynamic_cast<VulkanRenderer*>(RendererUtils::getRenderer());
 
@@ -54,33 +55,33 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
         .sharingMode = vk::SharingMode::eExclusive,
         .initialLayout = vk::ImageLayout::eUndefined,
     };
-    vk::Result result = device.createImage(&info, nullptr, &image);
+    vk::Result result = device.createImage(&info, nullptr, &texDt->image);
     if (result != vk::Result::eSuccess)
     {
         Logger::log("Couldn't create Vulkan texture at location: ", ULOG_LOG_TYPE_WARNING, dt.filename);
         return;
     }
 
-    vk::MemoryRequirements requirements = device.getImageMemoryRequirements(image);
+    vk::MemoryRequirements requirements = device.getImageMemoryRequirements(texDt->image);
     const vk::MemoryAllocateInfo allocationInfo
     {
         .sType = vk::StructureType::eMemoryAllocateInfo,
         .allocationSize = requirements.size,
         .memoryTypeIndex = findMemoryType(renderer->device.physicalDevice, requirements.memoryTypeBits, vk::MemoryPropertyFlagBits::eDeviceLocal),
     };
-    result = device.allocateMemory(&allocationInfo, nullptr, &imageMemory);
+    result = device.allocateMemory(&allocationInfo, nullptr, &texDt->imageMemory);
     if (result != vk::Result::eSuccess)
     {
         Logger::log("Couldn't allocate memory for Vulkan texture at location: ", ULOG_LOG_TYPE_WARNING, dt.filename);
         return;
     }
 
-    device.bindImageMemory(image, imageMemory, 0);
+    device.bindImageMemory(texDt->image, texDt->imageMemory, 0);
 
     const vk::ImageViewCreateInfo imageViewCreateInfo
     {
         .sType = vk::StructureType::eImageViewCreateInfo,
-        .image = image,
+        .image = texDt->image,
         .viewType = vk::ImageViewType::e2D,
         .format = vk::Format::eR8G8B8A8Unorm,
         .subresourceRange =
@@ -90,7 +91,7 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
             .layerCount = 1,
         }
     };
-    result = device.createImageView(&imageViewCreateInfo, nullptr, &imageView);
+    result = device.createImageView(&imageViewCreateInfo, nullptr, &texDt->imageView);
     if (result != vk::Result::eSuccess)
     {
         Logger::log("Couldn't create image view for Vulkan texture at location: ", ULOG_LOG_TYPE_WARNING, dt.filename);
@@ -110,14 +111,14 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
         .minLod = -1000,
         .maxLod = 1000,
     };
-    result = device.createSampler(&samplerCreateInfo, nullptr, &sampler);
+    result = device.createSampler(&samplerCreateInfo, nullptr, &texDt->sampler);
     if (result != vk::Result::eSuccess)
     {
         Logger::log("Couldn't create image sampler for Vulkan texture at location: ", ULOG_LOG_TYPE_WARNING, dt.filename);
         return;
     }
 
-    descriptorSet = ImGui_ImplVulkan_AddTexture(sampler, imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    texDt->descriptorSet = ImGui_ImplVulkan_AddTexture(texDt->sampler, texDt->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     const vk::BufferCreateInfo bufferCreateInfo =
     {
@@ -126,30 +127,30 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
         .usage = vk::BufferUsageFlagBits::eTransferSrc,
         .sharingMode = vk::SharingMode::eExclusive,
     };
-    result = device.createBuffer(&bufferCreateInfo, nullptr, &uploadBuffer);
+    result = device.createBuffer(&bufferCreateInfo, nullptr, &texDt->uploadBuffer);
     if (result != vk::Result::eSuccess)
     {
         Logger::log("Couldn't create upload buffer for Vulkan texture at location: ", ULOG_LOG_TYPE_WARNING, dt.filename);
         return;
     }
 
-    requirements = device.getBufferMemoryRequirements(uploadBuffer);
+    requirements = device.getBufferMemoryRequirements(texDt->uploadBuffer);
     const vk::MemoryAllocateInfo memoryAllocateInfo
     {
         .sType = vk::StructureType::eMemoryAllocateInfo,
         .allocationSize = requirements.size,
         .memoryTypeIndex = findMemoryType(renderer->device.physicalDevice, requirements.memoryTypeBits, vk::MemoryPropertyFlagBits::eHostVisible),
     };
-    result = device.allocateMemory(&memoryAllocateInfo, nullptr, &uploadBufferMemory);
+    result = device.allocateMemory(&memoryAllocateInfo, nullptr, &texDt->uploadBufferMemory);
     if (result != vk::Result::eSuccess)
     {
         Logger::log("Couldn't allocate memory for the upload buffer of Vulkan texture at location: ", ULOG_LOG_TYPE_WARNING, dt.filename);
         return;
     }
-    device.bindBufferMemory(uploadBuffer, uploadBufferMemory, 0);
+    device.bindBufferMemory(texDt->uploadBuffer, texDt->uploadBufferMemory, 0);
 
     void* map = nullptr;
-    result = device.mapMemory(uploadBufferMemory, 0, deviceSize, static_cast<vk::MemoryMapFlags>(0), &map);
+    result = device.mapMemory(texDt->uploadBufferMemory, 0, deviceSize, static_cast<vk::MemoryMapFlags>(0), &map);
     if (result != vk::Result::eSuccess)
     {
         Logger::log("Couldn't map memory for the upload buffer of Vulkan texture at location: ", ULOG_LOG_TYPE_WARNING, dt.filename);
@@ -160,7 +161,7 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
     const vk::MappedMemoryRange range
     {
         .sType = vk::StructureType::eMappedMemoryRange,
-        .memory = uploadBufferMemory,
+        .memory = texDt->uploadBufferMemory,
         .size =  deviceSize
     };
     result = device.flushMappedMemoryRanges(1, &range);
@@ -169,9 +170,9 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
         Logger::log("Couldn't flush mapped memory for the upload buffer of Vulkan texture at location: ", ULOG_LOG_TYPE_WARNING, dt.filename);
         return;
     };
-    device.unmapMemory(uploadBufferMemory);
+    device.unmapMemory(texDt->uploadBufferMemory);
 #endif
-    endLoad(data, bFreeImageData, freeFunc);
+    endLoad(dt, data, bFreeImageData, freeFunc);
 #ifndef __EMSCRIPTEN__
 
     const vk::CommandPool commandPool = windowData.Frames[windowData.FrameIndex].CommandPool;
@@ -211,7 +212,7 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
         .newLayout = vk::ImageLayout::eTransferDstOptimal,
         .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
         .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
-        .image = image,
+        .image = texDt->image,
         .subresourceRange =
         {
             .aspectMask = vk::ImageAspectFlagBits::eColor,
@@ -235,7 +236,7 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
             .depth = 1,
         },
     };
-    commandBuffer.copyBufferToImage(uploadBuffer, image, vk::ImageLayout::eTransferDstOptimal, 1, &region);
+    commandBuffer.copyBufferToImage(texDt->uploadBuffer, texDt->image, vk::ImageLayout::eTransferDstOptimal, 1, &region);
 
     const vk::ImageMemoryBarrier useBarrier
     {
@@ -246,7 +247,7 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
         .newLayout = vk::ImageLayout::eShaderReadOnlyOptimal,
         .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
         .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
-        .image = image,
+        .image = texDt->image,
         .subresourceRange =
         {
             .aspectMask = vk::ImageAspectFlagBits::eColor,
@@ -272,39 +273,37 @@ void UImGui::VulkanTexture::load(void* data, FVector2 size, uint32_t depth, cons
     }
     renderer->device.queue.waitIdle();
     device.freeCommandBuffers(commandPool, 1, &commandBuffer);
-    bCreated = true;
+    texDt->bCreated = true;
 #endif
 }
 
-uintptr_t UImGui::VulkanTexture::get() noexcept
+uintptr_t UImGui::VulkanTexture::get(TextureData& dt) noexcept
 {
 #ifdef __EMSCRIPTEN__
     return 0;
 #else
-    return reinterpret_cast<intptr_t>(descriptorSet);
+    return reinterpret_cast<intptr_t>(static_cast<VulkanTextureData*>(dt.context)->descriptorSet);
 #endif
 }
 
-void UImGui::VulkanTexture::clear() noexcept
+void UImGui::VulkanTexture::clear(TextureData& dt) noexcept
 {
 #ifndef __EMSCRIPTEN__
-    if (Renderer::data().rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU && bCreated)
+    auto* texDt = static_cast<VulkanTextureData*>(dt.context);
+    if (Renderer::data().textureRendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU && texDt->bCreated)
     {
         auto& device = dynamic_cast<VulkanRenderer*>(RendererUtils::getRenderer())->device.get();
 
-        device.freeMemory(uploadBufferMemory, nullptr);
-        device.destroyBuffer(uploadBuffer, nullptr);
-        device.destroySampler(sampler, nullptr);
-        device.destroyImageView(imageView, nullptr);
-        device.destroyImage(image, nullptr);
-        device.freeMemory(imageMemory, nullptr);
-        ImGui_ImplVulkan_RemoveTexture(descriptorSet);
-        bCreated = false;
+        device.freeMemory(texDt->uploadBufferMemory, nullptr);
+        device.destroyBuffer(texDt->uploadBuffer, nullptr);
+        device.destroySampler(texDt->sampler, nullptr);
+        device.destroyImageView(texDt->imageView, nullptr);
+        device.destroyImage(texDt->image, nullptr);
+        device.freeMemory(texDt->imageMemory, nullptr);
+        ImGui_ImplVulkan_RemoveTexture(texDt->descriptorSet);
+        texDt->bCreated = false;
+
+        delete texDt;
     }
 #endif
-}
-
-UImGui::VulkanTexture::~VulkanTexture() noexcept
-{
-    clear();
 }

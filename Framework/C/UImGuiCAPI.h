@@ -16,3 +16,8 @@
 #include <C/Modules/Undo/Undo.h>
 
 #include <C/Rendering/CTexture.h>
+#include <C/Rendering/CClientSideBar.h>
+#include <C/Rendering/CGenericRenderer.h>
+#include <C/Rendering/CGenericTexture.h>
+#include <C/Rendering/CRendererUtils.h>
+#include <ThirdParty/logger/C/CULog.h>

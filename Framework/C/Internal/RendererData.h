@@ -20,6 +20,7 @@ extern "C"
     /**
      * @brief Renderer data struct
      * @var rendererType - The current selected renderer
+     * @var textureRendererType - The current selected texture renderer
      * @var bUsingVSync - Whether the application uses VSync(sync the application framerate with monitor refresh rate)
      * @var msaaSamples - Number of samples for MSAA antialiasing
      * @var bEnablePowerSavingMode - Whether to enable power saving(rendering with a reduce frame rate when the
@@ -29,6 +30,7 @@ extern "C"
     typedef struct UIMGUI_PUBLIC_API UImGui_RendererData
     {
         UImGui_RendererType rendererType;
+        UImGui_RendererType textureRendererType;
         bool bUsingVSync;
         uint32_t msaaSamples;
 

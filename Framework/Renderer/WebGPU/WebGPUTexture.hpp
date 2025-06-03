@@ -13,27 +13,29 @@ namespace UImGui
     {
     public:
         WebGPUTexture() noexcept = default;
-        WebGPUTexture(String location, bool bFiltered) noexcept;
 
         // Event Safety - Any time
-        virtual void init(String location, bool bFiltered) noexcept override;
+        virtual void init(TextureData& dt, String location, bool bFiltered) noexcept override;
 
-        virtual void load(void* data, FVector2 size, uint32_t depth, bool bFreeImageData,
+        virtual void load(TextureData& dt, void* data, FVector2 size, uint32_t depth, bool bFreeImageData,
                                 const TFunction<void(void*)>& freeFunc) noexcept override;
 
         // Event Safety - Post-begin
-        virtual uintptr_t get() noexcept override;
+        virtual uintptr_t get(TextureData& dt) noexcept override;
 
         // Cleans up the image data
         // Event Safety - All initiated
-        virtual void clear() noexcept override;
-        virtual ~WebGPUTexture() noexcept override;
+        virtual void clear(TextureData& dt) noexcept override;
+        virtual ~WebGPUTexture() noexcept override = default;
     private:
 #ifdef __EMSCRIPTEN__
-        WGPUTextureDescriptor textureDescriptor{};
-        WGPUTexture texture = nullptr;
-        WGPUTextureView textureView = nullptr;
-        bool bCreated = false;
+        struct WebGPUTextureData
+        {
+            WGPUTextureDescriptor textureDescriptor{};
+            WGPUTexture texture = nullptr;
+            WGPUTextureView textureView = nullptr;
+            bool bCreated = false;
+        };
 #endif
     };
 
