@@ -16,7 +16,7 @@ extern "C"
 
     typedef UImGui_CGenericTexture_VoidFun UImGui_CGenericTexture_Clear;
 
-
+    // Event safety - any-time
     UIMGUI_PUBLIC_API UImGui_CGenericTexture* UImGui_CGenericTexture_make(
         UImGui_CGenericTexture_InitFun init,
         UImGui_CGenericTexture_GetFun get,
@@ -24,6 +24,7 @@ extern "C"
         UImGui_CGenericTexture_Clear clear
     );
 
+    // Event safety - end
     UIMGUI_PUBLIC_API void UImGui_CGenericTexture_free(UImGui_CGenericTexture* texture);
 #ifdef __cplusplus
 }
