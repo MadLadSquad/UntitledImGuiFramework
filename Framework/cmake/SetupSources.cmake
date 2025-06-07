@@ -22,6 +22,10 @@ if (USE_SPINNER_MODULE)
     list(APPEND FRAMEWORK_INCLUDE_DIRS "${UIMGUI_SRC_PREFIX}/Framework/Modules/Spinners/ThirdParty/imspinner/")
 endif ()
 
+if (USE_PLOTTING_MODULE)
+    list(APPEND FRAMEWORK_INCLUDE_DIRS "${UIMGUI_SRC_PREFIX}/Framework/Modules/Plotting/ThirdParty/implot/")
+endif ()
+
 if (NOT APPLE)
     list(APPEND FRAMEWORK_INCLUDE_DIRS "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/glad/include/")
     file(GLOB_RECURSE GLAD_SRC "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/glad/src/gl.c")

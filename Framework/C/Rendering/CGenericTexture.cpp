@@ -31,10 +31,10 @@ public:
 
     ~CGenericTexture() noexcept override = default;
 
-    UImGui_CGenericTexture_InitFun initFun;
-    UImGui_CGenericTexture_GetFun getFun;
-    UImGui_CGenericTexture_LoadFun loadFun;
-    UImGui_CGenericTexture_Clear clearFun;
+    UImGui_CGenericTexture_InitFun initFun{};
+    UImGui_CGenericTexture_GetFun getFun{};
+    UImGui_CGenericTexture_LoadFun loadFun{};
+    UImGui_CGenericTexture_Clear clearFun{};
 };
 
 UImGui_CGenericTexture* UImGui_CGenericTexture_make(

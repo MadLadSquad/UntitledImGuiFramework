@@ -73,6 +73,18 @@ if (UIMGUI_PRODUCTION_BUILD)
     multicast(target_compile_definitions PRIVATE "PRODUCTION")
 endif()
 
+if (IMGUI_BUILD_WITH_DX11)
+    multicast(target_compile_definitions PRIVATE "IMGUI_BUILD_WITH_DX11")
+endif()
+
+if (IMGUI_BUILD_WITH_DX12)
+    multicast(target_compile_definitions PRIVATE "IMGUI_BUILD_WITH_DX12")
+endif()
+
+if (IMGUI_BUILD_WITH_METAL)
+    multicast(target_compile_definitions PRIVATE "IMGUI_BUILD_WITH_METAL")
+endif()
+
 if (NOT EMSCRIPTEN)
     if (NOT UIMGUI_SKIP_FRAMEWORK)
         target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_COMPILE_LIB" "YAML_CPP_DLL" "URLL_USE_FUNCTIONAL"
