@@ -16,14 +16,14 @@
 #endif
 
 #ifdef PRODUCTION
-    #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x));   \
-    UNUSED(UImGui::AllocatorFuncs::get());                                  \
-    UNUSED(UImGui::Global::get());                                          \
-    logger.setCrashOnError(true);                                   \
+    #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x));       \
+    UNUSED(UImGui::AllocatorFuncs::get());                              \
+    UNUSED(UImGui::Global::get());                                      \
+    Logger::setCrashOnError(true);                                      \
     UImGui::Utility::removeConsole()
 #else
-    #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x));   \
-    UNUSED(UImGui::AllocatorFuncs::get());                                  \
+    #define UIMGUI_START(x) std::ios_base::sync_with_stdio(!(x));       \
+    UNUSED(UImGui::AllocatorFuncs::get());                              \
     UNUSED(UImGui::Global::get())
 #endif
 
