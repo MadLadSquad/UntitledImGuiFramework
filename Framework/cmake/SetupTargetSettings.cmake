@@ -25,6 +25,8 @@ endif()
 
 if (USE_PLOTTING_MODULE)
     multicast(target_compile_definitions PRIVATE UIMGUI_PLOTTING_MODULE_ENABLED)
+else ()
+    multicast(target_compile_definitions PRIVATE DISABLE_CIMPLOT)
 endif()
 
 if (USE_KNOBS_MODULE)
