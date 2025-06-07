@@ -90,9 +90,12 @@ The framework uses C++ as its main development language. Additionally, because w
 plugins in mutiple languages, the user-facing API has a separate, completely C version that can be used to develop 
 applications too!
 
-Simply write the required bindings to your language or generate them automatically from C using a relevant tool. As long as 
-you have the main engine library compiled you should easily be able to write applications in C or any other programming 
-language that supports C style functions. C and C++ ABI stability of the core is generally guaranteed.
+Through this effort, as well as through libraries and tools like [dear_bindings](https://github.com/dearimgui/dear_bindings) and [cimgui\_extra](https://github.com/MadLadSquad/cimgui_extra),
+both the modules and the framework APIs have a C coverage of around 97%.
+
+This focus on cross-compatibility allows developers to simply write the required bindings to their desired languages, and as long as 
+they have the main engine library compiled, they should be able to to easily write applications in C or any other programming 
+language that supports C style functions.
 
 ### Native plugin support
 The framework has native support for plugins with a handy plugin manager and interface that make it easy to make your application
