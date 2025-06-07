@@ -38,6 +38,10 @@
 #define IMGUI_HAS_VIEWPORT           // Viewport WIP branch
 #define IMGUI_HAS_DOCK               // Docking WIP branch
 
+// Extra defines set by Dear Bindings for internal purposes
+#define IMGUI_DEAR_BINDINGS_HAS_GETWINDOWFRAMEBUFFERSCALE
+#define IMGUI_DEAR_BINDINGS_HAS_GETWINDOWWORKAREAINSETS
+
 /*
 
 Index of this file:
@@ -2296,10 +2300,12 @@ struct ImGuiTableColumnSortSpecs_t
 CIMGUI_API void ImVector_Construct(void* vector);  // Construct a zero-size ImVector<> (of any type). This is primarily useful when calling ImFontGlyphRangesBuilder_BuildRanges()
 CIMGUI_API void ImVector_Destruct(void* vector);   // Destruct an ImVector<> (of any type). Important: Frees the vector memory but does not call destructors on contained objects (if they have them)
 
-CIMGUI_API void ImGuiPlatformIO_SetPlatform_GetWindowPos(void (*getWindowPosFunc)(ImGuiViewport* vp, ImVec2* result));                            // Set ImGuiPlatformIO::Platform_GetWindowPos in a C-compatible mannner
-CIMGUI_API void ImGuiPlatformIO_SetPlatform_GetWindowSize(void (*getWindowSizeFunc)(ImGuiViewport* vp, ImVec2* result));                          // Set ImGuiPlatformIO::Platform_GetWindowSize in a C-compatible mannner
+CIMGUI_API void ImGuiPlatformIO_SetPlatform_GetWindowWorkAreaInsets(void (*getWindowWorkAreaInsetsFunc)(ImGuiViewport* vp, ImVec4* result));  // Set ImGuiPlatformIO::Platform_GetWindowWorkAreaInsets in a C-compatible mannner
+
 CIMGUI_API void ImGuiPlatformIO_SetPlatform_GetWindowFramebufferScale(void (*getWindowFramebufferScaleFunc)(ImGuiViewport* vp, ImVec2* result));  // Set ImGuiPlatformIO::Platform_GetWindowFramebufferScale in a C-compatible mannner
-CIMGUI_API void ImGuiPlatformIO_SetPlatform_GetWindowWorkAreaInsets(void (*getWindowWorkAreaInsetsFunc)(ImGuiViewport* vp, ImVec4* result));      // Set ImGuiPlatformIO::Platform_GetWindowWorkAreaInsets in a C-compatible mannner
+
+CIMGUI_API void ImGuiPlatformIO_SetPlatform_GetWindowPos(void (*getWindowPosFunc)(ImGuiViewport* vp, ImVec2* result));    // Set ImGuiPlatformIO::Platform_GetWindowPos in a C-compatible mannner
+CIMGUI_API void ImGuiPlatformIO_SetPlatform_GetWindowSize(void (*getWindowSizeFunc)(ImGuiViewport* vp, ImVec2* result));  // Set ImGuiPlatformIO::Platform_GetWindowSize in a C-compatible mannner
 
 #if defined(IMGUI_HAS_IMSTR)
 #if IMGUI_HAS_IMSTR
