@@ -7,6 +7,17 @@ extern "C"
     typedef enum [[maybe_unused]] CKeys
     {
         Keys_UnknownKey = 349,
+
+        // Internal representation of ControlCmd, Control and Super. These values get saved to files so that keybinding
+        // files remain cross-platform when a binding is 1:1 compatible on macOS
+        Keys_LeftControlCommand_InternalRepr = 350,
+        Keys_LeftControl_InternalRepr = 351,
+        Keys_LeftSuper_InternalRepr = 352,
+        Keys_RightControlCommand_InternalRepr = 353,
+        Keys_RightControl_InternalRepr = 354,
+        Keys_RightSuper_InternalRepr = 355,
+        Keys_COUNT = 356,
+
         Keys_Space = 32,
         Keys_Apostrophe = 39,
         Keys_Comma = 44,
@@ -119,11 +130,25 @@ extern "C"
         Keys_NumPadEnter = 335,
         Keys_NumPadEqual = 336,
         Keys_LeftShift = 340,
+
+        // Swaps control and command on macOS because that's how it's done there
+#ifdef __APPLE__
+        Keys_LeftControlCmd = 343,
         Keys_LeftControl = 341,
+
+        Keys_RightControlCmd = 347,
+        Keys_RightControl = 345,
+#else
+        Keys_LeftControlCmd = 341,
+        Keys_LeftControl = 341
+
+        Keys_RightControlCmd = 345,
+        Keys_RightControl = 345,
+#endif
+
         Keys_LeftAlt = 342,
         Keys_LeftSuper = 343,
         Keys_RightShift = 344,
-        Keys_RightControl = 345,
         Keys_RightAlt = 346,
         Keys_RightSuper = 347,
         Keys_Menu = 348,

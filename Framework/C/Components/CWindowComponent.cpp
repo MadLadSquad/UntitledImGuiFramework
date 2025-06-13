@@ -46,7 +46,7 @@ public:
 };
 
 
-UImGui_CComponentHandle UImGui_WindowComponent_makeCWindowComponent(const UImGui_ComponentRegularFun construct,
+UImGui_CComponentHandle* UImGui_WindowComponent_makeCWindowComponent(const UImGui_ComponentRegularFun construct,
                                                                     const UImGui_ComponentRegularFun begin, const UImGui_ComponentTickFun tick, const UImGui_ComponentRegularFun end,
                                                                     const UImGui_ComponentRegularFun destruct, UImGui_CComponentData data)
 {
@@ -64,17 +64,17 @@ UImGui_CComponentHandle UImGui_WindowComponent_makeCWindowComponent(const UImGui
     return handle;
 }
 
-UImGui_CComponentData_P* UImGui_WindowComponent_getCWindowComponentData(UImGui_CComponentHandle handle)
+const UImGui_CComponentData_P* UImGui_WindowComponent_getCWindowComponentData(const UImGui_CComponentHandle* handle)
 {
-    return &static_cast<CWindowComponentInternalClass*>(handle)->data;
+    return &CAST(const CWindowComponentInternalClass*, handle)->data;
 }
 
-void UImGui_WindowComponent_destroyCWindowComponent(UImGui_CComponentHandle handle)
+void UImGui_WindowComponent_destroyCWindowComponent(const UImGui_CComponentHandle* handle)
 {
-    delete (CWindowComponentInternalClass*)handle;
+    delete CAST(const CWindowComponentInternalClass*, handle);
 }
 
-UImGui_String UImGui_WindowComponent_getCWindowComponentName(UImGui_CComponentHandle handle)
+UImGui_String UImGui_WindowComponent_getCWindowComponentName(const UImGui_CComponentHandle* handle)
 {
-    return static_cast<CWindowComponentInternalClass*>(handle)->name.c_str();
+    return CAST(const CWindowComponentInternalClass*, handle)->name.c_str();
 }

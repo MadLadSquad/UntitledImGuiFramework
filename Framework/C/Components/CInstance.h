@@ -15,17 +15,17 @@ extern "C"
 
     /**
      * @brief C alternative of the InitInfo struct. std::vector members are replaced by pointers and size variables
-     * @note This struct doesn't allow modification of the directory strings
+     * @note This struct doesn't allow for modification of the directory strings
      */
     typedef struct UIMGUI_PUBLIC_API UImGui_CInitInfo
     {
-        UImGui_CComponentHandle* inlineComponents;
+        UImGui_CComponentHandle** inlineComponents;
         size_t inlineComponentsSize;
 
-        UImGui_CComponentHandle* titlebarComponents;
+        UImGui_CComponentHandle** titlebarComponents;
         size_t titlebarComponentsSize;
 
-        UImGui_CComponentHandle* windowComponents;
+        UImGui_CComponentHandle** windowComponents;
         size_t windowComponentsSize;
 
         UImGui_CInstanceRegularFun* constructFuncs;

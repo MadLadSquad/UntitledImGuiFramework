@@ -15,7 +15,7 @@ public:
         beginF(&dataP);
     }
 
-    virtual void tick(float deltaTime) override
+    virtual void tick(const float deltaTime) override
     {
         tickAutohandle(deltaTime);
         tickF(&dataP, deltaTime);
@@ -46,9 +46,12 @@ public:
 };
 
 
-UImGui_CComponentHandle UImGui_Titlebar_makeCTitlebarComponent(UImGui_ComponentRegularFun construct,
-                                                               UImGui_ComponentRegularFun begin, UImGui_ComponentTickFun tick, UImGui_ComponentRegularFun end,
-                                                               UImGui_ComponentRegularFun destruct, UImGui_CComponentData data)
+UImGui_CComponentHandle* UImGui_Titlebar_makeCTitlebarComponent(const UImGui_ComponentRegularFun construct,
+                                                                const UImGui_ComponentRegularFun begin,
+                                                                const UImGui_ComponentTickFun tick,
+                                                                const UImGui_ComponentRegularFun end,
+                                                                const UImGui_ComponentRegularFun destruct,
+                                                                UImGui_CComponentData data)
 {
     auto* handle = dynamic_cast<CTitlebarComponentInternalClass*>(UImGui::TitlebarComponent::make<CTitlebarComponentInternalClass>());
     handle->state = data.state;
@@ -64,17 +67,68 @@ UImGui_CComponentHandle UImGui_Titlebar_makeCTitlebarComponent(UImGui_ComponentR
     return handle;
 }
 
-UImGui_CComponentData_P* UImGui_Titlebar_getCTitlebarComponentData(UImGui_CComponentHandle handle)
+const UImGui_CComponentData_P* UImGui_Titlebar_getCTitlebarComponentData(const UImGui_CComponentHandle* const handle)
 {
-    return &static_cast<CTitlebarComponentInternalClass*>(handle)->dataP;
+    return &CAST(const CTitlebarComponentInternalClass*, handle)->dataP;
 }
 
-void UImGui_Titlebar_destroyCTitlebarComponent(UImGui_CComponentHandle handle)
+void UImGui_Titlebar_destroyCTitlebarComponent(const UImGui_CComponentHandle* const handle)
 {
-    delete (CTitlebarComponentInternalClass*)handle;
+    delete CAST(const CTitlebarComponentInternalClass*, handle);
 }
 
-UImGui_String UImGui_Titlebar_getCTitlebarComponentName(UImGui_CComponentHandle handle)
+UImGui_String UImGui_Titlebar_getCTitlebarComponentName(const UImGui_CComponentHandle* const handle)
 {
-    return static_cast<CTitlebarComponentInternalClass*>(handle)->name.c_str();
+    return CAST(const CTitlebarComponentInternalClass*, handle)->name.c_str();
+}
+
+UImGui_CTitlebarBuilder* UImGui_TitlebarBuilder_init()
+{
+    return CAST(UImGui_CTitlebarBuilder*, new UImGui::TitlebarBuilder{});
+}
+
+void UImGui_TitlebarBuilder_setBuildNativeOnMacOS(UImGui_CTitlebarBuilder* builder, const bool bBuildNativeOnMacOS)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->setBuildNativeOnMacOS(bBuildNativeOnMacOS);
+}
+
+void UImGui_TitlebarBuilder_setContext(UImGui_CTitlebarBuilder* builder, void* data)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->setContext(data);
+}
+
+void UImGui_TitlebarBuilder_addMenuItem(UImGui_CTitlebarBuilder* builder, const UImGui_String label, const UImGui_String hint, const UImGui_TitlebarBuilderMenuItemFunc f, bool* bEnabled)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->addMenuItem(label, hint, f, bEnabled);
+}
+
+void UImGui_TitlebarBuilder_addSeparator(UImGui_CTitlebarBuilder* builder)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->addSeparator();
+}
+
+void UImGui_TitlebarBuilder_addSubmenu(UImGui_CTitlebarBuilder* builder, const UImGui_String label, UImGui_CTitlebarBuilder* submenu, bool* bEnabled)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->addSubmenu(label, *CAST(UImGui::TitlebarBuilder*, submenu), bEnabled);
+}
+
+void UImGui_TitlebarBuilder_addCheckbox(UImGui_CTitlebarBuilder* builder, const UImGui_String label, bool* bSelected, bool* bEnabled)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->addCheckbox(label, *bSelected, bEnabled);
+}
+
+
+void UImGui_TitlebarBuilder_finish(UImGui_CTitlebarBuilder* builder) noexcept
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->finish();
+}
+
+void UImGui_TitlebarBuilder_render(UImGui_CTitlebarBuilder* builder) noexcept
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->render();
+}
+
+void UImGui_TitlebarBuilder_free(UImGui_CTitlebarBuilder* builder)
+{
+    delete CAST(UImGui::TitlebarBuilder*, builder);
 }

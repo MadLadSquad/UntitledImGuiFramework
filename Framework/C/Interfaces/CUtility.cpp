@@ -82,7 +82,7 @@ UImGui_String UImGui_Utility_toLower(char* str)
     auto tmpRealloc = static_cast<char*>(realloc(str, u8tmp.size()));
     if (tmpRealloc == nullptr)
     {
-        free(str);
+        UImGui_Allocator_deallocate(str);
         tmpRealloc = static_cast<char*>(UImGui_Allocator_allocate(u8tmp.size()));
     }
     return strcpy(tmpRealloc, u8tmp.data());
@@ -104,7 +104,7 @@ UImGui_String UImGui_Utility_toUpper(char* str)
     auto tmpRealloc = static_cast<char*>(realloc(str, u8tmp.size()));
     if (tmpRealloc == nullptr)
     {
-        free(str);
+        UImGui_Allocator_deallocate(str);
         tmpRealloc = static_cast<char*>(UImGui_Allocator_allocate(u8tmp.size()));
     }
     return strcpy(tmpRealloc, u8tmp.data());

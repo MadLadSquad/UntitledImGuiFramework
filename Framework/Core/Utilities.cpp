@@ -23,14 +23,7 @@ void UImGui::Utility::sanitiseFilepath(FString& str) noexcept
 
 void UImGui::Utility::keyToText(FString& text, const uint16_t& key, const bool bLong) noexcept
 {
-    static bool bFirst = true;
-    static TArray<std::pair<FString, FString>, Keys_UnknownKey + 1> keyStrings{};
-    if (bFirst)
-    {
-        initializeKeyStrings(keyStrings);
-        bFirst = false;
-    }
-    text = bLong ? keyStrings[key].first : keyStrings[key].second;
+    text = bLong ? getKeyStrings()[key].first : getKeyStrings()[key].second;
 }
 
 UImGui::FString UImGui::Utility::keyToText(const uint16_t& key, const bool bLong) noexcept
@@ -253,14 +246,35 @@ void UImGui::Utility::initializeKeyStrings(KeyStringsArrType& keyStrings) noexce
     keyStrings[Keys_NumPadEqual] = { "Numpad Equal", "Num =" };
 
     keyStrings[Keys_LeftShift] = { "Left Shift", "LShift" };
-    keyStrings[Keys_LeftAlt] = { "Left Alt", "LAlt" };
+
+#ifdef __APPLE__
+    keyStrings[Keys_LeftAlt] = { "Left Option", "LOpt" };
+    keyStrings[Keys_RightAlt] = { "Right Option", "ROpt" };
+
+    keyStrings[Keys_LeftControlCmd] = { "Left CMD", "LCMD" };
+    keyStrings[Keys_RightControlCmd] = { "Right CMD", "RCMD" };
     keyStrings[Keys_LeftControl] = { "Left Control", "LCTRL" };
-    keyStrings[Keys_LeftSuper] = { "Left Super/CMD/Windows", "LSuper" };
+    keyStrings[Keys_RightControl] = { "Right Control", "RCTRL" };
+    keyStrings[Keys_LeftSuper] = { "Left CMD", "LCMD" };
+    keyStrings[Keys_RightSuper] = { "Right CMD", "RCMD" };
+#else
+    keyStrings[Keys_LeftAlt] = { "Left Alt", "LAlt" };
+    keyStrings[Keys_RightAlt] = { "Right Alt", "RAlt" };
+    keyStrings[Keys_LeftControlCmd] = { "Left Control", "LCTRL" };
+    keyStrings[Keys_RightControlCmd] = { "Right Control", "RCTRL" };
+    keyStrings[Keys_LeftControl] = { "Left Control", "LCTRL" };
+    keyStrings[Keys_RightControl] = { "Right Control", "RCTRL" };
+    #ifdef _WIN32
+        keyStrings[Keys_LeftSuper] = { "Left Win", "LWin" };
+        keyStrings[Keys_RightSuper] = { "Right Win", "RWin" };
+    #else
+        keyStrings[Keys_LeftSuper] = { "Left Super", "LSuper" };
+        keyStrings[Keys_RightSuper] = { "Right Super", "RSuper" };
+    #endif
+#endif
+
 
     keyStrings[Keys_RightShift] = { "Right Shift", "RShift" };
-    keyStrings[Keys_RightControl] = { "Right Control", "RCTRL" };
-    keyStrings[Keys_RightAlt] = { "Right Alt", "RAlt" };
-    keyStrings[Keys_RightSuper] = { "Right Super/CMD/Windows", "RSuper" };
     keyStrings[Keys_Menu] = { "Menu", "Menu" };
 
     keyStrings[Keys_MouseButtonLeft] = { "Mouse Button 1/Left", "LMB" };
@@ -337,4 +351,38 @@ void UImGui::Utility::interruptSignalHandler() noexcept
     sigaction(SIGTERM, &data, nullptr);
 #endif
 #endif
+}
+
+UImGui::Utility::KeyStringsArrType& UImGui::Utility::getKeyStrings() noexcept
+{
+    static KeyStringsArrType keyStrings{};
+    static bool bFirst = true;
+    if (bFirst)
+    {
+        initializeKeyStrings(keyStrings);
+        bFirst = false;
+    }
+    return keyStrings;
+}
+
+UImGui::TVector<UImGui::FString> UImGui::Utility::splitString(const FString& str, String token) noexcept
+{
+    TVector<UImGui::FString> result;
+
+    size_t i = 0;
+    size_t last = 0;
+    while (true)
+    {
+        i = str.find(token, i);
+        if (i == FString::npos)
+        {
+            result.emplace_back(str.substr(last, str.length() - last));
+            break;
+        }
+
+        result.emplace_back(str.substr(last, i - last));
+        i++;
+        last = i;
+    }
+    return result;
 }

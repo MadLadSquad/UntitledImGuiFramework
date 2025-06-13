@@ -114,7 +114,7 @@ file(GLOB_RECURSE EXEC_SRC "${UIMGUI_CUSTOM_EXEC_SOURCES}")
 
 if (APPLE)
     file(GLOB_RECURSE APPLE_SRC "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.mm"
-            "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.m")
+            "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.m" "${UIMGUI_SRC_PREFIX}/Framework/Core/*.mm")
 endif()
 
 # ----------------------------------------------------------------------------------------------------------------------

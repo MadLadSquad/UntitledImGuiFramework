@@ -47,7 +47,7 @@ void UImGui::GUIRenderer::init(GenericRenderer* renderer) noexcept
     {
         for (size_t i = 0; i < initInfo.cInitInfo->titlebarComponentsSize; i++)
         {
-            auto* component = static_cast<TitlebarComponent*>(initInfo.cInitInfo->titlebarComponents[i]);
+            auto* component = CAST(TitlebarComponent*, initInfo.cInitInfo->titlebarComponents[i]);
             if (component->state != UIMGUI_COMPONENT_STATE_OFF)
                 component->begin();
         }
@@ -60,7 +60,7 @@ void UImGui::GUIRenderer::init(GenericRenderer* renderer) noexcept
     {
         for (size_t i = 0; i < initInfo.cInitInfo->windowComponentsSize; i++)
         {
-            auto* component = static_cast<WindowComponent*>(initInfo.cInitInfo->windowComponents[i]);
+            auto* component = CAST(WindowComponent*, initInfo.cInitInfo->windowComponents[i]);
             if (component->state != UIMGUI_COMPONENT_STATE_OFF)
                 component->begin();
         }
@@ -73,7 +73,7 @@ void UImGui::GUIRenderer::init(GenericRenderer* renderer) noexcept
     {
         for (size_t i = 0; i < initInfo.cInitInfo->inlineComponentsSize; i++)
         {
-            auto* component = static_cast<InlineComponent*>(initInfo.cInitInfo->inlineComponents[i]);
+            auto* component = CAST(InlineComponent*, initInfo.cInitInfo->inlineComponents[i]);
             if (component->state != UIMGUI_COMPONENT_STATE_OFF)
                 component->begin();
         }
@@ -126,7 +126,7 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericRenderer* render
     {
         for (size_t i = 0; i < initInfo.cInitInfo->titlebarComponentsSize; i++)
         {
-            auto* component = static_cast<TitlebarComponent*>(initInfo.cInitInfo->titlebarComponents[i]);
+            auto* component = CAST(TitlebarComponent*, initInfo.cInitInfo->titlebarComponents[i]);
             if (component->state != UIMGUI_COMPONENT_STATE_OFF)
                 component->tick(deltaTime);
         }
@@ -139,7 +139,7 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericRenderer* render
     {
         for (size_t i = 0; i < initInfo.cInitInfo->inlineComponentsSize; i++)
         {
-            auto* component = static_cast<InlineComponent*>(initInfo.cInitInfo->inlineComponents[i]);
+            auto* component = CAST(InlineComponent*, initInfo.cInitInfo->inlineComponents[i]);
             if (component->state != UIMGUI_COMPONENT_STATE_OFF)
                 component->tick(deltaTime);
         }
@@ -163,7 +163,7 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericRenderer* render
     {
         for (size_t i = 0; i < initInfo.cInitInfo->windowComponentsSize; i++)
         {
-            auto* component = static_cast<WindowComponent*>(initInfo.cInitInfo->windowComponents[i]);
+            auto* component = CAST(WindowComponent*, initInfo.cInitInfo->windowComponents[i]);
             if (component->state != UIMGUI_COMPONENT_STATE_OFF)
                 component->tick(deltaTime);
         }
@@ -201,7 +201,7 @@ void UImGui::GUIRenderer::shutdown(GenericRenderer* renderer) noexcept
     {
         for (size_t i = 0; i < initInfo.cInitInfo->titlebarComponentsSize; i++)
         {
-            auto* component = static_cast<TitlebarComponent*>(initInfo.cInitInfo->titlebarComponents[i]);
+            auto* component = CAST(TitlebarComponent*, initInfo.cInitInfo->titlebarComponents[i]);
             if (component->state != UIMGUI_COMPONENT_STATE_OFF)
                 component->end();
         }
@@ -214,7 +214,7 @@ void UImGui::GUIRenderer::shutdown(GenericRenderer* renderer) noexcept
     {
         for (size_t i = 0; i < initInfo.cInitInfo->windowComponentsSize; i++)
         {
-            auto* component = static_cast<WindowComponent*>(initInfo.cInitInfo->windowComponents[i]);
+            auto* component = CAST(WindowComponent*, initInfo.cInitInfo->windowComponents[i]);
             if (component->state != UIMGUI_COMPONENT_STATE_OFF)
                 component->end();
         }
@@ -227,7 +227,7 @@ void UImGui::GUIRenderer::shutdown(GenericRenderer* renderer) noexcept
     {
         for (size_t i = 0; i < initInfo.cInitInfo->inlineComponentsSize; i++)
         {
-            auto* component = static_cast<InlineComponent*>(initInfo.cInitInfo->inlineComponents[i]);
+            auto* component = CAST(InlineComponent*, initInfo.cInitInfo->inlineComponents[i]);
             if (component->state != UIMGUI_COMPONENT_STATE_OFF)
                 component->end();
         }

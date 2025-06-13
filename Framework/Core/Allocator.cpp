@@ -15,3 +15,13 @@ UImGui::AllocatorFuncs* UImGui::AllocatorFuncs::getWithCreate() noexcept
     };
     return &allocators;
 }
+
+void* operator new(const size_t size)
+{
+    return UImGui_Allocator_allocate(size);
+}
+
+void operator delete(void* ptr) noexcept
+{
+    UImGui_Allocator_deallocate(ptr);
+}

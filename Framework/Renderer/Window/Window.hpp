@@ -109,7 +109,7 @@ namespace UImGui
         TArray<uint16_t, 350> keys{};
         TVector<InputAction> inputActionList{};
 
-        void saveConfig(bool bSaveKeybindings) const noexcept;
+        void saveConfig(bool bSaveKeybindings) noexcept;
         void openConfig();
         void setTitle(String title) noexcept;
         void setIcon(String name) const noexcept;

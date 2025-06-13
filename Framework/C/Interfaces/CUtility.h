@@ -43,7 +43,7 @@ extern "C"
      * @warning str will be overwritten, reassign to the return value
      * @note Event Safety - Any time
      * @note The returned string has to be freed
-     * @returns A upper case string
+     * @returns An upper case string
      */
     UIMGUI_PUBLIC_API UImGui_String UImGui_Utility_toUpper(char* str);
 

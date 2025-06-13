@@ -10,6 +10,7 @@ namespace UImGui
 {
     class Global;
     class InputAction;
+    struct TitlebarMenuItem;
 
     class UIMGUI_PUBLIC_API Utility
     {
@@ -18,6 +19,8 @@ namespace UImGui
         Utility(const Utility&) = delete;
         void operator=(Utility const&) = delete;
         ~Utility() = delete;
+
+        typedef TArray<std::pair<FString, FString>, Keys_COUNT> KeyStringsArrType;
 
         // Event Safety - Any time
         static void sanitiseFilepath(FString& str) noexcept;
@@ -31,6 +34,9 @@ namespace UImGui
         static void keyToText(FString& text, const InputAction& action, bool bLong) noexcept;
         // Event Safety - Any time
         static FString keyToText(const InputAction& action, bool bLong) noexcept;
+
+        // Event Safety - Any time
+        static TVector<FString> splitString(const FString& str, String token) noexcept;
 
         // Event Safety - Any time
         static void removeConsole() noexcept;
@@ -51,11 +57,13 @@ namespace UImGui
         // Event Safety - Any time
         // Sleep for X milliseconds
         static void sleep(uint64_t milliseconds) noexcept;
+
+        // Event Safety - Any time
+        static KeyStringsArrType& getKeyStrings() noexcept;
     private:
         friend class Global;
         static void interruptSignalHandler() noexcept;
 
-        typedef TArray<std::pair<FString, FString>, Keys_UnknownKey + 1> KeyStringsArrType;
         static void initializeKeyStrings(KeyStringsArrType& keyStrings) noexcept;
     };
 }

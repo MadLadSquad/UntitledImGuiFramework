@@ -29,7 +29,7 @@ extern "C"
     /**
      * @brief Returns a list of plugins
      * @param size - A pointer that will get filled with the size of the array of C Plugin structs
-     * @note Does not give you access to the attach and detach functions. These can only be accessed through the C++ API
+     * @note Does not give you access to the "attach" and "detach" functions. These can only be accessed through the C++ API
      * @note Event safety - post-startup
      * @return A list of C Plugin structs
      */

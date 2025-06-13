@@ -1,9 +1,102 @@
 #pragma once
 #include <Defines.hpp>
 #include <Types.hpp>
+#include <C/Components/CTitlebarComponent.h>
 
 namespace UImGui
 {
+    typedef UImGui_TitlebarMenuItemType TitlebarMenuItemType;
+
+    struct UIMGUI_PUBLIC_API TitlebarMenuItem
+    {
+        FString label;
+        FString hint;
+        TFunction<void(void*)> f;
+
+        TitlebarMenuItemType type;
+        size_t membersLen;
+
+        bool* bEnabled = nullptr;
+        bool* bSelected = nullptr;
+    };
+
+    class UIMGUI_PUBLIC_API TitlebarBuilder
+    {
+    public:
+        TitlebarBuilder() noexcept = default;
+
+        /**
+         * @brief Enables/disables integrating with the global menu on macOS instead of drawing the menu ourselves using dear imgui
+         * @param bBuildNativeOnMacOS - Whether to build a native menu on macOS. Doesn't have to be set when not on macOS.
+         * Setting this value on macOS changes the behaviour of the finish and render methods.
+         * @note Event safety - Any time
+         */
+        TitlebarBuilder& setBuildNativeOnMacOS(bool bBuildNativeOnMacOS) noexcept;
+
+        /**
+         * @brief Sets the user-defined context variable for the menu that can be consumed by callbacks
+         * @param data - A void* to your data context for use in menu callback functions
+         * @note Event safety - Any time
+         */
+        TitlebarBuilder& setContext(void* data) noexcept;
+
+        /**
+         * @brief Adds a menu item aka a button to the menu
+         * @param label - The text label of the menu item
+         * @param hint - Hint text, if it's a key binding from the Input interface try converting it to macOS format on macOS
+         * @param f - A callback function that is called when pressed. Gets the user-defined void* context pointer
+         * @param bEnabled - Whether the menu item is enabled. A nullptr is interpreted as true. On false values the button is greyed out and cannot be clicked
+         * @note Event safety - Begin, Post-begin
+         */
+        TitlebarBuilder& addMenuItem(const FString& label, const FString& hint = "", const TFunction<void(void*)>& f = [](void*) -> void {}, bool* bEnabled = nullptr) noexcept;
+
+        /**
+         * @brief Adds a separator to the menu
+         * @note Event safety - Begin, Post-begin
+         */
+        TitlebarBuilder& addSeparator() noexcept;
+
+        /**
+         * @brief Adds a submenu to the menu
+         * @param label - The text label of the menu item
+         * @param submenu - A pointer to another menu builder instance that will be added as a submenu
+         * @param bEnabled - Whether the menu item is enabled. NULL is interpreted as true. On false values the button is greyed out and cannot be clicked
+         * @note Event safety - Begin, Post-begin
+         */
+        TitlebarBuilder& addSubmenu(const FString& label, const TitlebarBuilder& submenu, bool* bEnabled = nullptr) noexcept;
+
+        /**
+         * @brief Adds a checkbox element to the menu
+         * @param label - The text label of the menu item
+         * @param bSelected - A pointer to a boolean. The pointer will be mutated by us when the checkbox is pressed
+         * @param bEnabled - Whether the menu item is enabled. NULL is interpreted as true. On false values the button is greyed out and cannot be clicked
+         * @note Event safety - Begin, Post-begin
+         */
+        TitlebarBuilder& addCheckbox(const FString& label, bool& bSelected, bool* bEnabled = nullptr) noexcept;
+
+        /**
+         * Finishes building the menu. When drawing a macOS menu this function submits it to the OS for rendering. When
+         * drawing an imgui-native menu it does nothing.
+         * @note Event safety - Begin, Post-begin
+         */
+        void finish() noexcept;
+
+        /**
+         * Renders the menu. Should be called every frame. When drawing a macOS menu it does nothing. When drawing an
+         * imgui-native menu it renders the UI for the menu. Should only be called in Titlebar components
+         * @note Event safety - Tick
+         */
+        void render() noexcept;
+    private:
+        bool bPreferNative = true;
+        void* data = nullptr;
+#ifdef __APPLE__
+        void macOSFinish() noexcept;
+#endif
+
+        TVector<TitlebarMenuItem> events{};
+    };
+
     /**
      * @brief A UI component that implements the standard top title bar
      * @implements TitlebarComponent - The constructor for the component
@@ -69,7 +162,7 @@ namespace UImGui
          */
         static constexpr ComponentType componentType = UIMGUI_COMPONENT_TYPE_TITLEBAR;
         /**
-         * @brief The name ID of the component as to provide a human readable way to differentiate between components,
+         * @brief The name ID of the component as to provide a human-readable way to differentiate between components,
          * not guaranteed to be unique
          */
         FString name{};

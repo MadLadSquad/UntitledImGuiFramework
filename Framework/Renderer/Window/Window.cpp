@@ -32,7 +32,7 @@ bool& UImGui::WindowInternal::resized() noexcept
 
 #define SAVE_CONFIG_YAML_BASIC(x, y) out << YAML::Key << #x << YAML::Value << windowData.y
 
-void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) const noexcept
+void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) noexcept
 {
     auto* instance = Instance::get();
     std::ofstream fout((instance->initInfo.configDir + "Core/Window.yaml").c_str());
@@ -75,7 +75,38 @@ void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) const noexcept
             out << YAML::BeginMap << YAML::Key << "key" << YAML::Value << a.name;
             out << YAML::Key << "val" << YAML::Value << YAML::Flow << YAML::BeginSeq;
             for (auto& f : a.keyCodes)
+            {
+                // Sanitise keys that vary in function between platforms
+                // Defines are needed to prevent compilation errors
+                switch (f)
+                {
+#ifdef __APPLE__
+                case Keys_LeftControl:
+                        f = Keys_LeftControl_InternalRepr;
+                        break;
+                case Keys_RightControl:
+                        f = Keys_RightControl_InternalRepr;
+                        break;
+                case Keys_LeftControlCmd:
+                        f = Keys_LeftControlCommand_InternalRepr;
+                        break;
+                case Keys_RightControlCmd:
+                        f = Keys_RightControlCommand_InternalRepr;
+                        break;
+#endif
+#ifndef __APPLE__
+                case Keys_LeftSuper:
+                        f = Keys_LeftSuper_InternalRepr;
+                        break;
+                case Keys_RightSuper:
+                        f = Keys_RightSuper_InternalRepr;
+                        break;
+#endif
+                default:
+                        break;
+                }
                 out << static_cast<int>(f);
+            }
             out << YAML::EndSeq;
             out << YAML::EndMap;
         }
@@ -251,6 +282,34 @@ skip_window_config:
             InputAction action;
             action.name = a["key"].as<FString>();
             action.keyCodes = a["val"].as<TVector<uint16_t>>();
+
+            // Sanitise keys that vary in function between platforms
+            for (auto& a : action.keyCodes)
+            {
+                switch (a)
+                {
+                case Keys_LeftControl_InternalRepr:
+                    a = Keys_LeftControl;
+                    break;
+                case Keys_RightControl_InternalRepr:
+                    a = Keys_RightControl;
+                    break;
+                case Keys_LeftControlCommand_InternalRepr:
+                    a = Keys_LeftControlCmd;
+                    break;
+                case Keys_RightControlCommand_InternalRepr:
+                    a = Keys_RightControlCmd;
+                    break;
+                case Keys_LeftSuper_InternalRepr:
+                    a = Keys_LeftSuper;
+                    break;
+                case Keys_RightSuper_InternalRepr:
+                    a = Keys_RightSuper;
+                    break;
+                default:
+                    break;
+                }
+            }
             inputActionList.push_back(action);
         }
     }

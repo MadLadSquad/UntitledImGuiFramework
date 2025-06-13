@@ -46,9 +46,9 @@ public:
 };
 
 
-UImGui_CComponentHandle UImGui_Inline_makeCInlineComponent(const UImGui_ComponentRegularFun construct,
-                                                           const UImGui_ComponentRegularFun begin, const UImGui_ComponentTickFun tick, const UImGui_ComponentRegularFun end,
-                                                           const UImGui_ComponentRegularFun destruct, const UImGui_CComponentData data)
+UImGui_CComponentHandle* UImGui_Inline_makeCInlineComponent(const UImGui_ComponentRegularFun construct,
+                                                            const UImGui_ComponentRegularFun begin, const UImGui_ComponentTickFun tick, const UImGui_ComponentRegularFun end,
+                                                            const UImGui_ComponentRegularFun destruct, const UImGui_CComponentData data)
 {
     auto* handle = dynamic_cast<CInlineComponentInternalClass*>(UImGui::InlineComponent::make<CInlineComponentInternalClass>());
     handle->state = data.state;
@@ -64,17 +64,17 @@ UImGui_CComponentHandle UImGui_Inline_makeCInlineComponent(const UImGui_Componen
     return handle;
 }
 
-UImGui_CComponentData_P* UImGui_Inline_getCInlineComponentData(UImGui_CComponentHandle handle)
+const UImGui_CComponentData_P* UImGui_Inline_getCInlineComponentData(const UImGui_CComponentHandle* const handle)
 {
-    return &static_cast<CInlineComponentInternalClass*>(handle)->data;
+    return &CAST(const CInlineComponentInternalClass*, handle)->data;
 }
 
-void UImGui_Inline_destroyCInlineComponent(UImGui_CComponentHandle handle)
+void UImGui_Inline_destroyCInlineComponent(const UImGui_CComponentHandle* const handle)
 {
-    delete (CInlineComponentInternalClass*)handle;
+    delete CAST(const CInlineComponentInternalClass*, handle);
 }
 
-UImGui_String UImGui_Inline_getCInlineComponentName(UImGui_CComponentHandle handle)
+UImGui_String UImGui_Inline_getCInlineComponentName(const UImGui_CComponentHandle* const handle)
 {
-    return static_cast<CInlineComponentInternalClass*>(handle)->name.c_str();
+    return CAST(const CInlineComponentInternalClass*, handle)->name.c_str();
 }
