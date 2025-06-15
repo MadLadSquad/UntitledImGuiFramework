@@ -140,7 +140,7 @@ extern "C"
         Keys_RightControl = 345,
 #else
         Keys_LeftControlCmd = 341,
-        Keys_LeftControl = 341
+        Keys_LeftControl = 341,
 
         Keys_RightControlCmd = 345,
         Keys_RightControl = 345,
