@@ -5,13 +5,29 @@
 
 UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addMenuItem(const FString& label, const FString& hint, const std::function<void(void*)>& f, bool* bEnabled) noexcept
 {
-    events.emplace_back(label, hint, f, UIMGUI_TITLEBAR_MENU_ITEM_TYPE_MENU_ITEM, 1, bEnabled, nullptr);
+    events.emplace_back(TitlebarMenuItem{
+        .label = label,
+        .hint = hint,
+        .f = f,
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_MENU_ITEM,
+        .membersLen = 1,
+        .bEnabled = bEnabled,
+        .bSelected = nullptr
+    });
     return *this;
 }
 
 UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addSeparator() noexcept
 {
-    events.emplace_back("", "", [](void*) -> void {}, UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SEPARATOR, 1, nullptr, nullptr);
+    events.emplace_back(TitlebarMenuItem{
+        .label = "",
+        .hint = "",
+        .f = [](void*) -> void {},
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SEPARATOR,
+        .membersLen = 1,
+        .bEnabled = nullptr,
+        .bSelected = nullptr
+    });
     return *this;
 }
 
@@ -20,16 +36,41 @@ UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addSubmenu(const FString& labe
     // + 2 for the "begin submenu" and "end submenu" headers
     events.reserve(submenu.events.size() + 2);
 
-    events.emplace_back(label, "", [](void*) -> void{}, UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SUBMENU, submenu.events.size(), bEnabled, nullptr);
-    events.insert(events.end(), submenu.events.begin(), submenu.events.end());
-    events.emplace_back("", "", [](void*) -> void{}, UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_SUBMENU, 1, nullptr, nullptr);
+    events.emplace_back(TitlebarMenuItem{
+        .label = label,
+        .hint = "",
+        .f = [](void*) -> void {},
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SUBMENU,
+        .membersLen = submenu.events.size(),
+        .bEnabled = bEnabled,
+        .bSelected = nullptr
+    });
 
+    events.insert(events.end(), submenu.events.begin(), submenu.events.end());
+
+    events.emplace_back(TitlebarMenuItem{
+        .label = "",
+        .hint = "",
+        .f = [](void*) -> void {},
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_SUBMENU,
+        .membersLen = 1,
+        .bEnabled = nullptr,
+        .bSelected = nullptr
+    });
     return *this;
 }
 
 UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addCheckbox(const FString& label, bool& bSelected, bool* bEnabled) noexcept
 {
-    events.emplace_back(label, "", [](void*) -> void {}, UIMGUI_TITLEBAR_MENU_ITEM_TYPE_CHECKBOX, 1, bEnabled, &bSelected);
+    events.emplace_back(TitlebarMenuItem{
+        .label = label,
+        .hint = "",
+        .f = [](void*) -> void {},
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_CHECKBOX,
+        .membersLen = 1,
+        .bEnabled = bEnabled,
+        .bSelected = &bSelected
+    });
     return *this;
 }
 
