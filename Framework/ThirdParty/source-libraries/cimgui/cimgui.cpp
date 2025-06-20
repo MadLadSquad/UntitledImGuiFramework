@@ -3610,7 +3610,7 @@ CIMGUI_API void        cimgui::ImDrawList_PrimVtx(cimgui::ImDrawList* self, cimg
 
 CIMGUI_API void cimgui::ImDrawList_PushTextureID(cimgui::ImDrawList* self, cimgui::ImTextureRef tex_ref)
 {
-    reinterpret_cast<::ImDrawList*>(self)->PushTextureID(reinterpret_cast<::ImTextureRef>(tex_ref));
+    reinterpret_cast<::ImDrawList*>(self)->PushTextureID(*reinterpret_cast<::ImTextureRef*>(&tex_ref));
 }
 
 CIMGUI_API void cimgui::ImDrawList_PopTextureID(cimgui::ImDrawList* self)
@@ -3700,32 +3700,32 @@ CIMGUI_API void cimgui::ImDrawData_ScaleClipRects(cimgui::ImDrawData* self, cimg
     reinterpret_cast<::ImDrawData*>(self)->ScaleClipRects(ConvertToCPP_ImVec2(fb_scale));
 }
 
-CIMGUI_API void           cimgui::ImTextureData_Create(cimgui::ImTextureData* self, cimgui::ImTextureFormat format, int w, int h)
+CIMGUI_API void         cimgui::ImTextureData_Create(cimgui::ImTextureData* self, cimgui::ImTextureFormat format, int w, int h)
 {
     reinterpret_cast<::ImTextureData*>(self)->Create(static_cast<::ImTextureFormat>(format), w, h);
 }
 
-CIMGUI_API void           cimgui::ImTextureData_DestroyPixels(cimgui::ImTextureData* self)
+CIMGUI_API void         cimgui::ImTextureData_DestroyPixels(cimgui::ImTextureData* self)
 {
     reinterpret_cast<::ImTextureData*>(self)->DestroyPixels();
 }
 
-CIMGUI_API unsigned char* cimgui::ImTextureData_GetPixels(cimgui::ImTextureData* self)
+CIMGUI_API void*        cimgui::ImTextureData_GetPixels(cimgui::ImTextureData* self)
 {
     return reinterpret_cast<::ImTextureData*>(self)->GetPixels();
 }
 
-CIMGUI_API unsigned char* cimgui::ImTextureData_GetPixelsAt(cimgui::ImTextureData* self, int x, int y)
+CIMGUI_API void*        cimgui::ImTextureData_GetPixelsAt(cimgui::ImTextureData* self, int x, int y)
 {
     return reinterpret_cast<::ImTextureData*>(self)->GetPixelsAt(x, y);
 }
 
-CIMGUI_API int            cimgui::ImTextureData_GetSizeInBytes(const cimgui::ImTextureData* self)
+CIMGUI_API int          cimgui::ImTextureData_GetSizeInBytes(const cimgui::ImTextureData* self)
 {
     return reinterpret_cast<const ::ImTextureData*>(self)->GetSizeInBytes();
 }
 
-CIMGUI_API int            cimgui::ImTextureData_GetPitch(const cimgui::ImTextureData* self)
+CIMGUI_API int          cimgui::ImTextureData_GetPitch(const cimgui::ImTextureData* self)
 {
     return reinterpret_cast<const ::ImTextureData*>(self)->GetPitch();
 }
@@ -3736,17 +3736,17 @@ CIMGUI_API cimgui::ImTextureRef cimgui::ImTextureData_GetTexRef(cimgui::ImTextur
     return *reinterpret_cast<::cimgui::ImTextureRef*>(&tmp);
 }
 
-CIMGUI_API ImTextureID    cimgui::ImTextureData_GetTexID(const cimgui::ImTextureData* self)
+CIMGUI_API ImTextureID  cimgui::ImTextureData_GetTexID(const cimgui::ImTextureData* self)
 {
     return reinterpret_cast<const ::ImTextureData*>(self)->GetTexID();
 }
 
-CIMGUI_API void           cimgui::ImTextureData_SetTexID(cimgui::ImTextureData* self, ImTextureID tex_id)
+CIMGUI_API void         cimgui::ImTextureData_SetTexID(cimgui::ImTextureData* self, ImTextureID tex_id)
 {
     reinterpret_cast<::ImTextureData*>(self)->SetTexID(tex_id);
 }
 
-CIMGUI_API void           cimgui::ImTextureData_SetStatus(cimgui::ImTextureData* self, cimgui::ImTextureStatus status)
+CIMGUI_API void         cimgui::ImTextureData_SetStatus(cimgui::ImTextureData* self, cimgui::ImTextureStatus status)
 {
     reinterpret_cast<::ImTextureData*>(self)->SetStatus(static_cast<::ImTextureStatus>(status));
 }
@@ -3870,7 +3870,7 @@ CIMGUI_API void cimgui::ImFontAtlas_SetTexID(cimgui::ImFontAtlas* self, ImTextur
 
 CIMGUI_API void cimgui::ImFontAtlas_SetTexIDImTextureRef(cimgui::ImFontAtlas* self, cimgui::ImTextureRef id)
 {
-    reinterpret_cast<::ImFontAtlas*>(self)->SetTexID(reinterpret_cast<::ImTextureRef>(id));
+    reinterpret_cast<::ImFontAtlas*>(self)->SetTexID(*reinterpret_cast<::ImTextureRef*>(&id));
 }
 
 CIMGUI_API bool cimgui::ImFontAtlas_IsBuilt(const cimgui::ImFontAtlas* self)
