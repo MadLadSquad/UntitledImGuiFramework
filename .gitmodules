@@ -26,7 +26,7 @@
 	url = https://github.com/MadLadSquad/UntitledExec.git
 [submodule "Framework/Modules/Knobs/ThirdParty/imgui-knobs"]
 	path = Framework/Modules/Knobs/ThirdParty/imgui-knobs
-	url = https://github.com/altschuler/imgui-knobs.git
+	url = https://github.com/MadLadSquad/imgui-knobs.git
 [submodule "Framework/Modules/Spinners/ThirdParty/imspinner"]
 	path = Framework/Modules/Spinners/ThirdParty/imspinner
 	url = https://github.com/dalerank/imspinner.git
