@@ -3712,12 +3712,12 @@ CIMGUI_API void           cimgui::ImTextureData_DestroyPixels(cimgui::ImTextureD
 
 CIMGUI_API unsigned char* cimgui::ImTextureData_GetPixels(cimgui::ImTextureData* self)
 {
-    return reinterpret_cast<::ImTextureData*>(self)->GetPixels();
+    return static_cast<unsigned char*>(reinterpret_cast<::ImTextureData*>(self)->GetPixels());
 }
 
 CIMGUI_API unsigned char* cimgui::ImTextureData_GetPixelsAt(cimgui::ImTextureData* self, int x, int y)
 {
-    return reinterpret_cast<::ImTextureData*>(self)->GetPixelsAt(x, y);
+    return static_cast<unsigned char*>(reinterpret_cast<::ImTextureData*>(self)->GetPixelsAt(x, y));
 }
 
 CIMGUI_API int            cimgui::ImTextureData_GetSizeInBytes(const cimgui::ImTextureData* self)
