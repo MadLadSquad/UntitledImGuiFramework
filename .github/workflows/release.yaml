@@ -36,7 +36,6 @@ jobs:
         run: |
           git config --global user.name "Madman10K"
           git config --global user.email "contact@madladsquad.com"
-          git fetch --all
           git submodule update --remote --merge --init --recursive
           tag="${{ github.ref_name }}"
           tag="${tag:1}"
