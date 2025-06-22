@@ -12,11 +12,40 @@ extern "C"
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SUBMENU,
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_SUBMENU,
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SEPARATOR,
-        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_CHECKBOX
+        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_CHECKBOX,
+        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_BEGIN_RADIO,
+        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_RADIO_BUTTON,
+        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_RADIO
     } UImGui_TitlebarMenuItemType;
 
     typedef void UImGui_CTitlebarBuilder;
+    typedef void UImGui_CRadioBuilder;
     typedef void(*UImGui_TitlebarBuilderMenuItemFunc)(void*);
+
+    /**
+     * @brief Initialises the radio button by setting its selected index reference. Free with UImGui_RadioBuilder_free
+     * @param selectedIndex - A pointer to the current selected index
+     * @return A pointer to the current radio builder
+     * @note Event safety - Any time
+     */
+    UIMGUI_PUBLIC_API UImGui_CRadioBuilder* UImGui_RadioBuilder_init(int* selectedIndex);
+
+    /**
+     * @brief Adds a radio button to the menu bar
+     * @param builder - The builder instance, to which the button will be added
+     * @param label - The label of the button
+     * @param bEnabled - Whether the radio button can be selected
+     * @note Event safety - Begin, Post-begin
+     */
+    UIMGUI_PUBLIC_API void UImGui_RadioBuilder_add(UImGui_CRadioBuilder* builder, UImGui_String label, bool* bEnabled);
+
+    /**
+     * @brief Frees the memory for a C radio builder
+     * @param builder The builder to be freed
+     * @note Event safety - Any time
+     */
+    UIMGUI_PUBLIC_API void UImGui_RadioBuilder_free(UImGui_CRadioBuilder* builder);
+
 
     // Allocates a new C instance of the TitlebarBuilder class
     // Event safety - Any time
@@ -78,12 +107,19 @@ extern "C"
     UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_addCheckbox(UImGui_CTitlebarBuilder* builder, UImGui_String label, bool* bSelected, bool* bEnabled);
 
     /**
+     * @brief Adds a group of radio buttons to the menu
+     * @param submenu - A radio builder to be added to the menu
+     * @note Event safety - Begin, Post-begin
+     */
+    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_addRadioGroup(UImGui_CTitlebarBuilder* builder, UImGui_CRadioBuilder* submenu);
+
+    /**
      * @brief Finishes building the menu. When drawing a macOS menu this function submits it to the OS for rendering. When
      * drawing an imgui-native menu it does nothing.
      * @param builder - A pointer to the C menu builder instance from UImGui_TitlebarBuilder_init
      * @note Event safety - Begin, Post-begin
      */
-    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_finish(UImGui_CTitlebarBuilder* builder) noexcept;
+    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_finish(UImGui_CTitlebarBuilder* builder);
 
     /**
      * @brief Renders the menu. Should be called every frame. When drawing a macOS menu it does nothing. When drawing an
@@ -91,7 +127,14 @@ extern "C"
      * @param builder - A pointer to the C menu builder instance from UImGui_TitlebarBuilder_init
      * @note Event safety - Tick
      */
-    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_render(UImGui_CTitlebarBuilder* builder) noexcept;
+    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_render(UImGui_CTitlebarBuilder* builder);
+
+    /**
+     * @brief Clears the menu for rebuilding
+     * @param builder A pointer to the C menu builder instance from UImGui_TitlebarBuilder_init
+     * @note Event safety - Begin, Post-begin
+     */
+    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_clear(UImGui_CTitlebarBuilder* builder);
 
     // Frees a C instance of the TitlebarBuilder class
     // Event safety - Any time

@@ -12,7 +12,9 @@ UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addMenuItem(const FString& lab
         .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_MENU_ITEM,
         .membersLen = 1,
         .bEnabled = bEnabled,
-        .bSelected = nullptr
+        .bSelected = nullptr,
+        .size = nullptr,
+        .lsize = 0
     });
     return *this;
 }
@@ -26,7 +28,9 @@ UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addSeparator() noexcept
         .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SEPARATOR,
         .membersLen = 1,
         .bEnabled = nullptr,
-        .bSelected = nullptr
+        .bSelected = nullptr,
+        .size = nullptr,
+        .lsize = 0
     });
     return *this;
 }
@@ -43,7 +47,9 @@ UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addSubmenu(const FString& labe
         .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SUBMENU,
         .membersLen = submenu.events.size(),
         .bEnabled = bEnabled,
-        .bSelected = nullptr
+        .bSelected = nullptr,
+        .size = nullptr,
+        .lsize = 0
     });
 
     events.insert(events.end(), submenu.events.begin(), submenu.events.end());
@@ -55,7 +61,9 @@ UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addSubmenu(const FString& labe
         .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_SUBMENU,
         .membersLen = 1,
         .bEnabled = nullptr,
-        .bSelected = nullptr
+        .bSelected = nullptr,
+        .size = nullptr,
+        .lsize = 0
     });
     return *this;
 }
@@ -69,7 +77,9 @@ UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addCheckbox(const FString& lab
         .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_CHECKBOX,
         .membersLen = 1,
         .bEnabled = bEnabled,
-        .bSelected = &bSelected
+        .bSelected = &bSelected,
+        .size = nullptr,
+        .lsize = 0
     });
     return *this;
 }
@@ -86,6 +96,68 @@ UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::setContext(void* data) noexcep
     return *this;
 }
 
+UImGui::RadioBuilder::RadioBuilder(int& selectedIndex) noexcept
+{
+    init(selectedIndex);
+}
+
+UImGui::RadioBuilder& UImGui::RadioBuilder::init(int& selectedIndex) noexcept
+{
+    currentEnabledIndex = &selectedIndex;
+    currentEnabledIndexLong = currentEnabledIndex == nullptr ? 0 : *currentEnabledIndex;
+    return *this;
+}
+
+UImGui::RadioBuilder& UImGui::RadioBuilder::add(const FString& label, bool* bEnabled)
+{
+    events.emplace_back(TitlebarMenuItem{
+        .label = label,
+        .hint = "",
+        .f = [](void*) -> void {},
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_RADIO_BUTTON,
+        .membersLen = 1,
+        .bEnabled = bEnabled,
+        .bSelected = nullptr,
+        .size = currentEnabledIndex,
+        .lsize = currentEnabledIndexLong
+    });
+    return *this;
+}
+
+UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addRadioGroup(const UImGui::RadioBuilder& submenu) noexcept
+{
+    events.reserve(submenu.events.size() + 2);
+
+    events.emplace_back(TitlebarMenuItem{
+        .label = "",
+        .hint = "",
+        .f = [](void*) -> void {},
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_BEGIN_RADIO,
+        .membersLen = submenu.events.size(),
+        .bEnabled = nullptr,
+        .bSelected = nullptr,
+        .size = submenu.currentEnabledIndex,
+        .lsize = submenu.currentEnabledIndexLong
+    });
+
+    events.insert(events.end(), submenu.events.begin(), submenu.events.end());
+
+    events.emplace_back(TitlebarMenuItem{
+        .label = "",
+        .hint = "",
+        .f = [](void*) -> void {},
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_RADIO,
+        .membersLen = 1,
+        .bEnabled = nullptr,
+        .bSelected = nullptr,
+        .size = nullptr,
+        .lsize = submenu.currentEnabledIndexLong
+    });
+
+    return *this;
+}
+
+
 void UImGui::TitlebarBuilder::finish() noexcept
 {
 #ifdef __APPLE__
@@ -94,7 +166,7 @@ void UImGui::TitlebarBuilder::finish() noexcept
 #endif
 }
 
-void UImGui::TitlebarBuilder::render() noexcept
+void UImGui::TitlebarBuilder::render() const noexcept
 {
 #ifdef __APPLE__
     if (bPreferNative)
@@ -105,11 +177,10 @@ void UImGui::TitlebarBuilder::render() noexcept
         if (ImGui::BeginMainMenuBar())
         {
             size_t depth = 0;
-            int radioCounter = 0;
-            int radioValue = -1;
             for (size_t i = 0; i < events.size(); i++)
             {
                 const TitlebarMenuItem& a = events[i];
+                int radioBegin = 0;
 
                 switch (a.type)
                 {
@@ -136,11 +207,34 @@ void UImGui::TitlebarBuilder::render() noexcept
                         Logger::log("A checkbox with the following label is null, not rendering: ", ULOG_LOG_TYPE_ERROR, a.label.c_str());
                         break;
                     }
-                    if (a.bEnabled != nullptr)
-                        ImGui::BeginDisabled(!(*a.bEnabled));
+                    if (a.bEnabled != nullptr && !(*a.bEnabled))
+                        ImGui::BeginDisabled();
                     ImGui::Checkbox(a.label.c_str(), a.bSelected);
                     if (a.bEnabled != nullptr && !(*a.bEnabled))
                         ImGui::EndDisabled();
+                    break;
+                case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_BEGIN_RADIO:
+                    if (a.size == nullptr)
+                    {
+                        i += a.membersLen + 1;
+                        Logger::log("A radio button was submitted with a NULL index.\n"
+                                            "Make sure to always initialise your radio button with UImGui::RadioBuilder::init()!"
+                                            "Not rendering!", ULOG_LOG_TYPE_ERROR);
+                    }
+                    else
+                        radioBegin = CAST(int, i) + 1;
+                    break;
+                case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_RADIO_BUTTON:
+                    if (a.bEnabled != nullptr && !(*a.bEnabled))
+                        ImGui::BeginDisabled();
+                    ImGui::RadioButton(a.label.c_str(), a.size, CAST(int, i) - radioBegin);
+                    if (a.bEnabled != nullptr && !(*a.bEnabled))
+                        ImGui::EndDisabled();
+                    break;
+                case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_RADIO:
+                    radioBegin = 0;
+                    break;
+                default:
                     break;
                 }
             }
@@ -149,4 +243,9 @@ void UImGui::TitlebarBuilder::render() noexcept
 #ifdef __APPLE__
     }
 #endif
+}
+
+void UImGui::TitlebarBuilder::clear() noexcept
+{
+    events.clear();
 }

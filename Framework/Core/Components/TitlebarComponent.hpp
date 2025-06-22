@@ -18,6 +18,37 @@ namespace UImGui
 
         bool* bEnabled = nullptr;
         bool* bSelected = nullptr;
+
+        int* size = nullptr;
+        long lsize = 0;
+    };
+
+    class UIMGUI_PUBLIC_API RadioBuilder
+    {
+    public:
+        RadioBuilder() noexcept = default;
+        explicit RadioBuilder(int& selectedIndex) noexcept;
+
+        /**
+         * @brief Initialises the radio button by setting its selected index reference
+         * @param selectedIndex - A reference to the current selected index
+         * @note Event safety - Any time
+         */
+        RadioBuilder& init(int& selectedIndex) noexcept;
+
+        /**
+         * @brief Adds a radio button to the menu bar
+         * @param label - The label of the button
+         * @param bEnabled - Whether the radio button can be selected
+         * @note Event safety - Begin, Post-begin
+         */
+        RadioBuilder& add(const FString& label, bool* bEnabled = nullptr);
+    private:
+        friend class TitlebarBuilder;
+
+        int* currentEnabledIndex = nullptr;
+        long currentEnabledIndexLong = 0;
+        TVector<TitlebarMenuItem> events{};
     };
 
     class UIMGUI_PUBLIC_API TitlebarBuilder
@@ -75,18 +106,31 @@ namespace UImGui
         TitlebarBuilder& addCheckbox(const FString& label, bool& bSelected, bool* bEnabled = nullptr) noexcept;
 
         /**
-         * Finishes building the menu. When drawing a macOS menu this function submits it to the OS for rendering. When
+         * @brief Adds a group of radio buttons to the menu
+         * @param submenu - A radio builder to be added to the menu
+         * @note Event safety - Begin, Post-begin
+         */
+        TitlebarBuilder& addRadioGroup(const RadioBuilder& submenu) noexcept;
+
+        /**
+         * @brief Finishes building the menu. When drawing a macOS menu this function submits it to the OS for rendering. When
          * drawing an imgui-native menu it does nothing.
          * @note Event safety - Begin, Post-begin
          */
         void finish() noexcept;
 
         /**
-         * Renders the menu. Should be called every frame. When drawing a macOS menu it does nothing. When drawing an
+         * @brief Renders the menu. Should be called every frame. When drawing a macOS menu it does nothing. When drawing an
          * imgui-native menu it renders the UI for the menu. Should only be called in Titlebar components
          * @note Event safety - Tick
          */
-        void render() noexcept;
+        void render() const noexcept;
+
+        /**
+         * @brief Clears the menu for rebuilding
+         * @note Event safety - Begin, Post-begin
+         */
+        void clear() noexcept;
     private:
         bool bPreferNative = true;
         void* data = nullptr;

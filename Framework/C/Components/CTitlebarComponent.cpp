@@ -117,18 +117,42 @@ void UImGui_TitlebarBuilder_addCheckbox(UImGui_CTitlebarBuilder* builder, const 
     CAST(UImGui::TitlebarBuilder*, builder)->addCheckbox(label, *bSelected, bEnabled);
 }
 
+void UImGui_TitlebarBuilder_addRadioGroup(UImGui_CTitlebarBuilder* builder, UImGui_CRadioBuilder* submenu)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->addRadioGroup(*CAST(UImGui::RadioBuilder*, submenu));
+}
 
-void UImGui_TitlebarBuilder_finish(UImGui_CTitlebarBuilder* builder) noexcept
+void UImGui_TitlebarBuilder_finish(UImGui_CTitlebarBuilder* builder)
 {
     CAST(UImGui::TitlebarBuilder*, builder)->finish();
 }
 
-void UImGui_TitlebarBuilder_render(UImGui_CTitlebarBuilder* builder) noexcept
+void UImGui_TitlebarBuilder_render(UImGui_CTitlebarBuilder* builder)
 {
     CAST(UImGui::TitlebarBuilder*, builder)->render();
+}
+
+void UImGui_TitlebarBuilder_clear(UImGui_CTitlebarBuilder* builder)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->clear();
 }
 
 void UImGui_TitlebarBuilder_free(UImGui_CTitlebarBuilder* builder)
 {
     delete CAST(UImGui::TitlebarBuilder*, builder);
+}
+
+UImGui_CRadioBuilder* UImGui_RadioBuilder_init(int* selectedIndex)
+{
+    return CAST(UImGui_CRadioBuilder*, new UImGui::RadioBuilder(*selectedIndex));
+}
+
+void UImGui_RadioBuilder_add(UImGui_CRadioBuilder* builder, const UImGui_String label, bool* bEnabled)
+{
+    CAST(UImGui::RadioBuilder*, builder)->add(label, bEnabled);
+}
+
+void UImGui_RadioBuilder_free(UImGui_CRadioBuilder* builder)
+{
+    delete CAST(UImGui::RadioBuilder*, builder);
 }

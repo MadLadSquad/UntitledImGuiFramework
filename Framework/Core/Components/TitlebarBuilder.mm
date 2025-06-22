@@ -66,7 +66,42 @@ void UImGui::TitlebarBuilder::macOSFinish() noexcept
 }
 - (BOOL)validateMenuItem:(NSMenuItem *)item
 {
-    item.state = *_flag ? NSControlStateValueOn : NSControlStateValueOff; // keep ✓ fresh
+    item.state = *_flag ? NSControlStateValueOn : NSControlStateValueOff;
+    return _enabledPtr ? *_enabledPtr : YES;
+}
+@end
+
+@interface RadioBridge : NSObject <NSMenuItemValidation>
+{
+    NSInteger              *indexPtr;
+    NSInteger               _myValue;
+    bool                   *_enabledPtr;
+    int                    *normalSize;
+}
+- (instancetype)initWithIndexPtr:(NSInteger *)ptr
+                           value:(NSInteger)value
+                         enabled:(bool *)en
+                         normalSize:(int*)normal;
+- (void)choose:(NSMenuItem *)sender;
+@end
+
+@implementation RadioBridge
+- (instancetype)initWithIndexPtr:(NSInteger *)ptr value:(NSInteger)v
+                         enabled:(bool *)en normalSize:(int*)normal
+{
+    if ((self = [super init])) { indexPtr = ptr; _myValue = v; _enabledPtr = en; normalSize = normal; }
+    return self;
+}
+- (void)choose:(NSMenuItem *)sender
+{
+    *indexPtr = _myValue;
+    *normalSize = (int)_myValue;
+}
+- (BOOL)validateMenuItem:(NSMenuItem *)item
+{
+    if (*indexPtr != *normalSize)
+        *indexPtr = *normalSize;
+    item.state = (*indexPtr == _myValue) ? NSControlStateValueOn : NSControlStateValueOff;
     return _enabledPtr ? *_enabledPtr : YES;
 }
 @end
@@ -169,6 +204,7 @@ static std::pair<UImGui::FString, NSEventModifierFlags> parseKeybindingHint(cons
 static NSMenu* buildTitlebarRecursive(const UImGui::TVector<UImGui::TitlebarMenuItem>& items, size_t begin, size_t end, void* ctx) noexcept
 {
     NSMenu* menu = [[NSMenu alloc] initWithTitle:@""];
+    int radioBegin = 0;
     for (size_t i = begin; i < end; i++)
     {
         const auto& item = items[i];
@@ -231,6 +267,38 @@ static NSMenu* buildTitlebarRecursive(const UImGui::TVector<UImGui::TitlebarMenu
         }
         else if (item.type == UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_SUBMENU)
             return menu;
+        else if (item.type == UIMGUI_TITLEBAR_MENU_ITEM_TYPE_BEGIN_RADIO)
+        {
+            if (item.size == nullptr)
+            {
+                i += item.membersLen + 1;
+                Logger::log("A radio button was submitted with a NULL index.\n"
+                                    "Make sure to always initialise your radio button with UImGui::RadioBuilder::init()!"
+                                    "Not rendering!", ULOG_LOG_TYPE_ERROR);
+            }
+            else
+                radioBegin = CAST(int, i) + 1;
+        }
+        else if (item.type == UIMGUI_TITLEBAR_MENU_ITEM_TYPE_RADIO_BUTTON)
+        {
+            NSMenuItem* element = [[NSMenuItem alloc]
+                                        initWithTitle:[NSString stringWithUTF8String:item.label.data()]
+                                               action:@selector(choose:)
+                                        keyEquivalent:@""];
+
+            RadioBridge* bridge = [[RadioBridge alloc]
+                                        initWithIndexPtr:(NSInteger*)&item.lsize
+                                                   value:i - radioBegin
+                                                 enabled:item.bEnabled
+                                                normalSize: item.size];
+            element.target = bridge;
+            objc_setAssociatedObject(element, bridge, bridge,
+                                     OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
+            [menu addItem:element];
+        }
+        else if (item.type == UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_RADIO)
+            radioBegin = 0;
     }
     return menu;
 }
