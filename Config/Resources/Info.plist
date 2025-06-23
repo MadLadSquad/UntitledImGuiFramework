@@ -4,13 +4,13 @@
 <dict>
     <!-- Application Metadata -->
     <key>CFBundleName</key>
-    <string>UImGuiDemo</string>
+    <string>Example</string>
 
     <key>CFBundleDisplayName</key>
     <string>UntitledImGuiFramework Demo</string>
 
     <key>CFBundleIdentifier</key>
-    <string>com.madladsquad.UImGuiDemo</string>
+    <string>com.madladsquad.Example</string>
 
     <key>CFBundleVersion</key>
     <string>1.0</string>
@@ -20,7 +20,7 @@
 
     <!-- Executable -->
     <key>CFBundleExecutable</key>
-    <string>UImGuiDemo</string>
+    <string>example</string>
 
     <key>CFBundlePackageType</key>
     <string>APPL</string>
@@ -40,6 +40,9 @@
     <!-- Application Category -->
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.utilities</string>
+
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright (c) 2024 - 2025 MadLadSquad</string>
 
     <!-- Security Configuration -->
     <key>NSAppTransportSecurity</key>

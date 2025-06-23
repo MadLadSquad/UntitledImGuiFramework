@@ -2,6 +2,7 @@
 #include <C/Internal/Keys.h>
 #include <Core/Utilities.hpp>
 #include <ThirdParty/utfcpp/source/utf8.h>
+#include <Core/Components/Instance.hpp>
 
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
@@ -12,6 +13,54 @@ static NSMenu* buildTitlebarRecursive(const UImGui::TVector<UImGui::TitlebarMenu
 void UImGui::TitlebarBuilder::macOSFinish() noexcept
 {
     [NSApp setMainMenu:buildTitlebarRecursive(events, 0, events.size(), data)];
+}
+
+UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addAppMenuDefaultItems() noexcept
+{
+    events.emplace_back(TitlebarMenuItem{
+        .label = "",
+        .hint = "",
+        .f = [](void*) -> void {},
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_APP_MENU_DEFAULT,
+        .membersLen = 1,
+        .bEnabled = nullptr,
+        .bSelected = nullptr,
+        .size = nullptr,
+        .lsize = 0
+    });
+    return *this;
+}
+
+UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addWindowMenuDefaultItems() noexcept
+{
+    events.emplace_back(TitlebarMenuItem{
+        .label = "",
+        .hint = "",
+        .f = [](void*) -> void {},
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_WINDOW_MENU_DEFAULT,
+        .membersLen = 1,
+        .bEnabled = nullptr,
+        .bSelected = nullptr,
+        .size = nullptr,
+        .lsize = 0
+    });
+    return *this;
+}
+
+UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addHelpMenuDefaultItems() noexcept
+{
+    events.emplace_back(TitlebarMenuItem{
+        .label = "",
+        .hint = "",
+        .f = [](void*) -> void {},
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_HELP_MENU_DEFAULT,
+        .membersLen = 1,
+        .bEnabled = nullptr,
+        .bSelected = nullptr,
+        .size = nullptr,
+        .lsize = 0
+    });
+    return *this;
 }
 
 @interface FuncBridge : NSObject <NSMenuItemValidation>
@@ -299,6 +348,69 @@ static NSMenu* buildTitlebarRecursive(const UImGui::TVector<UImGui::TitlebarMenu
         }
         else if (item.type == UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_RADIO)
             radioBegin = 0;
+        else if (item.type == UIMGUI_TITLEBAR_MENU_ITEM_TYPE_APP_MENU_DEFAULT)
+        {
+            const auto& name = UImGui::Instance::get()->applicationName;
+
+            [menu addItemWithTitle:[NSString stringWithFormat:@"About %@", [NSString stringWithUTF8String:name.data()]]
+                            action:@selector(orderFrontStandardAboutPanel:)
+                     keyEquivalent:@""];
+            [menu addItem:[NSMenuItem separatorItem]];
+
+            NSMenu* servicesMenu = [[NSMenu alloc] init];
+            [NSApp setServicesMenu:servicesMenu];
+            [[menu addItemWithTitle:@"Services"
+                               action:NULL
+                        keyEquivalent:@""] setSubmenu:servicesMenu];
+            [servicesMenu release];
+
+            [menu addItem:[NSMenuItem separatorItem]];
+            [menu addItemWithTitle:[NSString stringWithFormat:@"Hide %@", [NSString stringWithUTF8String:name.data()]]
+                               action:@selector(hide:)
+                        keyEquivalent:@"h"];
+            [[menu addItemWithTitle:@"Hide Others"
+                               action:@selector(hideOtherApplications:)
+                        keyEquivalent:@"h"]
+                setKeyEquivalentModifierMask:NSEventModifierFlagOption | NSEventModifierFlagCommand];
+            [menu addItemWithTitle:@"Show All"
+                               action:@selector(unhideAllApplications:)
+                        keyEquivalent:@""];
+            [menu addItem:[NSMenuItem separatorItem]];
+
+            [menu addItemWithTitle:[NSString stringWithFormat:@"Quit %@", [NSString stringWithUTF8String:name.data()]]
+                               action:@selector(terminate:)
+                        keyEquivalent:@"q"];
+        }
+        else if (item.type == UIMGUI_TITLEBAR_MENU_ITEM_TYPE_WINDOW_MENU_DEFAULT)
+        {
+            [NSApp setWindowsMenu:menu];
+            [menu addItemWithTitle:@"Minimize"
+                          action:@selector(performMiniaturize:)
+                   keyEquivalent:@"m"];
+            [menu addItemWithTitle:@"Zoom"
+                                  action:@selector(performZoom:)
+                           keyEquivalent:@""];
+            [menu addItem:[NSMenuItem separatorItem]];
+            [menu addItemWithTitle:@"Bring All to Front"
+                                  action:@selector(arrangeInFront:)
+                           keyEquivalent:@""];
+
+            [menu addItem:[NSMenuItem separatorItem]];
+            [[menu addItemWithTitle:@"Enter Full Screen"
+                                   action:@selector(toggleFullScreen:)
+                            keyEquivalent:@"f"]
+             setKeyEquivalentModifierMask:NSEventModifierFlagControl | NSEventModifierFlagCommand];
+        }
+        else if (item.type == UIMGUI_TITLEBAR_MENU_ITEM_TYPE_HELP_MENU_DEFAULT)
+        {
+            NSMenuItem* showHelp =
+                [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ Help", [NSString stringWithUTF8String:UImGui::Instance::get()->applicationName.data()]]
+                                           action:@selector(showHelp:)
+                                    keyEquivalent:@"?"];
+            showHelp.target = nil;
+            [menu addItem:showHelp];
+            [NSApp setHelpMenu:menu];
+        }
     }
     return menu;
 }

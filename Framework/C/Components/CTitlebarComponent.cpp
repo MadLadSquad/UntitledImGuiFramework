@@ -122,6 +122,21 @@ void UImGui_TitlebarBuilder_addRadioGroup(UImGui_CTitlebarBuilder* builder, UImG
     CAST(UImGui::TitlebarBuilder*, builder)->addRadioGroup(*CAST(UImGui::RadioBuilder*, submenu));
 }
 
+void UImGui_TitlebarBuilder_addAppMenuDefaultItems(UImGui_CTitlebarBuilder* builder)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->addAppMenuDefaultItems();
+}
+
+void UImGui_TitlebarBuilder_addWindowMenuDefaultItems(UImGui_CTitlebarBuilder* builder)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->addWindowMenuDefaultItems();
+}
+
+void UImGui_TitlebarBuilder_addHelpMenuDefaultItems(UImGui_CTitlebarBuilder* builder)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->addHelpMenuDefaultItems();
+}
+
 void UImGui_TitlebarBuilder_finish(UImGui_CTitlebarBuilder* builder)
 {
     CAST(UImGui::TitlebarBuilder*, builder)->finish();

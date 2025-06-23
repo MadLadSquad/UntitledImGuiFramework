@@ -113,6 +113,28 @@ namespace UImGui
         TitlebarBuilder& addRadioGroup(const RadioBuilder& submenu) noexcept;
 
         /**
+         * @brief Add the default items as part of the macOS application menu(The first submenu that always inherits the name of your application.)
+         * A submenu of this kind(Most commonly created with an "" label) has to be created beforehand
+         * @note Only has effect on macOS
+         * @note Event safety - Begin, Post-begin
+         */
+        TitlebarBuilder& addAppMenuDefaultItems() noexcept;
+
+        /**
+         * @brief Adds the default items to the macOS window menu(a submenu with the title "Window" has to be created beforehand)
+         * @note Only has effect on macOS
+         * @note Event safety - Begin, Post-begin
+         */
+        TitlebarBuilder& addWindowMenuDefaultItems() noexcept;
+
+        /**
+         * @brief Adds the default items for the macOS help menu(a submenu with the title "Help" has to be created beforehand)
+         * @note Only has effect on macOS
+         * @note Event safety - Begin, Post-begin
+         */
+        TitlebarBuilder& addHelpMenuDefaultItems() noexcept;
+
+        /**
          * @brief Finishes building the menu. When drawing a macOS menu this function submits it to the OS for rendering. When
          * drawing an imgui-native menu it does nothing.
          * @note Event safety - Begin, Post-begin

@@ -11,11 +11,17 @@ extern "C"
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_MENU_ITEM,
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SUBMENU,
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_SUBMENU,
+
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SEPARATOR,
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_CHECKBOX,
+
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_BEGIN_RADIO,
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_RADIO_BUTTON,
-        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_RADIO
+        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_RADIO,
+
+        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_APP_MENU_DEFAULT,
+        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_WINDOW_MENU_DEFAULT,
+        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_HELP_MENU_DEFAULT
     } UImGui_TitlebarMenuItemType;
 
     typedef void UImGui_CTitlebarBuilder;
@@ -108,10 +114,36 @@ extern "C"
 
     /**
      * @brief Adds a group of radio buttons to the menu
+     * @param builder - A pointer to the C menu builder instance from UImGui_TitlebarBuilder_init
      * @param submenu - A radio builder to be added to the menu
      * @note Event safety - Begin, Post-begin
      */
     UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_addRadioGroup(UImGui_CTitlebarBuilder* builder, UImGui_CRadioBuilder* submenu);
+
+    /**
+     * @brief Add the default items as part of the macOS application menu(The first submenu that always inherits the name of your application.)
+     * A submenu of this kind(Most commonly created with an "" label) has to be created beforehand
+     * @param builder - A pointer to the C menu builder instance from UImGui_TitlebarBuilder_init
+     * @note Only has effect on macOS
+     * @note Event safety - Begin, Post-begin
+     */
+    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_addAppMenuDefaultItems(UImGui_CTitlebarBuilder* builder);
+
+    /**
+     * @brief Adds the default items to the macOS window menu(a submenu with the title "Window" has to be created beforehand)
+     * @param builder - A pointer to the C menu builder instance from UImGui_TitlebarBuilder_init
+     * @note Only has effect on macOS
+     * @note Event safety - Begin, Post-begin
+     */
+    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_addWindowMenuDefaultItems(UImGui_CTitlebarBuilder* builder);
+
+    /**
+     * @brief Adds the default items for the macOS help menu(a submenu with the title "Help" has to be created beforehand)
+     * @param builder - A pointer to the C menu builder instance from UImGui_TitlebarBuilder_init
+     * @note Only has effect on macOS
+     * @note Event safety - Begin, Post-begin
+     */
+    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_addHelpMenuDefaultItems(UImGui_CTitlebarBuilder* builder);
 
     /**
      * @brief Finishes building the menu. When drawing a macOS menu this function submits it to the OS for rendering. When

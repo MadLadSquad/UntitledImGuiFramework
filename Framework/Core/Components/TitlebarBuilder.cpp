@@ -157,6 +157,22 @@ UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addRadioGroup(const UImGui::Ra
     return *this;
 }
 
+#ifndef __APPLE__
+UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addAppMenuDefaultItems() noexcept
+{
+    return *this;
+}
+
+UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addWindowMenuDefaultItems() noexcept
+{
+    return *this;
+}
+
+UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addHelpMenuDefaultItems() noexcept
+{
+    return *this;
+}
+#endif
 
 void UImGui::TitlebarBuilder::finish() noexcept
 {

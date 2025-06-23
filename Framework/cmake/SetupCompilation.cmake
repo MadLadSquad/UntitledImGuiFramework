@@ -59,6 +59,7 @@ if (BUILD_VARIANT_VENDOR OR WIN32)
         add_link_options(-fwasm-exceptions)
     endif()
     set(SKIP_INSTALL_ALL ON) # Disable installing freetype
+    set(FT_DYNAMIC_HARFBUZZ OFF)
     add_subdirectory("${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/freetype")
     set(SKIP_INSTALL_ALL OFF)
     set(FREETYPE_LIBRARIES "freetype")
