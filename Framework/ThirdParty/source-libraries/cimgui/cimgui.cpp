@@ -635,29 +635,29 @@ CIMGUI_API void  cimgui::ImGui_SetScrollFromPosY(float local_y, float center_y_r
     ::ImGui::SetScrollFromPosY(local_y, center_y_ratio);
 }
 
-CIMGUI_API void cimgui::ImGui_PushFont(cimgui::ImFont* font)
+CIMGUI_API void         cimgui::ImGui_PushFont(cimgui::ImFont* font, float font_size_base_unscaled)
 {
-    ::ImGui::PushFont(reinterpret_cast<::ImFont*>(font));
+    ::ImGui::PushFont(reinterpret_cast<::ImFont*>(font), font_size_base_unscaled);
 }
 
-CIMGUI_API void cimgui::ImGui_PushFontEx(cimgui::ImFont* font, float font_size_base)
-{
-    ::ImGui::PushFont(reinterpret_cast<::ImFont*>(font), font_size_base);
-}
-
-CIMGUI_API void cimgui::ImGui_PopFont(void)
+CIMGUI_API void         cimgui::ImGui_PopFont(void)
 {
     ::ImGui::PopFont();
 }
 
-CIMGUI_API void cimgui::ImGui_PushFontSize(float font_size_base)
+CIMGUI_API cimgui::ImFont* cimgui::ImGui_GetFont(void)
 {
-    ::ImGui::PushFontSize(font_size_base);
+    return reinterpret_cast<::cimgui::ImFont*>(::ImGui::GetFont());
 }
 
-CIMGUI_API void cimgui::ImGui_PopFontSize(void)
+CIMGUI_API float        cimgui::ImGui_GetFontSize(void)
 {
-    ::ImGui::PopFontSize();
+    return ::ImGui::GetFontSize();
+}
+
+CIMGUI_API cimgui::ImFontBaked* cimgui::ImGui_GetFontBaked(void)
+{
+    return reinterpret_cast<::cimgui::ImFontBaked*>(::ImGui::GetFontBaked());
 }
 
 CIMGUI_API void cimgui::ImGui_PushStyleColor(ImGuiCol idx, ImU32 col)
@@ -750,24 +750,9 @@ CIMGUI_API void  cimgui::ImGui_PopTextWrapPos(void)
     ::ImGui::PopTextWrapPos();
 }
 
-CIMGUI_API cimgui::ImFont* cimgui::ImGui_GetFont(void)
-{
-    return reinterpret_cast<::cimgui::ImFont*>(::ImGui::GetFont());
-}
-
-CIMGUI_API float         cimgui::ImGui_GetFontSize(void)
-{
-    return ::ImGui::GetFontSize();
-}
-
 CIMGUI_API cimgui::ImVec2 cimgui::ImGui_GetFontTexUvWhitePixel(void)
 {
     return ConvertFromCPP_ImVec2(::ImGui::GetFontTexUvWhitePixel());
-}
-
-CIMGUI_API cimgui::ImFontBaked* cimgui::ImGui_GetFontBaked(void)
-{
-    return reinterpret_cast<::cimgui::ImFontBaked*>(::ImGui::GetFontBaked());
 }
 
 CIMGUI_API ImU32         cimgui::ImGui_GetColorU32(ImGuiCol idx)

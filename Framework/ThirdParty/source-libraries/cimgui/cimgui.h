@@ -518,21 +518,25 @@ CIMGUI_API void  ImGui_SetScrollFromPosX(float local_x, float center_x_ratio /* 
 CIMGUI_API void  ImGui_SetScrollFromPosY(float local_y, float center_y_ratio /* = 0.5f */);  // adjust scrolling amount to make given position visible. Generally GetCursorStartPos() + offset to compute a valid position.
 
 // Parameters stacks (font)
+//  - PushFont(font, 0.0f)                       // Change font and keep current size
+//  - PushFont(NULL, 20.0f)                      // Keep font and change current size
+//  - PushFont(font, 20.0f)                      // Change font and set size to 20.0f
+//  - PushFont(font, style.FontSizeBase * 2.0f)  // Change font and set size to be twice bigger than current size.
+//  - PushFont(font, font->LegacySize)           // Change font and set size to size passed to AddFontXXX() function. Same as pre-1.92 behavior.
 // *IMPORTANT* before 1.92, fonts had a single size. They can now be dynamically be adjusted.
-// - Before 1.92: PushFont() always used font default size.
-// -  Since 1.92: PushFont() preserve the current shared font size.
-// - To use old behavior (single size font, size specified in AddFontXXX() call:
-//   - Use 'PushFont(font, font->LegacySize)' at call site
-//   - Or set 'ImFontConfig::Flags |= ImFontFlags_DefaultToLegacySize' before calling AddFont(), and then 'PushFont(font)' will use this size.
-// - External scale factors are applied over the provided value.
-// *IMPORTANT* If you want to scale an existing font size:
-//   - OK: PushFontSize(style.FontSizeBase * factor) (= value before external scale factors applied).
-//   - KO: PushFontSize(GetFontSize() * factor)      (= value after external scale factors applied. external scale factors are style.FontScaleMain + per-viewport scales.).
-CIMGUI_API void ImGui_PushFont(ImFont* font);                                     // Implied font_size_base = -1
-CIMGUI_API void ImGui_PushFontEx(ImFont* font, float font_size_base /* = -1 */);  // use NULL as a shortcut to push default font. Use <0.0f to keep current font size.
-CIMGUI_API void ImGui_PopFont(void);
-CIMGUI_API void ImGui_PushFontSize(float font_size_base);
-CIMGUI_API void ImGui_PopFontSize(void);
+//  - In 1.92 we have REMOVED the single parameter version of PushFont() because it seems like the easiest way to provide an error-proof transition.
+//  - PushFont(font) before 1.92 = PushFont(font, font->LegacySize) after 1.92          // Use default font size as passed to AddFontXXX() function.
+// *IMPORTANT* external scale factors are applied over the provided size. If you want to scale an *existing* font size:
+//  - External scale factors are: 'style.FontScaleMain * style.FontScaleDpi' and maybe more.
+//  - CORRECT:   PushFont(NULL, style.FontSizeBase)         // use current unscaled size    == does nothing
+//  - CORRECT:   PushFont(NULL, style.FontSizeBase * 2.0f)  // use current unscaled size x2 == make text twice bigger
+//  - INCORRECT: PushFont(NULL, GetFontSize())              // INCORRECT! use size after external factors applied == EXTERNAL SCALING FACTORS WILL APPLY TWICE!
+//  - INCORRECT: PushFont(NULL, GetFontSize() * 2.0f)       // INCORRECT! use size after external factors applied == EXTERNAL SCALING FACTORS WILL APPLY TWICE!
+CIMGUI_API void         ImGui_PushFont(ImFont* font, float font_size_base_unscaled);  // Use NULL as a shortcut to keep current font. Use 0.0f to keep current size.
+CIMGUI_API void         ImGui_PopFont(void);
+CIMGUI_API ImFont*      ImGui_GetFont(void);                                          // get current font
+CIMGUI_API float        ImGui_GetFontSize(void);                                      // get current scaled font size (= height in pixels). AFTER external scale factors applied. *IMPORTANT* DO NOT PASS THIS VALUE TO PushFont()! Use ImGui::GetStyle().FontSizeBase to get value before external scale factors.
+CIMGUI_API ImFontBaked* ImGui_GetFontBaked(void);                                     // get current font bound at current size // == GetFont()->GetFontBaked(GetFontSize())
 
 // Parameters stacks (shared)
 CIMGUI_API void ImGui_PushStyleColor(ImGuiCol idx, ImU32 col);            // modify a style color. always use this if you modify the style after NewFrame().
@@ -558,10 +562,7 @@ CIMGUI_API void  ImGui_PopTextWrapPos(void);
 
 // Style read access
 // - Use the ShowStyleEditor() function to interactively see/edit the colors.
-CIMGUI_API ImFont*       ImGui_GetFont(void);                                                // get current font
-CIMGUI_API float         ImGui_GetFontSize(void);                                            // get current font size (= height in pixels) of current font with external scale factors applied. Use ImGui::GetStyle().FontSizeBase to get value before external scale factors.
 CIMGUI_API ImVec2        ImGui_GetFontTexUvWhitePixel(void);                                 // get UV coordinate for a white pixel, useful to draw custom shapes via the ImDrawList API
-CIMGUI_API ImFontBaked*  ImGui_GetFontBaked(void);                                           // get current font bound at current size // == GetFont()->GetFontBaked(GetFontSize())
 CIMGUI_API ImU32         ImGui_GetColorU32(ImGuiCol idx);                                    // Implied alpha_mul = 1.0f
 CIMGUI_API ImU32         ImGui_GetColorU32Ex(ImGuiCol idx, float alpha_mul /* = 1.0f */);    // retrieve given style color with style alpha applied and optional extra alpha multiplier, packed as a 32-bit value suitable for ImDrawList
 CIMGUI_API ImU32         ImGui_GetColorU32ImVec4(ImVec4 col);                                // retrieve given color with style alpha applied, packed as a 32-bit value suitable for ImDrawList
@@ -2437,7 +2438,7 @@ IM_MSVC_RUNTIME_CHECKS_RESTORE
 struct ImGuiStyle_t
 {
     // ImGui::GetFontSize() == FontSizeBase * (FontScaleMain * FontScaleDpi * other_scaling_factors)
-    float              FontSizeBase;                      // Current base font size before external scaling factors are applied. Use PushFont()/PushFontSize() to modify. Use ImGui::GetFontSize() to obtain scaled value.
+    float              FontSizeBase;                      // Current base font size before external scaling factors are applied. Use PushFont(NULL, size) to modify. Use ImGui::GetFontSize() to obtain scaled value.
     float              FontScaleMain;                     // Main scale factor. May be set by application once, or exposed to end-user.
     float              FontScaleDpi;                      // Additional scale factor from viewport/monitor contents scale. When io.ConfigDpiScaleFonts is enabled, this is automatically overwritten when changing monitor DPI.
 
@@ -3608,7 +3609,7 @@ struct ImFontConfig_t
     ImS8                OversampleV;           // 0 (1)    // Rasterize at higher quality for sub-pixel positioning. 0 == auto == 1. This is not really useful as we don't use sub-pixel positions on the Y axis.
     float               SizePixels;            //          // Size in pixels for rasterizer (more or less maps to the resulting font height).
     const ImWchar*      GlyphRanges;           // NULL     // *LEGACY* THE ARRAY DATA NEEDS TO PERSIST AS LONG AS THE FONT IS ALIVE. Pointer to a user-provided list of Unicode range (2 value per range, values are inclusive, zero-terminated list).
-    const ImWchar*      GlyphExcludeRanges;    // NULL     // Pointer to a VERY SHORT user-provided list of Unicode range (2 value per range, values are inclusive, zero-terminated list). This is very close to GlyphRanges[] but designed to exclude ranges from a font source, when merging fonts with overlapping glyphs. Use "Input Glyphs Overlap Detection Tool" to find about your overlapping ranges.
+    const ImWchar*      GlyphExcludeRanges;    // NULL     // Pointer to a small user-provided list of Unicode ranges (2 value per range, values are inclusive, zero-terminated list). This is very close to GlyphRanges[] but designed to exclude ranges from a font source, when merging fonts with overlapping glyphs. Use "Input Glyphs Overlap Detection Tool" to find about your overlapping ranges.
     //ImVec2        GlyphExtraSpacing;      // 0, 0     // (REMOVED AT IT SEEMS LARGELY OBSOLETE. PLEASE REPORT IF YOU WERE USING THIS). Extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->AdvanceX. Only X axis is supported for now.
     ImVec2              GlyphOffset;           // 0, 0     // Offset (in pixels) all glyphs from this font input. Absolute value for default size, other sizes will scale this value.
     float               GlyphMinAdvanceX;      // 0        // Minimum AdvanceX for glyphs, set Min to align font icons, set both Min/Max to enforce mono-space font. Absolute value for default size, other sizes will scale this value.
@@ -3878,11 +3879,10 @@ CIMGUI_API bool         ImFontBaked_IsGlyphLoaded(ImFontBaked* self, ImWchar c);
 // (in future versions as we redesign font loading API, this will become more important and better documented. for now please consider this as internal/advanced use)
 typedef enum
 {
-    ImFontFlags_None                = 0,
-    ImFontFlags_DefaultToLegacySize = 1<<0,  // Legacy compatibility: make PushFont() calls without explicit size use font->LegacySize instead of current font size.
-    ImFontFlags_NoLoadError         = 1<<1,  // Disable throwing an error/assert when calling AddFontXXX() with missing file/data. Calling code is expected to check AddFontXXX() return value.
-    ImFontFlags_NoLoadGlyphs        = 1<<2,  // [Internal] Disable loading new glyphs.
-    ImFontFlags_LockBakedSizes      = 1<<3,  // [Internal] Disable loading new baked sizes, disable garbage collecting current ones. e.g. if you want to lock a font to a single size. Important: if you use this to preload given sizes, consider the possibility of multiple font density used on Retina display.
+    ImFontFlags_None           = 0,
+    ImFontFlags_NoLoadError    = 1<<1,  // Disable throwing an error/assert when calling AddFontXXX() with missing file/data. Calling code is expected to check AddFontXXX() return value.
+    ImFontFlags_NoLoadGlyphs   = 1<<2,  // [Internal] Disable loading new glyphs.
+    ImFontFlags_LockBakedSizes = 1<<3,  // [Internal] Disable loading new baked sizes, disable garbage collecting current ones. e.g. if you want to lock a font to a single size. Important: if you use this to preload given sizes, consider the possibility of multiple font density used on Retina display.
 } ImFontFlags_;
 
 // Font runtime data and rendering
