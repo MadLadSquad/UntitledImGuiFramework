@@ -3936,10 +3936,6 @@ CIMGUI_API void         ImFont_ClearOutputData(ImFont* self);
 CIMGUI_API void         ImFont_AddRemapChar(ImFont* self, ImWchar from_codepoint, ImWchar to_codepoint);                                   // Makes 'from_codepoint' character points to 'to_codepoint' glyph.
 CIMGUI_API bool         ImFont_IsGlyphRangeUnused(ImFont* self, unsigned int c_begin, unsigned int c_last);
 
-// This is provided for consistency (but we don't actually use this)
-inline
-ImTextureID
-ImTextureRef
 #endif // #ifndef IMGUI_DISABLE
 #ifdef __cplusplus
 } // End of extern "C" block
