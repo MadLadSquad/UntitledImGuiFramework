@@ -21,7 +21,8 @@ extern "C"
 
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_APP_MENU_DEFAULT,
         UIMGUI_TITLEBAR_MENU_ITEM_TYPE_WINDOW_MENU_DEFAULT,
-        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_HELP_MENU_DEFAULT
+        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_HELP_MENU_DEFAULT,
+        UIMGUI_TITLEBAR_MENU_ITEM_TYPE_EDIT_MENU_DEFAULT
     } UImGui_TitlebarMenuItemType;
 
     typedef void UImGui_CTitlebarBuilder;
@@ -144,6 +145,14 @@ extern "C"
      * @note Event safety - Begin, Post-begin
      */
     UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_addHelpMenuDefaultItems(UImGui_CTitlebarBuilder* builder);
+
+    /**
+     * @brief Adds the default items for the macOS edit menu(a submenu with the title "Edit" has to be created beforehand)
+     * @param builder - A pointer to the C menu builder instance from UImGui_TitlebarBuilder_init
+     * @note Only has effect on macOS
+     * @note Event safety - Begin, Post-begin
+     */
+    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_addEditMenuDefaultItems(UImGui_CTitlebarBuilder* builder);
 
     /**
      * @brief Finishes building the menu. When drawing a macOS menu this function submits it to the OS for rendering. When

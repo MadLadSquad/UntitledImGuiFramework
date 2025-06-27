@@ -135,6 +135,13 @@ namespace UImGui
         TitlebarBuilder& addHelpMenuDefaultItems() noexcept;
 
         /**
+         * @brief Adds the default items for the macOS edit menu(a submenu with the title "Edit" has to be created beforehand)
+         * @note Only has effect on macOS
+         * @note Event safety - Begin, Post-begin
+         */
+        TitlebarBuilder& addEditMenuDefaultItems() noexcept;
+
+        /**
          * @brief Finishes building the menu. When drawing a macOS menu this function submits it to the OS for rendering. When
          * drawing an imgui-native menu it does nothing.
          * @note Event safety - Begin, Post-begin

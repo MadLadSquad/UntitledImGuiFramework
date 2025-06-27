@@ -63,6 +63,22 @@ UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addHelpMenuDefaultItems() noex
     return *this;
 }
 
+UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addEditMenuDefaultItems() noexcept
+{
+    events.emplace_back(TitlebarMenuItem{
+        .label = "",
+        .hint = "",
+        .f = [](void*) -> void {},
+        .type = UIMGUI_TITLEBAR_MENU_ITEM_TYPE_EDIT_MENU_DEFAULT,
+        .membersLen = 1,
+        .bEnabled = nullptr,
+        .bSelected = nullptr,
+        .size = nullptr,
+        .lsize = 0
+    });
+    return *this;
+}
+
 @interface FuncBridge : NSObject <NSMenuItemValidation>
 {
     std::function<void(NSMenuItem *)> _cb;
@@ -228,12 +244,12 @@ static std::pair<UImGui::FString, NSEventModifierFlags> parseKeybindingHint(cons
     for (auto& a : split)
     {
         UImGui::Utility::toLower(a);
-        if (modifierMap.contains(a.c_str()))
-            result.second |= modifierMap.at(a.c_str());
+        if (modifierMap.contains(a))
+            result.second |= modifierMap.at(a);
         else
         {
-            if (specialKeyMap.contains(a.c_str()))
-                result.first = [[NSString stringWithCharacters:&specialKeyMap.at(a.c_str()) length:1] UTF8String];
+            if (specialKeyMap.contains(a))
+                result.first = [[NSString stringWithCharacters:&specialKeyMap.at(a) length:1] UTF8String];
             else
             {
                 bool bFound = false;
@@ -337,7 +353,7 @@ static NSMenu* buildTitlebarRecursive(const UImGui::TVector<UImGui::TitlebarMenu
 
             RadioBridge* bridge = [[RadioBridge alloc]
                                         initWithIndexPtr:(NSInteger*)&item.lsize
-                                                   value:i - radioBegin
+                                                   value:CAST(NSInteger, i) - radioBegin
                                                  enabled:item.bEnabled
                                                 normalSize: item.size];
             element.target = bridge;
@@ -360,7 +376,7 @@ static NSMenu* buildTitlebarRecursive(const UImGui::TVector<UImGui::TitlebarMenu
             NSMenu* servicesMenu = [[NSMenu alloc] init];
             [NSApp setServicesMenu:servicesMenu];
             [[menu addItemWithTitle:@"Services"
-                               action:NULL
+                               action:nullptr
                         keyEquivalent:@""] setSubmenu:servicesMenu];
             [servicesMenu release];
 
@@ -410,6 +426,20 @@ static NSMenu* buildTitlebarRecursive(const UImGui::TVector<UImGui::TitlebarMenu
             showHelp.target = nil;
             [menu addItem:showHelp];
             [NSApp setHelpMenu:menu];
+        }
+        else if (item.type == UIMGUI_TITLEBAR_MENU_ITEM_TYPE_EDIT_MENU_DEFAULT)
+        {
+            NSMenuItem* emoji = [[NSMenuItem alloc]
+                                 initWithTitle:NSLocalizedString(@"Emoji & Symbols", nil)
+                                 action:@selector(orderFrontCharacterPalette:)
+                                 keyEquivalent:@""];
+            [menu addItem:emoji];
+
+            NSMenuItem* dict = [[NSMenuItem alloc]
+                                initWithTitle:NSLocalizedString(@"Start Dictation…", nil)
+                                action:@selector(startDictation:)
+                                keyEquivalent:@""];
+            [menu addItem:dict];
         }
     }
     return menu;

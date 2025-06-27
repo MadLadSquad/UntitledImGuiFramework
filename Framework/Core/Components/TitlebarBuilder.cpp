@@ -172,6 +172,11 @@ UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addHelpMenuDefaultItems() noex
 {
     return *this;
 }
+
+UImGui::TitlebarBuilder& UImGui::TitlebarBuilder::addEditMenuDefaultItems() noexcept
+{
+    return *this;
+}
 #endif
 
 void UImGui::TitlebarBuilder::finish() noexcept

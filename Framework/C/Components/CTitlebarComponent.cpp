@@ -137,6 +137,11 @@ void UImGui_TitlebarBuilder_addHelpMenuDefaultItems(UImGui_CTitlebarBuilder* bui
     CAST(UImGui::TitlebarBuilder*, builder)->addHelpMenuDefaultItems();
 }
 
+void UImGui_TitlebarBuilder_addEditMenuDefaultItems(UImGui_CTitlebarBuilder* builder)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->addEditMenuDefaultItems();
+}
+
 void UImGui_TitlebarBuilder_finish(UImGui_CTitlebarBuilder* builder)
 {
     CAST(UImGui::TitlebarBuilder*, builder)->finish();
