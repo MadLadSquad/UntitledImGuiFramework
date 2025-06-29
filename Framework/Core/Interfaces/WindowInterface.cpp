@@ -39,7 +39,7 @@ void UImGui::Window::saveSettings(const bool bSaveKeybinds) noexcept
 
 void UImGui::Window::close() noexcept
 {
-    get().close();
+    glfwSetWindowShouldClose(getInternal(), true);
 }
 
 UImGui::FVector2 UImGui::Window::getCurrentWindowPosition() noexcept

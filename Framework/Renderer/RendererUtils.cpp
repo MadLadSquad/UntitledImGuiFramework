@@ -25,9 +25,37 @@ void UImGui::RendererUtils::OpenGL::setHints(const int majorVersion, const int m
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, CAST(int, bForwardCompatible));
 }
 
-void UImGui::RendererUtils::OpenGL::swapFramebuffer() noexcept
+void UImGui::RendererUtils::OpenGL::swapFramebuffers() noexcept
 {
     glfwSwapBuffers(Window::getInternal());
+}
+
+UImGui::RendererUtils::OpenGL::Context* UImGui::RendererUtils::OpenGL::createContext() noexcept
+{
+    // TODO: SDL
+    return nullptr;
+}
+
+void UImGui::RendererUtils::OpenGL::setCurrentContext(Context* ctx) noexcept
+{
+    UNUSED(ctx);
+    glfwMakeContextCurrent(Window::getInternal());
+}
+
+void UImGui::RendererUtils::OpenGL::destroyContext(UImGui::RendererUtils::OpenGL::Context* ctx) noexcept
+{
+    // TODO: SDL
+    UNUSED(ctx);
+}
+
+UImGui::RendererUtils::OpenGL::Context* UImGui::RendererUtils::OpenGL::getCurrentContext() noexcept
+{
+    return glfwGetCurrentContext();
+}
+
+void UImGui::RendererUtils::OpenGL::setSwapInterval(const int interval) noexcept
+{
+    glfwSwapInterval(interval);
 }
 
 bool UImGui::RendererUtils::WebGPU::supported() noexcept

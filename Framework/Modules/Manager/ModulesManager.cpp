@@ -62,7 +62,7 @@ void UImGui::Modules::save() noexcept
 
 UImGui::ModulesManager& UImGui::Modules::get() noexcept
 {
-    return Global::get().modulesManagerr;
+    return Global::get().modulesManager;
 }
 
 void UImGui::ModulesManager::initModules(const FString& projectDir)

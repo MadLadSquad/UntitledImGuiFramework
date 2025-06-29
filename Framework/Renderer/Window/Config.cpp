@@ -150,27 +150,27 @@ skip_window_config:
             action.keyCodes = a["val"].as<TVector<uint16_t>>();
 
             // Sanitise keys that vary in function between platforms
-            for (auto& a : action.keyCodes)
+            for (auto& f : action.keyCodes)
             {
-                switch (a)
+                switch (f)
                 {
                 case Keys_LeftControl_InternalRepr:
-                    a = Keys_LeftControl;
+                    f = Keys_LeftControl;
                     break;
                 case Keys_RightControl_InternalRepr:
-                    a = Keys_RightControl;
+                    f = Keys_RightControl;
                     break;
                 case Keys_LeftControlCommand_InternalRepr:
-                    a = Keys_LeftControlCmd;
+                    f = Keys_LeftControlCmd;
                     break;
                 case Keys_RightControlCommand_InternalRepr:
-                    a = Keys_RightControlCmd;
+                    f = Keys_RightControlCmd;
                     break;
                 case Keys_LeftSuper_InternalRepr:
-                    a = Keys_LeftSuper;
+                    f = Keys_LeftSuper;
                     break;
                 case Keys_RightSuper_InternalRepr:
-                    a = Keys_RightSuper;
+                    f = Keys_RightSuper;
                     break;
                 default:
                     break;
@@ -179,4 +179,26 @@ skip_window_config:
             inputActionList.push_back(action);
         }
     }
+}
+
+void UImGui::WindowInternal::configureDefaultHints() const noexcept
+{
+    glfwWindowHint(GLFW_RESIZABLE, windowData.bResizeable);
+#ifndef __EMSCRIPTEN__
+    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, windowData.bSurfaceTransparent);
+    glfwWindowHint(GLFW_VISIBLE, !windowData.bHidden);
+    glfwWindowHint(GLFW_FOCUSED, windowData.bFocused);
+    glfwWindowHint(GLFW_DECORATED, windowData.bDecorated);
+    glfwWindowHint(GLFW_MAXIMIZED, windowData.bMaximised);
+
+    #ifdef GLFW_PLATFORM_X11
+        glfwWindowHintString(GLFW_X11_CLASS_NAME, Instance::get()->applicationName.c_str());
+        glfwWindowHintString(GLFW_X11_INSTANCE_NAME, Instance::get()->applicationName.c_str());
+    #endif
+    #ifdef GLFW_PLATFORM_WAYLAND
+        glfwWindowHintString(GLFW_WAYLAND_APP_ID, Instance::get()->applicationName.c_str());
+    #endif
+#endif
+
+    Logger::log("Window settings configured", ULOG_LOG_TYPE_NOTE);
 }

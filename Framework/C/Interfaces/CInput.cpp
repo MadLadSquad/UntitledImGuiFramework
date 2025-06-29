@@ -6,21 +6,6 @@ void UImGui_Input_setCursorVisibility(const UImGui_CursorVisibilityState visibil
     UImGui::Input::setCursorVisibility(visibility);
 }
 
-UImGui_CursorVisibilityState UImGui_Input_getCurrentCursorVisibility()
-{
-    return UImGui::Input::getCurrentCursorVisibility();
-}
-
-void UImGui_Input_setStickyKeys(const bool bEnable)
-{
-    UImGui::Input::setStickyKeys(bEnable);
-}
-
-bool UImGui_Input_getStickyKeys()
-{
-    return UImGui::Input::getStickyKeys();
-}
-
 void UImGui_Input_setRawMouseMotion(const bool bEnable)
 {
     UImGui::Input::setRawMouseMotion(bEnable);
@@ -29,16 +14,6 @@ void UImGui_Input_setRawMouseMotion(const bool bEnable)
 bool UImGui_Input_getRawMouseMotion()
 {
     return UImGui::Input::getRawMouseMotion();
-}
-
-void UImGui_Input_setLockKeyMods(const bool bEnable)
-{
-    UImGui::Input::setLockKeyMods(bEnable);
-}
-
-bool UImGui_Input_getLockKeyMods()
-{
-    return UImGui::Input::getLockKeyMods();
 }
 
 uint8_t UImGui_Input_getKey(const uint16_t key)

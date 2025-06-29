@@ -48,13 +48,6 @@ namespace UImGui
 
         // Event Safety - begin, style, post-begin
         static void setCursorVisibility(CursorVisibilityState visibility) noexcept;
-        // Event Safety - begin, style, post-begin
-        static CursorVisibilityState getCurrentCursorVisibility() noexcept;
-
-        // Event Safety - begin, style, post-begin
-        static void setStickyKeys(bool bEnable) noexcept;
-        // Event Safety - begin, style, post-begin
-        static bool getStickyKeys() noexcept;
 
         // Event Safety - begin, style, post-begin
         // This may not be set if the system doesn't support raw mouse motion or if the mouse cursor is not in the
@@ -62,11 +55,6 @@ namespace UImGui
         static void setRawMouseMotion(bool bEnable) noexcept;
         // Event Safety - begin, style, post-begin
         static bool getRawMouseMotion() noexcept;
-
-        // Event Safety - begin, style, post-begin
-        static void setLockKeyMods(bool bEnable) noexcept;
-        // Event Safety - begin, style, post-begin
-        static bool getLockKeyMods() noexcept;
 
         // Event Safety - Any time
         static uint8_t getKey(uint16_t key) noexcept;

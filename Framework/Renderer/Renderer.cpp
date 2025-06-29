@@ -33,7 +33,7 @@ void UImGui::RendererInternal::start()
     Window::get().createWindow();
     renderer->init(metadata);
 
-    global.modulesManagerr.init(global.instance->initInfo.configDir);
+    global.modulesManager.init(global.instance->initInfo.configDir);
     GUIRenderer::init(renderer);
 
     // The need to conform to the JS event loop is the main reason the stop method is separate from start
@@ -49,7 +49,7 @@ void UImGui::RendererInternal::stop() const noexcept
 {
     GUIRenderer::shutdown(renderer);
     renderer->destroy();
-    Global::get().modulesManagerr.destroy();
+    Modules::get().destroy();
     Window::get().destroyWindow();
 }
 

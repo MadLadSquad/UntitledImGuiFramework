@@ -33,7 +33,7 @@ namespace UImGui
         friend class Plugins;
 
         WindowInternal window{};
-        ModulesManager modulesManagerr{};
+        ModulesManager modulesManager{};
         Plugins plugins{};
 
         static Global* getWithCreate() noexcept;

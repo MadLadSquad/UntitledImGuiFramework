@@ -57,7 +57,7 @@ void* UImGui::Instance::getGlobal() noexcept
 
 void UImGui::Instance::shutdown() noexcept
 {
-    Window::get().close();
+    Window::close();
 }
 
 UImGui::Instance* UImGui::Instance::get() noexcept

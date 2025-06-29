@@ -59,10 +59,10 @@ UImGui::FVector4 UImGui::Monitor::getWorkArea() const noexcept
 
     glfwGetMonitorWorkarea(monitor, &x, &y, &width, &height);
     return FVector4
-            {
-                    static_cast<float>(x),static_cast<float>(y),
-                    static_cast<float>(width), static_cast<float>(height)
-            };
+    {
+        static_cast<float>(x),static_cast<float>(y),
+        static_cast<float>(width), static_cast<float>(height)
+    };
 #else
     return { 0.0f, 0.0f, 0.0f, 0.0f };
 #endif
@@ -89,11 +89,11 @@ UImGui_CMonitorData UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_
 #ifndef __EMSCRIPTEN__
     const auto tmp = Window::getWindowMonitor();
     return UImGui_CMonitorData
-            {
-                    .additionalData = tmp.additionalData,
-                    .additionalDataSize = tmp.additionalDataSize,
-                    .monitor = tmp.monitor,
-            };
+    {
+        .additionalData = tmp.additionalData,
+        .additionalDataSize = tmp.additionalDataSize,
+        .monitor = tmp.monitor,
+    };
 #else
     return {};
 #endif
@@ -122,14 +122,14 @@ void UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_pushEve
         if (a.monitor == data->monitor)
         {
             a.pushEvent([&](Monitor& fMonitor, const MonitorState state) -> void
-                        {
-                            UImGui_CMonitorData dt;
-                            UImGui_Monitor_initWithMonitor_Internal(&dt, data->monitor);
-                            dt.additionalData = data->additionalData;
-                            dt.additionalDataSize = data->additionalDataSize;
+            {
+                UImGui_CMonitorData dt;
+                UImGui_Monitor_initWithMonitor_Internal(&dt, data->monitor);
+                dt.additionalData = data->additionalData;
+                dt.additionalDataSize = data->additionalDataSize;
 
-                            f(&dt, state);
-                        });
+                f(&dt, state);
+            });
             return;
         }
     }
@@ -155,11 +155,11 @@ UImGui_CMonitorData* UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui
     for (const auto& a : Window::getMonitors())
     {
         monitors.push_back(
-                {
-                        .additionalData = a.additionalData,
-                        .additionalDataSize = a.additionalDataSize,
-                        .monitor = a.monitor
-                });
+        {
+            .additionalData = a.additionalData,
+            .additionalDataSize = a.additionalDataSize,
+            .monitor = a.monitor
+        });
     }
     *size = monitors.size();
     return monitors.data();

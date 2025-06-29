@@ -11,6 +11,10 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#ifdef __EMSCRIPTEN__
+    #include <emscripten/html5.h>
+#endif
+
 #include <Defines.hpp>
 #include <Renderer/RendererUtils.hpp>
 #include <Interfaces/RendererInterface.hpp>
@@ -38,6 +42,8 @@ void UImGui::OpenGLRenderer::setupWindowIntegration() noexcept
 
 void UImGui::OpenGLRenderer::setupPostWindowCreation() noexcept
 {
+    RendererUtils::OpenGL::setCurrentContext(RendererUtils::OpenGL::createContext());
+    RendererUtils::OpenGL::setSwapInterval(Renderer::data().bUsingVSync);
 #if !__APPLE__
     const int version = gladLoadGL(glfwGetProcAddress);
     Logger::log
@@ -51,8 +57,6 @@ void UImGui::OpenGLRenderer::setupPostWindowCreation() noexcept
     );
 #endif
 
-    // Idk why we're setting it again but ok
-    glfwSwapInterval(Renderer::data().bUsingVSync);
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
 
@@ -90,7 +94,7 @@ void UImGui::OpenGLRenderer::renderStart(double deltaTime) noexcept
 
 void UImGui::OpenGLRenderer::renderEnd(double deltaTime) noexcept
 {
-    RendererUtils::OpenGL::swapFramebuffer();
+    RendererUtils::OpenGL::swapFramebuffers();
 }
 
 void UImGui::OpenGLRenderer::destroy() noexcept

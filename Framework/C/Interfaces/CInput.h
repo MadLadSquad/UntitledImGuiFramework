@@ -36,18 +36,10 @@ extern "C"
     {
         UIMGUI_CURSOR_VISIBILITY_STATE_NORMAL = 0x00034001,
         UIMGUI_CURSOR_VISIBILITY_STATE_HIDDEN = 0x00034002,
-        UIMGUI_CURSOR_VISIBILITY_STATE_DISABLED = 0x00034003
     } UImGui_CursorVisibilityState;
 
     // Event Safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Input_setCursorVisibility(UImGui_CursorVisibilityState visibility);
-    // Event Safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API UImGui_CursorVisibilityState UImGui_Input_getCurrentCursorVisibility();
-
-    // Event Safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API void UImGui_Input_setStickyKeys(bool bEnable);
-    // Event Safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API bool UImGui_Input_getStickyKeys();
 
     // Event Safety - begin, style, post-begin
     // This may not be set if the system doesn't support raw mouse motion or if the mouse cursor is not in the
@@ -55,11 +47,6 @@ extern "C"
     UIMGUI_PUBLIC_API void UImGui_Input_setRawMouseMotion(bool bEnable);
     // Event Safety - begin, style, post-begin
     UIMGUI_PUBLIC_API bool UImGui_Input_getRawMouseMotion();
-
-    // Event Safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API void UImGui_Input_setLockKeyMods(bool bEnable);
-    // Event Safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API bool UImGui_Input_getLockKeyMods();
 
     // Event Safety - Any time
     UIMGUI_PUBLIC_API uint8_t UImGui_Input_getKey(uint16_t key);

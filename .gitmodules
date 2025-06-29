@@ -69,3 +69,6 @@
 [submodule "Framework/ThirdParty/source-libraries/cimgui/cimgui_extra"]
 	path = Framework/ThirdParty/source-libraries/cimgui/cimgui_extra
 	url = https://github.com/MadLadSquad/cimgui_extra.git
+[submodule "Framework/ThirdParty/SDL"]
+	path = Framework/ThirdParty/SDL
+	url = https://github.com/MadLadSquad/SDL.git

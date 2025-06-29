@@ -91,8 +91,6 @@ namespace UImGui
         [[nodiscard]] GLFWwindow* data() const noexcept;
         bool& resized() noexcept;
 
-        void close() const noexcept;
-
         TVector<TFunction<void(const char**, size_t size)>> dragDropPathCCallbackList;
     private:
         friend class Window;
@@ -111,6 +109,8 @@ namespace UImGui
 
         void saveConfig(bool bSaveKeybindings) noexcept;
         void openConfig();
+        void configureDefaultHints() const noexcept;
+
         void setTitle(String title) noexcept;
         void setIcon(String name) const noexcept;
 

@@ -33,6 +33,7 @@ namespace UImGui
             void operator=(OpenGL const&) = delete;
 
             typedef UImGui_OpenGLProfile Profile;
+            typedef UImGui_OpenGLContext Context;
 
             // Call this inside the window hints interface function of the GenericRenderer class
             //
@@ -45,7 +46,27 @@ namespace UImGui
 
             // Swaps buffers for OpenGL.
             // Event safety - post-begin
-            static void swapFramebuffer() noexcept;
+            static void swapFramebuffers() noexcept;
+
+            // Create an OpenGL context(call this in post-window creation)
+            // Event safety - startup, post-startup
+            static Context* createContext() noexcept;
+
+            // Set current OpenGL context(call this in post-window creation)
+            // Event safety - startup, post-startup
+            static void setCurrentContext(Context* ctx) noexcept;
+
+            // Destroy the current OpenGL context
+            // Event safety - post-startup
+            static void destroyContext(Context* ctx) noexcept;
+
+            // Get the current OpenGL context
+            // Event safety - startup, post-startup
+            static Context* getCurrentContext() noexcept;
+
+            // Set the swap interval for the OpenGL renderer
+            // Event safety - startup, post-startup
+            static void setSwapInterval(int interval) noexcept;
         };
 
         class UIMGUI_PUBLIC_API WebGPU

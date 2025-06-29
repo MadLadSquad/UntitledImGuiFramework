@@ -29,6 +29,7 @@ extern "C"
 #endif
 
     struct GLFWwindow;
+    typedef void UImGui_OpenGLContext;
 
     typedef enum UImGui_RendererClientAPI
     {
@@ -61,8 +62,28 @@ extern "C"
 
     // Swaps buffers for OpenGL.
     // Event safety - post-begin
-    UIMGUI_PUBLIC_API void UImGui_RendererUtils_OpenGL_swapFramebuffer();
+    UIMGUI_PUBLIC_API void UImGui_RendererUtils_OpenGL_swapFramebuffers();
 
+    // Create an OpenGL context(call this in post-window creation)
+    // Event safety - startup, post-startup
+    UIMGUI_PUBLIC_API UImGui_OpenGLContext* UImGui_RendererUtils_OpenGL_createContext();
+
+    // Set current OpenGL context(call this in post-window creation)
+    // Event safety - startup, post-startup
+    UIMGUI_PUBLIC_API void UImGui_RendererUtils_OpenGL_setCurrentContext(UImGui_OpenGLContext* ctx);
+
+    // Destroy the current OpenGL context
+    // Event safety - post-startup
+    UIMGUI_PUBLIC_API void UImGui_RendererUtils_OpenGL_destroyContext(UImGui_OpenGLContext* ctx);
+
+    // Get the current OpenGL context
+    // Event safety - startup, post-startup
+    UIMGUI_PUBLIC_API UImGui_OpenGLContext* UImGui_RendererUtils_OpenGL_getCurrentContext();
+
+    // Set the swap interval for the OpenGL renderer
+    // Event safety - startup, post-startup
+    UIMGUI_PUBLIC_API void UImGui_RendererUtils_OpenGL_setSwapInterval(int interval) noexcept;
+    
     // Check for WebGPU support
     // Event safety - any time
     UIMGUI_PUBLIC_API bool UImGui_RendererUtils_WebGPU_supported();
@@ -70,6 +91,7 @@ extern "C"
     // Renderer a new dear imgui frame
     // Event safety - tick
     UIMGUI_PUBLIC_API void UImGui_RendererUtils_beginImGuiFrame();
+
 #ifdef __cplusplus
 }
 #endif

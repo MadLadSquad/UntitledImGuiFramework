@@ -66,25 +66,8 @@ void UImGui::WindowInternal::createWindow() noexcept
 
     // This is used to set up window hints for the renderer. Read up on creating custom renderers.
     RendererUtils::getRenderer()->setupWindowIntegration();
+    configureDefaultHints();
 
-    glfwWindowHint(GLFW_RESIZABLE, windowData.bResizeable);
-#ifndef __EMSCRIPTEN__
-    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, windowData.bSurfaceTransparent);
-    glfwWindowHint(GLFW_VISIBLE, !windowData.bHidden);
-    glfwWindowHint(GLFW_FOCUSED, windowData.bFocused);
-    glfwWindowHint(GLFW_DECORATED, windowData.bDecorated);
-    glfwWindowHint(GLFW_MAXIMIZED, windowData.bMaximised);
-
-    #ifdef GLFW_PLATFORM_X11
-        glfwWindowHintString(GLFW_X11_CLASS_NAME, Instance::get()->applicationName.c_str());
-        glfwWindowHintString(GLFW_X11_INSTANCE_NAME, Instance::get()->applicationName.c_str());
-    #endif
-    #ifdef GLFW_PLATFORM_WAYLAND
-        glfwWindowHintString(GLFW_WAYLAND_APP_ID, Instance::get()->applicationName.c_str());
-    #endif
-#endif
-
-    Logger::log("Window settings configured", ULOG_LOG_TYPE_NOTE);
     GLFWmonitor* monitor = nullptr;
 #ifndef __EMSCRIPTEN__
     if (windowData.fullscreen)
@@ -117,16 +100,10 @@ void UImGui::WindowInternal::createWindow() noexcept
     windowSize.x = CAST(float, tempx);
     windowSize.y = CAST(float, tempy);
 
-    // Set the context
-    glfwMakeContextCurrent(windowMain);
-
-    // Set swap interval
-    glfwSwapInterval(Renderer::data().bUsingVSync);
+    RendererUtils::getRenderer()->setupPostWindowCreation();
 
     // Set callbacks
     configureCallbacks();
-
-    RendererUtils::getRenderer()->setupPostWindowCreation();
     glfwSetWindowUserPointer(windowMain, this);
 }
 
@@ -134,11 +111,6 @@ void UImGui::WindowInternal::destroyWindow() const noexcept
 {
     glfwDestroyWindow(windowMain);
     glfwTerminate();
-}
-
-void UImGui::WindowInternal::close() const noexcept
-{
-    glfwSetWindowShouldClose(windowMain, true);
 }
 
 void UImGui::WindowInternal::updateKeyState() noexcept
