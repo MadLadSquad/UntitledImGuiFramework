@@ -79,6 +79,8 @@ void UImGui::OpenGLRenderer::init(RendererInternalMetadata& metadata) noexcept
     }
     metadata.gpuName = FCAST(const char*, glGetString(GL_RENDERER));
 
+    Logger::log("Running on device - ", ULOG_LOG_TYPE_NOTE, metadata.gpuName);
+
     Window::pushWindowResizeCallback([](const int width, const int height) -> void
     {
         glViewport(0, 0, width, height);
