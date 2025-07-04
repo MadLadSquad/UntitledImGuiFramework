@@ -53,6 +53,8 @@ void UImGui::Texture::clear() noexcept
     {
         bCleared = true;
         RendererUtils::getRenderer()->waitOnGPU();
+        // CAUTION: if you get a crash here you probably forgot to clear your texture
+        // in a function marked as event safe during "end"(*::end methods of components/instance for example)
         TEX_RUN(clear(dt));
     }
 }
