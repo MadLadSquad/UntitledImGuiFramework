@@ -1,7 +1,15 @@
 if (WIN32)
-    set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
-    set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+    include(WindowsPlatform)
+    initialise_platform()
+elseif(APPLE)
+    include(ApplePlatform)
+    initialise_platform()
+else()
+    include(UnixPlatform)
+    initialise_platform()
 endif()
+
+setup_output_path()
 include(UImGuiHeader)
 
 include_directories(. ${UIMGUI_PLUGIN_APP_NAME}/Source ${UIMGUI_PLUGIN_APP_NAME}/Generated ${UIMGUI_PLUGIN_APP_NAME}/Framework ${UIMGUI_PLUGIN_APP_NAME}/)

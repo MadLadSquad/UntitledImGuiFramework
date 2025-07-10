@@ -63,7 +63,7 @@ set(CMAKE_C_STANDARD 99)
 
 set(UIMGUI_PLUGIN_APP_NAME \"${prjname}\")
 set(UIMGUI_PLUGIN_NAME \"${plugin_name}\")
-set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \"\${CMAKE_SOURCE_DIR}/\${UIMGUI_PLUGIN_APP_NAME}/Framework/cmake/\")
+set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \"\${CMAKE_SOURCE_DIR}/\${UIMGUI_PLUGIN_APP_NAME}/Framework/cmake/\" \"\${CMAKE_SOURCE_DIR}/\${UIMGUI_PLUGIN_APP_NAME}/Framework/cmake/Platform/\")
 
 include(PluginDefaultsInit)
 project(${plugin_name})
@@ -96,8 +96,6 @@ function compile()
 if [ "$1" != "" ] && [ "$2" != "" ]; then
   plugin_name="$1"
   prjname="$2"
-
-  headless=true
 else
   read -rp "Enter your plugin's name: " plugin_name # read the project name
   read -rp "Enter the target application's name: " prjname

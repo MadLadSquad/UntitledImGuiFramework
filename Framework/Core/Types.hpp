@@ -19,7 +19,7 @@
 #include <C/CTypes.h>
 
 // Dependencies
-#include <../ThirdParty/logger/ULog.hpp>
+#include <ThirdParty/logger/ULog.hpp>
 #include <yaml-cpp/yaml.h>
 
 #include "Allocator.hpp"

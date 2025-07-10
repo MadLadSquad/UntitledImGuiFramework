@@ -26,11 +26,7 @@ if (USE_PLOTTING_MODULE)
     list(APPEND FRAMEWORK_INCLUDE_DIRS "${UIMGUI_SRC_PREFIX}/Framework/Modules/Plotting/ThirdParty/implot/")
 endif ()
 
-if (NOT APPLE)
-    list(APPEND FRAMEWORK_INCLUDE_DIRS "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/glad/include/")
-    file(GLOB_RECURSE GLAD_SRC "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/glad/src/gl.c")
-    file(GLOB_RECURSE GLAD_HEAD "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/glad/include/*.h")
-endif()
+setup_opengl_loader_sources()
 
 include_directories(${FRAMEWORK_INCLUDE_DIRS})
 if (DEFINED PLUGIN_PREFIX)
@@ -39,6 +35,7 @@ endif ()
 
 link_directories("${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/vulkan" "UVKBuildTool/build")
 
+setup_platform_imgui_sources()
 if (EMSCRIPTEN)
     file(GLOB_RECURSE IMGUI_SRC "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_glfw.cpp"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.cpp"
@@ -51,25 +48,6 @@ if (EMSCRIPTEN)
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3_loader.h"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/misc/freetype/*.h")
 else()
-    if (APPLE AND IMGUI_BUILD_WITH_METAL)
-        file(GLOB_RECURSE IMGUI_ADDITIONAL_BACKENDS_SRC
-                "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_metal.mm")
-        file(GLOB_RECURSE IMGUI_ADDITIONAL_BACKENDS_HEAD
-                "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_metal.h")
-    elseif(WIN32)
-        if (IMGUI_BUILD_WITH_DX12)
-            file(GLOB_RECURSE IMGUI_DX12_SRC "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_dx12.cpp")
-            file(GLOB_RECURSE IMGUI_DX12_HEAD "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_dx12.h")
-        endif()
-
-        if (IMGUI_BUILD_WITH_DX11)
-            file(GLOB_RECURSE IMGUI_DX11_SRC "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_dx11.cpp")
-            file(GLOB_RECURSE IMGUI_DX11_HEAD "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_dx11.h")
-        endif()
-
-        file(GLOB_RECURSE IMGUI_ADDITIONAL_BACKENDS_SRC ${IMGUI_DX11_SRC} ${IMGUI_DX12_SRC})
-        file(GLOB_RECURSE IMGUI_ADDITIONAL_BACKENDS_HEAD ${IMGUI_DX11_HEAD} ${IMGUI_DX12_HEAD})
-    endif ()
     file(GLOB_RECURSE IMGUI_SRC "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_glfw.cpp"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_opengl3.cpp"
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_vulkan.cpp"
@@ -104,18 +82,9 @@ file(GLOB_RECURSE UGUI_HEAD "${UIMGUI_SRC_PREFIX}/Framework/Core/*.hpp" "${UIMGU
 
 file(GLOB_RECURSE UGUI_APP_SRC "Source/*.cpp" "Source/*.c" "${UIMGUI_CUSTOM_APP_SOURCES}")
 file(GLOB_RECURSE UGUI_APP_HEAD "Source/*.hpp" "Source/*.h" "Generated/Config.hpp" "${UIMGUI_CUSTOM_APP_HEADERS}")
-
-if (APPLE)
-    file(GLOB_RECURSE UGUI_APP_SRC_APPLE "Source/*.m" "Source/*.mm")
-    list(APPEND UGUI_APP_HEAD ${UGUI_APP_SRC_APPLE})
-endif()
+setup_app_sources()
 
 file(GLOB_RECURSE EXEC_SRC "${UIMGUI_CUSTOM_EXEC_SOURCES}")
-
-if (APPLE)
-    file(GLOB_RECURSE APPLE_SRC "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.mm"
-            "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.m" "${UIMGUI_SRC_PREFIX}/Framework/Core/*.mm")
-endif()
 
 # ----------------------------------------------------------------------------------------------------------------------
 # ----------------------------------------------- Modify files for modules ---------------------------------------------
