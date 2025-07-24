@@ -40,7 +40,7 @@ jobs:
           git config --global user.email "contact@madladsquad.com"
           git fetch --all
           git checkout auto || git checkout -b auto
-          git submodule foreach --recursive "git reset --hard origin/`git symbolic-ref refs/remotes/origin/HEAD | cut -f4 -d/`"
+          git submodule foreach --recursive "git reset --hard origin/\`git symbolic-ref refs/remotes/origin/HEAD | cut -f4 -d/\`"
           git submodule update --remote --merge --init
 
           cd Framework/ThirdParty/source-libraries/cimgui || exit
