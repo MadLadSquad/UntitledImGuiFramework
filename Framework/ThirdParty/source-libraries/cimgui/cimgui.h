@@ -33,7 +33,7 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #define IMGUI_VERSION       "1.92.2 WIP"
-#define IMGUI_VERSION_NUM   19212
+#define IMGUI_VERSION_NUM   19213
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
 #define IMGUI_HAS_VIEWPORT           // In 'docking' WIP branch.
@@ -1010,7 +1010,7 @@ CIMGUI_API void ImGui_TableAngledHeadersRow(void);                              
 CIMGUI_API ImGuiTableSortSpecs*  ImGui_TableGetSortSpecs(void);                       // get latest sort specs for the table (NULL if not sorting).  Lifetime: don't hold on this pointer over multiple frames or past any subsequent call to BeginTable().
 CIMGUI_API int                   ImGui_TableGetColumnCount(void);                     // return number of columns (value passed to BeginTable)
 CIMGUI_API int                   ImGui_TableGetColumnIndex(void);                     // return current column index.
-CIMGUI_API int                   ImGui_TableGetRowIndex(void);                        // return current row index.
+CIMGUI_API int                   ImGui_TableGetRowIndex(void);                        // return current row index (header rows are accounted for)
 CIMGUI_API const char*           ImGui_TableGetColumnName(int column_n /* = -1 */);   // return "" if column didn't have a name declared by TableSetupColumn(). Pass -1 to use current column.
 CIMGUI_API ImGuiTableColumnFlags ImGui_TableGetColumnFlags(int column_n /* = -1 */);  // return column flags so you can query their Enabled/Visible/Sorted/Hovered status flags. Pass -1 to use current column.
 CIMGUI_API void                  ImGui_TableSetColumnEnabled(int column_n, bool v);   // change user accessible enabled/disabled state of a column. Set to false to hide the column. User can use the context menu to change this themselves (right-click in headers, or right-click in columns body with ImGuiTableFlags_ContextMenuInBody)
@@ -1498,17 +1498,24 @@ typedef enum
 typedef enum
 {
     ImGuiTabBarFlags_None                         = 0,
-    ImGuiTabBarFlags_Reorderable                  = 1<<0,  // Allow manually dragging tabs to re-order them + New tabs are appended at the end of list
-    ImGuiTabBarFlags_AutoSelectNewTabs            = 1<<1,  // Automatically select new tabs when they appear
-    ImGuiTabBarFlags_TabListPopupButton           = 1<<2,  // Disable buttons to open the tab list popup
-    ImGuiTabBarFlags_NoCloseWithMiddleMouseButton = 1<<3,  // Disable behavior of closing tabs (that are submitted with p_open != NULL) with middle mouse button. You may handle this behavior manually on user's side with if (IsItemHovered() && IsMouseClicked(2)) *p_open = false.
-    ImGuiTabBarFlags_NoTabListScrollingButtons    = 1<<4,  // Disable scrolling buttons (apply when fitting policy is ImGuiTabBarFlags_FittingPolicyScroll)
-    ImGuiTabBarFlags_NoTooltip                    = 1<<5,  // Disable tooltips when hovering a tab
-    ImGuiTabBarFlags_DrawSelectedOverline         = 1<<6,  // Draw selected overline markers over selected tab
-    ImGuiTabBarFlags_FittingPolicyResizeDown      = 1<<7,  // Resize tabs when they don't fit
-    ImGuiTabBarFlags_FittingPolicyScroll          = 1<<8,  // Add scroll buttons when tabs don't fit
-    ImGuiTabBarFlags_FittingPolicyMask_           = ImGuiTabBarFlags_FittingPolicyResizeDown | ImGuiTabBarFlags_FittingPolicyScroll,
-    ImGuiTabBarFlags_FittingPolicyDefault_        = ImGuiTabBarFlags_FittingPolicyResizeDown,
+    ImGuiTabBarFlags_Reorderable                  = 1<<0,                                  // Allow manually dragging tabs to re-order them + New tabs are appended at the end of list
+    ImGuiTabBarFlags_AutoSelectNewTabs            = 1<<1,                                  // Automatically select new tabs when they appear
+    ImGuiTabBarFlags_TabListPopupButton           = 1<<2,                                  // Disable buttons to open the tab list popup
+    ImGuiTabBarFlags_NoCloseWithMiddleMouseButton = 1<<3,                                  // Disable behavior of closing tabs (that are submitted with p_open != NULL) with middle mouse button. You may handle this behavior manually on user's side with if (IsItemHovered() && IsMouseClicked(2)) *p_open = false.
+    ImGuiTabBarFlags_NoTabListScrollingButtons    = 1<<4,                                  // Disable scrolling buttons (apply when fitting policy is ImGuiTabBarFlags_FittingPolicyScroll)
+    ImGuiTabBarFlags_NoTooltip                    = 1<<5,                                  // Disable tooltips when hovering a tab
+    ImGuiTabBarFlags_DrawSelectedOverline         = 1<<6,                                  // Draw selected overline markers over selected tab
+
+    // Fitting/Resize policy
+    ImGuiTabBarFlags_FittingPolicyMixed           = 1<<7,                                  // Shrink down tabs when they don't fit, until width is style.TabMinWidthShrink, then enable scrolling buttons.
+    ImGuiTabBarFlags_FittingPolicyShrink          = 1<<8,                                  // Shrink down tabs when they don't fit
+    ImGuiTabBarFlags_FittingPolicyScroll          = 1<<9,                                  // Enable scrolling buttons when tabs don't fit
+    ImGuiTabBarFlags_FittingPolicyMask_           = ImGuiTabBarFlags_FittingPolicyMixed | ImGuiTabBarFlags_FittingPolicyShrink | ImGuiTabBarFlags_FittingPolicyScroll,
+    ImGuiTabBarFlags_FittingPolicyDefault_        = ImGuiTabBarFlags_FittingPolicyMixed,
+
+#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+    ImGuiTabBarFlags_FittingPolicyResizeDown      = ImGuiTabBarFlags_FittingPolicyShrink,  // Renamed in 1.92.2
+#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 } ImGuiTabBarFlags_;
 
 // Flags for ImGui::BeginTabItem()
@@ -2053,6 +2060,8 @@ typedef enum
     ImGuiStyleVar_ImageBorderSize,              // float     ImageBorderSize
     ImGuiStyleVar_TabRounding,                  // float     TabRounding
     ImGuiStyleVar_TabBorderSize,                // float     TabBorderSize
+    ImGuiStyleVar_TabMinWidthBase,              // float     TabMinWidthBase
+    ImGuiStyleVar_TabMinWidthShrink,            // float     TabMinWidthShrink
     ImGuiStyleVar_TabBarBorderSize,             // float     TabBarBorderSize
     ImGuiStyleVar_TabBarOverlineSize,           // float     TabBarOverlineSize
     ImGuiStyleVar_TableAngledHeadersAngle,      // float     TableAngledHeadersAngle
@@ -2488,6 +2497,8 @@ struct ImGuiStyle_t
     float              ImageBorderSize;                   // Thickness of border around Image() calls.
     float              TabRounding;                       // Radius of upper corners of a tab. Set to 0.0f to have rectangular tabs.
     float              TabBorderSize;                     // Thickness of border around tabs.
+    float              TabMinWidthBase;                   // Minimum tab width, to make tabs larger than their contents. TabBar buttons are not affected.
+    float              TabMinWidthShrink;                 // Minimum tab width after shrinking, when using ImGuiTabBarFlags_FittingPolicyMixed policy.
     float              TabCloseButtonMinWidthSelected;    // -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width.
     float              TabCloseButtonMinWidthUnselected;  // -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width. FLT_MAX: never show close button when unselected.
     float              TabBarBorderSize;                  // Thickness of tab-bar separator, which takes on the tab active color to denote focus.
