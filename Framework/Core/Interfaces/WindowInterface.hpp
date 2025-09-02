@@ -227,15 +227,6 @@ namespace UImGui
 #endif
 
         // Event safety - begin, style, post-begin
-        // Returns all the strings acquired by the application when the user drags in a file or an array of files
-        static TVector<FString>& getOSDragDropStrings() noexcept;
-        // Event safety - begin, style, post-begin
-        static void pushWindowOSDragDropCallback(const TFunction<void(TVector<FString>&)>& f) noexcept;
-
-        // Event safety - begin, style, post-begin
-        static void pushWindowErrorCallback(const TFunction<void(int, String)>& f) noexcept;
-
-        // Event safety - begin, style, post-begin
         // This is the internal window instance, DO NOT TOUCH IT
         static GLFWwindow* getInternal() noexcept;
     private:

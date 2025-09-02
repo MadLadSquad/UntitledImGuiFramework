@@ -147,7 +147,7 @@ skip_window_config:
         {
             InputAction action;
             action.name = a["key"].as<FString>();
-            action.keyCodes = a["val"].as<TVector<uint16_t>>();
+            action.keyCodes = a["val"].as<TVector<uint64_t>>();
 
             // Sanitise keys that vary in function between platforms
             for (auto& f : action.keyCodes)

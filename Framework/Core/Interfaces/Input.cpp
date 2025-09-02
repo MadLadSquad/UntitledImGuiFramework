@@ -2,17 +2,17 @@
 #include <Interfaces/WindowInterface.hpp>
 #include <GLFW/glfw3.h>
 
-bool UImGui::InputAction::operator==(const uint8_t& st) const noexcept
+bool UImGui::InputAction::operator==(const CKeyState& st) const noexcept
 {
     return state == st;
 }
 
-bool UImGui::InputAction::operator!=(const uint8_t& st) const noexcept
+bool UImGui::InputAction::operator!=(const CKeyState& st) const noexcept
 {
     return state != st;
 }
 
-uint8_t UImGui::Input::getKey(const uint16_t key) noexcept
+CKeyState UImGui::Input::getKey(const CKeys key) noexcept
 {
     return Window::get().keys[key];
 }
@@ -22,8 +22,10 @@ const UImGui::InputAction& UImGui::Input::getAction(const FString& name) noexcep
     for (auto& a : Window::get().inputActionList)
         if (a.name == name)
             return a;
+
     Logger::log("Input action with name: ", ULOG_LOG_TYPE_ERROR, name, ", does not exist!");
-    std::terminate();
+    static InputAction empty{};
+    return empty;
 }
 
 UImGui::TVector<UImGui::InputAction>& UImGui::Input::getActions() noexcept

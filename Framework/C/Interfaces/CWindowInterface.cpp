@@ -330,12 +330,7 @@ void UImGui_Window_pushGlobalMonitorCallback(const UImGui_Window_pushGlobalMonit
 
 void UImGui_Window_pushWindowOSDragDropCallback(UImGui_Window_pushWindowOSDragDropCallbackFun f)
 {
-    UImGui::Window::get().dragDropPathCCallbackList.emplace_back(f);
-}
-
-void UImGui_Window_pushWindowErrorCallback(const UImGui_Window_pushWindowErrorCallbackFun f)
-{
-    UImGui::Window::pushWindowErrorCallback(f);
+    UImGui::Window::get().dragDropPathCallbackList.emplace_back(f);
 }
 
 GLFWwindow* UImGui_Window_getInternal()

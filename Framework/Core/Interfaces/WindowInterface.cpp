@@ -301,19 +301,6 @@ void UImGui::Window::setWindowMonitor(const Monitor& monitor) noexcept
 
     glfwSetWindowMonitor(get().windowMain, monitor.monitor, 0, 0, currentMode->width, currentMode->height, mode->refreshRate);
 }
-#endif
-
-UImGui::TVector<UImGui::FString>& UImGui::Window::getOSDragDropStrings() noexcept
-{
-    return get().dragDropPaths;
-}
-
-void UImGui::Window::pushWindowOSDragDropCallback(const TFunction<void(TVector<FString>&)>& f) noexcept
-{
-    get().dragDropPathCallbackList.push_back(f);
-}
-
-#ifndef __EMSCRIPTEN__
 
 void UImGui::Window::pushGlobalMonitorCallback(const TFunction<void(Monitor&, MonitorState)>& f) noexcept
 {
@@ -321,11 +308,6 @@ void UImGui::Window::pushGlobalMonitorCallback(const TFunction<void(Monitor&, Mo
 }
 
 #endif
-
-void UImGui::Window::pushWindowErrorCallback(const TFunction<void(int, String)>& f) noexcept
-{
-    get().windowErrorCallbackList.push_back(f);
-}
 
 void UImGui::Window::Platform::setWindowAlwaysOnTop() noexcept
 {

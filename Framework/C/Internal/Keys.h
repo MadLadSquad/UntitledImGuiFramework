@@ -3,6 +3,13 @@
 extern "C"
 {
 #endif
+    typedef enum [[maybe_unused]] CKeyState
+    {
+        KeyStateReleased    = 0,
+        KeyStatePressed     = 1,
+        KeyStateRepeat      = 2,
+    } CKeyState;
+
     // Enum of keycode constants
     typedef enum [[maybe_unused]] CKeys
     {

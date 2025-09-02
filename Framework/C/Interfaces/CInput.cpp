@@ -16,7 +16,7 @@ bool UImGui_Input_getRawMouseMotion()
     return UImGui::Input::getRawMouseMotion();
 }
 
-uint8_t UImGui_Input_getKey(const uint16_t key)
+CKeyState UImGui_Input_getKey(const CKeys key)
 {
     return UImGui::Input::getKey(key);
 }
@@ -27,7 +27,7 @@ UImGui_CInputAction UImGui_Input_getAction(const UImGui_String name)
     return UImGui_CInputAction
     {
         .name = a.name.c_str(),
-        .keyCodes = const_cast<uint16_t*>(a.keyCodes.data()),
+        .keyCodes = const_cast<uint64_t*>(a.keyCodes.data()),
         .keyCodesSize = a.keyCodes.size(),
         .state = a.state,
     };

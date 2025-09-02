@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/Types.hpp>
+#include <C/Internal/Keys.h>
 
 // Imports the C API, contains definitions of the C InputAction struct and other uniform API structs and enum
 #include <C/Interfaces/CInput.h>
@@ -18,15 +19,15 @@ namespace UImGui
     {
         InputAction() = default;
 
-        bool operator==(const uint8_t& st) const noexcept;
-        bool operator!=(const uint8_t& st) const noexcept;
+        bool operator==(const CKeyState& st) const noexcept;
+        bool operator!=(const CKeyState& st) const noexcept;
 
         // The ID for the action
         FString name{};
-        TVector<uint16_t> keyCodes;
+        TVector<uint64_t> keyCodes;
 
         // Set by the input system, do not set this manually
-        uint8_t state{};
+        CKeyState state{};
     };
 
     typedef UImGui_CursorVisibilityState CursorVisibilityState;
@@ -57,7 +58,7 @@ namespace UImGui
         static bool getRawMouseMotion() noexcept;
 
         // Event Safety - Any time
-        static uint8_t getKey(uint16_t key) noexcept;
+        static CKeyState getKey(CKeys key) noexcept;
         // Event Safety - Any time
         static const InputAction& getAction(const UImGui::FString& name) noexcept;
 

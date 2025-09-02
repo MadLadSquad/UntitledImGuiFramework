@@ -24,8 +24,6 @@ void UImGui::WindowInternal::configureCallbacks() const noexcept
     glfwSetMonitorCallback(monitorCallback);
 
     glfwSetDropCallback(windowMain, windowOSDragDropCallback);
-
-    glfwSetErrorCallback(windowErrorCallback);
 }
 
 void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, const int width, const int height) noexcept
@@ -42,13 +40,13 @@ void UImGui::WindowInternal::framebufferSizeCallback(GLFWwindow* window, const i
 void UImGui::WindowInternal::keyboardInputCallback(GLFWwindow* window, const int key, int scanCode, const int action, int mods) noexcept
 {
     auto* wind = CAST(WindowInternal*, glfwGetWindowUserPointer(window));
-    wind->keys[key] = action;
+    wind->keys[key] = static_cast<CKeyState>(action);
 }
 
 void UImGui::WindowInternal::mouseKeyInputCallback(GLFWwindow* window, const int button, const int action, int mods) noexcept
 {
     auto* wind = CAST(WindowInternal*, glfwGetWindowUserPointer(window));
-    wind->keys[button] = action;
+    wind->keys[button] = static_cast<CKeyState>(action);
 }
 
 void UImGui::WindowInternal::mouseCursorPositionCallback(GLFWwindow* window, const double xpos, const double ypos) noexcept
@@ -159,24 +157,8 @@ void UImGui::WindowInternal::monitorCallback(GLFWmonitor* monitor, int event) no
 
 void UImGui::WindowInternal::windowOSDragDropCallback(GLFWwindow* window, const int count, const char** paths) noexcept
 {
-    auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
-    windowInst->dragDropPaths.clear();
-
-    for (int i = 0; i < count; i++)
-        windowInst->dragDropPaths.emplace_back(paths[i]);
-
+    const auto* windowInst = static_cast<WindowInternal*>(glfwGetWindowUserPointer(window));
     for (auto& a : windowInst->dragDropPathCallbackList)
-        a(windowInst->dragDropPaths);
-    for (auto& a : windowInst->dragDropPathCCallbackList)
-        a(paths, count);
-}
-
-void UImGui::WindowInternal::windowErrorCallback(int code, const char* description) noexcept
-{
-#ifndef DEVELOPMENT
-    if (code != GLFW_FEATURE_UNAVAILABLE)
-#endif
-    Logger::log("Encountered GLFW window error, ", ULOG_LOG_TYPE_ERROR, code, ": ", description);
-    for (auto& a : Window::get().windowErrorCallbackList)
-        a(code, description);
+        for (int i = 0; i < count; i++)
+            a(paths[i]);
 }

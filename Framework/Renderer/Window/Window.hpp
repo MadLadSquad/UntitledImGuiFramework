@@ -2,6 +2,7 @@
 #include <Core/Interfaces/Input.hpp>
 #include <array>
 #include <C/Internal/CMonitor.h>
+#include <C/Interfaces/CWindowInterface.h>
 
 struct GLFWwindow;
 namespace UImGui
@@ -91,20 +92,20 @@ namespace UImGui
         [[nodiscard]] GLFWwindow* data() const noexcept;
         bool& resized() noexcept;
 
-        TVector<TFunction<void(const char**, size_t size)>> dragDropPathCCallbackList;
     private:
         friend class Window;
         friend class Input;
         friend class RendererInternal;
         friend class Global;
         friend class Layouts;
+        friend void ::UImGui_Window_pushWindowOSDragDropCallback(UImGui_Window_pushWindowOSDragDropCallbackFun f);
 
         void updateKeyState() noexcept;
 
         FVector2 windowSize = { 800.0f, 600.0f };
         FVector2 windowSizeInScreenCoords{};
 
-        TArray<uint16_t, 350> keys{};
+        TArray<CKeyState, 350> keys{};
         TVector<InputAction> inputActionList{};
 
         void saveConfig(bool bSaveKeybindings) noexcept;
@@ -140,8 +141,6 @@ namespace UImGui
 
         static void windowOSDragDropCallback(GLFWwindow* window, int count, const char** paths) noexcept;
 
-        static void windowErrorCallback(int code, const char* description) noexcept;
-
         // As of now, only supported on X11, Win32 & macOS
         void setWindowAlwaysOnTop() const noexcept;
 
@@ -174,12 +173,7 @@ namespace UImGui
         TVector<TFunction<void(void)>> windowRefreshCallbackList;
         TVector<TFunction<void(bool)>> windowMaximisedCallbackList;
         TVector<TFunction<void(Monitor&, MonitorState)>> windowMonitorCallbackList;
-
-        TVector<TFunction<void(TVector<FString>&)>> dragDropPathCallbackList;
-
-        TVector<TFunction<void(int, const char*)>> windowErrorCallbackList;
-
-        TVector<FString> dragDropPaths;
+        TVector<TFunction<void(String)>> dragDropPathCallbackList;
 
         TVector<Monitor> monitors;
 

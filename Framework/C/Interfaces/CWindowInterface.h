@@ -21,7 +21,7 @@ extern "C"
 
     typedef void(*UImGui_Window_pushWindowErrorCallbackFun)(int, UImGui_String);
 
-    typedef void(*UImGui_Window_pushWindowOSDragDropCallbackFun)(UImGui_String*, size_t);
+    typedef void(*UImGui_Window_pushWindowOSDragDropCallbackFun)(UImGui_String);
 
     // Event Safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_setTitle(UImGui_String name);
@@ -226,9 +226,6 @@ extern "C"
 
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_pushWindowOSDragDropCallback(UImGui_Window_pushWindowOSDragDropCallbackFun f);
-
-    // Event safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API void UImGui_Window_pushWindowErrorCallback(UImGui_Window_pushWindowErrorCallbackFun f);
 
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API GLFWwindow* UImGui_Window_getInternal();

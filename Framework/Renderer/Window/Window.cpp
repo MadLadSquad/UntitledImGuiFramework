@@ -1,10 +1,5 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "Window.hpp"
-#ifdef __APPLE__
-    #include <OpenGL/GL.h>
-#else
-    #include <glad/include/glad/gl.h>
-#endif
 #include <Global.hpp>
 #include <GLFW/glfw3.h>
 
@@ -17,7 +12,7 @@
 
 UImGui::WindowInternal::WindowInternal() noexcept
 {
-    keys.fill(0);
+    keys.fill(KeyStateReleased);
 }
 
 GLFWwindow* UImGui::WindowInternal::data() const noexcept

@@ -1,6 +1,8 @@
 #pragma once
 #include <C/CTypes.h>
 
+#include "C/Internal/Keys.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -17,10 +19,10 @@ extern "C"
     {
         const char* name;
 
-        uint16_t* keyCodes;
+        uint64_t* keyCodes;
         size_t keyCodesSize;
 
-        uint8_t state;
+        CKeyState state;
     } UImGui_CInputAction;
 
     /**
@@ -29,8 +31,6 @@ extern "C"
      * For normal GUI applications
      * @enum UIMGUI_CURSOR_VISIBILITY_STATE_HIDDEN - Hides the cursor when it's over the window, but allows the user to
      * leave the window area.
-     * @enum UIMGUI_CURSOR_VISIBILITY_STATE_DISABLED - Hides the cursor and locks it to the window. This is useful for
-     * 3D cameras like in games.
      */                      
     typedef enum UImGui_CursorVisibilityState
     {
@@ -49,7 +49,7 @@ extern "C"
     UIMGUI_PUBLIC_API bool UImGui_Input_getRawMouseMotion();
 
     // Event Safety - Any time
-    UIMGUI_PUBLIC_API uint8_t UImGui_Input_getKey(uint16_t key);
+    UIMGUI_PUBLIC_API CKeyState UImGui_Input_getKey(CKeys key);
     // Event Safety - Any time
     UIMGUI_PUBLIC_API UImGui_CInputAction UImGui_Input_getAction(UImGui_String name);
 
