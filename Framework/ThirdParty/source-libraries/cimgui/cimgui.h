@@ -3961,8 +3961,8 @@ CIMGUI_API const char*  ImFont_GetDebugName(const ImFont* self);                
 // 'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
 CIMGUI_API ImFontBaked* ImFont_GetFontBaked(ImFont* self, float font_size);                                                                // Implied density = -1.0f
 CIMGUI_API ImFontBaked* ImFont_GetFontBakedEx(ImFont* self, float font_size, float density /* = -1.0f */);                                 // Get or create baked data for given size
-CIMGUI_API ImVec2       ImFont_CalcTextSizeA(ImFont* self, float size, float max_width, float wrap_width, const char* text_begin);         // Implied text_end = NULL, remaining = NULL
-CIMGUI_API ImVec2       ImFont_CalcTextSizeAEx(ImFont* self, float size, float max_width, float wrap_width, const char* text_begin, const char* text_end /* = NULL */, const char** remaining /* = NULL */); // utf8
+CIMGUI_API ImVec2       ImFont_CalcTextSizeA(ImFont* self, float size, float max_width, float wrap_width, const char* text_begin);         // Implied text_end = NULL, out_remaining = NULL
+CIMGUI_API ImVec2       ImFont_CalcTextSizeAEx(ImFont* self, float size, float max_width, float wrap_width, const char* text_begin, const char* text_end /* = NULL */, const char** out_remaining /* = NULL */);
 CIMGUI_API const char*  ImFont_CalcWordWrapPosition(ImFont* self, float size, const char* text, const char* text_end, float wrap_width);
 CIMGUI_API void         ImFont_RenderChar(ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImWchar c);              // Implied cpu_fine_clip = NULL
 CIMGUI_API void         ImFont_RenderCharEx(ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImWchar c, const ImVec4* cpu_fine_clip /* = NULL */);
