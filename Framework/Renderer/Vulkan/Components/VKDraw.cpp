@@ -53,18 +53,19 @@ void UImGui::VKDraw::ImGuiInit() const noexcept
     ImGui_ImplGlfw_InitForVulkan(Window::getInternal(), true);
     ImGui_ImplVulkan_InitInfo initInfo =
     {
+        .ApiVersion = VK_API_VERSION_1_3,
         .Instance = instance->data(),
         .PhysicalDevice = device->physicalDevice,
         .Device = device->device,
         .QueueFamily = CAST(uint32_t, device->indices.graphicsFamily),
         .Queue = device->queue,
         .DescriptorPool = device->descriptorPools.pool,
-        .RenderPass = window.RenderPass,
         .MinImageCount = CAST(uint32_t, minimalImageCount),
         .ImageCount = window.ImageCount,
-        .MSAASamples = CAST(VkSampleCountFlagBits, Renderer::data().msaaSamples),
         .PipelineCache = VK_NULL_HANDLE,
+        .RenderPass = window.RenderPass,
         .Subpass = 0,
+        .MSAASamples = CAST(VkSampleCountFlagBits, Renderer::data().msaaSamples),
         .Allocator = nullptr,
         .CheckVkResultFn = [](VkResult result) -> void
         {
