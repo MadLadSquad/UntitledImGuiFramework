@@ -3,6 +3,11 @@ include(GenericPlatform)
 macro(setup_pre_dependency_options)
 endmacro()
 
+macro(setup_freetype_vendored)
+    set(SKIP_INSTALL_ALL ON) # Disable installing freetype
+    setup_freetype_vendored_generic()
+endmacro()
+
 macro(setup_glfw_vendored)
     setup_glfw_vendored_generic(ON)
 endmacro()

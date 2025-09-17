@@ -1,5 +1,9 @@
 include(GenericUnix)
 
+macro(setup_freetype_vendored)
+    setup_freetype_vendored_generic()
+endmacro()
+
 macro(setup_vulkan_vendored)
     find_package(Vulkan REQUIRED)
     set(VULKAN_LIBRARIES_T Vulkan::Vulkan)
@@ -67,3 +71,4 @@ macro(link_to_framework_libraries)
         endif()
     endif ()
 endmacro()
+

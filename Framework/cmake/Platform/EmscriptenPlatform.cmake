@@ -32,6 +32,11 @@ endmacro()
 macro(setup_opengl_vendored)
 endmacro()
 
+macro(setup_freetype_vendored)
+    set(SKIP_INSTALL_ALL ON) # Disable installing freetype
+    setup_freetype_vendored_generic()
+endmacro()
+
 macro(setup_opengl_system)
     setup_opengl_system_generic()
 endmacro()

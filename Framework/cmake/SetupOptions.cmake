@@ -13,17 +13,8 @@ if (BUILD_VARIANT_VENDOR OR WIN32)
     setup_glfw_vendored()
     setup_opengl_vendored()
     setup_vulkan_vendored()
-    
-    if (NOT BUILD_VARIANT_STATIC)
-        set(BUILD_SHARED_LIBS ON)
-    endif()
-    set(SKIP_INSTALL_ALL ON) # Disable installing freetype
-    set(FT_DYNAMIC_HARFBUZZ OFF)
-    add_subdirectory("${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/freetype")
-    set(SKIP_INSTALL_ALL OFF)
-    set(FREETYPE_LIBRARIES "freetype")
-    set(FREETYPE_INCLUDE_DIRS "")
-
+	
+    setup_freetype_vendored()
     setup_yaml_cpp_vendored()
 else()
     find_package(PkgConfig REQUIRED)

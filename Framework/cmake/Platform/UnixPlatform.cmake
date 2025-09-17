@@ -10,6 +10,11 @@ macro(setup_opengl_vendored)
     set(X11_LIBRARIES "X11")
 endmacro()
 
+macro(setup_freetype_vendored)
+    set(SKIP_INSTALL_ALL ON) # Disable installing freetype
+    setup_freetype_vendored_generic()
+endmacro()
+
 macro(setup_opengl_system)
     find_package(X11 REQUIRED)
     setup_opengl_system_generic()
