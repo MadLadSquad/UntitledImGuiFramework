@@ -169,6 +169,8 @@ int GLAD_GL_EXT_unpack_subimage = 0;
 int GLAD_GL_EXT_win32_keyed_mutex = 0;
 int GLAD_GL_EXT_window_rectangles = 0;
 int GLAD_GL_FJ_shader_binary_GCCSO = 0;
+int GLAD_GL_HUAWEI_program_binary = 0;
+int GLAD_GL_HUAWEI_shader_binary = 0;
 int GLAD_GL_IMG_bindless_texture = 0;
 int GLAD_GL_IMG_framebuffer_downsample = 0;
 int GLAD_GL_IMG_multisampled_render_to_texture = 0;
@@ -2828,6 +2830,8 @@ static int glad_gl_find_extensions_gles2(void) {
     GLAD_GL_EXT_win32_keyed_mutex = glad_gl_has_extension(exts, exts_i, "GL_EXT_win32_keyed_mutex");
     GLAD_GL_EXT_window_rectangles = glad_gl_has_extension(exts, exts_i, "GL_EXT_window_rectangles");
     GLAD_GL_FJ_shader_binary_GCCSO = glad_gl_has_extension(exts, exts_i, "GL_FJ_shader_binary_GCCSO");
+    GLAD_GL_HUAWEI_program_binary = glad_gl_has_extension(exts, exts_i, "GL_HUAWEI_program_binary");
+    GLAD_GL_HUAWEI_shader_binary = glad_gl_has_extension(exts, exts_i, "GL_HUAWEI_shader_binary");
     GLAD_GL_IMG_bindless_texture = glad_gl_has_extension(exts, exts_i, "GL_IMG_bindless_texture");
     GLAD_GL_IMG_framebuffer_downsample = glad_gl_has_extension(exts, exts_i, "GL_IMG_framebuffer_downsample");
     GLAD_GL_IMG_multisampled_render_to_texture = glad_gl_has_extension(exts, exts_i, "GL_IMG_multisampled_render_to_texture");
