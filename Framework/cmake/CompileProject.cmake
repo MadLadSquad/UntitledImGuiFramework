@@ -14,3 +14,6 @@ if (NOT EMSCRIPTEN AND NOT UIMGUI_SKIP_FRAMEWORK)
 endif()
 
 configure_file(Framework/cmake/UntitledImGuiFramework.pc.in UntitledImGuiFramework.pc @ONLY)
+if (APPLE)
+    configure_file(Config/Resources/Info.plist.in Info.plist @ONLY)
+endif()

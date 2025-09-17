@@ -2,49 +2,42 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!-- Application Metadata -->
     <key>CFBundleName</key>
-    <string>Example</string>
+    <string>@APP_TARGET@</string>
 
     <key>CFBundleDisplayName</key>
-    <string>UntitledImGuiFramework Demo</string>
+    <string>@APP_TARGET@</string>
 
     <key>CFBundleIdentifier</key>
-    <string>com.madladsquad.Example</string>
+    <string>com.example.@APP_TARGET@</string>
 
     <key>CFBundleVersion</key>
-    <string>1.0</string>
+    <string>@APP_VERSION@</string>
 
     <key>CFBundleShortVersionString</key>
-    <string>1.0.0</string>
+    <string>@APP_VERSION@</string>
 
-    <!-- Executable -->
     <key>CFBundleExecutable</key>
-    <string>example</string>
+    <string>@APP_TARGET@</string>
 
     <key>CFBundlePackageType</key>
     <string>APPL</string>
 
-    <!-- Icon -->
     <key>CFBundleIconFile</key>
     <string>Icon.icns</string>
 
-    <!-- Minimum macOS Version -->
     <key>LSMinimumSystemVersion</key>
     <string>12.0.0</string>
 
-    <!-- High Resolution Support -->
     <key>NSHighResolutionCapable</key>
     <true/>
 
-    <!-- Application Category -->
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.utilities</string>
 
     <key>NSHumanReadableCopyright</key>
-    <string>Copyright (c) 2024 - 2025 MadLadSquad</string>
+    <string>Copyright (c) Example</string>
 
-    <!-- Security Configuration -->
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>

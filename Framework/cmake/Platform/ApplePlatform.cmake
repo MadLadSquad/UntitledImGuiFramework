@@ -1,6 +1,7 @@
 include(GenericUnix)
 
 macro(setup_freetype_vendored)
+    set(SKIP_INSTALL_ALL OFF)
     setup_freetype_vendored_generic()
 endmacro()
 

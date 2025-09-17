@@ -42,6 +42,8 @@ function create_folders()
 
   mkdir Config/cmake || die
   touch Config/cmake/"${prjname}".cmake && echo "\
+set(APP_VERSION "1.0.0.0")
+
 function(custom_setup_step)
 endfunction()
 
