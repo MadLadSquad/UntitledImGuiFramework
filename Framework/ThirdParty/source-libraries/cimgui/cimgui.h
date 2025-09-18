@@ -2,7 +2,7 @@
 // **DO NOT EDIT DIRECTLY**
 // https://github.com/dearimgui/dear_bindings
 
-// dear imgui, v1.92.3 WIP
+// dear imgui, v1.92.4 WIP
 // (headers)
 
 // Help:
@@ -32,8 +32,8 @@
 
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
-#define IMGUI_VERSION       "1.92.3 WIP"
-#define IMGUI_VERSION_NUM   19226
+#define IMGUI_VERSION       "1.92.4 WIP"
+#define IMGUI_VERSION_NUM   19231
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
 #define IMGUI_HAS_VIEWPORT           // In 'docking' WIP branch.
@@ -1400,6 +1400,15 @@ typedef enum
     ImGuiInputTextFlags_CallbackResize      = 1<<22,  // Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. Notify when the string wants to be resized (for string types which hold a cache of their Size). You will be provided a new BufSize in the callback and NEED to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
     ImGuiInputTextFlags_CallbackEdit        = 1<<23,  // Callback on any edit. Note that InputText() already returns true on edit + you can always use IsItemEdited(). The callback is useful to manipulate the underlying buffer while focus is active.
 
+    // Multi-line Word-Wrapping [BETA]
+    // - Not well tested yet. Please report any incorrect cursor movement, selection behavior etc. bug to https://github.com/ocornut/imgui/issues/3237.
+    // - Wrapping style is not ideal. Wrapping of long words/sections (e.g. words larger than total available width) may be particularly unpleasing.
+    // - Wrapping width needs to always account for the possibility of a vertical scrollbar.
+    // - It is much slower than regular text fields.
+    //   Ballpark estimate of cost on my 2019 desktop PC: for a 100 KB text buffer: +~0.3 ms (Optimized) / +~1.0 ms (Debug build).
+    //   The CPU cost is very roughly proportional to text length, so a 10 KB buffer should cost about ten times less.
+    ImGuiInputTextFlags_WordWrap            = 1<<24,  // InputTextMultine(): word-wrap lines that are too long.
+
     // Obsolete names
     //ImGuiInputTextFlags_AlwaysInsertMode  = ImGuiInputTextFlags_AlwaysOverwrite   // [renamed in 1.82] name was not matching behavior
 } ImGuiInputTextFlags_;
@@ -1476,6 +1485,7 @@ typedef enum
     ImGuiSelectableFlags_Disabled          = 1<<3,                                    // Cannot be selected, display grayed out text
     ImGuiSelectableFlags_AllowOverlap      = 1<<4,                                    // (WIP) Hit testing to allow subsequent widgets to overlap this one
     ImGuiSelectableFlags_Highlight         = 1<<5,                                    // Make the item be displayed as if it is hovered
+    ImGuiSelectableFlags_SelectOnNav       = 1<<6,                                    // Auto-select when moved into, unless Ctrl is held. Automatic when in a BeginMultiSelect() block.
 
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
     ImGuiSelectableFlags_DontClosePopups   = ImGuiSelectableFlags_NoAutoClosePopups,  // Renamed in 1.91.0
@@ -2522,6 +2532,7 @@ struct ImGuiStyle_t
     ImVec2             SeparatorTextPadding;              // Horizontal offset of text from each edge of the separator + spacing on other axis. Generally small values. .y is recommended to be == FramePadding.y.
     ImVec2             DisplayWindowPadding;              // Apply to regular windows: amount which we enforce to keep visible when moving near edges of your screen.
     ImVec2             DisplaySafeAreaPadding;            // Apply to every windows, menus, popups, tooltips: amount where we avoid displaying contents. Adjust if you cannot see the edges of your screen (e.g. on a TV where scaling has not been configured).
+    bool               DockingNodeHasCloseButton;         // Docking node has their own CloseButton() to close all docked windows.
     float              DockingSeparatorSize;              // Thickness of resizing border between docked windows
     float              MouseCursorScale;                  // Scale software rendered mouse cursor (when io.MouseDrawCursor is enabled). We apply per-monitor DPI scaling over this scale. May be removed later.
     bool               AntiAliasedLines;                  // Enable anti-aliased lines/borders. Disable if you are really tight on CPU/GPU. Latched at the beginning of the frame (copied to ImDrawList).
