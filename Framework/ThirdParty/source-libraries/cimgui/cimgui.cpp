@@ -4092,6 +4092,16 @@ CIMGUI_API cimgui::ImVec2 cimgui::ImGuiViewport_GetWorkCenter(const cimgui::ImGu
     return ConvertFromCPP_ImVec2(reinterpret_cast<const ::ImGuiViewport*>(self)->GetWorkCenter());
 }
 
+CIMGUI_API void cimgui::ImGuiPlatformIO_ClearPlatformHandlers(cimgui::ImGuiPlatformIO* self)
+{
+    reinterpret_cast<::ImGuiPlatformIO*>(self)->ClearPlatformHandlers();
+}
+
+CIMGUI_API void cimgui::ImGuiPlatformIO_ClearRendererHandlers(cimgui::ImGuiPlatformIO* self)
+{
+    reinterpret_cast<::ImGuiPlatformIO*>(self)->ClearRendererHandlers();
+}
+
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
 CIMGUI_API void   cimgui::ImGui_PushFont(cimgui::ImFont* font)
