@@ -21,12 +21,12 @@ void UImGui::Utility::sanitiseFilepath(FString& str) noexcept
             a = '/';
 }
 
-void UImGui::Utility::keyToText(FString& text, const uint16_t& key, const bool bLong) noexcept
+void UImGui::Utility::keyToText(FString& text, const CKeys key, const bool bLong) noexcept
 {
     text = bLong ? getKeyStrings()[key].first : getKeyStrings()[key].second;
 }
 
-UImGui::FString UImGui::Utility::keyToText(const uint16_t& key, const bool bLong) noexcept
+UImGui::FString UImGui::Utility::keyToText(const CKeys key, const bool bLong) noexcept
 {
     FString txt;
     keyToText(txt, key, bLong);
@@ -291,8 +291,8 @@ void UImGui::Utility::initializeKeyStrings(KeyStringsArrType& keyStrings) noexce
 
 void UImGui::Utility::keyToText(FString& text, const InputAction& action, const bool bLong) noexcept
 {
-    for (auto& a : action.keyCodes)
-        text += keyToText(a, bLong) + "+";
+    for (const auto& a : action.keyCodes)
+        text += keyToText(static_cast<CKeys>(a), bLong) + "+";
     text.pop_back();
 }
 
@@ -365,9 +365,9 @@ UImGui::Utility::KeyStringsArrType& UImGui::Utility::getKeyStrings() noexcept
     return keyStrings;
 }
 
-UImGui::TVector<UImGui::FString> UImGui::Utility::splitString(const FString& str, String token) noexcept
+UImGui::TVector<UImGui::FString> UImGui::Utility::splitString(const FString& str, const String token) noexcept
 {
-    TVector<UImGui::FString> result;
+    TVector<FString> result;
 
     size_t i = 0;
     size_t last = 0;

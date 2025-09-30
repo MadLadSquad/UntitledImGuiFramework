@@ -1,12 +1,8 @@
 #include "VKDraw.hpp"
-
-#include "GLFW/glfw3.h"
 #ifndef __EMSCRIPTEN__
 #include <Interfaces/WindowInterface.hpp>
 #include <Interfaces/RendererInterface.hpp>
-
-#include <imgui_impl_glfw.h>
-
+#include <Window/WindowUtils.hpp>
 #include <Defines.hpp>
 
 UImGui::VKDraw::VKDraw(VKInstance& inst, VKDevice& dev) noexcept
@@ -45,8 +41,8 @@ void UImGui::VKDraw::init() noexcept
         &window,
         device->indices.graphicsFamily,
         nullptr,
-        CAST(int, Window::windowSize().x),
-        CAST(int, Window::windowSize().y),
+        CAST(int, Window::getWindowSize().x),
+        CAST(int, Window::getWindowSize().y),
         minimalImageCount,
         VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
         CAST(VkSampleCountFlagBits, Renderer::data().msaaSamples)
@@ -62,7 +58,7 @@ void UImGui::VKDraw::destroy() noexcept
 
 void UImGui::VKDraw::ImGuiInit() const noexcept
 {
-    ImGui_ImplGlfw_InitForVulkan(Window::getInternal(), true);
+    RendererUtils::Vulkan::ImGuiInit();
     ImGui_ImplVulkan_InitInfo initInfo =
     {
         .ApiVersion = VK_API_VERSION_1_3,
@@ -102,7 +98,7 @@ void UImGui::VKDraw::ImGuiInit() const noexcept
 
 void UImGui::VKDraw::ImGuiPreDraw() noexcept
 {
-    auto size = Window::windowSize();
+    auto size = Window::getWindowSize();
     auto width = CAST(int, size.x);
     auto height = CAST(int, size.y);
 
@@ -110,10 +106,10 @@ void UImGui::VKDraw::ImGuiPreDraw() noexcept
     {
         while (width <= 0 || height <= 0)
         {
-            size = Window::windowSize();
+            size = Window::getWindowSize();
             width = CAST(int, size.x);
             height = CAST(int, size.y);
-            glfwWaitEvents();
+            WindowUtils::waitEvents();
         }
 
         device->device.waitIdle();
@@ -138,8 +134,8 @@ void UImGui::VKDraw::ImGuiPreDraw() noexcept
 
 void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
 {
-    VkSemaphore imageAcquired = window.FrameSemaphores[window.SemaphoreIndex].ImageAcquiredSemaphore;
-    VkSemaphore renderComplete = window.FrameSemaphores[window.SemaphoreIndex].RenderCompleteSemaphore;
+    VkSemaphore imageAcquired = window.FrameSemaphores[CAST(int, window.SemaphoreIndex)].ImageAcquiredSemaphore;
+    VkSemaphore renderComplete = window.FrameSemaphores[CAST(int, window.SemaphoreIndex)].RenderCompleteSemaphore;
     VkResult result;
 
     result = vkAcquireNextImageKHR(device->device, window.Swapchain, UINT64_MAX, imageAcquired, VK_NULL_HANDLE, &window.FrameIndex);
@@ -150,7 +146,7 @@ void UImGui::VKDraw::ImGuiDraw(void* drawData) noexcept
         return;
     }
 
-    const ImGui_ImplVulkanH_Frame* fd = &window.Frames[window.FrameIndex];
+    const ImGui_ImplVulkanH_Frame* fd = &window.Frames[CAST(int, window.FrameIndex)];
     result = vkWaitForFences(device->device, 1, &fd->Fence, VK_TRUE, UINT64_MAX);
     if (result != VK_SUCCESS)
     {
@@ -255,7 +251,7 @@ void UImGui::VKDraw::present() noexcept
     if (bRebuildSwapchain)
         return;
 
-    VkSemaphore renderComplete = window.FrameSemaphores[window.SemaphoreIndex].RenderCompleteSemaphore;
+    VkSemaphore renderComplete = window.FrameSemaphores[CAST(int, window.SemaphoreIndex)].RenderCompleteSemaphore;
     const VkPresentInfoKHR info =
     {
         .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,

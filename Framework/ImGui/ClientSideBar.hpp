@@ -1,5 +1,5 @@
 #pragma once
-#include <C/Rendering/CClientSideBar.h>
+#include <C/ImGui/CClientSideBar.h>
 #include <Types.hpp>
 
 struct ImGuiStyle;

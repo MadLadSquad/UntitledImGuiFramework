@@ -1,5 +1,9 @@
 #pragma once
 #include <C/CDefines.h>
+#include <C/Window/RendererData.h>
+#ifndef __EMSCRIPTEN__
+    #include <vulkan/vulkan.h>
+#endif
 
 #ifdef __cplusplus
 extern "C"
@@ -45,11 +49,31 @@ extern "C"
         UIMGUI_OPENGL_PROFILE_COMPAT = 0x00032002,
     } UImGui_OpenGLProfile;
 
+    typedef void(*UImGui_OpenGLProc)();
+    typedef UImGui_OpenGLProc(*UImGui_OpenGL_GetProcAddressFun)(const char*);
+
     // Call this inside the window hints interface function of the GenericRenderer class
     //
-    // Use this for every graphics API, except for OpenGL. For OpenGL you should use: UImGui_RendererUtils_setOpenGLHints
+    // Use this for every graphics API, except for OpenGL. For OpenGL, you should use: UImGui_RendererUtils_setOpenGLHints
     // Event safety - startup, post-startup
     UIMGUI_PUBLIC_API void UImGui_RendererUtils_setupManually();
+
+    // Renderer a new dear imgui frame
+    // Event safety - tick
+    UIMGUI_PUBLIC_API void UImGui_RendererUtils_beginImGuiFrame();
+
+    // Initialise dear imgui for rendering with a renderer that is not OpenGL or Vulkan
+    // CAUTION: For OpenGL or Vulkan, use the specialisations under their respective namespaces
+    // Event safety - style, begin
+    UIMGUI_PUBLIC_API void UImGui_RendererUtils_ImGuiInitOther();
+
+    // Install window callbacks for dear imgui(only needed for some renderers, such as WebGPU or OpenGL)
+    // Event safety - style, begin
+    UIMGUI_PUBLIC_API void UImGui_RendererUtils_ImGuiInstallCallbacks();
+
+    // Returns a pointer to the current renderer
+    // Event safety - any-time
+    UIMGUI_PUBLIC_API UImGui_CGenericRenderer* UImGui_RendererUtils_getRenderer();
 
     // Call this inside the window hints interface function of the GenericRenderer class
     //
@@ -58,7 +82,7 @@ extern "C"
     // Desktop - UIMGUI_LATEST_OPENGL_VERSION, UIMGUI_RENDERER_CLIENT_API_OPENGL, UIMGUI_OPENGL_PROFILE_CORE, true
     //
     // Event safety - startup, post-startup
-    UIMGUI_PUBLIC_API void UImGui_RendererUtils_OpenGL_setHints(int majorVersion, int minorVersion, UImGui_RendererClientAPI clientApi, UImGui_OpenGLProfile profile, bool bForwardCompatible);
+    UIMGUI_PUBLIC_API void UImGui_RendererUtils_OpenGL_setHints(int majorVersion, int minorVersion, UImGui_RendererClientAPI clientApi, UImGui_OpenGLProfile profile, bool bForwardCompatible, uint32_t samples);
 
     // Swaps buffers for OpenGL.
     // Event safety - post-begin
@@ -83,15 +107,28 @@ extern "C"
     // Set the swap interval for the OpenGL renderer
     // Event safety - startup, post-startup
     UIMGUI_PUBLIC_API void UImGui_RendererUtils_OpenGL_setSwapInterval(int interval);
-    
+
+    // Returns the function for getting the OpenGL proc address
+    // Event safety - startup, post-startup
+    UIMGUI_PUBLIC_API UImGui_OpenGL_GetProcAddressFun UImGui_RendererUtils_OpenGL_getProcAddressFunction();
+
     // Check for WebGPU support
     // Event safety - any time
     UIMGUI_PUBLIC_API bool UImGui_RendererUtils_WebGPU_supported();
 
-    // Renderer a new dear imgui frame
-    // Event safety - tick
-    UIMGUI_PUBLIC_API void UImGui_RendererUtils_beginImGuiFrame();
 
+    #ifndef __EMSCRIPTEN__
+        // Initialise dear imgui for rendering with Vulkan
+        // Event safety - style, begin
+        UIMGUI_PUBLIC_API void UImGui_RendererUtils_Vulkan_ImGuiInit();
+
+        // Event safety - post-startup
+        UIMGUI_PUBLIC_API VkResult UImGui_RendererUtils_Vulkan_createWindowSurface(VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface);
+
+        // The arrays need to be freed with UImGui_Allocator_free after use
+        // Event safety - post-startup
+        UIMGUI_PUBLIC_API void UImGui_RendererUtils_Vulkan_fillInstanceAndLayerExtensions(const char*** instanceExtensions, size_t* instanceExtensionsSize, const char*** instanceLayers, size_t* instanceLayersSize);
+    #endif
 #ifdef __cplusplus
 }
 #endif

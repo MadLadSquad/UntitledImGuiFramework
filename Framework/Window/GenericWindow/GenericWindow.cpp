@@ -1,11 +1,33 @@
-#include "Window.hpp"
-#include <Core/Components/Instance.hpp>
-#include <C/Internal/Keys.h>
-#include <GLFW/glfw3.h>
+#include "GenericWindow.hpp"
+#include <Components/Instance.hpp>
+
+UImGui::FVector2 UImGui::GenericWindow::getMousePositionChange() noexcept
+{
+    const FVector2 ret = mouseOffset;
+    mouseOffset = { 0.0f, 0.0f };
+    return ret;
+}
+
+UImGui::FVector2 UImGui::GenericWindow::getCurrentMousePosition() const noexcept
+{
+    return mousePos;
+}
+
+UImGui::FVector2 UImGui::GenericWindow::getLastMousePosition() const noexcept
+{
+    return mouseLastPos;
+}
+
+UImGui::FVector2 UImGui::GenericWindow::getScroll() noexcept
+{
+    const FVector2 ret = scroll;
+    scroll = { 0.0f, 0.0f };
+    return ret;
+}
 
 #define SAVE_CONFIG_YAML_BASIC(x, y) out << YAML::Key << #x << YAML::Value << windowData.y
 
-void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) noexcept
+void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
 {
     auto* instance = Instance::get();
     std::ofstream fout((instance->initInfo.configDir + "Core/Window.yaml").c_str());
@@ -18,8 +40,8 @@ void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) noexcept
         SAVE_CONFIG_YAML_BASIC(save-layout, bSaveLayout);
         SAVE_CONFIG_YAML_BASIC(icon, iconLocation);
 
-        out << YAML::Key << "width" << YAML::Value << windowSize.x;
-        out << YAML::Key << "height" << YAML::Value << windowSize.y;
+        out << YAML::Key << "width" << YAML::Value << windowSizeS.x;
+        out << YAML::Key << "height" << YAML::Value << windowSizeS.y;
 
         SAVE_CONFIG_YAML_BASIC(fullscreen, fullscreen);
         SAVE_CONFIG_YAML_BASIC(window-name, name);
@@ -38,7 +60,7 @@ void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) noexcept
         fout.close();
     }
 
-    if (bSaveKeybindings)
+    if (bSaveKeybinds)
     {
         YAML::Emitter out;
         out << YAML::BeginMap << YAML::Key << "bindings" << YAML::BeginSeq;
@@ -93,7 +115,7 @@ void UImGui::WindowInternal::saveConfig(bool bSaveKeybindings) noexcept
 
 #define OPEN_CONFIG_GET_YAML_BASIC(x, y, z) if (out[#x]) windowData.y = out[#x].as<z>()
 
-void UImGui::WindowInternal::openConfig()
+void UImGui::GenericWindow::openConfig() noexcept
 {
     YAML::Node out;
 
@@ -110,8 +132,8 @@ void UImGui::WindowInternal::openConfig()
 
     if (out["width"] && out["height"])
     {
-        windowSize.x = out["width"].as<float>();
-        windowSize.y = out["height"].as<float>();
+        windowSizeS.x = out["width"].as<float>();
+        windowSizeS.y = out["height"].as<float>();
     }
 
     OPEN_CONFIG_GET_YAML_BASIC(icon, iconLocation, FString);
@@ -179,26 +201,4 @@ skip_window_config:
             inputActionList.push_back(action);
         }
     }
-}
-
-void UImGui::WindowInternal::configureDefaultHints() const noexcept
-{
-    glfwWindowHint(GLFW_RESIZABLE, windowData.bResizeable);
-#ifndef __EMSCRIPTEN__
-    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, windowData.bSurfaceTransparent);
-    glfwWindowHint(GLFW_VISIBLE, !windowData.bHidden);
-    glfwWindowHint(GLFW_FOCUSED, windowData.bFocused);
-    glfwWindowHint(GLFW_DECORATED, windowData.bDecorated);
-    glfwWindowHint(GLFW_MAXIMIZED, windowData.bMaximised);
-
-    #ifdef GLFW_PLATFORM_X11
-        glfwWindowHintString(GLFW_X11_CLASS_NAME, Instance::get()->applicationName.c_str());
-        glfwWindowHintString(GLFW_X11_INSTANCE_NAME, Instance::get()->applicationName.c_str());
-    #endif
-    #ifdef GLFW_PLATFORM_WAYLAND
-        glfwWindowHintString(GLFW_WAYLAND_APP_ID, Instance::get()->applicationName.c_str());
-    #endif
-#endif
-
-    Logger::log("Window settings configured", ULOG_LOG_TYPE_NOTE);
 }

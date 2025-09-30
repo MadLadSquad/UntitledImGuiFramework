@@ -3,7 +3,7 @@
 
 #include "Core/Core.hpp"
 #include "Generated/BuildDef.hpp"
-#include "ThirdParty/glfw/include/GLFW/glfw3.h"
+#include <Core/Interfaces/WindowInterface.hpp>
 #include <cstring>
 
 #define VK_LAYER_KHRONOS_VALIDATION "VK_LAYER_KHRONOS_validation"
@@ -21,16 +21,10 @@ void UImGui::VKInstance::init() noexcept
         .apiVersion = VK_API_VERSION_1_4
     };
 
-    uint32_t glfwExtensionCount = 0;
-    const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
     TVector<const char*> instanceExtensions;
     TVector<const char*> instanceLayers;
 
-    instanceExtensions.resize(glfwExtensionCount);
-    for (size_t i = 0; i < glfwExtensionCount; i++)
-        instanceExtensions[i] = glfwExtensions[i];
-
+    RendererUtils::Vulkan::fillInstanceAndLayerExtensions(instanceExtensions, instanceLayers);
 #ifdef DEVELOPMENT
     instanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
     instanceLayers.push_back(VK_LAYER_KHRONOS_VALIDATION);
