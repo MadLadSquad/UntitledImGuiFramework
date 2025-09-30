@@ -1,6 +1,6 @@
 #pragma once
 #include <Types.hpp>
-#include <C/Rendering/CTexture.h>
+#include <C/Renderer/CTexture.h>
 #include <stb_image_write.h>
 
 namespace UImGui

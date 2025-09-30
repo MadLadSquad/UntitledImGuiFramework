@@ -1,6 +1,6 @@
 #pragma once
 #include <C/CDefines.h>
-#include <C/Internal/RendererData.h>
+#include <C/Window/RendererData.h>
 #ifdef __APPLE__
     #include <OpenGL/GL.h>
 #else
@@ -12,7 +12,7 @@ extern "C"
 {
 #endif
 
-    typedef void(*UImGui_CGenericRenderer_VoidVoidFun)(void);
+    typedef void(*UImGui_CGenericRenderer_VoidVoidFun)();
     typedef void(*UImGui_CGenericRenderer_TickEvent)(float);
 
     UIMGUI_PUBLIC_API UImGui_CGenericRenderer* UImGui_CGenericRenderer_init(

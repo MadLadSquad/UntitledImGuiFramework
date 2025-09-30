@@ -1,13 +1,12 @@
 #include <Global.hpp>
 #include <Defines.hpp>
 #include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <GLFW/glfw3.h>
 #include "ImGui.hpp"
 #include <Core/Components/Instance.hpp>
 #include <Core/Platform/WASM.hpp>
 
-#include "Interfaces/LayoutsInterface.hpp"
+#include <Core/Interfaces/LayoutsInterface.hpp>
+#include <Core/Interfaces/WindowInterface.hpp>
 
 void UImGui::GUIRenderer::init(GenericRenderer* renderer) noexcept
 {
@@ -176,16 +175,16 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericRenderer* render
 
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
-        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        void* backup = RendererUtils::OpenGL::getCurrentContext();
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();
-        glfwMakeContextCurrent(backup_current_context);
+        RendererUtils::OpenGL::setCurrentContext(backup);
     }
 }
 
 void UImGui::GUIRenderer::beginFrame() noexcept
 {
-    ImGui_ImplGlfw_NewFrame();
+    Window::get()->ImGuiNewFrame();
     ImGui::NewFrame();
 }
 
@@ -236,7 +235,7 @@ void UImGui::GUIRenderer::shutdown(GenericRenderer* renderer) noexcept
     if (Layouts::getLoadLayout() && !Layouts::layoutLocation().empty())
         ImGui::SaveIniSettingsToDisk((Instance::get()->initInfo.configDir + "Core/" + Layouts::layoutLocation() + ".ini").c_str());
     renderer->ImGuiShutdown();
-    ImGui_ImplGlfw_Shutdown();
+    Window::get()->ImGuiShutdown();
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
     if (Modules::data().plotting)
         ImPlot::DestroyContext();

@@ -8,14 +8,44 @@ void UImGui_Window_setTitle(const UImGui_String name)
     UImGui::Window::setTitle(name);
 }
 
+UImGui_String UImGui_Window_getTitle()
+{
+    return UImGui::Window::getTitle();
+}
+
+void UImGui_Window_setTitleSetting(const UImGui_String name)
+{
+    UImGui::Window::setTitleSetting(name);
+}
+
+UImGui_String UImGui_Window_getTitleSetting()
+{
+    return UImGui::Window::getTitleSetting();
+}
+
 void UImGui_Window_setIcon(const UImGui_String name)
 {
     UImGui::Window::setIcon(name);
 }
 
-float UImGui_Window_aspectRatio()
+UImGui_String UImGui_Window_getIconLocation()
 {
-    return UImGui::Window::aspectRatio();
+    return UImGui::Window::getIconLocation();
+}
+
+UImGui_String UImGui_Window_getIconLocationSetting()
+{
+    return UImGui::Window::getIconLocationSetting();
+}
+
+void UImGui_Window_setIconLocationSetting(const UImGui_String location)
+{
+    return UImGui::Window::setIconLocationSetting(location);
+}
+
+float UImGui_Window_getAspectRatio()
+{
+    return UImGui::Window::getAspectRatio();
 }
 
 [[maybe_unused]] UImGui_FVector2 UImGui_Window_getCurrentWindowPosition()
@@ -43,24 +73,29 @@ void UImGui_Window_pushWindowPositionChangeCallback(const UImGui_Window_pushWind
     UImGui::Window::pushWindowPositionChangeCallback(f);
 }
 
-UImGui_FVector2* UImGui_Window_windowSize()
+UImGui_FVector2 UImGui_Window_getWindowSize()
 {
-    return &UImGui::Window::windowSize();
+    return UImGui::Window::getWindowSize();
 }
 
-bool* UImGui_Window_fullscreen()
+UImGui_FVector2* UImGui_Window_getWindowSizeSetting()
 {
-    return &UImGui::Window::fullscreen();
+    return &UImGui::Window::getWindowSizeSetting();
 }
 
-UImGui_String UImGui_Window_name()
+bool UImGui_Window_getWindowFullscreen()
 {
-    return UImGui::Window::name().c_str();
+    return UImGui::Window::getWindowFullscreen();
 }
 
-UImGui_String UImGui_Window_iconLocation()
+bool* UImGui_Window_getWindowFullscreenSetting()
 {
-    return UImGui::Window::iconLocation().c_str();
+    return &UImGui::Window::getWindowFullscreenSetting();
+}
+
+void UImGui_Window_setWindowFullscreen(const bool bFullscreen)
+{
+    UImGui::Window::setWindowFullscreen(bFullscreen);
 }
 
 void UImGui_Window_saveSettings(const bool bSaveKeybinds)
@@ -128,9 +163,9 @@ void UImGui_Window_setWindowSizeInScreenCoords(const UImGui_FVector2 sz)
     UImGui::Window::setWindowSizeInScreenCoords(sz);
 }
 
-UImGui_FVector2* UImGui_Window_getWindowSizeInScreenCoords()
+UImGui_FVector2 UImGui_Window_getWindowSizeInScreenCoords()
 {
-    return &UImGui::Window::getWindowSizeInScreenCoords();
+    return UImGui::Window::getWindowSizeInScreenCoords();
 }
 
 void UImGui_Window_pushWindowResizedInScreenCoordsCallback(const UImGui_Window_pushWindowResizedInScreenCoordsCallbackFun f)
@@ -185,9 +220,9 @@ bool UImGui_Window_getWindowCurrentlyHidden()
     return UImGui::Window::getWindowCurrentlyHidden();
 }
 
-bool* UImGui_Window_windowSurfaceTransparent()
+bool* UImGui_Window_windowSurfaceTransparentSetting()
 {
-    return &UImGui::Window::windowSurfaceTransparent();
+    return &UImGui::Window::windowSurfaceTransparentSetting();
 }
 
 void UImGui_Window_focusWindow()
@@ -299,41 +334,42 @@ bool UImGui_Window_getWindowCurrentlyMaximised()
     return UImGui::Window::getWindowCurrentlyMaximised();
 }
 
+UImGui_MonitorData UImGui_Window_getWindowMonitor()
+{
+    return UImGui::Window::getWindowMonitor().get();
+}
+
+UImGui_MonitorData UImGui_Window_getPrimaryMonitor()
+{
+    return UImGui::Window::getPrimaryMonitor().get();
+}
+
+UImGui_MonitorData* UImGui_Window_getMonitors(size_t* size)
+{
 #ifndef __EMSCRIPTEN__
+    auto& m = UImGui::Window::getMonitors();
+    *size = m.size();
 
-UImGui_CMonitorData UImGui_Window_getWindowMonitor()
-{
-    return UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Window_getWindowMonitor();
-}
+    auto& monitors = UImGui::Global::get().deallocationStruct.monitors;
+    if (monitors.empty())
+        return nullptr;
 
-void UImGui_Window_setWindowMonitor(const UImGui_CMonitorData* monitor)
-{
-    UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Monitor_setWindowMonitor(monitor);
-}
+    monitors.clear();
 
-UImGui_CMonitorData* UImGui_Window_getMonitors(size_t* size)
-{
-    return UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::UImGui_Window_getMonitors(size);
-}
-
-void UImGui_Window_pushGlobalMonitorCallback(const UImGui_Window_pushGlobalMonitorCallbackFun f)
-{
-    UImGui::Window::pushGlobalMonitorCallback([&](const UImGui::Monitor& monitor, const UImGui::MonitorState state) -> void
-    {
-        // This is used so that we can circumvent private variables in the UImGui::Monitor class. Friend functions do
-        // not do the job for us in this case, due to our retarded header file structure.
-        UImGui::Monitor::CInternalGetMonitorClassDoNotTouch::pushGlobalMonitorCallbackFun(monitor, state, f);
-    });
-}
-
+    for (auto a : m)
+        monitors.push_back(a.get());
+    return monitors.data();
+#else
+    return nullptr;
 #endif
+}
 
 void UImGui_Window_pushWindowOSDragDropCallback(UImGui_Window_pushWindowOSDragDropCallbackFun f)
 {
-    UImGui::Window::get().dragDropPathCallbackList.emplace_back(f);
+    UImGui::Window::get()->dragDropPathCallbackList.emplace_back(f);
 }
 
-GLFWwindow* UImGui_Window_getInternal()
+void* UImGui_Window_getInternal()
 {
     return UImGui::Window::getInternal();
 }

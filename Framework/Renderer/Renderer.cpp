@@ -5,8 +5,8 @@
 #endif
 #include <yaml-cpp/yaml.h>
 #include <Core/Components/Instance.hpp>
-#include <Renderer/ImGui/ImGui.hpp>
-#include <GLFW/glfw3.h>
+#include <ImGui/ImGui.hpp>
+#include <Window/WindowUtils.hpp>
 #include <Interfaces/WindowInterface.hpp>
 #include <Global.hpp>
 
@@ -30,7 +30,12 @@ void UImGui::RendererInternal::start()
 
     // The window gets created after getting the renderer settings but before starting the renderer, because depending
     // on the API we need to configure our renderer with different properties
-    Window::get().createWindow();
+    if (global.instance->initInfo.customWindow != nullptr)
+        global.window.window = global.instance->initInfo.customWindow;
+    else if (global.instance->initInfo.cInitInfo != nullptr && global.instance->initInfo.cInitInfo->customWindow != nullptr)
+        global.window.window = static_cast<GenericWindow*>(global.instance->initInfo.cInitInfo->customWindow);
+
+    Window::get()->createWindow();
     renderer->init(metadata);
 
     global.modulesManager.init(global.instance->initInfo.configDir);
@@ -40,7 +45,7 @@ void UImGui::RendererInternal::start()
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop_arg(tick, this, 0, true);
 #else
-    while (!glfwWindowShouldClose(Window::getInternal()))
+    while (!WindowUtils::shouldRender())
         tick(this);
 #endif
 }
@@ -50,7 +55,7 @@ void UImGui::RendererInternal::stop() const noexcept
     GUIRenderer::shutdown(renderer);
     renderer->destroy();
     Modules::get().destroy();
-    Window::get().destroyWindow();
+    Window::get()->destroyWindow();
 }
 
 void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
@@ -67,7 +72,7 @@ void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
         Timer timer;
         timer.start();
 
-        glfwWaitEventsTimeout(waitTimeout);
+        WindowUtils::waitEventsTimeout(waitTimeout);
 
         timer.stop();
         const double elapsed = timer.get();
@@ -78,14 +83,8 @@ void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
     }
 #endif
 
-    glfwPollEvents();
-
-    const double now = glfwGetTime();
-    deltaTime = now - inst.lastTime;
-    inst.lastTime = now;
-
-    // Updates the state of the keybindings
-    Global::get().window.updateKeyState();
+    double now = 0.0;
+    WindowUtils::pollEvents(now, deltaTime, inst.lastTime);
 
 #ifdef __EMSCRIPTEN__
     if (inst.data.idleFrameRate > 0.0f && inst.data.bEnablePowerSavingMode)
@@ -127,7 +126,7 @@ void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
 
     // Do not render if the window is minimised
     if (Window::getWindowIconified())
-        glfwWaitEvents();
+        WindowUtils::waitEventsTimeout(1.0f);
 
     inst.renderer->renderStart(deltaTime);
     GUIRenderer::beginUI(static_cast<float>(deltaTime), inst.renderer);
