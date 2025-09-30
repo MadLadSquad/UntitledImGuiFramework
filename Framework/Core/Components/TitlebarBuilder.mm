@@ -1,5 +1,5 @@
 #include "TitlebarComponent.hpp"
-#include <C/Internal/Keys.h>
+#include <C/Window/Keys.h>
 #include <Core/Utilities.hpp>
 #include <ThirdParty/utfcpp/source/utf8.h>
 #include <Core/Components/Instance.hpp>
