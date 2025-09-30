@@ -30,8 +30,8 @@ macro(setup_app_sources)
     file(GLOB_RECURSE UGUI_APP_SRC_APPLE "Source/*.m" "Source/*.mm")
     list(APPEND UGUI_APP_HEAD ${UGUI_APP_SRC_APPLE})
 
-    file(GLOB_RECURSE APPLE_SRC "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.mm"
-            "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.m" "${UIMGUI_SRC_PREFIX}/Framework/Core/*.mm"
+    file(GLOB_RECURSE APPLE_SRC "${UIMGUI_SRC_PREFIX}/Framework/Window/*.mm"
+            "${UIMGUI_SRC_PREFIX}/Framework/Window/*.m" "${UIMGUI_SRC_PREFIX}/Framework/Core/*.mm"
     )
 endmacro()
 
