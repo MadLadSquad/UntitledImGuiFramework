@@ -1,4 +1,4 @@
-#import "MacOSWindowPlatform.h"
+#include "MacOSWindowPlatform.h"
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
 
