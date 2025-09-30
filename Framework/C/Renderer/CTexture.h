@@ -1,7 +1,6 @@
 #pragma once
 #include <C/CTypes.h>
 #include <C/CDefines.h>
-#include <C/Internal/RendererData.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -48,7 +47,7 @@ extern "C"
     /**
      * @brief Enum of standard texture formats. Use UIMGUI_TEXTURE_FORMAT_OTHER when using your own loading function
      */
-    typedef enum UIMGUI_PUBLIC_API UImGui_TextureFormat
+    typedef enum UImGui_TextureFormat
     {
         UIMGUI_TEXTURE_FORMAT_PNG,
         UIMGUI_TEXTURE_FORMAT_BMP,

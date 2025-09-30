@@ -1,7 +1,6 @@
 #pragma once
 #include <C/CTypes.h>
-
-#include "C/Internal/Keys.h"
+#include <C/Window/Keys.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -15,7 +14,7 @@ extern "C"
      * @var state - The current state of the action
      * @note Event Safety - Any time
      */
-    typedef struct UImGui_CInputAction
+    typedef struct UIMGUI_PUBLIC_API UImGui_CInputAction
     {
         const char* name;
 

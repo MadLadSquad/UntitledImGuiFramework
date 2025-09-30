@@ -1,5 +1,9 @@
 #pragma once
-#include <C/Rendering/CRendererUtils.h>
+#include <C/Renderer/CRendererUtils.h>
+#include <Core/Types.hpp>
+#ifndef __EMSCRIPTEN__
+    #include <vulkan/vulkan.h>
+#endif
 
 namespace UImGui
 {
@@ -21,9 +25,18 @@ namespace UImGui
         // Event safety - any-time
         static GenericRenderer* getRenderer() noexcept;
 
-        // Renderer a new dear imgui frame
+        // Render a new dear imgui frame
         // Event safety - post-begin
         static void beginImGuiFrame() noexcept;
+
+        // Initialise dear imgui for rendering with a renderer that is not OpenGL or Vulkan
+        // CAUTION: For OpenGL or Vulkan, use the specialisations under their respective namespaces
+        // Event safety - style, begin
+        static void ImGuiInitOther() noexcept;
+
+        // Install window callbacks for dear imgui(only needed for some renderers, such as WebGPU or OpenGL)
+        // Event safety - style, begin
+        static void ImGuiInstallCallbacks() noexcept;
 
         class UIMGUI_PUBLIC_API OpenGL
         {
@@ -34,15 +47,16 @@ namespace UImGui
 
             typedef UImGui_OpenGLProfile Profile;
             typedef UImGui_OpenGLContext Context;
+            typedef UImGui_OpenGL_GetProcAddressFun GetProcAddressFun;
 
             // Call this inside the window hints interface function of the GenericRenderer class
             //
             // Recommended args:
-            // Emscripten/Web targets - UIMGUI_LATEST_OPENGL_VERSION, UIMGUI_RENDERER_CLIENT_API_OPENGL_ES, UIMGUI_OPENGL_PROFILE_ANY, false
-            // Desktop - UIMGUI_LATEST_OPENGL_VERSION, UIMGUI_RENDERER_CLIENT_API_OPENGL, UIMGUI_OPENGL_PROFILE_CORE, true
+            // Emscripten/Web targets - UIMGUI_LATEST_OPENGL_VERSION, UIMGUI_RENDERER_CLIENT_API_OPENGL_ES, UIMGUI_OPENGL_PROFILE_ANY, false, Renderer::data().msaaSamples
+            // Desktop - UIMGUI_LATEST_OPENGL_VERSION, UIMGUI_RENDERER_CLIENT_API_OPENGL, UIMGUI_OPENGL_PROFILE_CORE, true, Renderer::data().msaaSamples
             //
             // Event safety - startup, post-startup
-            static void setHints(int majorVersion, int minorVersion, RendererClientAPI clientApi, Profile profile, bool bForwardCompatible) noexcept;
+            static void setHints(int majorVersion, int minorVersion, RendererClientAPI clientApi, Profile profile, bool bForwardCompatible, uint32_t samples) noexcept;
 
             // Swaps buffers for OpenGL.
             // Event safety - post-begin
@@ -64,9 +78,36 @@ namespace UImGui
             // Event safety - startup, post-startup
             static Context* getCurrentContext() noexcept;
 
+            // Returns the function for getting the OpenGL proc address
+            // Event safety - startup, post-startup
+            static GetProcAddressFun getProcAddressFunction() noexcept;
+
             // Set the swap interval for the OpenGL renderer
             // Event safety - startup, post-startup
             static void setSwapInterval(int interval) noexcept;
+
+            // Initialise dear imgui for rendering with OpenGL
+            // Event safety - style, begin
+            static void ImGuiInit() noexcept;
+        };
+
+        class UIMGUI_PUBLIC_API Vulkan
+        {
+        public:
+            Vulkan() = delete;
+            Vulkan(const Vulkan&) = delete;
+            void operator=(Vulkan const&) = delete;
+
+#ifndef __EMSCRIPTEN__
+            // Initialise dear imgui for rendering with Vulkan
+            // Event safety - style, begin
+            static void ImGuiInit() noexcept;
+
+            // Event safety - post-startup
+            static VkResult createWindowSurface(VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) noexcept;
+            // Event safety - post-startup
+            static void fillInstanceAndLayerExtensions(TVector<const char*>& instanceExtensions, TVector<const char*>& instanceLayers) noexcept;
+#endif
         };
 
         class UIMGUI_PUBLIC_API WebGPU

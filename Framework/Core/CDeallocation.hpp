@@ -1,6 +1,6 @@
 #pragma once
 #include <Types.hpp>
-#include <C/Internal/CMonitor.h>
+#include <C/Window/CMonitor.h>
 #include <C/Interfaces/CPluginInterface.h>
 #include <Renderer/Texture.hpp>
 
@@ -10,7 +10,7 @@ namespace UImGui
     struct UIMGUI_PUBLIC_API CDeallocationStruct
     {
         TVector<FString> keyStrings;
-        TVector<UImGui_CMonitorData> monitors;
+        TVector<UImGui_MonitorData> monitors;
         TVector<Texture> textures;
         TVector<UImGui_CPlugin> plugins;
     };

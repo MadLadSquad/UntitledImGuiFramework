@@ -42,7 +42,8 @@ macro(setup_yaml_cpp_vendored_generic force_shared)
     add_subdirectory("${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/yaml-cpp")
     set(YAML_CPP_LIBRARIES_T "yaml-cpp")
     set(YAML_CPP_INCLUDE_DIRS_T "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/yaml-cpp/include/yaml-cpp"
-            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/yaml-cpp/include")
+            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/yaml-cpp/include"
+    )
 endmacro()
 
 macro(setup_freetype_vendored_generic)
@@ -81,7 +82,8 @@ endmacro()
 macro(setup_platform_target_settings_generic)
     if (NOT UIMGUI_SKIP_FRAMEWORK)
         target_compile_definitions(UntitledImGuiFramework PRIVATE "UIMGUI_COMPILE_LIB" "YAML_CPP_DLL" "URLL_USE_FUNCTIONAL"
-                "MLS_EXPORT_LIBRARY" "MLS_LIB_COMPILE" "VULKAN_HPP_NO_STRUCT_CONSTRUCTORS")
+                "MLS_EXPORT_LIBRARY" "MLS_LIB_COMPILE" "VULKAN_HPP_NO_STRUCT_CONSTRUCTORS"
+        )
     endif ()
     target_compile_definitions(${APP_TARGET} PRIVATE "UIMGUI_EXECUTABLE")
 endmacro()

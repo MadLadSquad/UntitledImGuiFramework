@@ -1,7 +1,7 @@
 #pragma once
 #include <C/CDefines.h>
 #include <C/CTypes.h>
-#include <C/Rendering/CTexture.h>
+#include <C/Renderer/CTexture.h>
 
 #ifdef __cplusplus
 extern "C"

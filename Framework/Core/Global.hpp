@@ -1,7 +1,7 @@
 #pragma once
-#include <Renderer/Window/Window.hpp>
-#include "Modules/Manager/ModulesManager.hpp"
-#include "CDeallocation.hpp"
+#include <Window/Window.hpp>
+#include <Modules/Manager/ModulesManager.hpp>
+#include <Core/CDeallocation.hpp>
 #include <Interfaces/PluginInterface.hpp>
 #ifdef _WIN32
     #include <windows.h>

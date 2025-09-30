@@ -1,9 +1,7 @@
 #include "RendererUtils.hpp"
 #include <Interfaces/WindowInterface.hpp>
-#include <GLFW/glfw3.h>
 #include <Core/Platform/WASM.hpp>
 #include <ImGui/ImGui.hpp>
-#include <Renderer/GenericRenderer/GenericRenderer.hpp>
 #include <Interfaces/RendererInterface.hpp>
 
 UImGui::GenericRenderer* UImGui::RendererUtils::getRenderer() noexcept
@@ -13,49 +11,52 @@ UImGui::GenericRenderer* UImGui::RendererUtils::getRenderer() noexcept
 
 void UImGui::RendererUtils::setupManually() noexcept
 {
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    Window::get()->setupManualRenderingHints();
 }
 
-void UImGui::RendererUtils::OpenGL::setHints(const int majorVersion, const int minorVersion, const RendererClientAPI clientApi, const Profile profile, const bool bForwardCompatible) noexcept
+void UImGui::RendererUtils::OpenGL::setHints(const int majorVersion, const int minorVersion, const RendererClientAPI clientApi, const Profile profile, const bool bForwardCompatible, const uint32_t samples) noexcept
 {
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, majorVersion);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minorVersion);
-    glfwWindowHint(GLFW_CLIENT_API, CAST(int, clientApi));
-    glfwWindowHint(GLFW_OPENGL_PROFILE, CAST(int, profile));
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, CAST(int, bForwardCompatible));
+    Window::get()->OpenGL_setHints(majorVersion, minorVersion, clientApi, profile, bForwardCompatible, samples);
 }
 
 void UImGui::RendererUtils::OpenGL::swapFramebuffers() noexcept
 {
-    glfwSwapBuffers(Window::getInternal());
+    Window::get()->OpenGL_swapBuffers();
 }
 
 UImGui::RendererUtils::OpenGL::Context* UImGui::RendererUtils::OpenGL::createContext() noexcept
 {
-    // TODO: SDL
-    return nullptr;
+    return Window::get()->OpenGL_createContext();
 }
 
 void UImGui::RendererUtils::OpenGL::setCurrentContext(Context* ctx) noexcept
 {
-    UNUSED(ctx);
-    glfwMakeContextCurrent(Window::getInternal());
+    Window::get()->OpenGL_setCurrentContext(ctx);
 }
 
-void UImGui::RendererUtils::OpenGL::destroyContext(UImGui::RendererUtils::OpenGL::Context* ctx) noexcept
+void UImGui::RendererUtils::OpenGL::destroyContext(Context* ctx) noexcept
 {
-    // TODO: SDL
-    UNUSED(ctx);
+    Window::get()->OpenGL_destroyContext(ctx);
 }
 
 UImGui::RendererUtils::OpenGL::Context* UImGui::RendererUtils::OpenGL::getCurrentContext() noexcept
 {
-    return glfwGetCurrentContext();
+    return Window::get()->OpenGL_getCurrentContext();
 }
 
 void UImGui::RendererUtils::OpenGL::setSwapInterval(const int interval) noexcept
 {
-    glfwSwapInterval(interval);
+    Window::get()->OpenGL_setSwapInterval(interval);
+}
+
+void UImGui::RendererUtils::OpenGL::ImGuiInit() noexcept
+{
+    Window::get()->ImGuiInitFor_OpenGL();
+}
+
+UImGui::RendererUtils::OpenGL::GetProcAddressFun UImGui::RendererUtils::OpenGL::getProcAddressFunction() noexcept
+{
+    return Window::get()->OpenGL_getProcAddressFunction();
 }
 
 bool UImGui::RendererUtils::WebGPU::supported() noexcept
@@ -71,3 +72,30 @@ void UImGui::RendererUtils::beginImGuiFrame() noexcept
 {
     GUIRenderer::beginFrame();
 }
+
+void UImGui::RendererUtils::ImGuiInitOther() noexcept
+{
+    Window::get()->ImGuiInitFor_Other();
+}
+
+void UImGui::RendererUtils::ImGuiInstallCallbacks() noexcept
+{
+    Window::get()->ImGuiInstallCallbacks();
+}
+
+#ifndef __EMSCRIPTEN__
+void UImGui::RendererUtils::Vulkan::ImGuiInit() noexcept
+{
+    Window::get()->ImGuiInitFor_Vulkan();
+}
+
+VkResult UImGui::RendererUtils::Vulkan::createWindowSurface(const VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) noexcept
+{
+    return Window::get()->Vulkan_createWindowSurface(instance, allocator, surface);
+}
+
+void UImGui::RendererUtils::Vulkan::fillInstanceAndLayerExtensions(TVector<const char*>& instanceExtensions, TVector<const char*>& instanceLayers) noexcept
+{
+    Window::get()->Vulkan_fillInstanceAndLayerExtensions(instanceExtensions, instanceLayers);
+}
+#endif

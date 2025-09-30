@@ -18,22 +18,25 @@
 #include <misc/cpp/imgui_stdlib.h>
 #include <misc/freetype/imgui_freetype.h>
 #include <custom_funcs.hpp>
+#include <Renderer/Renderer.hpp>
 #include <Renderer/Texture.hpp>
-#include <Renderer/ImGui/ClientSideBar.hpp>
+#include <ImGui/ClientSideBar.hpp>
+#include <ImGui/UImGuiExtensions.hpp>
+#include <Window/Window.hpp>
+#include <Window/WindowUtils.hpp>
+
 #include <urll/urll.h>
-#include <Renderer/ImGui/UImGuiExtensions.hpp>
 
 #include <Modules/Modules.hpp>
+
 #include <Core/FrameworkMain.hpp>
 
 #include <ThirdParty/imgui/backends/imgui_impl_opengl3.h>
 #ifdef __EMSCRIPTEN__
-#include <ThirdParty/imgui/backends/imgui_impl_wgpu.h>
-#include <emscripten.h>
-#include <emscripten/html5.h>
-#include <emscripten/html5_webgpu.h>
+   #include <ThirdParty/imgui/backends/imgui_impl_wgpu.h>
+   #include <emscripten.h>
+   #include <emscripten/html5.h>
+   #include <emscripten/html5_webgpu.h>
 #else
-#include <ThirdParty/imgui/backends/imgui_impl_vulkan.h>
+   #include <ThirdParty/imgui/backends/imgui_impl_vulkan.h>
 #endif
-#include <GLFW/glfw3.h>
-#include <ThirdParty/imgui/backends/imgui_impl_glfw.h>

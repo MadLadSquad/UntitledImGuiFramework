@@ -2,8 +2,9 @@
 #include <C/CTypes.h>
 #include <C/CDefines.h>
 #include "CComponentCommon.h"
-#include <C/Internal/RendererData.h>
-#include <C/Rendering/CGenericTexture.h>
+#include <C/Window/RendererData.h>
+#include <C/Renderer/CGenericTexture.h>
+#include <C/Window/CGenericWindow.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -48,6 +49,7 @@ extern "C"
 
         UImGui_CGenericRenderer* customRenderer;
         UImGui_CGenericTexture* customTexture;
+        UImGui_CGenericWindow* customWindow;
     } UImGui_CInitInfo;
 
     // Event Safety - Any time

@@ -13,6 +13,7 @@
 namespace UImGui
 {
     class GenericRenderer;
+    class GenericWindow;
 
     /**
      * @brief A struct that defines initialization information for the framework, instantiated automatically in the Instance
@@ -39,6 +40,7 @@ namespace UImGui
 
         GenericRenderer* customRenderer = nullptr;
         GenericTexture* customTexture = nullptr;
+        GenericWindow* customWindow = nullptr;
 
         UImGui_CInitInfo* cInitInfo = nullptr;
 

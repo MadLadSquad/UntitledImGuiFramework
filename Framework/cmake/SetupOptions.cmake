@@ -49,7 +49,8 @@ if (USE_OS_MODULE AND NOT EMSCRIPTEN)
     if (ENABLE_UOPEN)
         if (BUILD_VARIANT_VENDOR)
             include_directories("${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/ThirdParty/"
-                    "${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/ThirdParty/UntitledOpen")
+                    "${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/ThirdParty/UntitledOpen"
+            )
             add_subdirectory("${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/ThirdParty/UntitledOpen")
             list(APPEND ENABLED_LIBRARIES UntitledOpen)
         else ()
@@ -67,7 +68,8 @@ if (USE_OS_MODULE AND NOT EMSCRIPTEN)
     if (ENABLE_UEXEC)
         if (BUILD_VARIANT_VENDOR)
             include_directories("${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/ThirdParty/"
-                    "${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/ThirdParty/uexec")
+                    "${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/ThirdParty/uexec"
+            )
             add_subdirectory("${UIMGUI_SRC_PREFIX}/Framework/Modules/OS/ThirdParty/uexec")
             list(APPEND ENABLED_LIBRARIES uexec)
         else ()

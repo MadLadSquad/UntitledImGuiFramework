@@ -1,4 +1,4 @@
-#include "Window.hpp"
+#include "WindowGLFW.hpp"
 #ifdef _WIN32
     #define GLFW_EXPOSE_NATIVE_WIN32
 #elif __APPLE__
@@ -16,7 +16,7 @@
 
 #ifdef __APPLE__
     #include <OpenGL/GL.h>
-    #include "macOS/MacOSWindowPlatform.h"
+    #include "../GenericWindow/macOS/MacOSWindowPlatform.h"
 #else
     #include <glad/include/glad/gl.h>
 #endif
@@ -25,14 +25,14 @@
 
 #include <cstring>
 
-void UImGui::WindowInternal::setWindowAlwaysOnTop() const noexcept
+void UImGui::WindowGLFW::Platform_setWindowAlwaysOnTop() noexcept
 {
 #ifdef GLFW_EXPOSE_NATIVE_X11
     if (glfwGetPlatform() == GLFW_PLATFORM_X11)
     {
         Display* display = glfwGetX11Display();
         const ::Window root = DefaultRootWindow(display);
-        ::Window window = glfwGetX11Window(windowMain);
+        const ::Window win = glfwGetX11Window(window);
 
         const Atom wmStateAbove = XInternAtom(display, "_NET_WM_STATE_ABOVE", 1);
         if (wmStateAbove == None)
@@ -47,7 +47,7 @@ void UImGui::WindowInternal::setWindowAlwaysOnTop() const noexcept
             XClientMessageEvent xclient = {};
 
             xclient.type = ClientMessage;
-            xclient.window = window;
+            xclient.window = win;
             xclient.message_type = wmNetWmState;
             xclient.format = 32;
             xclient.data.l[0] = 1;
@@ -68,20 +68,20 @@ void UImGui::WindowInternal::setWindowAlwaysOnTop() const noexcept
     }
 #endif
 #ifdef GLFW_EXPOSE_NATIVE_WIN32
-    auto window = glfwGetWin32Window(windowMain);
-    SetWindowPos(window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    auto win = glfwGetWin32Window(window);
+    SetWindowPos(win, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 #elif defined(GLFW_EXPOSE_NATIVE_COCOA)
-    MacOSWindow::setWindowAlwaysAbove(glfwGetCocoaWindow(windowMain));
+    MacOSWindow::setWindowAlwaysAbove(glfwGetCocoaWindow(window));
 #endif
 }
 
-void UImGui::WindowInternal::setWindowAlwaysBelow() const noexcept
+void UImGui::WindowGLFW::Platform_setWindowAlwaysOnBottom() noexcept
 {
 #ifdef GLFW_EXPOSE_NATIVE_X11
     if (glfwGetPlatform() == GLFW_PLATFORM_X11)
     {
         Display* display = glfwGetX11Display();
-        ::Window window = glfwGetX11Window(windowMain);
+        const ::Window win = glfwGetX11Window(window);
         const ::Window root = DefaultRootWindow(display);
 
         const Atom wmNetWmState = XInternAtom(display, "_NET_WM_STATE", 1);
@@ -108,7 +108,7 @@ void UImGui::WindowInternal::setWindowAlwaysBelow() const noexcept
         XClientMessageEvent xclient = {};
 
         xclient.type = ClientMessage;
-        xclient.window = window;
+        xclient.window = win;
         xclient.message_type = wmNetWmState;
         xclient.format = 32;
         xclient.data.l[0] = _NET_WM_STATE_ADD;
@@ -117,7 +117,7 @@ void UImGui::WindowInternal::setWindowAlwaysBelow() const noexcept
         XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, reinterpret_cast<XEvent*>(&xclient));
 
         xclient.type = ClientMessage;
-        xclient.window = window;
+        xclient.window = win;
         xclient.message_type = wmNetWmState;
         xclient.format = 32;
         xclient.data.l[0] = _NET_WM_STATE_ADD;
@@ -135,49 +135,22 @@ void UImGui::WindowInternal::setWindowAlwaysBelow() const noexcept
     }
 #endif
 #ifdef GLFW_EXPOSE_NATIVE_WIN32
-    auto window = glfwGetWin32Window(windowMain);
-    SetWindowPos(window, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-    //DefWindowProcA(window, WM_WINDOWPOSCHANGING, 0, 0);
+    auto win = glfwGetWin32Window(window);
+    SetWindowPos(win, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+    //DefWindowProcA(win, WM_WINDOWPOSCHANGING, 0, 0);
 #elif defined(GLFW_EXPOSE_NATIVE_COCOA)
-    MacOSWindow::setWindowAlwaysBelow(glfwGetCocoaWindow(windowMain));
+    MacOSWindow::setWindowAlwaysBelow(glfwGetCocoaWindow(window));
 #endif
 }
 
-void UImGui::WindowInternal::setWindowType(const char* type) const noexcept
+void UImGui::WindowGLFW::Platform_setWindowShowingOnPager(const bool bShowInPager) noexcept
 {
-#ifdef GLFW_EXPOSE_NATIVE_X11
-    if (glfwGetPlatform() == GLFW_PLATFORM_X11)
-    {
-        Display* display = glfwGetX11Display();
-        const ::Window window = glfwGetX11Window(windowMain);
-
-        const Atom windowType = XInternAtom(display, "_NET_WM_WINDOW_TYPE", 1);
-        if (windowType == None)
-        {
-            Logger::log("Couldn't find atom of type \"_NET_WM_WINDOW_TYPE\"!", ULOG_LOG_TYPE_ERROR);
-            return;
-        }
-
-        Atom windowTypeT = XInternAtom(display, type, 1);
-        if (windowTypeT == None)
-        {
-            Logger::log("Couldn't find atom of type \"", ULOG_LOG_TYPE_ERROR, type, "\"!");
-            return;
-        }
-
-        XChangeProperty(display, window, windowType, XA_ATOM, 32, PropModeReplace, reinterpret_cast<unsigned char*>(&windowTypeT), 1);
-    }
-#endif
-}
-
-void UImGui::WindowInternal::setShowWindowInPager(const bool bShowInPagerr) noexcept
-{
-    bShowOnPager = bShowInPagerr;
+    this->bShowOnPager = bShowInPager;
 #ifdef GLFW_EXPOSE_NATIVE_X11
     if (glfwGetPlatform() == GLFW_PLATFORM_X11 && !bShowOnPager)
     {
         Display* display = glfwGetX11Display();
-        ::Window window = glfwGetX11Window(windowMain);
+        const ::Window win = glfwGetX11Window(window);
         const ::Window root = DefaultRootWindow(display);
 
         const Atom wmNetWmState = XInternAtom(display, "_NET_WM_STATE", 1);
@@ -196,7 +169,7 @@ void UImGui::WindowInternal::setShowWindowInPager(const bool bShowInPagerr) noex
         XClientMessageEvent xclient = {};
 
         xclient.type = ClientMessage;
-        xclient.window = window;
+        xclient.window = win;
         xclient.message_type = wmNetWmState;
         xclient.format = 32;
         xclient.data.l[0] = _NET_WM_STATE_ADD;
@@ -210,27 +183,32 @@ void UImGui::WindowInternal::setShowWindowInPager(const bool bShowInPagerr) noex
 #ifdef GLFW_EXPOSE_NATIVE_WIN32
     if (!bShowOnPager)
     {
-        auto window = glfwGetWin32Window(windowMain);
-        LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
-        SetWindowLongPtr(window, GWL_EXSTYLE, (style & ~WS_EX_APPWINDOW) | WS_EX_TOOLWINDOW);
+        auto win = glfwGetWin32Window(window);
+        LONG_PTR style = GetWindowLongPtr(win, GWL_EXSTYLE);
+        SetWindowLongPtr(win, GWL_EXSTYLE, (style & ~WS_EX_APPWINDOW) | WS_EX_TOOLWINDOW);
     }
     else
     {
-        auto window = glfwGetWin32Window(windowMain);
-        LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
-        SetWindowLongPtr(window, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
+        auto win = glfwGetWin32Window(window);
+        LONG_PTR style = GetWindowLongPtr(win, GWL_EXSTYLE);
+        SetWindowLongPtr(win, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
     }
 #endif
 }
 
-void UImGui::WindowInternal::setShowWindowOnTaskbar(const bool bShowOnTaskbarr) noexcept
+bool UImGui::WindowGLFW::Platform_getWindowShowingOnPager() noexcept
 {
-    bShowOnTaskbar = bShowOnTaskbarr;
+    return bShowOnPager;
+}
+
+void UImGui::WindowGLFW::Platform_setWindowShowingOnTaskbar(const bool bShowOnTaskbar) noexcept
+{
+    this->bShowOnTaskbar = bShowOnTaskbar;
 #ifdef GLFW_EXPOSE_NATIVE_X11
     if (glfwGetPlatform() == GLFW_PLATFORM_X11 && !bShowOnTaskbar)
     {
         Display* display = glfwGetX11Display();
-        ::Window window = glfwGetX11Window(windowMain);
+        const ::Window win = glfwGetX11Window(window);
         const ::Window root = DefaultRootWindow(display);
 
         const Atom wmNetWmState = XInternAtom(display, "_NET_WM_STATE", 1);
@@ -250,7 +228,7 @@ void UImGui::WindowInternal::setShowWindowOnTaskbar(const bool bShowOnTaskbarr) 
         XClientMessageEvent xclient = {};
 
         xclient.type = ClientMessage;
-        xclient.window = window;
+        xclient.window = win;
         xclient.message_type = wmNetWmState;
         xclient.format = 32;
         xclient.data.l[0] = _NET_WM_STATE_ADD;
@@ -264,26 +242,58 @@ void UImGui::WindowInternal::setShowWindowOnTaskbar(const bool bShowOnTaskbarr) 
 #ifdef GLFW_EXPOSE_NATIVE_WIN32
     if (!bShowOnPager)
     {
-        auto window = glfwGetWin32Window(windowMain);
-        LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
-        SetWindowLongPtr(window, GWL_EXSTYLE, (style & ~WS_EX_APPWINDOW) | WS_EX_TOOLWINDOW);
+        auto win = glfwGetWin32Window(window);
+        LONG_PTR style = GetWindowLongPtr(win, GWL_EXSTYLE);
+        SetWindowLongPtr(win, GWL_EXSTYLE, (style & ~WS_EX_APPWINDOW) | WS_EX_TOOLWINDOW);
     }
     else
     {
-        auto window = glfwGetWin32Window(windowMain);
-        LONG_PTR style = GetWindowLongPtr(window, GWL_EXSTYLE);
-        SetWindowLongPtr(window, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
+        auto win = glfwGetWin32Window(window);
+        LONG_PTR style = GetWindowLongPtr(win, GWL_EXSTYLE);
+        SetWindowLongPtr(win, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
     }
 #endif
 }
 
-size_t UImGui::WindowInternal::getWindowID() const noexcept
+bool UImGui::WindowGLFW::Platform_getWindowShowingOnTaskbar() noexcept
+{
+    return bShowOnPager;
+}
+
+void UImGui::WindowGLFW::Platform_setWindowType(String type) noexcept
 {
 #ifdef GLFW_EXPOSE_NATIVE_X11
     if (glfwGetPlatform() == GLFW_PLATFORM_X11)
     {
         Display* display = glfwGetX11Display();
-        const ::Window window = glfwGetX11Window(windowMain);
+        const ::Window win = glfwGetX11Window(window);
+
+        const Atom windowType = XInternAtom(display, "_NET_WM_WINDOW_TYPE", 1);
+        if (windowType == None)
+        {
+            Logger::log("Couldn't find atom of type \"_NET_WM_WINDOW_TYPE\"!", ULOG_LOG_TYPE_ERROR);
+            return;
+        }
+
+        Atom windowTypeT = XInternAtom(display, type, 1);
+        if (windowTypeT == None)
+        {
+            Logger::log("Couldn't find atom of type \"", ULOG_LOG_TYPE_ERROR, type, "\"!");
+            return;
+        }
+
+        XChangeProperty(display, win, windowType, XA_ATOM, 32, PropModeReplace, reinterpret_cast<unsigned char*>(&windowTypeT), 1);
+    }
+#endif
+}
+
+size_t UImGui::WindowGLFW::Platform_getWindowID() noexcept
+{
+#ifdef GLFW_EXPOSE_NATIVE_X11
+    if (glfwGetPlatform() == GLFW_PLATFORM_X11)
+    {
+        Display* display = glfwGetX11Display();
+        const ::Window win = glfwGetX11Window(window);
         const Atom pid = XInternAtom(display, "_NET_WM_PID", 1);
         if (pid == None)
         {
@@ -296,7 +306,7 @@ size_t UImGui::WindowInternal::getWindowID() const noexcept
         uint64_t bytesAfter;
         unsigned char* propPID = nullptr;
 
-        const auto result = XGetWindowProperty(display, window, pid, 0, 1, False, XA_CARDINAL, &type, &format, &nItems, &bytesAfter, &propPID);
+        const auto result = XGetWindowProperty(display, win, pid, 0, 1, False, XA_CARDINAL, &type, &format, &nItems, &bytesAfter, &propPID);
         if (result == Success && propPID != nullptr)
         {
             const uint64_t xid = *reinterpret_cast<uint64_t*>(propPID);
@@ -314,9 +324,9 @@ size_t UImGui::WindowInternal::getWindowID() const noexcept
     }
 #endif
 #ifdef GLFW_EXPOSE_NATIVE_WIN32
-        return GetWindowLong(glfwGetWin32Window(windowMain), GWL_ID);
+    return GetWindowLong(glfwGetWin32Window(window), GWL_ID);
 #elif defined(GLFW_EXPOSE_NATIVE_COCOA)
-        return (intptr_t)glfwGetCocoaWindow(windowMain);
+    return (intptr_t)glfwGetCocoaWindow(window);
 #endif
     return 0;
 }

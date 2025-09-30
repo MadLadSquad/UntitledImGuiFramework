@@ -31,15 +31,18 @@ macro(setup_app_sources)
     list(APPEND UGUI_APP_HEAD ${UGUI_APP_SRC_APPLE})
 
     file(GLOB_RECURSE APPLE_SRC "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.mm"
-            "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.m" "${UIMGUI_SRC_PREFIX}/Framework/Core/*.mm")
+            "${UIMGUI_SRC_PREFIX}/Framework/Renderer/*.m" "${UIMGUI_SRC_PREFIX}/Framework/Core/*.mm"
+    )
 endmacro()
 
 macro(setup_platform_imgui_sources)
     if (IMGUI_BUILD_WITH_METAL)
         file(GLOB_RECURSE IMGUI_ADDITIONAL_BACKENDS_SRC
-                "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_metal.mm")
+                "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_metal.mm"
+        )
         file(GLOB_RECURSE IMGUI_ADDITIONAL_BACKENDS_HEAD
-                "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_metal.h")
+                "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/imgui/backends/imgui_impl_metal.h"
+        )
     endif()
 endmacro()
 
@@ -66,7 +69,8 @@ macro(link_to_framework_libraries)
     link_to_framework_libraries_generic_unix()
     if (NOT UIMGUI_SKIP_FRAMEWORK)
         target_link_libraries(UntitledImGuiFramework "-framework Cocoa" "-framework IOKit" "-framework CoreFoundation"
-                "-framework QuartzCore")
+                "-framework QuartzCore"
+        )
         if (IMGUI_BUILD_WITH_METAL)
             multicast(target_link_libraries "-framework Metal")
         endif()

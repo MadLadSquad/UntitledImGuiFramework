@@ -1,6 +1,6 @@
 #pragma once
 #include <Types.hpp>
-#include <C/Internal/Keys.h>
+#include <C/Window/Keys.h>
 
 struct ImGuiContext;
 typedef void* (*ImGuiMemAllocFunc)(size_t sz, void* user_data);
@@ -9,7 +9,7 @@ typedef void  (*ImGuiMemFreeFunc )(void* ptr, void* user_data);
 namespace UImGui
 {
     class Global;
-    class InputAction;
+    struct InputAction;
     struct TitlebarMenuItem;
 
     class UIMGUI_PUBLIC_API Utility
@@ -26,9 +26,9 @@ namespace UImGui
         static void sanitiseFilepath(FString& str) noexcept;
 
         // Event Safety - Any time
-        static void keyToText(FString& text, const uint16_t& key, bool bLong) noexcept;
+        static void keyToText(FString& text, CKeys key, bool bLong) noexcept;
         // Event Safety - Any time
-        static FString keyToText(const uint16_t& key, bool bLong) noexcept;
+        static FString keyToText(CKeys key, bool bLong) noexcept;
 
         // Event Safety - Any time
         static void keyToText(FString& text, const InputAction& action, bool bLong) noexcept;

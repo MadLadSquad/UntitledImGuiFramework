@@ -17,7 +17,7 @@ UImGui_String UImGui_Utility_sanitiseFilepath(const UImGui_String str)
     return ss;
 }
 
-UImGui_String UImGui_Utility_keyToText(const uint16_t key, const bool bLong)
+UImGui_String UImGui_Utility_keyToText(const CKeys key, const bool bLong)
 {
     auto& global = UImGui::Global::get();
     const auto text = UImGui::Utility::keyToText(key, bLong);

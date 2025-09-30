@@ -57,7 +57,8 @@ endmacro()
 
 macro(link_to_framework_libraries)
     target_link_libraries(${APP_TARGET} ${GLFW_LIBRARIES_T} ${OPENGL_LIBRARIES_T} pthread dl
-            ${YAML_CPP_LIBRARIES_T} ${FREETYPE_LIBRARIES} ${VULKAN_LIBRARIES_T} ${X11_LIBRARIES})
+            ${YAML_CPP_LIBRARIES_T} ${FREETYPE_LIBRARIES} ${VULKAN_LIBRARIES_T} ${X11_LIBRARIES}
+    )
 
     foreach(f IN ITEMS ${ENABLED_LIBRARIES})
         target_link_libraries(${APP_TARGET} ${f})
@@ -97,9 +98,11 @@ macro(setup_platform_target_settings)
     multicast(set_target_properties PROPERTIES LINK_FLAGS "${EM_LINK_FLAGS}")
 
     multicast(target_link_options PRIVATE -sUSE_WEBGPU=1 -sUSE_GLFW=3 -sALLOW_MEMORY_GROWTH=1 -fwasm-exceptions
-            -sSUPPORT_LONGJMP=wasm)
+            -sSUPPORT_LONGJMP=wasm
+    )
 
     multicast(target_compile_definitions PRIVATE "UIMGUI_PLATFORM_WASM")
+    multicast(target_compile_options PRIVATE "-Wno-cast-function-type")
 endmacro()
 
 macro(initialise_platform)

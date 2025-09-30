@@ -7,8 +7,6 @@
 #else
     #include <glad/include/glad/gl.h>
 #endif
-#include <GLFW/glfw3.h>
-#include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
 #ifdef __EMSCRIPTEN__
@@ -30,14 +28,15 @@ void UImGui::OpenGLRenderer::setupWindowIntegration() noexcept
 #ifdef __EMSCRIPTEN__
         UIMGUI_RENDERER_CLIENT_API_OPENGL_ES,
         UIMGUI_OPENGL_PROFILE_ANY,
-        false
+        false,
 #else
         UIMGUI_RENDERER_CLIENT_API_OPENGL,
         UIMGUI_OPENGL_PROFILE_CORE,
-        true
+        true,
 #endif
+
+        Renderer::data().msaaSamples
     );
-    glfwWindowHint(GLFW_SAMPLES, static_cast<int>(Renderer::data().msaaSamples));
 }
 
 void UImGui::OpenGLRenderer::setupPostWindowCreation() noexcept
@@ -45,7 +44,7 @@ void UImGui::OpenGLRenderer::setupPostWindowCreation() noexcept
     RendererUtils::OpenGL::setCurrentContext(RendererUtils::OpenGL::createContext());
     RendererUtils::OpenGL::setSwapInterval(Renderer::data().bUsingVSync);
 #if !__APPLE__
-    const int version = gladLoadGL(glfwGetProcAddress);
+    const int version = gladLoadGL(RendererUtils::OpenGL::getProcAddressFunction());
     Logger::log
     (
 #ifdef __EMSCRIPTEN__
@@ -60,7 +59,7 @@ void UImGui::OpenGLRenderer::setupPostWindowCreation() noexcept
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
 
-    const auto size = Window::windowSize();
+    const auto size = Window::getWindowSize();
 
     // Set viewport and global pointer to use in callbacks
     glViewport(0, 0, CAST(int, size.x), CAST(int, size.y));
@@ -118,11 +117,8 @@ void UImGui::OpenGLRenderer::ImGuiShutdown() noexcept
 
 void UImGui::OpenGLRenderer::ImGuiInit() noexcept
 {
-    ImGui_ImplGlfw_InitForOpenGL(Window::getInternal(), true);
-
-#ifdef __EMSCRIPTEN__
-    ImGui_ImplGlfw_InstallEmscriptenCallbacks(Window::getInternal(), "canvas");
-#endif
+    RendererUtils::OpenGL::ImGuiInit();
+    RendererUtils::ImGuiInstallCallbacks();
     ImGui_ImplOpenGL3_Init(UIMGUI_LATEST_GLSL_VERSION);
 }
 

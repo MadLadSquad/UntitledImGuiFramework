@@ -2,12 +2,10 @@
 #include <Renderer/RendererUtils.hpp>
 #ifdef __EMSCRIPTEN__
 #include "imgui.h"
-#include "imgui_impl_glfw.h"
 #include "imgui_impl_wgpu.h"
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #include <emscripten/html5_webgpu.h>
-#include <GLFW/glfw3.h>
 
 #include <Components/Instance.hpp>
 #include <Interfaces/WindowInterface.hpp>
@@ -39,8 +37,8 @@ void UImGui::WebGPURenderer::createSwapchain() noexcept
 {
     if (swapchain)
         wgpuSwapChainRelease(swapchain);
-    swapchainWidth = static_cast<uint32_t>(Window::windowSize().x);
-    swapchainHeight = static_cast<uint32_t>(Window::windowSize().y);
+    swapchainWidth = static_cast<uint32_t>(Window::getWindowSize().x);
+    swapchainHeight = static_cast<uint32_t>(Window::getWindowSize().y);
 
     const WGPUSwapChainDescriptor swapchainDescriptor =
     {
@@ -85,7 +83,7 @@ void UImGui::WebGPURenderer::init(RendererInternalMetadata&) noexcept
 
 void UImGui::WebGPURenderer::renderStart(double deltaTime) noexcept
 {
-    if (swapchainWidth != Window::windowSize().x || swapchainHeight != Window::windowSize().y)
+    if (swapchainWidth != Window::getWindowSize().x || swapchainHeight != Window::getWindowSize().y)
     {
         ImGui_ImplWGPU_InvalidateDeviceObjects();
         createSwapchain();
@@ -189,8 +187,8 @@ void UImGui::WebGPURenderer::ImGuiShutdown() noexcept
 
 void UImGui::WebGPURenderer::ImGuiInit() noexcept
 {
-    ImGui_ImplGlfw_InitForOther(Window::getInternal(), true);
-    ImGui_ImplGlfw_InstallEmscriptenCallbacks(Window::getInternal(), "canvas");
+    RendererUtils::ImGuiInitOther();
+    RendererUtils::ImGuiInstallCallbacks();
 
     ImGui_ImplWGPU_InitInfo initInfo{};
     initInfo.Device = device;
