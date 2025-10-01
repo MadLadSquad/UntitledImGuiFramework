@@ -92,7 +92,15 @@ void* UImGui::MonitorGLFW::getPlatformHandle(MonitorData& data) noexcept
 #ifdef __EMSCRIPTEN__
     return (void*)"#canvas";
 #elifdef _WIN32
-    return reinterpret_cast<void*>(glfwGetWin32Monitor(reinterpret_cast<GLFWmonitor*>(data.id)));
+    return reinterpret_cast<void*>(
+               const_cast<char*>(
+                   glfwGetWin32Monitor(
+                       reinterpret_cast<GLFWmonitor*>(
+                           data.id
+                       )
+                   )
+               )
+    );
 #elifdef __APPLE__
     return reinterpret_cast<void*>(glfwGetCocoaMonitor(reinterpret_cast<GLFWmonitor*>(data.id)));
 #else
