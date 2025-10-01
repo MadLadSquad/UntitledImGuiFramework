@@ -1,5 +1,20 @@
 #include "WindowGLFW.hpp"
 #include <GLFW/glfw3.h>
+#ifdef _WIN32
+    #define GLFW_EXPOSE_NATIVE_WIN32
+#elif __APPLE__
+    #define GLFW_EXPOSE_NATIVE_COCOA
+#elif !__EMSCRIPTEN__
+    #if __has_include(<wayland-client.h>)
+        #define GLFW_EXPOSE_NATIVE_WAYLAND
+    #endif
+    #if __has_include(<X11/Xatom.h>)
+        #define GLFW_EXPOSE_NATIVE_X11
+        #include <X11/Xatom.h>
+        #define _NET_WM_STATE_ADD 1
+    #endif
+#endif
+#include <GLFW/glfw3native.h>
 
 UImGui::Monitor UImGui::WindowGLFW::getWindowMonitor() noexcept
 {
@@ -70,4 +85,19 @@ UImGui::FVector2 UImGui::MonitorGLFW::getSize(MonitorData& data) noexcept
 float UImGui::MonitorGLFW::getPixelDensity(MonitorData& data) noexcept
 {
     return 1.0f;
+}
+
+void* UImGui::MonitorGLFW::getPlatformHandle(MonitorData& data) noexcept
+{
+#ifdef __EMSCRIPTEN__
+    return (void*)"#canvas";
+#elifdef _WIN32
+    return glfwGetWin32Monitor(reinterpret_cast<GLFWmonitor*>(data.id));
+#elifdef __APPLE__
+    return reinterpret_cast<void*>(glfwGetCocoaMonitor(reinterpret_cast<GLFWmonitor*>(data.id)));
+#else
+    if (glfwGetPlatform() == GLFW_PLATFORM_WAYLAND)
+        return glfwGetWaylandMonitor(reinterpret_cast<GLFWmonitor*>(data.id));
+    return reinterpret_cast<void*>(glfwGetX11Monitor(reinterpret_cast<GLFWmonitor*>(data.id)));
+#endif
 }

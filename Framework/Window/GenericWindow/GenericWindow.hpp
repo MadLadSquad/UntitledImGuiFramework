@@ -14,6 +14,7 @@
 namespace UImGui
 {
     typedef UImGui_CursorVisibilityState CursorVisibilityState;
+    typedef UImGui_WindowPlatform WindowPlatform;
 
     struct UIMGUI_PUBLIC_API WindowData
     {
@@ -150,6 +151,10 @@ namespace UImGui
         virtual void Platform_setWindowType(String type) noexcept = 0;
         virtual size_t Platform_getWindowID() noexcept = 0;
 
+        virtual void* Platform_getNativeWindowHandle() noexcept = 0;
+        virtual WindowPlatform Platform_getCurrentWindowPlatform() noexcept = 0;
+        virtual void* Platform_getNativeDisplay() noexcept = 0;
+
         virtual void setWindowSizeInScreenCoords(FVector2 sz) noexcept = 0;
         virtual FVector2 getWindowSizeInScreenCoords() noexcept = 0;
         virtual void pushWindowResizedInScreenCoordsCallback(const TFunction<void(int, int)>& f) noexcept = 0;
@@ -166,7 +171,9 @@ namespace UImGui
         virtual bool& getWindowHiddenSetting() noexcept = 0;
         virtual bool getWindowCurrentlyHidden() noexcept = 0;
 
-        virtual bool& windowSurfaceTransparentSetting() noexcept = 0;
+        virtual bool getWindowSurfaceTransparent() noexcept = 0;
+        virtual void setWindowSurfaceTransparent(bool bTransparent) noexcept = 0;
+        virtual bool& getWindowSurfaceTransparentSetting() noexcept = 0;
 
         virtual void focusWindow() noexcept = 0;
         virtual bool& getWindowFocusedSetting() noexcept = 0;

@@ -8,6 +8,16 @@ extern "C"
 #include <C/CDefines.h>
 #include <C/Window/CMonitor.h>
 
+    typedef enum UImGui_WindowPlatform
+    {
+        UIMGUI_WINDOW_PLATFORM_WIN32,
+        UIMGUI_WINDOW_PLATFORM_COCOA,
+        UIMGUI_WINDOW_PLATFORM_X11,
+        UIMGUI_WINDOW_PLATFORM_WAYLAND,
+        UIMGUI_WINDOW_PLATFORM_EMSCRIPTEN,
+        UIMGUI_WINDOW_PLATFORM_OTHER
+    } UImGui_WindowPlatform;
+
     typedef void(*UImGui_Window_pushWindowPositionChangeCallbackFun)(UImGui_FVector2);
     typedef void(*UImGui_Window_pushWindowCloseCallbackFun)();
     typedef void(*UImGui_Window_pushWindowResizedInScreenCoordsCallbackFun)(int, int);
@@ -80,36 +90,51 @@ extern "C"
     UIMGUI_PUBLIC_API void UImGui_Window_pushWindowCloseCallback(UImGui_Window_pushWindowCloseCallbackFun f);
     
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32 & macOS
+    // Available for GLFW platforms - X11, Win32 & macOS
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowAlwaysOnTop();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32 & macOS
+    // Available for GLFW platforms - X11, Win32 & macOS
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowAlwaysOnBottom();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32
+    // Available for GLFW platforms - X11, Win32
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowShowingOnPager(bool bShowInPager);
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32
+    // Available for GLFW platforms - X11, Win32
     UIMGUI_PUBLIC_API bool UImGui_Window_Platform_getWindowShowingOnPager();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32
+    // Available for GLFW platforms - X11, Win32
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowShowingOnTaskbar(bool bShowOnTaskbar);
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32
+    // Available for GLFW platforms - X11, Win32
     UIMGUI_PUBLIC_API bool UImGui_Window_Platform_getWindowShowingOnTaskbar();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11
+    // Available for GLFW platforms - X11
     // Sets the X11 window type
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowType(UImGui_String type);
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32 & macOS
+    // Available for GLFW platforms - X11, Win32 & macOS
     // Returns the window ID as a size_t. On macOS, it returns the memory address to the window as its integer representation
     UIMGUI_PUBLIC_API size_t UImGui_Window_Platform_getWindowID();
+
+    // Event Safety - begin, style, post-begin
+    // Available for GLFW platforms - Win32, macOS, Emscripten, X11 & Wayland
+    // Returns the native window handle as a void*
+    UIMGUI_PUBLIC_API void* UImGui_Window_Platform_getNativeWindowHandle();
+
+    // Event Safety - begin, style, post-begin
+    // Available for GLFW platforms - Win32, macOS, Emscripten, X11 & Wayland
+    // Returns the native window handle as a void*
+    UIMGUI_PUBLIC_API UImGui_WindowPlatform UImGui_Window_Platform_getCurrentWindowPlatform();
+
+    // Event Safety - begin, style, post-begin
+    // Available for GLFW platforms - X11 & Wayland. The other platforms return null. Cross-platform libraries
+    // should handle null values without any issues though.
+    UIMGUI_PUBLIC_API void* UImGui_Window_Platform_getNativeDisplay();
 
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_setWindowSizeInScreenCoords(UImGui_FVector2 sz);
@@ -153,7 +178,11 @@ extern "C"
     UIMGUI_PUBLIC_API bool UImGui_Window_getWindowCurrentlyHidden();
 
     // Event safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API bool* UImGui_Window_windowSurfaceTransparentSetting();
+    UIMGUI_PUBLIC_API bool UImGui_Window_getWindowSurfaceTransparent();
+    // Event safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API void UImGui_Window_setWindowSurfaceTransparent(bool bTransparent);
+    // Event safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API bool* UImGui_Window_getWindowSurfaceTransparentSetting();
 
     // Event safety - begin, style, post-begin
     // This doesn't change the "focused" setting, use the `getWindowFocused` function

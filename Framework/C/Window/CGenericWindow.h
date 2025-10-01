@@ -2,6 +2,7 @@
 #include <C/Window/CMonitor.h>
 #include <C/Renderer/CRendererUtils.h>
 #include <C/Interfaces/CInput.h>
+#include <C/Interfaces/CWindowInterface.h>
 #ifndef __EMSCRIPTEN__
     #include <vulkan/vulkan.h>
 #endif
@@ -113,6 +114,10 @@ extern "C"
         void(*Platform_setWindowType)(struct UImGui_CGenericWindowInitInfo*, UImGui_String);
         size_t(*Platform_getWindowID)(struct UImGui_CGenericWindowInitInfo*);
 
+        void*(*Platform_getNativeWindowHandle)(struct UImGui_CGenericWindowInitInfo*);
+        UImGui_WindowPlatform(*Platform_getCurrentWindowPlatform)(struct UImGui_CGenericWindowInitInfo*);
+        void*(*Platform_getNativeDisplay)(struct UImGui_CGenericWindowInitInfo*);
+
         void(*setWindowSizeInScreenCoords)(struct UImGui_CGenericWindowInitInfo*, UImGui_FVector2);
         UImGui_FVector2(*getWindowSizeInScreenCoords)(struct UImGui_CGenericWindowInitInfo*);
         void(*pushWindowResizedInScreenCoordsCallback)(struct UImGui_CGenericWindowInitInfo*, const void*);
@@ -129,7 +134,9 @@ extern "C"
         bool*(*getWindowHiddenSetting)(struct UImGui_CGenericWindowInitInfo*);
         bool(*getWindowCurrentlyHidden)(struct UImGui_CGenericWindowInitInfo*);
 
-        bool*(*windowSurfaceTransparentSetting)(struct UImGui_CGenericWindowInitInfo*);
+        bool(*getWindowSurfaceTransparent)(struct UImGui_CGenericWindowInitInfo*);
+        void(*setWindowSurfaceTransparent)(struct UImGui_CGenericWindowInitInfo*, bool);
+        bool*(*getWindowSurfaceTransparentSetting)(struct UImGui_CGenericWindowInitInfo*);
 
         void(*focusWindow)(struct UImGui_CGenericWindowInitInfo*);
         bool*(*getWindowFocusSetting)(struct UImGui_CGenericWindowInitInfo*);
