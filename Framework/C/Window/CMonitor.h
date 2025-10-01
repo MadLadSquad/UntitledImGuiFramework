@@ -36,6 +36,10 @@ extern "C"
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API float UImGui_Monitor_getPixelDensity(UImGui_MonitorData* data);
 
+    // Get the monitor's platform-specific handle
+    // Event safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API void* UImGui_Monitor_getPlatformHandle(UImGui_MonitorData* data);
+
     // Allocate a GenericMonitor instance to be used together with a corresponding GenericWindow
     // Event safety - Any time
     UIMGUI_PUBLIC_API UImGui_CGenericMonitor* UImGui_CGenericMonitor_allocate(
@@ -43,7 +47,8 @@ extern "C"
         double(*getContentScale)(UImGui_MonitorData*),
         UImGui_String(*getName)(UImGui_MonitorData*),
         UImGui_FVector2(*getSize)(UImGui_MonitorData*),
-        float(*getPixelDensity)(UImGui_MonitorData*)
+        float(*getPixelDensity)(UImGui_MonitorData*),
+        void*(*getPlatformHandle)(UImGui_MonitorData*)
     );
 
     // CGenericWindow instances automatically call this function in their destructor, but it is given for convenience

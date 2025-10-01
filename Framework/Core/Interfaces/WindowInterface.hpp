@@ -77,38 +77,53 @@ namespace UImGui
             void operator=(Platform const&) = delete;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32, macOS
+            // Available for GLFW platforms - X11, Win32, macOS
             static void setWindowAlwaysOnTop() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32, macOS
+            // Available for GLFW platforms - X11, Win32, macOS
             static void setWindowAlwaysOnBottom() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Platform note: On Win32 "setWindowShowingOnPager" and "setWindowShowingOnTaskbar" run the same code,
+            // GLFW Platform note: On Win32 "setWindowShowingOnPager" and "setWindowShowingOnTaskbar" run the same code,
             // as it is not possible to disable the window from showing on both the taskbar and window switcher
-            // Available for platforms - X11, Win32
+            // Available for GLFW platforms - X11, Win32
             static void setWindowShowingOnPager(bool bShowInPager) noexcept;
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for GLFW platforms - X11, Win32
             static bool getWindowShowingOnPager() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for GLFW platforms - X11, Win32
             static void setWindowShowingOnTaskbar(bool bShowOnTaskbar) noexcept;
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for GLFW platforms - X11, Win32
             static bool getWindowShowingOnTaskbar() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11
+            // Available for GLFW platforms - X11
             // Sets the X11 window type
             static void setWindowType(String type) noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32, macOS
+            // Available for GLFW platforms - X11, Win32, macOS
             // Returns the window ID as a size_t. On macOS this is the integer representation of the window pointer
             static size_t getWindowID() noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for GLFW platforms - Win32, macOS, Emscripten, X11 & Wayland
+            // Returns the native window handle as a void*
+            static void* getNativeWindowHandle() noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for GLFW platforms - Win32, macOS, Emscripten, X11 & Wayland
+            // Returns the native window handle as a void*
+            static WindowPlatform getCurrentWindowPlatform() noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for GLFW platforms - X11 & Wayland. The other platforms return null. Cross-platform libraries
+            // should handle null values without any issues though.
+            static void* getNativeDisplay() noexcept;
         };
 
         // Event safety - begin, style, post-begin
@@ -153,7 +168,11 @@ namespace UImGui
         static bool getWindowCurrentlyHidden() noexcept;
 
         // Event safety - begin, style, post-begin
-        static bool& windowSurfaceTransparentSetting() noexcept;
+        static bool getWindowSurfaceTransparent() noexcept;
+        // Event safety - begin, style, post-begin
+        static void setWindowSurfaceTransparent(bool bTransparent) noexcept;
+        // Event safety - begin, style, post-begin
+        static bool& getWindowSurfaceTransparentSetting() noexcept;
 
         // Event safety - begin, style, post-begin
         // This doesn't change the "focused" setting, use the `getWindowFocused` function

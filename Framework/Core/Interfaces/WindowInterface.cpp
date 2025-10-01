@@ -158,9 +158,19 @@ bool& UImGui::Window::getWindowHiddenSetting() noexcept
     return window(getWindowHiddenSetting());
 }
 
-bool& UImGui::Window::windowSurfaceTransparentSetting() noexcept
+bool UImGui::Window::getWindowSurfaceTransparent() noexcept
 {
-    return window(windowSurfaceTransparentSetting());
+    return window(getWindowSurfaceTransparent());
+}
+
+void UImGui::Window::setWindowSurfaceTransparent(const bool bTransparent) noexcept
+{
+    window(setWindowSurfaceTransparent(bTransparent));
+}
+
+bool& UImGui::Window::getWindowSurfaceTransparentSetting() noexcept
+{
+    return window(getWindowSurfaceTransparentSetting());
 }
 
 void UImGui::Window::focusWindow() noexcept
@@ -356,6 +366,21 @@ void UImGui::Window::Platform::setWindowType(const String type) noexcept
 size_t UImGui::Window::Platform::getWindowID() noexcept
 {
     return window(Platform_getWindowID());
+}
+
+void* UImGui::Window::Platform::getNativeWindowHandle() noexcept
+{
+    return window(Platform_getNativeWindowHandle());
+}
+
+UImGui::WindowPlatform UImGui::Window::Platform::getCurrentWindowPlatform() noexcept
+{
+    return window(Platform_getCurrentWindowPlatform());
+}
+
+void* UImGui::Window::Platform::getNativeDisplay() noexcept
+{
+    return window(Platform_getNativeDisplay());
 }
 
 void* UImGui::Window::getInternal() noexcept

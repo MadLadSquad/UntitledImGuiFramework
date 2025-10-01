@@ -29,6 +29,11 @@ float UImGui_Monitor_getPixelDensity(UImGui_MonitorData* data)
     return cast(data)->getPixelDensity();
 }
 
+void* UImGui_Monitor_getPlatformHandle(UImGui_MonitorData* data)
+{
+    return cast(data)->getPlatformHandle();
+}
+
 class CGenericMonitor final : public UImGui::GenericMonitor
 {
 public:
@@ -57,11 +62,17 @@ public:
         return getPixelDensityFun(&data);
     }
 
+    void* getPlatformHandle(UImGui::MonitorData& data) noexcept override
+    {
+        return getPlatformHandleFun(&data);
+    }
+
     UImGui_FVector4(*getWorkAreaFun)(UImGui_MonitorData*){};
     double(*getContentScaleFun)(UImGui_MonitorData*){};
     UImGui_String(*getNameFun)(UImGui_MonitorData*){};
     UImGui_FVector2(*getSizeFun)(UImGui_MonitorData*){};
     float(*getPixelDensityFun)(UImGui_MonitorData*){};
+    void*(*getPlatformHandleFun)(UImGui_MonitorData*);
 };
 
 UImGui_CGenericMonitor* UImGui_CGenericMonitor_allocate(
@@ -69,7 +80,8 @@ UImGui_CGenericMonitor* UImGui_CGenericMonitor_allocate(
                                                             double(*getContentScale)(UImGui_MonitorData*),
                                                             UImGui_String(*getName)(UImGui_MonitorData*),
                                                             UImGui_FVector2(*getSize)(UImGui_MonitorData*),
-                                                            float(*getPixelDensity)(UImGui_MonitorData*)
+                                                            float(*getPixelDensity)(UImGui_MonitorData*),
+                                                            void*(*getPlatformHandle)(UImGui_MonitorData*)
                                                         )
 {
     auto* result = new CGenericMonitor{};
@@ -78,6 +90,7 @@ UImGui_CGenericMonitor* UImGui_CGenericMonitor_allocate(
     result->getNameFun = getName;
     result->getSizeFun = getSize;
     result->getPixelDensityFun = getPixelDensity;
+    result->getPlatformHandleFun = getPlatformHandle;
     return result;
 }
 

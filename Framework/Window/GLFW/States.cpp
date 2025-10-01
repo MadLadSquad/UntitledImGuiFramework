@@ -165,6 +165,7 @@ void UImGui::WindowGLFW::refreshSettings() noexcept
     setWindowFullscreen(windowData.fullscreen);
     setWindowResizeable(windowData.bResizeable);
 
+    setWindowSurfaceTransparent(windowData.bSurfaceTransparent);
     if (windowData.bSurfaceTransparent)
         glfwSetWindowOpacity(window, ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w);
 
@@ -193,7 +194,17 @@ void UImGui::WindowGLFW::pushWindowCloseCallback(const std::function<void()>& f)
     windowCloseCallbackList.push_back(f);
 }
 
-bool& UImGui::WindowGLFW::windowSurfaceTransparentSetting() noexcept
+bool UImGui::WindowGLFW::getWindowSurfaceTransparent() noexcept
+{
+    return glfwGetWindowAttrib(window, GLFW_TRANSPARENT_FRAMEBUFFER);
+}
+
+void UImGui::WindowGLFW::setWindowSurfaceTransparent(const bool bTransparent) noexcept
+{
+    glfwSetWindowAttrib(window, GLFW_TRANSPARENT_FRAMEBUFFER, bTransparent);
+}
+
+bool& UImGui::WindowGLFW::getWindowSurfaceTransparentSetting() noexcept
 {
     return windowData.bSurfaceTransparent;
 }

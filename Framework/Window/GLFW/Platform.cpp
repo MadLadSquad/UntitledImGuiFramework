@@ -330,3 +330,38 @@ size_t UImGui::WindowGLFW::Platform_getWindowID() noexcept
 #endif
     return 0;
 }
+
+void* UImGui::WindowGLFW::Platform_getNativeWindowHandle() noexcept
+{
+#ifdef __APPLE__
+    return glfwGetCocoaWindow(window);
+#elifdef _WIN32
+    return glfwGetWin32Window(window);
+#elifdef __EMSCRIPTEN__
+    return (void*)"#canvas";
+#else
+    return (glfwGetPlatform() == GLFW_PLATFORM_WAYLAND) ? glfwGetWaylandWindow(window) : reinterpret_cast<void*>(glfwGetX11Window(window));
+#endif
+}
+
+UImGui::WindowPlatform UImGui::WindowGLFW::Platform_getCurrentWindowPlatform() noexcept
+{
+#ifdef __APPLE__
+    return UIMGUI_WINDOW_PLATFORM_COCOA;
+#elifdef _WIN32
+    return UIMGUI_WINDOW_PLATFORM_WIN32;
+#elifdef __EMSCRIPTEN__
+    return UIMGUI_WINDOW_PLATFORM_EMSCRIPTEN;
+#else
+    return (glfwGetPlatform() == GLFW_PLATFORM_WAYLAND) ? UIMGUI_WINDOW_PLATFORM_WAYLAND : UIMGUI_WINDOW_PLATFORM_X11;
+#endif
+}
+
+void* UImGui::WindowGLFW::Platform_getNativeDisplay() noexcept
+{
+#if defined(__EMSCRIPTEN__) || defined(__APPLE__) || defined(_WIN32)
+    return nullptr;
+#else
+    return (glfwGetPlatform() == GLFW_PLATFORM_WAYLAND) ? CAST(void*, glfwGetWaylandDisplay()) : CAST(void*, glfwGetX11Display());
+#endif
+}

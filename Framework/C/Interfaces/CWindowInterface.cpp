@@ -158,6 +158,21 @@ size_t UImGui_Window_Platform_getWindowID()
     return UImGui::Window::Platform::getWindowID();
 }
 
+void* UImGui_Window_Platform_getNativeWindowHandle()
+{
+    return UImGui::Window::Platform::getNativeWindowHandle();
+}
+
+UImGui_WindowPlatform UImGui_Window_Platform_getCurrentWindowPlatform()
+{
+    return UImGui::Window::Platform::getCurrentWindowPlatform();
+}
+
+void* UImGui_Window_Platform_getNativeDisplay()
+{
+    return UImGui::Window::Platform::getNativeDisplay();
+}
+
 void UImGui_Window_setWindowSizeInScreenCoords(const UImGui_FVector2 sz)
 {
     UImGui::Window::setWindowSizeInScreenCoords(sz);
@@ -220,9 +235,19 @@ bool UImGui_Window_getWindowCurrentlyHidden()
     return UImGui::Window::getWindowCurrentlyHidden();
 }
 
-bool* UImGui_Window_windowSurfaceTransparentSetting()
+bool UImGui_Window_getWindowSurfaceTransparent()
 {
-    return &UImGui::Window::windowSurfaceTransparentSetting();
+    return UImGui::Window::getWindowSurfaceTransparent();
+}
+
+void UImGui_Window_setWindowSurfaceTransparent(const bool bTransparent)
+{
+    UImGui::Window::setWindowSurfaceTransparent(bTransparent);
+}
+
+bool* UImGui_Window_getWindowSurfaceTransparentSetting()
+{
+    return &UImGui::Window::getWindowSurfaceTransparentSetting();
 }
 
 void UImGui_Window_focusWindow()

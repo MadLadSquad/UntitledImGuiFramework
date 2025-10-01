@@ -17,6 +17,8 @@ namespace UImGui
 
         double getContentScale(MonitorData& data) noexcept override;
         float getPixelDensity(MonitorData& data) noexcept override;
+
+        void* getPlatformHandle(MonitorData& data) noexcept override;
     };
 
     class UIMGUI_PUBLIC_API WindowGLFW final : public GenericWindow
@@ -123,6 +125,10 @@ namespace UImGui
         void Platform_setWindowType(String type) noexcept override;
         size_t Platform_getWindowID() noexcept override;
 
+        void* Platform_getNativeWindowHandle() noexcept override;
+        WindowPlatform Platform_getCurrentWindowPlatform() noexcept override;
+        void* Platform_getNativeDisplay() noexcept override;
+
         void setWindowSizeInScreenCoords(FVector2 sz) noexcept override;
         FVector2 getWindowSizeInScreenCoords() noexcept override;
         void pushWindowResizedInScreenCoordsCallback(const TFunction<void(int, int)>& f) noexcept override;
@@ -139,7 +145,9 @@ namespace UImGui
         bool& getWindowHiddenSetting() noexcept override;
         bool getWindowCurrentlyHidden() noexcept override;
 
-        bool& windowSurfaceTransparentSetting() noexcept override;
+        bool getWindowSurfaceTransparent() noexcept override;
+        void setWindowSurfaceTransparent(bool bTransparent) noexcept override;
+        bool& getWindowSurfaceTransparentSetting() noexcept override;
 
         void focusWindow() noexcept override;
         bool& getWindowFocusedSetting() noexcept override;

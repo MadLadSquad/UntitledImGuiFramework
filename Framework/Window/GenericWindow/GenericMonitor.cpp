@@ -47,6 +47,15 @@ float UImGui::Monitor::getPixelDensity() noexcept
 #endif
 }
 
+void* UImGui::Monitor::getPlatformHandle() noexcept
+{
+#ifndef __EMSCRIPTEN__
+    return Window::get()->monitor->getPlatformHandle(data);
+#else
+    return nullptr;
+#endif
+}
+
 UImGui::MonitorData& UImGui::Monitor::get() noexcept
 {
     return data;

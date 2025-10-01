@@ -19,6 +19,8 @@ namespace UImGui
 
         virtual double getContentScale(MonitorData& data) noexcept = 0;
         virtual float getPixelDensity(MonitorData& data) noexcept = 0;
+
+        virtual void* getPlatformHandle(MonitorData& data) noexcept = 0;
     };
 
     class UIMGUI_PUBLIC_API Monitor
@@ -45,6 +47,10 @@ namespace UImGui
         // Get the monitor's pixel density
         // Event safety - begin, style, post-begin
         float getPixelDensity() noexcept;
+
+        // Get the monitor's platform-specific handle
+        // Event safety - begin, style, post-begin
+        void* getPlatformHandle() noexcept;
 
         // Event safety - any time
         MonitorData& get() noexcept;
