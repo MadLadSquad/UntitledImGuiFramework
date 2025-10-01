@@ -341,6 +341,20 @@ public:
         return initInfo->Platform_getWindowID(initInfo);
     }
 
+    void* Platform_getNativeWindowHandle() noexcept override
+    {
+        return initInfo->Platform_getNativeWindowHandle(initInfo);
+    }
+
+    UImGui::WindowPlatform Platform_getCurrentWindowPlatform() noexcept override
+    {
+        return initInfo->Platform_getCurrentWindowPlatform(initInfo);
+    }
+
+    void* Platform_getNativeDisplay() noexcept override
+    {
+        return initInfo->Platform_getNativeDisplay(initInfo);
+    }
 
     void setWindowSizeInScreenCoords(const UImGui::FVector2 sz) noexcept override
     {
@@ -405,10 +419,19 @@ public:
         return initInfo->getWindowCurrentlyHidden(initInfo);
     }
 
-
-    bool& windowSurfaceTransparentSetting() noexcept override
+    bool getWindowSurfaceTransparent() noexcept override
     {
-        return *initInfo->windowSurfaceTransparentSetting(initInfo);
+        return initInfo->getWindowSurfaceTransparent(initInfo);
+    }
+
+    void setWindowSurfaceTransparent(const bool bTransparent) noexcept override
+    {
+        initInfo->setWindowSurfaceTransparent(initInfo, bTransparent);
+    }
+
+    bool& getWindowSurfaceTransparentSetting() noexcept override
+    {
+        return *initInfo->getWindowSurfaceTransparentSetting(initInfo);
     }
 
 
