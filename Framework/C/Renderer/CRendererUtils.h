@@ -1,5 +1,5 @@
 #pragma once
-#include <C/CDefines.h>
+#include <C/CTypes.h>
 #include <C/Window/RendererData.h>
 #ifndef __EMSCRIPTEN__
     #include <vulkan/vulkan.h>
@@ -112,15 +112,20 @@ extern "C"
     // Event safety - startup, post-startup
     UIMGUI_PUBLIC_API UImGui_OpenGL_GetProcAddressFun UImGui_RendererUtils_OpenGL_getProcAddressFunction();
 
+    // Initialise dear imgui for rendering with OpenGL
+    // Event safety - style, begin
+    UIMGUI_PUBLIC_API void UImGui_RendererUtils_OpenGL_ImGuiInit(UImGui_String glslVersion);
+
     // Check for WebGPU support
     // Event safety - any time
     UIMGUI_PUBLIC_API bool UImGui_RendererUtils_WebGPU_supported();
 
 
     #ifndef __EMSCRIPTEN__
-        // Initialise dear imgui for rendering with Vulkan
+        // Initialise dear imgui for rendering with Vulkan. Requires a pointer to a C++ instance of the
+        // ImGui_ImplVulkan_InitInfo struct which is already filled.
         // Event safety - style, begin
-        UIMGUI_PUBLIC_API void UImGui_RendererUtils_Vulkan_ImGuiInit();
+        UIMGUI_PUBLIC_API void UImGui_RendererUtils_Vulkan_ImGuiInit(void* initInfo);
 
         // Event safety - post-startup
         UIMGUI_PUBLIC_API VkResult UImGui_RendererUtils_Vulkan_createWindowSurface(VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface);

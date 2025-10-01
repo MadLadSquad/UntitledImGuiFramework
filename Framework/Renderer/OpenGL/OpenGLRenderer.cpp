@@ -117,9 +117,7 @@ void UImGui::OpenGLRenderer::ImGuiShutdown() noexcept
 
 void UImGui::OpenGLRenderer::ImGuiInit() noexcept
 {
-    RendererUtils::OpenGL::ImGuiInit();
-    RendererUtils::ImGuiInstallCallbacks();
-    ImGui_ImplOpenGL3_Init(UIMGUI_LATEST_GLSL_VERSION);
+    RendererUtils::OpenGL::ImGuiInit(UIMGUI_LATEST_GLSL_VERSION);
 }
 
 void UImGui::OpenGLRenderer::ImGuiRenderData() noexcept

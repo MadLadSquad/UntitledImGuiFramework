@@ -61,6 +61,11 @@ UImGui_OpenGL_GetProcAddressFun UImGui_RendererUtils_OpenGL_getProcAddressFuncti
     return UImGui::RendererUtils::OpenGL::getProcAddressFunction();
 }
 
+void UImGui_RendererUtils_OpenGL_ImGuiInit(const UImGui_String glslVersion)
+{
+    UImGui::RendererUtils::OpenGL::ImGuiInit(glslVersion);
+}
+
 void UImGui_RendererUtils_ImGuiInitOther()
 {
     UImGui::RendererUtils::ImGuiInitOther();
@@ -72,9 +77,9 @@ UImGui_CGenericRenderer* UImGui_RendererUtils_getRenderer()
 }
 
 #ifndef __EMSCRIPTEN__
-void UImGui_RendererUtils_Vulkan_ImGuiInit()
+void UImGui_RendererUtils_Vulkan_ImGuiInit(void* initInfo)
 {
-    UImGui::RendererUtils::Vulkan::ImGuiInit();
+    UImGui::RendererUtils::Vulkan::ImGuiInit(*static_cast<ImGui_ImplVulkan_InitInfo*>(initInfo));
 }
 
 VkResult UImGui_RendererUtils_Vulkan_createWindowSurface(VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface)
