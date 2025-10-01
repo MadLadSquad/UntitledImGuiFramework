@@ -58,10 +58,9 @@ void UImGui::VKDraw::destroy() noexcept
 
 void UImGui::VKDraw::ImGuiInit() const noexcept
 {
-    RendererUtils::Vulkan::ImGuiInit();
     ImGui_ImplVulkan_InitInfo initInfo =
     {
-        .ApiVersion = VK_API_VERSION_1_3,
+        .ApiVersion = VK_API_VERSION_1_4,
         .Instance = instance->data(),
         .PhysicalDevice = device->physicalDevice,
         .Device = device->device,
@@ -93,7 +92,7 @@ void UImGui::VKDraw::ImGuiInit() const noexcept
             }
         }
     };
-    ImGui_ImplVulkan_Init(&initInfo);
+    RendererUtils::Vulkan::ImGuiInit(initInfo);
 }
 
 void UImGui::VKDraw::ImGuiPreDraw() noexcept

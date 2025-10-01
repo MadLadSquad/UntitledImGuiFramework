@@ -33,24 +33,24 @@ UImGui_String UImGui_Renderer_getDriverVersion()
     return UImGui::Renderer::getDriverVersion().c_str();
 }
 
-void UImGui_RendererInternalMetadata_setVendorString(UImGui_String str)
+void UImGui_RendererInternalMetadata_setVendorString(const UImGui_String str)
 {
     UImGui::Global::get().renderer->metadata.vendorString = str;
 }
 
-void UImGui_RendererInternalMetadata_setApiVersion(UImGui_String str)
+void UImGui_RendererInternalMetadata_setApiVersion(const UImGui_String str)
 {
     UImGui::Global::get().renderer->metadata.apiVersion = str;
 
 }
 
-void UImGui_RendererInternalMetadata_setDriverVersion(UImGui_String str)
+void UImGui_RendererInternalMetadata_setDriverVersion(const UImGui_String str)
 {
     UImGui::Global::get().renderer->metadata.driverVersion = str;
 
 }
 
-void UImGui_RendererInternalMetadata_setGPUName(UImGui_String str)
+void UImGui_RendererInternalMetadata_setGPUName(const UImGui_String str)
 {
     UImGui::Global::get().renderer->metadata.gpuName = str;
 }
