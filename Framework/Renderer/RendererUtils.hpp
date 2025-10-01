@@ -5,6 +5,7 @@
     #include <vulkan/vulkan.h>
 #endif
 
+struct ImGui_ImplVulkan_InitInfo;
 namespace UImGui
 {
     typedef UImGui_RendererClientAPI RendererClientAPI;
@@ -88,7 +89,7 @@ namespace UImGui
 
             // Initialise dear imgui for rendering with OpenGL
             // Event safety - style, begin
-            static void ImGuiInit() noexcept;
+            static void ImGuiInit(String glslVersion) noexcept;
         };
 
         class UIMGUI_PUBLIC_API Vulkan
@@ -101,7 +102,7 @@ namespace UImGui
 #ifndef __EMSCRIPTEN__
             // Initialise dear imgui for rendering with Vulkan
             // Event safety - style, begin
-            static void ImGuiInit() noexcept;
+            static void ImGuiInit(ImGui_ImplVulkan_InitInfo& initInfo) noexcept;
 
             // Event safety - post-startup
             static VkResult createWindowSurface(VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) noexcept;

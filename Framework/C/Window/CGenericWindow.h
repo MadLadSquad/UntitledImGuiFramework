@@ -56,11 +56,15 @@ extern "C"
 #endif
 
         CKeyState(*getKey)(struct UImGui_CGenericWindowInitInfo*, CKeys);
+
         UImGui_FVector2(*getMousePositionChange)(struct UImGui_CGenericWindowInitInfo*);
         UImGui_FVector2(*getCurrentMousePosition)(struct UImGui_CGenericWindowInitInfo*);
         UImGui_FVector2(*getLastMousePosition)(struct UImGui_CGenericWindowInitInfo*);
+
         UImGui_FVector2(*getScroll)(struct UImGui_CGenericWindowInitInfo*);
+
         void(*setCursorVisibility)(struct UImGui_CGenericWindowInitInfo*, UImGui_CursorVisibilityState);
+
         void(*setRawMouseMotion)(struct UImGui_CGenericWindowInitInfo*, bool);
         bool(*getRawMouseMotion)(struct UImGui_CGenericWindowInitInfo*);
 
@@ -79,6 +83,7 @@ extern "C"
         UImGui_FVector2(*getCurrentWindowPosition)(struct UImGui_CGenericWindowInitInfo*);
         UImGui_FVector2(*getLastWindowPosition)(struct UImGui_CGenericWindowInitInfo*);
         UImGui_FVector2(*getWindowPositionChange)(struct UImGui_CGenericWindowInitInfo*);
+
         void(*setCurrentWindowPosition)(struct UImGui_CGenericWindowInitInfo*, UImGui_FVector2);
         void(*pushWindowPositionChangeCallback)(struct UImGui_CGenericWindowInitInfo*, const void*);
 
@@ -92,6 +97,7 @@ extern "C"
         void(*saveSettings)(struct UImGui_CGenericWindowInitInfo*, bool);
         void(*openConfig)(struct UImGui_CGenericWindowInitInfo*);
         void(*refreshSettings)(struct UImGui_CGenericWindowInitInfo*);
+
         void(*close)(struct UImGui_CGenericWindowInitInfo*);
         void(*pushWindowCloseCallback)(struct UImGui_CGenericWindowInitInfo*, const void*);
 

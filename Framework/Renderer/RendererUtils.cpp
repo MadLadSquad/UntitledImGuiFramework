@@ -3,6 +3,7 @@
 #include <Core/Platform/WASM.hpp>
 #include <ImGui/ImGui.hpp>
 #include <Interfaces/RendererInterface.hpp>
+#include <imgui_impl_opengl3.h>
 
 UImGui::GenericRenderer* UImGui::RendererUtils::getRenderer() noexcept
 {
@@ -49,9 +50,11 @@ void UImGui::RendererUtils::OpenGL::setSwapInterval(const int interval) noexcept
     Window::get()->OpenGL_setSwapInterval(interval);
 }
 
-void UImGui::RendererUtils::OpenGL::ImGuiInit() noexcept
+void UImGui::RendererUtils::OpenGL::ImGuiInit(const String glslVersion) noexcept
 {
     Window::get()->ImGuiInitFor_OpenGL();
+    ImGuiInstallCallbacks();
+    ImGui_ImplOpenGL3_Init(glslVersion);
 }
 
 UImGui::RendererUtils::OpenGL::GetProcAddressFun UImGui::RendererUtils::OpenGL::getProcAddressFunction() noexcept
@@ -84,9 +87,10 @@ void UImGui::RendererUtils::ImGuiInstallCallbacks() noexcept
 }
 
 #ifndef __EMSCRIPTEN__
-void UImGui::RendererUtils::Vulkan::ImGuiInit() noexcept
+void UImGui::RendererUtils::Vulkan::ImGuiInit(ImGui_ImplVulkan_InitInfo& initInfo) noexcept
 {
     Window::get()->ImGuiInitFor_Vulkan();
+    ImGui_ImplVulkan_Init(&initInfo);
 }
 
 VkResult UImGui::RendererUtils::Vulkan::createWindowSurface(const VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) noexcept
