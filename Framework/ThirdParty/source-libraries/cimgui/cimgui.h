@@ -33,7 +33,7 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #define IMGUI_VERSION       "1.92.4 WIP"
-#define IMGUI_VERSION_NUM   19232
+#define IMGUI_VERSION_NUM   19234
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
 #define IMGUI_HAS_VIEWPORT           // In 'docking' WIP branch.
@@ -1959,10 +1959,11 @@ typedef enum
     ImGuiBackendFlags_RendererHasVtxOffset    = 1<<3,   // Backend Renderer supports ImDrawCmd::VtxOffset. This enables output of large meshes (64K+ vertices) while still using 16-bit indices.
     ImGuiBackendFlags_RendererHasTextures     = 1<<4,   // Backend Renderer supports ImTextureData requests to create/update/destroy textures. This enables incremental texture updates and texture reloads. See https://github.com/ocornut/imgui/blob/master/docs/BACKENDS.md for instructions on how to upgrade your custom backend.
 
-    // [BETA] Viewports
-    ImGuiBackendFlags_PlatformHasViewports    = 1<<10,  // Backend Platform supports multiple viewports.
-    ImGuiBackendFlags_HasMouseHoveredViewport = 1<<11,  // Backend Platform supports calling io.AddMouseViewportEvent() with the viewport under the mouse. IF POSSIBLE, ignore viewports with the ImGuiViewportFlags_NoInputs flag (Win32 backend, GLFW 3.30+ backend can do this, SDL backend cannot). If this cannot be done, Dear ImGui needs to use a flawed heuristic to find the viewport under.
-    ImGuiBackendFlags_RendererHasViewports    = 1<<12,  // Backend Renderer supports multiple viewports.
+    // [BETA] Multi-Viewports
+    ImGuiBackendFlags_RendererHasViewports    = 1<<10,  // Backend Renderer supports multiple viewports.
+    ImGuiBackendFlags_PlatformHasViewports    = 1<<11,  // Backend Platform supports multiple viewports.
+    ImGuiBackendFlags_HasMouseHoveredViewport = 1<<12,  // Backend Platform supports calling io.AddMouseViewportEvent() with the viewport under the mouse. IF POSSIBLE, ignore viewports with the ImGuiViewportFlags_NoInputs flag (Win32 backend, GLFW 3.30+ backend can do this, SDL backend cannot). If this cannot be done, Dear ImGui needs to use a flawed heuristic to find the viewport under.
+    ImGuiBackendFlags_HasParentViewport       = 1<<13,  // Backend Platform supports honoring viewport->ParentViewport/ParentViewportId value, by applying the corresponding parent/child relation at the Platform level.
 } ImGuiBackendFlags_;
 
 // Enumeration for PushStyleColor() / PopStyleColor()
@@ -3637,8 +3638,10 @@ CIMGUI_API int          ImTextureData_GetPitch(const ImTextureData* self);
 CIMGUI_API ImTextureRef ImTextureData_GetTexRef(ImTextureData* self);
 CIMGUI_API ImTextureID  ImTextureData_GetTexID(const ImTextureData* self);
 // Called by Renderer backend
-CIMGUI_API void         ImTextureData_SetTexID(ImTextureData* self, ImTextureID tex_id);       // Call after creating or destroying the texture. Never modify TexID directly!
-CIMGUI_API void         ImTextureData_SetStatus(ImTextureData* self, ImTextureStatus status);  // Call after honoring a request. Never modify Status directly!
+// - Call SetTexID() and SetStatus() after honoring texture requests. Never modify TexID and Status directly!
+// - A backend may decide to destroy a texture that we did not request to destroy, which is fine (e.g. freeing resources), but we immediately set the texture back in _WantCreate mode.
+CIMGUI_API void         ImTextureData_SetTexID(ImTextureData* self, ImTextureID tex_id);
+CIMGUI_API void         ImTextureData_SetStatus(ImTextureData* self, ImTextureStatus status);
 
 //-----------------------------------------------------------------------------
 // [SECTION] Font API (ImFontConfig, ImFontGlyph, ImFontAtlasFlags, ImFontAtlas, ImFontGlyphRangesBuilder, ImFont)
@@ -4033,6 +4036,7 @@ struct ImGuiViewport_t
     ImVec2             WorkSize;               // Work Area: Size of the viewport minus task bars, menu bars, status bars (<= Size)
     float              DpiScale;               // 1.0f = 96 DPI = No extra scale.
     ImGuiID            ParentViewportId;       // (Advanced) 0: no parent. Instruct the platform backend to setup a parent/child relationship between platform windows.
+    ImGuiViewport*     ParentViewport;         // (Advanced) Direct shortcut to ImGui::FindViewportByID(ParentViewportId). NULL: no parent.
     ImDrawData*        DrawData;               // The ImDrawData corresponding to this viewport. Valid after Render() and until the next call to NewFrame().
 
     // Platform/Backend Dependent Data
