@@ -36,7 +36,7 @@ UImGui_OpenGLContext* UImGui_RendererUtils_OpenGL_getCurrentContext()
     return UImGui::RendererUtils::OpenGL::getCurrentContext();
 }
 
-void UImGui_RendererUtils_OpenGL_setSwapInterval(const int interval) noexcept
+void UImGui_RendererUtils_OpenGL_setSwapInterval(const int interval)
 {
     UImGui::RendererUtils::OpenGL::setSwapInterval(interval);
 }

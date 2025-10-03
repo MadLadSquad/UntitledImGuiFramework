@@ -82,7 +82,7 @@ extern "C"
 
     // Set the swap interval for the OpenGL renderer
     // Event safety - startup, post-startup
-    UIMGUI_PUBLIC_API void UImGui_RendererUtils_OpenGL_setSwapInterval(int interval) noexcept;
+    UIMGUI_PUBLIC_API void UImGui_RendererUtils_OpenGL_setSwapInterval(int interval);
     
     // Check for WebGPU support
     // Event safety - any time
