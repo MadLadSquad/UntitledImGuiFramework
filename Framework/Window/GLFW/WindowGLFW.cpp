@@ -72,6 +72,9 @@ void UImGui::WindowGLFW::createWindow() noexcept
 
 void UImGui::WindowGLFW::destroyWindow() noexcept
 {
+    // This is a strange workaround for a Wayland-only crash. Check https://github.com/GLFW/glfw/issues/2744
+    glfwPollEvents();
+
     glfwDestroyWindow(window);
     glfwTerminate();
 }
