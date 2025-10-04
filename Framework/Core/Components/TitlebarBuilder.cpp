@@ -187,83 +187,87 @@ void UImGui::TitlebarBuilder::finish() noexcept
 #endif
 }
 
-void UImGui::TitlebarBuilder::render() const noexcept
+void UImGui::TitlebarBuilder::renderFull() const noexcept
 {
 #ifdef __APPLE__
     if (bPreferNative)
-        ;
-    else
+        return;
+#endif
+    if (ImGui::BeginMainMenuBar())
     {
-#endif
-        if (ImGui::BeginMainMenuBar())
-        {
-            size_t depth = 0;
-            for (size_t i = 0; i < events.size(); i++)
-            {
-                const TitlebarMenuItem& a = events[i];
-                int radioBegin = 0;
-
-                switch (a.type)
-                {
-                case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_MENU_ITEM:
-                    if (ImGui::MenuItem(a.label.c_str(), depth == 0 ? "" : a.hint.c_str(), false, a.bEnabled == nullptr ? true : *a.bEnabled))
-                        a.f(data);
-                    break;
-                case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SUBMENU:
-                    if (ImGui::BeginMenu(a.label.c_str(), a.bEnabled == nullptr ? true : *a.bEnabled))
-                        depth++;
-                    else
-                        i += a.membersLen + 1;
-                    break;
-                case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_SUBMENU:
-                    depth--;
-                    ImGui::EndMenu();
-                    break;
-                case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SEPARATOR:
-                    ImGui::Separator();
-                    break;
-                case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_CHECKBOX:
-                    if (a.bSelected == nullptr)
-                    {
-                        Logger::log("A checkbox with the following label is null, not rendering: ", ULOG_LOG_TYPE_ERROR, a.label.c_str());
-                        break;
-                    }
-                    if (a.bEnabled != nullptr && !(*a.bEnabled))
-                        ImGui::BeginDisabled();
-                    ImGui::Checkbox(a.label.c_str(), a.bSelected);
-                    if (a.bEnabled != nullptr && !(*a.bEnabled))
-                        ImGui::EndDisabled();
-                    break;
-                case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_BEGIN_RADIO:
-                    if (a.size == nullptr)
-                    {
-                        i += a.membersLen + 1;
-                        Logger::log("A radio button was submitted with a NULL index.\n"
-                                            "Make sure to always initialise your radio button with UImGui::RadioBuilder::init()!"
-                                            "Not rendering!", ULOG_LOG_TYPE_ERROR);
-                    }
-                    else
-                        radioBegin = CAST(int, i) + 1;
-                    break;
-                case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_RADIO_BUTTON:
-                    if (a.bEnabled != nullptr && !(*a.bEnabled))
-                        ImGui::BeginDisabled();
-                    ImGui::RadioButton(a.label.c_str(), a.size, CAST(int, i) - radioBegin);
-                    if (a.bEnabled != nullptr && !(*a.bEnabled))
-                        ImGui::EndDisabled();
-                    break;
-                case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_RADIO:
-                    radioBegin = 0;
-                    break;
-                default:
-                    break;
-                }
-            }
-            ImGui::EndMainMenuBar();
-        }
-#ifdef __APPLE__
+        renderInline();
+        ImGui::EndMainMenuBar();
     }
+}
+
+void UImGui::TitlebarBuilder::renderInline() const noexcept
+{
+#ifdef __APPLE__
+    if (bPreferNative)
+        return;
 #endif
+    size_t depth = 0;
+    for (size_t i = 0; i < events.size(); i++)
+    {
+        const TitlebarMenuItem& a = events[i];
+        int radioBegin = 0;
+
+        switch (a.type)
+        {
+        case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_MENU_ITEM:
+            if (ImGui::MenuItem(a.label.c_str(), depth == 0 ? "" : a.hint.c_str(), false, a.bEnabled == nullptr ? true : *a.bEnabled))
+                a.f(data);
+            break;
+        case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SUBMENU:
+            if (ImGui::BeginMenu(a.label.c_str(), a.bEnabled == nullptr ? true : *a.bEnabled))
+                depth++;
+            else
+                i += a.membersLen + 1;
+            break;
+        case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_SUBMENU:
+            depth--;
+            ImGui::EndMenu();
+            break;
+        case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_SEPARATOR:
+            ImGui::Separator();
+            break;
+        case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_CHECKBOX:
+            if (a.bSelected == nullptr)
+            {
+                Logger::log("A checkbox with the following label is null, not rendering: ", ULOG_LOG_TYPE_ERROR, a.label.c_str());
+                break;
+            }
+            if (a.bEnabled != nullptr && !(*a.bEnabled))
+                ImGui::BeginDisabled();
+            ImGui::Checkbox(a.label.c_str(), a.bSelected);
+            if (a.bEnabled != nullptr && !(*a.bEnabled))
+                ImGui::EndDisabled();
+            break;
+        case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_BEGIN_RADIO:
+            if (a.size == nullptr)
+            {
+                i += a.membersLen + 1;
+                Logger::log("A radio button was submitted with a NULL index.\n"
+                                    "Make sure to always initialise your radio button with UImGui::RadioBuilder::init()!"
+                                    "Not rendering!", ULOG_LOG_TYPE_ERROR);
+            }
+            else
+                radioBegin = CAST(int, i) + 1;
+            break;
+        case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_RADIO_BUTTON:
+            if (a.bEnabled != nullptr && !(*a.bEnabled))
+                ImGui::BeginDisabled();
+            ImGui::RadioButton(a.label.c_str(), a.size, CAST(int, i) - radioBegin);
+            if (a.bEnabled != nullptr && !(*a.bEnabled))
+                ImGui::EndDisabled();
+            break;
+        case UIMGUI_TITLEBAR_MENU_ITEM_TYPE_END_RADIO:
+            radioBegin = 0;
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 void UImGui::TitlebarBuilder::clear() noexcept

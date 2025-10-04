@@ -10,13 +10,63 @@ auto (z) = style.FramePadding;                                                \
 (x) += (z);                                                                   \
 (y) -= (z);
 
-void UImGui::ClientSideBar::Begin() noexcept
+#ifdef __APPLE__
+extern "C" float UImGui_Cocoa_setUpClientSideBarMacOS(UImGui_ClientSideBarFlags flags);
+#endif
+
+void UImGui::ClientSideBar::SetFlags(const ClientSideBarFlags flags) noexcept
 {
+    getFlags() = flags;
+}
+
+bool UImGui::ClientSideBar::Begin() noexcept
+{
+    BeginManualStyle();
+    const bool bRendered = ImGui::BeginMainMenuBar();
+    if (bRendered)
+        BeginManualRender();
+    return bRendered;
+}
+
+void UImGui::ClientSideBar::End(const bool bRendered, const FVector4 destructiveColour, const FVector4 destructiveColourActive) noexcept
+{
+    if (bRendered)
+    {
+        EndManualRender(destructiveColour, destructiveColourActive);
+        ImGui::EndMainMenuBar();
+    }
+    EndManualStyle();
+}
+
+void UImGui::ClientSideBar::BeginManualStyle() noexcept
+{
+#ifdef __APPLE__
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8.0f, 9.0f));
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+#endif
+}
+
+void UImGui::ClientSideBar::EndManualStyle() noexcept
+{
+#ifdef __APPLE__
+    ImGui::PopStyleVar(2);
+#endif
+}
+
+void UImGui::ClientSideBar::BeginManualRender() noexcept
+{
+#ifdef __APPLE__
+    auto result = UImGui_Cocoa_setUpClientSideBarMacOS(getFlags());
+    ImGui::InvisibleButton("uimgui_internal_main_bar_macos_spacing", { result, 9.0f });
+    ImGui::SameLine();
+#endif
     ImGui::BeginGroup();
 }
 
-void UImGui::ClientSideBar::End(const ClientSideBarFlags flags, const FVector4 destructiveColour, const FVector4 destructiveColourActive) noexcept
+void UImGui::ClientSideBar::EndManualRender(const FVector4 destructiveColour, const FVector4 destructiveColourActive) noexcept
 {
+    // On macOS, we do not need these calculations and UI elements
+#ifndef __APPLE__
     // Create an invisible button that fills up all available space but leaves enough for the buttons
     static float width = 0;
     ImGui::InvisibleButton("uimgui_internal_main_bar_spacing", { ImGui::GetContentRegionAvail().x - width, ImGui::GetFrameHeight() });
@@ -27,6 +77,8 @@ void UImGui::ClientSideBar::End(const ClientSideBarFlags flags, const FVector4 d
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, style.Colors[ImGuiCol_HeaderActive]);
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, style.Colors[ImGuiCol_HeaderHovered]);
 
+    auto flags = getFlags();
+
     if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_MINIMISE_BUTTON)
         renderMinimiseButton(width, style);
     if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_MAXIMISE_BUTTON)
@@ -35,8 +87,11 @@ void UImGui::ClientSideBar::End(const ClientSideBarFlags flags, const FVector4 d
         renderCloseButton(width, style, destructiveColour, destructiveColourActive);
 
     ImGui::PopStyleColor(3);
+#endif
     ImGui::EndGroup();
 
+    // Window dragging on macOS is done differently
+#ifndef __APPLE__
     // Mouse dragging code courtesy of https://github.com/ashifolfi/lynx-animator/blob/main/src/MainWindow.cpp
     static bool bDragging = false;
     if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_MOVEABLE && ((ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsItemActive()) || bDragging))
@@ -50,6 +105,13 @@ void UImGui::ClientSideBar::End(const ClientSideBarFlags flags, const FVector4 d
         else
             bDragging = false;
     }
+#endif
+}
+
+UImGui::ClientSideBarFlags& UImGui::ClientSideBar::getFlags()
+{
+    static ClientSideBarFlags flags = UIMGUI_CLIENT_SIDE_BAR_FLAG_ALL;
+    return flags;
 }
 
 void UImGui::ClientSideBar::renderMinimiseButton(float& width, const ImGuiStyle& style) noexcept
