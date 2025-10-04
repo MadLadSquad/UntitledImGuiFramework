@@ -30,7 +30,8 @@ endmacro()
 macro(link_to_framework_libraries_generic_unix)
     if (NOT UIMGUI_SKIP_FRAMEWORK)
         target_link_libraries(UntitledImGuiFramework ${GLFW_LIBRARIES_T} ${OPENGL_LIBRARIES_T} pthread
-                ${YAML_CPP_LIBRARIES_T} ${FREETYPE_LIBRARIES} ${VULKAN_LIBRARIES_T} ${X11_LIBRARIES} dl util)
+                ${YAML_CPP_LIBRARIES_T} ${FREETYPE_LIBRARIES} ${VULKAN_LIBRARIES_T} ${X11_LIBRARIES} dl util
+        )
     endif()
     target_link_libraries(${APP_LIB_TARGET} UntitledImGuiFramework ${YAML_CPP_LIBRARIES_T})
     target_link_libraries(${APP_TARGET} UntitledImGuiFramework ${APP_LIB_TARGET} ${YAML_CPP_LIBRARIES_T})

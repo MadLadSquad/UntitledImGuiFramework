@@ -3,10 +3,20 @@
 extern "C"
 {
 #endif
+
 #include <C/CTypes.h>
 #include <C/CDefines.h>
-#include <C/Internal/CMonitor.h>
-    typedef struct GLFWwindow GLFWwindow;
+#include <C/Window/CMonitor.h>
+
+    typedef enum UImGui_WindowPlatform
+    {
+        UIMGUI_WINDOW_PLATFORM_WIN32,
+        UIMGUI_WINDOW_PLATFORM_COCOA,
+        UIMGUI_WINDOW_PLATFORM_X11,
+        UIMGUI_WINDOW_PLATFORM_WAYLAND,
+        UIMGUI_WINDOW_PLATFORM_EMSCRIPTEN,
+        UIMGUI_WINDOW_PLATFORM_OTHER
+    } UImGui_WindowPlatform;
 
     typedef void(*UImGui_Window_pushWindowPositionChangeCallbackFun)(UImGui_FVector2);
     typedef void(*UImGui_Window_pushWindowCloseCallbackFun)();
@@ -25,12 +35,24 @@ extern "C"
 
     // Event Safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_setTitle(UImGui_String name);
+    // Event Safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API UImGui_String UImGui_Window_getTitle();
+    // Event Safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API void UImGui_Window_setTitleSetting(UImGui_String name);
+    // Event Safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API UImGui_String UImGui_Window_getTitleSetting();
 
     // Event Safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_setIcon(UImGui_String name);
+    // Event Safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API UImGui_String UImGui_Window_getIconLocation();
+    // Event Safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API UImGui_String UImGui_Window_getIconLocationSetting();
+    // Event Safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API void UImGui_Window_setIconLocationSetting(UImGui_String location);
 
     // Event Safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API float UImGui_Window_aspectRatio();
+    UIMGUI_PUBLIC_API float UImGui_Window_getAspectRatio();
 
     // Event Safety - begin, style, post-begin
     UIMGUI_PUBLIC_API UImGui_FVector2 UImGui_Window_getCurrentWindowPosition();
@@ -45,14 +67,16 @@ extern "C"
     UIMGUI_PUBLIC_API void UImGui_Window_pushWindowPositionChangeCallback(UImGui_Window_pushWindowPositionChangeCallbackFun f);
 
     // Event Safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API UImGui_FVector2* UImGui_Window_windowSize();
+    UIMGUI_PUBLIC_API UImGui_FVector2 UImGui_Window_getWindowSize();
     // Event Safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API bool* UImGui_Window_fullscreen();
+    UIMGUI_PUBLIC_API UImGui_FVector2* UImGui_Window_getWindowSizeSetting();
 
     // Event Safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API UImGui_String UImGui_Window_name();
+    UIMGUI_PUBLIC_API bool UImGui_Window_getWindowFullscreen();
     // Event Safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API UImGui_String UImGui_Window_iconLocation();
+    UIMGUI_PUBLIC_API bool* UImGui_Window_getWindowFullscreenSetting();
+    // Event Safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API void UImGui_Window_setWindowFullscreen(bool bFullscreen);
 
     // Event Safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_saveSettings(bool bSaveKeybinds);
@@ -66,41 +90,56 @@ extern "C"
     UIMGUI_PUBLIC_API void UImGui_Window_pushWindowCloseCallback(UImGui_Window_pushWindowCloseCallbackFun f);
     
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32 & macOS
+    // Available for GLFW platforms - X11, Win32 & macOS
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowAlwaysOnTop();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32 & macOS
+    // Available for GLFW platforms - X11, Win32 & macOS
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowAlwaysOnBottom();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32
+    // Available for GLFW platforms - X11, Win32
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowShowingOnPager(bool bShowInPager);
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32
+    // Available for GLFW platforms - X11, Win32
     UIMGUI_PUBLIC_API bool UImGui_Window_Platform_getWindowShowingOnPager();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32
+    // Available for GLFW platforms - X11, Win32
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowShowingOnTaskbar(bool bShowOnTaskbar);
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32
+    // Available for GLFW platforms - X11, Win32
     UIMGUI_PUBLIC_API bool UImGui_Window_Platform_getWindowShowingOnTaskbar();
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11
+    // Available for GLFW platforms - X11
     // Sets the X11 window type
     UIMGUI_PUBLIC_API void UImGui_Window_Platform_setWindowType(UImGui_String type);
 
     // Event Safety - begin, style, post-begin
-    // Available for platforms - X11, Win32 & macOS
+    // Available for GLFW platforms - X11, Win32 & macOS
     // Returns the window ID as a size_t. On macOS, it returns the memory address to the window as its integer representation
     UIMGUI_PUBLIC_API size_t UImGui_Window_Platform_getWindowID();
+
+    // Event Safety - begin, style, post-begin
+    // Available for GLFW platforms - Win32, macOS, Emscripten, X11 & Wayland
+    // Returns the native window handle as a void*
+    UIMGUI_PUBLIC_API void* UImGui_Window_Platform_getNativeWindowHandle();
+
+    // Event Safety - begin, style, post-begin
+    // Available for GLFW platforms - Win32, macOS, Emscripten, X11 & Wayland
+    // Returns the native window handle as a void*
+    UIMGUI_PUBLIC_API UImGui_WindowPlatform UImGui_Window_Platform_getCurrentWindowPlatform();
+
+    // Event Safety - begin, style, post-begin
+    // Available for GLFW platforms - X11 & Wayland. The other platforms return null. Cross-platform libraries
+    // should handle null values without any issues though.
+    UIMGUI_PUBLIC_API void* UImGui_Window_Platform_getNativeDisplay();
 
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_setWindowSizeInScreenCoords(UImGui_FVector2 sz);
     // Event safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API UImGui_FVector2* UImGui_Window_getWindowSizeInScreenCoords();
+    UIMGUI_PUBLIC_API UImGui_FVector2 UImGui_Window_getWindowSizeInScreenCoords();
     // Event safety - begin, style, post-begin
     // Pushes a new callback to the event list
     UIMGUI_PUBLIC_API void UImGui_Window_pushWindowResizedInScreenCoordsCallback(UImGui_Window_pushWindowResizedInScreenCoordsCallbackFun f);
@@ -139,7 +178,11 @@ extern "C"
     UIMGUI_PUBLIC_API bool UImGui_Window_getWindowCurrentlyHidden();
 
     // Event safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API bool* UImGui_Window_windowSurfaceTransparent();
+    UIMGUI_PUBLIC_API bool UImGui_Window_getWindowSurfaceTransparent();
+    // Event safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API void UImGui_Window_setWindowSurfaceTransparent(bool bTransparent);
+    // Event safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API bool* UImGui_Window_getWindowSurfaceTransparentSetting();
 
     // Event safety - begin, style, post-begin
     // This doesn't change the "focused" setting, use the `getWindowFocused` function
@@ -205,30 +248,25 @@ extern "C"
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API bool UImGui_Window_getWindowCurrentlyMaximised();
 
-#ifndef __EMSCRIPTEN__
     // A "UImGui_Window_getWindowMonitor" function should be here, but because it has to access private class variables,
     // it's defined under the C++ interface's Monitor's private section.
-    UIMGUI_PUBLIC_API UImGui_CMonitorData UImGui_Window_getWindowMonitor();
-
     // Event safety - begin, style, post-begin
-    // Sets the window to the provided monitor. When moving the window, the window will be moved to coordinates
-    // (0;0) of the new monitor, while preserving the width and height and using the new monitor's refresh rate
-    UIMGUI_PUBLIC_API void UImGui_Window_setWindowMonitor(const UImGui_CMonitorData* monitor);
+    UIMGUI_PUBLIC_API UImGui_MonitorData UImGui_Window_getWindowMonitor();
+
+    // Returns the primary monitor
+    // Event safety - begin, style, post-begin
+    UIMGUI_PUBLIC_API UImGui_MonitorData UImGui_Window_getPrimaryMonitor();
 
     // Event safety - begin, style, post-begin
     // Returns a list of monitors, first monitor is the primary monitor, i.e. the monitor where global UI elements
     // like the taskbar spawns.
-    UIMGUI_PUBLIC_API UImGui_CMonitorData* UImGui_Window_getMonitors(size_t* size);
-
-    // Event safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API void UImGui_Window_pushGlobalMonitorCallback(UImGui_Window_pushGlobalMonitorCallbackFun f);
-#endif
-
+    UIMGUI_PUBLIC_API UImGui_MonitorData* UImGui_Window_getMonitors(size_t* size);
+    
     // Event safety - begin, style, post-begin
     UIMGUI_PUBLIC_API void UImGui_Window_pushWindowOSDragDropCallback(UImGui_Window_pushWindowOSDragDropCallbackFun f);
 
     // Event safety - begin, style, post-begin
-    UIMGUI_PUBLIC_API GLFWwindow* UImGui_Window_getInternal();
+    UIMGUI_PUBLIC_API void* UImGui_Window_getInternal();
 #ifdef __cplusplus
 };
 #endif

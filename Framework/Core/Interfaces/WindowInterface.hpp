@@ -4,7 +4,6 @@
 #include <C/Interfaces/CWindowInterface.h>
 #include <Core/Components/Instance.hpp>
 
-struct GLFWwindow;
 namespace UImGui
 {
     class UIMGUI_PUBLIC_API Window
@@ -16,12 +15,24 @@ namespace UImGui
 
         // Event Safety - begin, style, post-begin
         static void setTitle(String name) noexcept;
+        // Event Safety - begin, style, post-begin
+        static String getTitle() noexcept;
+        // Event Safety - begin, style, post-begin
+        static void setTitleSetting(String name) noexcept;
+        // Event Safety - begin, style, post-begin
+        static String getTitleSetting() noexcept;
 
         // Event Safety - begin, style, post-begin
         static void setIcon(String name) noexcept;
+        // Event Safety - begin, style, post-begin
+        static String getIconLocation() noexcept;
+        // Event Safety - begin, style, post-begin
+        static String getIconLocationSetting() noexcept;
+        // Event Safety - begin, style, post-begin
+        static void setIconLocationSetting(String location) noexcept;
 
         // Event Safety - begin, style, post-begin
-        static float aspectRatio() noexcept;
+        static float getAspectRatio() noexcept;
 
         // Event Safety - begin, style, post-begin
         static FVector2 getCurrentWindowPosition() noexcept;
@@ -36,19 +47,21 @@ namespace UImGui
         static void pushWindowPositionChangeCallback(const TFunction<void(FVector2)>& f) noexcept;
 
         // Event Safety - begin, style, post-begin
-        static FVector2& windowSize() noexcept;
+        static FVector2 getWindowSize() noexcept;
         // Event Safety - begin, style, post-begin
-        static bool& fullscreen() noexcept;
+        static FVector2& getWindowSizeSetting() noexcept;
 
         // Event Safety - begin, style, post-begin
-        static FString& name() noexcept;
+        static bool getWindowFullscreen() noexcept;
         // Event Safety - begin, style, post-begin
-        static FString& iconLocation() noexcept;
+        static bool& getWindowFullscreenSetting() noexcept;
+        // Event Safety - begin, style, post-begin
+        static void setWindowFullscreen(bool bFullscreen) noexcept;
 
         // Event Safety - begin, style, post-begin
         static void saveSettings(bool bSaveKeybinds) noexcept;
 
-        // Event Safety - begin, style, post-begin
+        // Event Safety - post-style, post-begin
         static void refreshSettings() noexcept;
 
         // Event Safety - begin, style, post-begin
@@ -64,44 +77,59 @@ namespace UImGui
             void operator=(Platform const&) = delete;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32, macOS
+            // Available for GLFW platforms - X11, Win32, macOS
             static void setWindowAlwaysOnTop() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32, macOS
+            // Available for GLFW platforms - X11, Win32, macOS
             static void setWindowAlwaysOnBottom() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Platform note: On Win32 "setWindowShowingOnPager" and "setWindowShowingOnTaskbar" run the same code,
+            // GLFW Platform note: On Win32 "setWindowShowingOnPager" and "setWindowShowingOnTaskbar" run the same code,
             // as it is not possible to disable the window from showing on both the taskbar and window switcher
-            // Available for platforms - X11, Win32
+            // Available for GLFW platforms - X11, Win32
             static void setWindowShowingOnPager(bool bShowInPager) noexcept;
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for GLFW platforms - X11, Win32
             static bool getWindowShowingOnPager() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for GLFW platforms - X11, Win32
             static void setWindowShowingOnTaskbar(bool bShowOnTaskbar) noexcept;
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32
+            // Available for GLFW platforms - X11, Win32
             static bool getWindowShowingOnTaskbar() noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11
+            // Available for GLFW platforms - X11
             // Sets the X11 window type
             static void setWindowType(String type) noexcept;
 
             // Event Safety - begin, style, post-begin
-            // Available for platforms - X11, Win32, macOS
+            // Available for GLFW platforms - X11, Win32, macOS
             // Returns the window ID as a size_t. On macOS this is the integer representation of the window pointer
             static size_t getWindowID() noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for GLFW platforms - Win32, macOS, Emscripten, X11 & Wayland
+            // Returns the native window handle as a void*
+            static void* getNativeWindowHandle() noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for GLFW platforms - Win32, macOS, Emscripten, X11 & Wayland
+            // Returns the native window handle as a void*
+            static WindowPlatform getCurrentWindowPlatform() noexcept;
+
+            // Event Safety - begin, style, post-begin
+            // Available for GLFW platforms - X11 & Wayland. The other platforms return null. Cross-platform libraries
+            // should handle null values without any issues though.
+            static void* getNativeDisplay() noexcept;
         };
 
         // Event safety - begin, style, post-begin
         static void setWindowSizeInScreenCoords(FVector2 sz) noexcept;
         // Event safety - begin, style, post-begin
-        static FVector2& getWindowSizeInScreenCoords() noexcept;
+        static FVector2 getWindowSizeInScreenCoords() noexcept;
         // Event safety - begin, style, post-begin
         // Pushes a new callback to the event list
         static void pushWindowResizedInScreenCoordsCallback(const TFunction<void(int, int)>& f) noexcept;
@@ -140,7 +168,11 @@ namespace UImGui
         static bool getWindowCurrentlyHidden() noexcept;
 
         // Event safety - begin, style, post-begin
-        static bool& windowSurfaceTransparent() noexcept;
+        static bool getWindowSurfaceTransparent() noexcept;
+        // Event safety - begin, style, post-begin
+        static void setWindowSurfaceTransparent(bool bTransparent) noexcept;
+        // Event safety - begin, style, post-begin
+        static bool& getWindowSurfaceTransparentSetting() noexcept;
 
         // Event safety - begin, style, post-begin
         // This doesn't change the "focused" setting, use the `getWindowFocused` function
@@ -206,37 +238,28 @@ namespace UImGui
         // Event safety - begin, style, post-begin
         static bool getWindowCurrentlyMaximised() noexcept;
 
-#ifndef __EMSCRIPTEN__
-
         // Event safety - begin, style, post-begin
         // Returns the monitor of the current window.
         static Monitor getWindowMonitor() noexcept;
 
         // Event safety - begin, style, post-begin
-        // Sets the window to the provided monitor. When moving the window, the window will be moved to coordinates
-        // (0;0) of the new monitor, while preserving the width and height and using the new monitor's refresh rate
-        static void setWindowMonitor(const Monitor& monitor) noexcept;
+        // Returns the primary monitor
+        static Monitor getPrimaryMonitor() noexcept;
 
         // Event safety - begin, style, post-begin
         // Returns a list of monitors, first monitor is the primary monitor, i.e. the monitor where global UI elements
         // like the taskbar spawns.
-        static TVector<Monitor>& getMonitors() noexcept;
+        static const TVector<Monitor>& getMonitors() noexcept;
 
         // Event safety - begin, style, post-begin
-        static void pushGlobalMonitorCallback(const TFunction<void(Monitor&, MonitorState)>& f) noexcept;
-#endif
+        static void pushWindowOSDragDropCallback(const TFunction<void(const FString&)>& f) noexcept;
 
         // Event safety - begin, style, post-begin
         // This is the internal window instance, DO NOT TOUCH IT
-        static GLFWwindow* getInternal() noexcept;
-    private:
-        friend class Layouts;
-        friend class Input;
-        friend class WindowInternal;
-        friend class UImGui::Instance;
-        friend class RendererInternal;
-        friend void ::UImGui_Window_pushWindowOSDragDropCallback(UImGui_Window_pushWindowOSDragDropCallbackFun);
+        static void* getInternal() noexcept;
 
-        static WindowInternal& get() noexcept;
+        // Event safety - begin, style, post-begin
+        // Returns the current window instance
+        static GenericWindow* get() noexcept;
     };
 }

@@ -9,15 +9,18 @@
 #include <C/Interfaces/CUtility.h>
 #include <C/Interfaces/CWindowInterface.h>
 
-#include <C/Internal/CMonitor.h>
-#include <C/Internal/RendererData.h>
+#include <C/Window/CMonitor.h>
+#include <C/Window/RendererData.h>
 
 #include <C/Modules/Manager/CModulesManager.hpp>
 #include <C/Modules/Undo/Undo.h>
 
-#include <C/Rendering/CTexture.h>
-#include <C/Rendering/CClientSideBar.h>
-#include <C/Rendering/CGenericRenderer.h>
-#include <C/Rendering/CGenericTexture.h>
-#include <C/Rendering/CRendererUtils.h>
+#include <C/Renderer/CTexture.h>
+#include <C/ImGui/CClientSideBar.h>
+#include <C/Renderer/CGenericRenderer.h>
+#include <C/Renderer/CGenericTexture.h>
+#include <C/Renderer/CRendererUtils.h>
+#include <C/Window/CGenericWindow.h>
+#include <C/Window/CWindowUtils.h>
+
 #include <ThirdParty/logger/C/CULog.h>

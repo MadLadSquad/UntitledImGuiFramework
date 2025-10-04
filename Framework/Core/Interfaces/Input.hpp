@@ -1,6 +1,6 @@
 #pragma once
 #include <Core/Types.hpp>
-#include <C/Internal/Keys.h>
+#include <C/Window/Keys.h>
 
 // Imports the C API, contains definitions of the C InputAction struct and other uniform API structs and enum
 #include <C/Interfaces/CInput.h>
