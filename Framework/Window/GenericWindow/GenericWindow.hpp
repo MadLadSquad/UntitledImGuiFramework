@@ -220,9 +220,6 @@ namespace UImGui
         friend class Layouts;
         friend class Monitor;
 
-        bool bFirstMove = true;
-        bool bResized = false;
-
         FVector2 mousePos = { 0.0f, 0.0f };
         FVector2 mouseLastPos = { 0.0f, 0.0f };
         FVector2 mouseOffset = { 0.0f, 0.0f };

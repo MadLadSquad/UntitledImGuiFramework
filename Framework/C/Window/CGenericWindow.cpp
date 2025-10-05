@@ -13,7 +13,8 @@ public:
 
     ~CGenericWindow() noexcept override
     {
-        UImGui_CGenericMonitor_free(initInfo->monitor);
+        if (initInfo->monitor != nullptr)
+            UImGui_CGenericMonitor_free(initInfo->monitor);
     }
 
     void createWindow() noexcept override
