@@ -59,6 +59,8 @@ macro(link_to_framework_libraries)
     endif()
     target_link_libraries(${APP_TARGET} UntitledImGuiFramework ${YAML_CPP_LIBRARIES_T})
 
+    multicast(target_link_libraries dwmapi)
+
     if (IMGUI_BUILD_WITH_DX12)
         multicast(target_link_libraries d3d12 d3dcompiler dxgi)
     endif ()

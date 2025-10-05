@@ -18,8 +18,6 @@ void UImGui::WindowGLFW::configureCallbacks() const noexcept
     glfwSetWindowRefreshCallback(window, windowRefreshCallback);
     glfwSetWindowMaximizeCallback(window, windowMaximisedCallback);
 
-    //glfwSetMonitorCallback(monitorCallback);
-
     glfwSetDropCallback(window, windowOSDragDropCallback);
 }
 
