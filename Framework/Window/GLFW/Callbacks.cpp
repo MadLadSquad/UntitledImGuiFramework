@@ -48,11 +48,12 @@ void UImGui::WindowGLFW::mouseCursorPositionCallback(GLFWwindow* window, const d
 {
     auto* windowInst = static_cast<WindowGLFW*>(glfwGetWindowUserPointer(window));
 
-    if (windowInst->bFirstMove)
+    static bool bFirst = true;
+    if (bFirst)
     {
         windowInst->mouseLastPos.x = static_cast<float>(xpos);
         windowInst->mouseLastPos.y = static_cast<float>(ypos);
-        windowInst->bFirstMove = false;
+        bFirst = false;
     }
 
     windowInst->mouseOffset.x = static_cast<float>(xpos) - windowInst->mouseLastPos.x;
