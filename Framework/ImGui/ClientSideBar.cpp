@@ -2,6 +2,12 @@
 #include <imgui.h>
 #include <Interfaces/WindowInterface.hpp>
 #include <Components/Instance.hpp>
+#include <Window/WindowUtils.hpp>
+#ifdef _WIN32
+    #include <windows.h>
+    #include <windowsx.h>
+    #include <dwmapi.h>
+#endif
 
 #define UPDATE_PADDING (width += ImGui::GetItemRectSize().x + style.WindowPadding.x)
 #define ADD_PADDING_TO_ITEM_RECT(x, y, z) auto (x) = ImGui::GetItemRectMin(); \
@@ -13,6 +19,106 @@ auto (z) = style.FramePadding;                                                \
 #ifdef __APPLE__
 extern "C" float UImGui_Cocoa_setUpClientSideBarMacOS(UImGui_ClientSideBarFlags flags);
 #endif
+
+#ifdef _WIN32
+static WNDPROC* getProc() noexcept
+{
+    static WNDPROC proc;
+    return &proc;
+}
+
+static bool& hoveringOnNonDragArea() noexcept
+{
+    static bool bHovering = false;
+    return bHovering;
+}
+
+LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    switch (msg)
+    {
+    case WM_NCCALCSIZE:
+        // Remove the window's standard sizing border
+        if (wParam == TRUE && lParam != NULL)
+        {
+            NCCALCSIZE_PARAMS* pParams = reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
+            pParams->rgrc[0].top += 1;
+            pParams->rgrc[0].right -= 1;
+            pParams->rgrc[0].bottom -= 1;
+            pParams->rgrc[0].left += 1;
+        }
+        return 0;
+    case WM_NCPAINT:
+        return 0;
+    case WM_NCHITTEST:
+        {
+            const int borderWidth = 2;
+            POINTS mousePos = MAKEPOINTS(lParam);
+            POINT clientMousePos = { mousePos.x, mousePos.y };
+            ScreenToClient(hWnd, &clientMousePos);
+
+            RECT windowRect;
+            GetClientRect(hWnd, &windowRect);
+
+            if (clientMousePos.y >= windowRect.bottom - borderWidth)
+            {
+                if (clientMousePos.x <= borderWidth)
+                    return HTBOTTOMLEFT;
+                else if (clientMousePos.x >= windowRect.right - borderWidth)
+                    return HTBOTTOMRIGHT;
+                else
+                    return HTBOTTOM;
+            }
+            else if (clientMousePos.y <= borderWidth)
+            {
+                if (clientMousePos.x <= borderWidth)
+                    return HTTOPLEFT;
+                else if (clientMousePos.x >= windowRect.right - borderWidth)
+                    return HTTOPRIGHT;
+                else
+                    return HTTOP;
+            }
+            else if (clientMousePos.x <= borderWidth)
+                return HTLEFT;
+            else if (clientMousePos.x >= windowRect.right - borderWidth)
+                return HTRIGHT;
+
+            const int titleBarHeight = 32;
+            if (!hoveringOnNonDragArea() && clientMousePos.y <= titleBarHeight)
+                 return HTCAPTION;
+            return HTCLIENT;
+        }
+    case WM_NCACTIVATE:
+        return TRUE;
+    case WM_NCLBUTTONDBLCLK:
+        ShowWindow(hWnd, IsZoomed(hWnd) ? SW_RESTORE : SW_MAXIMIZE);
+        return 0;
+    case WM_GETMINMAXINFO:
+        {
+            MINMAXINFO* mmi = reinterpret_cast<MINMAXINFO*>(lParam);
+
+            // Get the monitor work area (not full area)
+            HMONITOR monitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+            MONITORINFO info = { sizeof(info) };
+            GetMonitorInfo(monitor, &info);
+
+            // Constrain to work area
+            mmi->ptMaxPosition.x = info.rcWork.left - info.rcMonitor.left - 1;
+            mmi->ptMaxPosition.y = info.rcWork.top - info.rcMonitor.top - 1;
+            mmi->ptMaxSize.x = info.rcWork.right - info.rcWork.left + 2;
+            mmi->ptMaxSize.y = info.rcWork.bottom - info.rcWork.top + 2;
+
+            // Hack to fill small pixel gaps when the window is maximised
+            MARGINS margin = { 1, 1, 1, 1 };
+            DwmExtendFrameIntoClientArea(hWnd, &margin);
+            return 0;
+        }
+    }
+
+    return CallWindowProc(*getProc(), hWnd, msg, wParam, lParam);
+}
+#endif
+
 
 void UImGui::ClientSideBar::SetFlags(const ClientSideBarFlags flags) noexcept
 {
@@ -40,16 +146,24 @@ void UImGui::ClientSideBar::End(const bool bRendered, const FVector4 destructive
 
 void UImGui::ClientSideBar::BeginManualStyle() noexcept
 {
-#ifdef __APPLE__
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8.0f, 9.0f));
+#if defined(__APPLE__) || defined(_WIN32)
+    #ifdef __APPLE__
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8.0f, 9.0f));
+    #endif
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 #endif
 }
 
 void UImGui::ClientSideBar::EndManualStyle() noexcept
 {
+#if defined(__APPLE__) || defined(_WIN32)
+    ImGui::PopStyleVar(
 #ifdef __APPLE__
-    ImGui::PopStyleVar(2);
+        2
+#else
+        1
+#endif
+    );
 #endif
 }
 
@@ -59,25 +173,58 @@ void UImGui::ClientSideBar::BeginManualRender() noexcept
     auto result = UImGui_Cocoa_setUpClientSideBarMacOS(getFlags());
     ImGui::InvisibleButton("uimgui_internal_main_bar_macos_spacing", { result, 9.0f });
     ImGui::SameLine();
+#elifdef _WIN32
+    static bool bFirst = true;
+    if (bFirst)
+    {
+        auto hwnd = static_cast<HWND>(UImGui::Window::Platform::getNativeWindowHandle());
+        
+        // Replace with our extended WndProc
+        *getProc() = (WNDPROC)GetWindowLongPtr(hwnd, GWLP_WNDPROC);
+        SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)WndProc);
+        
+        // Keep DWM composition and dark frame enabled
+        LONG_PTR lStyle = GetWindowLongPtr(hwnd, GWL_STYLE);
+        lStyle |= WS_THICKFRAME;
+        lStyle &= ~WS_CAPTION;
+        SetWindowLongPtr(hwnd, GWL_STYLE, lStyle);
+
+        RECT windowRect;
+        GetWindowRect(hwnd, &windowRect);
+        int width = windowRect.right - windowRect.left;
+        int height = windowRect.bottom - windowRect.top;
+
+        SetWindowPos(hwnd, NULL, 0, 0, width, height, SWP_FRAMECHANGED | SWP_NOMOVE);
+        bFirst = false;
+    }
 #endif
     ImGui::BeginGroup();
 }
 
 void UImGui::ClientSideBar::EndManualRender(const FVector4 destructiveColour, const FVector4 destructiveColourActive) noexcept
 {
-    // On macOS, we do not need these calculations and UI elements
+    // On macOS, the traffic light buttons are rendered by the operating system and they come before all elements so no need to draw our own widgets
 #ifndef __APPLE__
     // Create an invisible button that fills up all available space but leaves enough for the buttons
     static float width = 0;
     ImGui::InvisibleButton("uimgui_internal_main_bar_spacing", { ImGui::GetContentRegionAvail().x - width, ImGui::GetFrameHeight() });
+    
+    auto flags = getFlags();
+    // On Windows, we need to 
+#ifdef _WIN32
+    if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_MOVEABLE)
+    {
+        auto handle = static_cast<HWND>(UImGui::Window::Platform::getNativeWindowHandle());
+        hoveringOnNonDragArea() = !ImGui::IsItemHovered();
+    }
+#endif
+    
     const auto& style = ImGui::GetStyle();
     width = 0;
 
     ImGui::PushStyleColor(ImGuiCol_Button, style.Colors[ImGuiCol_MenuBarBg]); // Dear imgui does some fuckery when ImGui::BeginMainMenuBar is called
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, style.Colors[ImGuiCol_HeaderActive]);
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, style.Colors[ImGuiCol_HeaderHovered]);
-
-    auto flags = getFlags();
 
     if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_MINIMISE_BUTTON)
         renderMinimiseButton(width, style);
@@ -90,8 +237,8 @@ void UImGui::ClientSideBar::EndManualRender(const FVector4 destructiveColour, co
 #endif
     ImGui::EndGroup();
 
-    // Window dragging on macOS is done differently
-#ifndef __APPLE__
+    // Dragging for X11(The entire client-side bar feature does not work on Wayland in any way)
+#if !defined(__APPLE__) && !defined(_WIN32)
     // Mouse dragging code courtesy of https://github.com/ashifolfi/lynx-animator/blob/main/src/MainWindow.cpp
     static bool bDragging = false;
     if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_MOVEABLE && ((ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsItemActive()) || bDragging))
@@ -122,7 +269,7 @@ void UImGui::ClientSideBar::renderMinimiseButton(float& width, const ImGuiStyle&
     ADD_PADDING_TO_ITEM_RECT(min, max, padding);
 
     auto* drawList = ImGui::GetWindowDrawList();
-    drawList->AddLine({ min.x, max.y }, max, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]));
+    drawList->AddLine({ min.x, max.y }, max, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]), 1.24f);
 }
 
 void UImGui::ClientSideBar::renderMaximiseButton(float& width, const ImGuiStyle& style) noexcept
@@ -147,10 +294,10 @@ void UImGui::ClientSideBar::renderMaximiseButton(float& width, const ImGuiStyle&
     ADD_PADDING_TO_ITEM_RECT(min, max, padding);
 
     auto* drawList = ImGui::GetWindowDrawList();
-    drawList->AddLine(min, { min.x, max.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]));
-    drawList->AddLine(min, { max.x, min.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]));
-    drawList->AddLine(max, { min.x, max.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]));
-    drawList->AddLine(max, { max.x, min.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]));
+    drawList->AddLine(min, { min.x, max.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]), 1.24);
+    drawList->AddLine(min, { max.x, min.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]), 1.24);
+    drawList->AddLine(max, { min.x, max.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]), 1.24);
+    drawList->AddLine(max, { max.x, min.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]), 1.24);
 }
 
 void UImGui::ClientSideBar::renderCloseButton(float& width, const ImGuiStyle& style, FVector4 destructiveColour, FVector4 destructiveColourActive) noexcept
@@ -164,8 +311,8 @@ void UImGui::ClientSideBar::renderCloseButton(float& width, const ImGuiStyle& st
     ADD_PADDING_TO_ITEM_RECT(min, max, padding);
 
     auto* drawList = ImGui::GetWindowDrawList();
-    drawList->AddLine(min, max, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]));
-    drawList->AddLine({ min.x, max.y }, { max.x, min.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]));
+    drawList->AddLine(min, max, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]), 1.24);
+    drawList->AddLine({ min.x, max.y }, { max.x, min.y }, ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]), 1.24);
 
     ImGui::PopStyleColor(2);
 }
