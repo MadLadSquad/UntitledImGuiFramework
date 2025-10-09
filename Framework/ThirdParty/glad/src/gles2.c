@@ -98,6 +98,7 @@ int GLAD_GL_EXT_map_buffer_range = 0;
 int GLAD_GL_EXT_memory_object = 0;
 int GLAD_GL_EXT_memory_object_fd = 0;
 int GLAD_GL_EXT_memory_object_win32 = 0;
+int GLAD_GL_EXT_mesh_shader = 0;
 int GLAD_GL_EXT_multi_draw_arrays = 0;
 int GLAD_GL_EXT_multi_draw_indirect = 0;
 int GLAD_GL_EXT_multisampled_compatibility = 0;
@@ -543,6 +544,8 @@ PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXEXTPROC glad_glDrawElementsInstancedBaseVert
 PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXOESPROC glad_glDrawElementsInstancedBaseVertexOES = NULL;
 PFNGLDRAWELEMENTSINSTANCEDEXTPROC glad_glDrawElementsInstancedEXT = NULL;
 PFNGLDRAWELEMENTSINSTANCEDNVPROC glad_glDrawElementsInstancedNV = NULL;
+PFNGLDRAWMESHTASKSEXTPROC glad_glDrawMeshTasksEXT = NULL;
+PFNGLDRAWMESHTASKSINDIRECTEXTPROC glad_glDrawMeshTasksIndirectEXT = NULL;
 PFNGLDRAWMESHTASKSINDIRECTNVPROC glad_glDrawMeshTasksIndirectNV = NULL;
 PFNGLDRAWMESHTASKSNVPROC glad_glDrawMeshTasksNV = NULL;
 PFNGLDRAWRANGEELEMENTSPROC glad_glDrawRangeElements = NULL;
@@ -874,7 +877,9 @@ PFNGLMULTIDRAWARRAYSINDIRECTEXTPROC glad_glMultiDrawArraysIndirectEXT = NULL;
 PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTPROC glad_glMultiDrawElementsBaseVertexEXT = NULL;
 PFNGLMULTIDRAWELEMENTSEXTPROC glad_glMultiDrawElementsEXT = NULL;
 PFNGLMULTIDRAWELEMENTSINDIRECTEXTPROC glad_glMultiDrawElementsIndirectEXT = NULL;
+PFNGLMULTIDRAWMESHTASKSINDIRECTCOUNTEXTPROC glad_glMultiDrawMeshTasksIndirectCountEXT = NULL;
 PFNGLMULTIDRAWMESHTASKSINDIRECTCOUNTNVPROC glad_glMultiDrawMeshTasksIndirectCountNV = NULL;
+PFNGLMULTIDRAWMESHTASKSINDIRECTEXTPROC glad_glMultiDrawMeshTasksIndirectEXT = NULL;
 PFNGLMULTIDRAWMESHTASKSINDIRECTNVPROC glad_glMultiDrawMeshTasksIndirectNV = NULL;
 PFNGLNAMEDBUFFERATTACHMEMORYNVPROC glad_glNamedBufferAttachMemoryNV = NULL;
 PFNGLNAMEDBUFFERPAGECOMMITMENTMEMNVPROC glad_glNamedBufferPageCommitmentMemNV = NULL;
@@ -1842,6 +1847,13 @@ static void glad_gl_load_GL_EXT_memory_object_win32( GLADuserptrloadfunc load, v
     glad_glImportMemoryWin32HandleEXT = (PFNGLIMPORTMEMORYWIN32HANDLEEXTPROC) load(userptr, "glImportMemoryWin32HandleEXT");
     glad_glImportMemoryWin32NameEXT = (PFNGLIMPORTMEMORYWIN32NAMEEXTPROC) load(userptr, "glImportMemoryWin32NameEXT");
 }
+static void glad_gl_load_GL_EXT_mesh_shader( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_EXT_mesh_shader) return;
+    glad_glDrawMeshTasksEXT = (PFNGLDRAWMESHTASKSEXTPROC) load(userptr, "glDrawMeshTasksEXT");
+    glad_glDrawMeshTasksIndirectEXT = (PFNGLDRAWMESHTASKSINDIRECTEXTPROC) load(userptr, "glDrawMeshTasksIndirectEXT");
+    glad_glMultiDrawMeshTasksIndirectCountEXT = (PFNGLMULTIDRAWMESHTASKSINDIRECTCOUNTEXTPROC) load(userptr, "glMultiDrawMeshTasksIndirectCountEXT");
+    glad_glMultiDrawMeshTasksIndirectEXT = (PFNGLMULTIDRAWMESHTASKSINDIRECTEXTPROC) load(userptr, "glMultiDrawMeshTasksIndirectEXT");
+}
 static void glad_gl_load_GL_EXT_multi_draw_arrays( GLADuserptrloadfunc load, void* userptr) {
     if(!GLAD_GL_EXT_multi_draw_arrays) return;
     glad_glMultiDrawArraysEXT = (PFNGLMULTIDRAWARRAYSEXTPROC) load(userptr, "glMultiDrawArraysEXT");
@@ -2759,6 +2771,7 @@ static int glad_gl_find_extensions_gles2(void) {
     GLAD_GL_EXT_memory_object = glad_gl_has_extension(exts, exts_i, "GL_EXT_memory_object");
     GLAD_GL_EXT_memory_object_fd = glad_gl_has_extension(exts, exts_i, "GL_EXT_memory_object_fd");
     GLAD_GL_EXT_memory_object_win32 = glad_gl_has_extension(exts, exts_i, "GL_EXT_memory_object_win32");
+    GLAD_GL_EXT_mesh_shader = glad_gl_has_extension(exts, exts_i, "GL_EXT_mesh_shader");
     GLAD_GL_EXT_multi_draw_arrays = glad_gl_has_extension(exts, exts_i, "GL_EXT_multi_draw_arrays");
     GLAD_GL_EXT_multi_draw_indirect = glad_gl_has_extension(exts, exts_i, "GL_EXT_multi_draw_indirect");
     GLAD_GL_EXT_multisampled_compatibility = glad_gl_has_extension(exts, exts_i, "GL_EXT_multisampled_compatibility");
@@ -3098,6 +3111,7 @@ int gladLoadGLES2UserPtr( GLADuserptrloadfunc load, void *userptr) {
     glad_gl_load_GL_EXT_memory_object(load, userptr);
     glad_gl_load_GL_EXT_memory_object_fd(load, userptr);
     glad_gl_load_GL_EXT_memory_object_win32(load, userptr);
+    glad_gl_load_GL_EXT_mesh_shader(load, userptr);
     glad_gl_load_GL_EXT_multi_draw_arrays(load, userptr);
     glad_gl_load_GL_EXT_multi_draw_indirect(load, userptr);
     glad_gl_load_GL_EXT_multisampled_render_to_texture(load, userptr);
