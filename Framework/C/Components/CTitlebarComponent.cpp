@@ -147,9 +147,14 @@ void UImGui_TitlebarBuilder_finish(UImGui_CTitlebarBuilder* builder)
     CAST(UImGui::TitlebarBuilder*, builder)->finish();
 }
 
-void UImGui_TitlebarBuilder_render(UImGui_CTitlebarBuilder* builder)
+void UImGui_TitlebarBuilder_renderFull(UImGui_CTitlebarBuilder* builder)
 {
-    CAST(UImGui::TitlebarBuilder*, builder)->render();
+    CAST(UImGui::TitlebarBuilder*, builder)->renderFull();
+}
+
+void UImGui_TitlebarBuilder_renderInline(UImGui_CTitlebarBuilder* builder)
+{
+    CAST(UImGui::TitlebarBuilder*, builder)->renderInline();
 }
 
 void UImGui_TitlebarBuilder_clear(UImGui_CTitlebarBuilder* builder)

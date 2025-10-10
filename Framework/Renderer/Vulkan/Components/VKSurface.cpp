@@ -1,13 +1,12 @@
 #include "VKSurface.hpp"
 #ifndef __EMSCRIPTEN__
-#include <GLFW/glfw3.h>
 #include <Types.hpp>
 #include <Interfaces/WindowInterface.hpp>
 
 void UImGui::VKSurface::create(VKInstance& instance) noexcept
 {
     VkSurfaceKHR surf;
-    const auto result = glfwCreateWindowSurface(instance.data(), Window::getInternal(), nullptr, &surf);
+    const auto result = RendererUtils::Vulkan::createWindowSurface(instance.data(), nullptr, &surf);
     if (result != VK_SUCCESS)
     {
         Logger::log("Failed to create a window surface! Error code: ", ULOG_LOG_TYPE_ERROR, result);

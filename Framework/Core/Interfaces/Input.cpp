@@ -1,6 +1,5 @@
 #include <Interfaces/Input.hpp>
 #include <Interfaces/WindowInterface.hpp>
-#include <GLFW/glfw3.h>
 
 bool UImGui::InputAction::operator==(const CKeyState& st) const noexcept
 {
@@ -14,12 +13,12 @@ bool UImGui::InputAction::operator!=(const CKeyState& st) const noexcept
 
 CKeyState UImGui::Input::getKey(const CKeys key) noexcept
 {
-    return Window::get().keys[key];
+    return Window::get()->getKey(key);
 }
 
 const UImGui::InputAction& UImGui::Input::getAction(const FString& name) noexcept
 {
-    for (auto& a : Window::get().inputActionList)
+    for (auto& a : Window::get()->inputActionList)
         if (a.name == name)
             return a;
 
@@ -30,41 +29,40 @@ const UImGui::InputAction& UImGui::Input::getAction(const FString& name) noexcep
 
 UImGui::TVector<UImGui::InputAction>& UImGui::Input::getActions() noexcept
 {
-    return Window::get().inputActionList;
+    return Window::get()->inputActionList;
 }
 
 UImGui::FVector2 UImGui::Input::getMousePositionChange() noexcept
 {
-    return Window::get().getMousePositionChange();
+    return Window::get()->getMousePositionChange();
 }
 
 UImGui::FVector2 UImGui::Input::getCurrentMousePosition() noexcept
 {
-    return Window::get().mousePos;
+    return Window::get()->getCurrentMousePosition();
 }
 
 UImGui::FVector2 UImGui::Input::getLastMousePosition() noexcept
 {
-    return Window::get().mouseLastPos;
+    return Window::get()->getLastMousePosition();
 }
 
 UImGui::FVector2 UImGui::Input::getScroll() noexcept
 {
-    return Window::get().getScroll();
+    return Window::get()->getScroll();
 }
 
 void UImGui::Input::setCursorVisibility(const CursorVisibilityState visibility) noexcept
 {
-    glfwSetInputMode(Window::getInternal(), GLFW_CURSOR, visibility);
+    Window::get()->setCursorVisibility(visibility);
 }
 
 void UImGui::Input::setRawMouseMotion(const bool bEnable) noexcept
 {
-    if (glfwRawMouseMotionSupported())
-        glfwSetInputMode(Window::getInternal(), GLFW_RAW_MOUSE_MOTION, bEnable);
+    Window::get()->setRawMouseMotion(bEnable);
 }
 
 bool UImGui::Input::getRawMouseMotion() noexcept
 {
-    return glfwGetInputMode(Window::getInternal(), GLFW_RAW_MOUSE_MOTION);
+    return Window::get()->getRawMouseMotion();
 }

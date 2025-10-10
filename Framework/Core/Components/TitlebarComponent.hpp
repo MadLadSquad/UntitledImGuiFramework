@@ -149,11 +149,23 @@ namespace UImGui
         void finish() noexcept;
 
         /**
-         * @brief Renders the menu. Should be called every frame. When drawing a macOS menu it does nothing. When drawing an
-         * imgui-native menu it renders the UI for the menu. Should only be called in Titlebar components
+         * @brief Renders the menu and automatically creates a dear imgui main menu bar automatically.
+         * Should be called every frame. When drawing a macOS menu it does nothing. When drawing an
+         * imgui-native menu it creates a dear imgui main menu bar and renders the UI for the menu inside it.
+         * Should only be called in Titlebar components
          * @note Event safety - Tick
          */
-        void render() const noexcept;
+        void renderFull() const noexcept;
+
+        /**
+         * @brief Renders the menu without creating a dear imgui main menu bar automatically.
+         * Should be called every frame. When drawing a macOS menu it does nothing. When drawing an
+         * imgui-native menu it renders the UI for the menu. This is useful for integrating the titlebar builder
+         * API with the client-side bar feature
+         * Should only be called in Titlebar components
+         * @note Event safety - Tick
+         */
+        void renderInline() const noexcept;
 
         /**
          * @brief Clears the menu for rebuilding

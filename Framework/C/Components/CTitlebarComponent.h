@@ -163,12 +163,23 @@ extern "C"
     UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_finish(UImGui_CTitlebarBuilder* builder);
 
     /**
-     * @brief Renders the menu. Should be called every frame. When drawing a macOS menu it does nothing. When drawing an
-     * imgui-native menu it renders the UI for the menu. Should only be called in Titlebar components
-     * @param builder - A pointer to the C menu builder instance from UImGui_TitlebarBuilder_init
+     * @brief Renders the menu and automatically creates a dear imgui main menu bar automatically.
+     * Should be called every frame. When drawing a macOS menu it does nothing. When drawing an
+     * imgui-native menu it creates a dear imgui main menu bar and renders the UI for the menu inside it.
+     * Should only be called in Titlebar components
      * @note Event safety - Tick
      */
-    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_render(UImGui_CTitlebarBuilder* builder);
+    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_renderFull(UImGui_CTitlebarBuilder* builder);
+
+    /**
+     * @brief Renders the menu without creating a dear imgui main menu bar automatically.
+     * Should be called every frame. When drawing a macOS menu it does nothing. When drawing an
+     * imgui-native menu it renders the UI for the menu. This is useful for integrating the titlebar builder
+     * API with the client-side bar feature
+     * Should only be called in Titlebar components
+     * @note Event safety - Tick
+     */
+    UIMGUI_PUBLIC_API void UImGui_TitlebarBuilder_renderInline(UImGui_CTitlebarBuilder* builder);
 
     /**
      * @brief Clears the menu for rebuilding
