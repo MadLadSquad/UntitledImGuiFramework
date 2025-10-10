@@ -203,14 +203,19 @@ void UImGui::ClientSideBar::BeginManualRender() noexcept
 
 void UImGui::ClientSideBar::EndManualRender(const FVector4 destructiveColour, const FVector4 destructiveColourActive) noexcept
 {
-    // On macOS, the traffic light buttons are rendered by the operating system and they come before all elements so no need to draw our own widgets
-#ifndef __APPLE__
     // Create an invisible button that fills up all available space but leaves enough for the buttons
     static float width = 0;
     ImGui::InvisibleButton("uimgui_internal_main_bar_spacing", { ImGui::GetContentRegionAvail().x - width, ImGui::GetFrameHeight() });
-    
-    auto flags = getFlags();
-    // On Windows, we need to 
+
+    // macOS + Freedesktop. Maximise on double-click. Windows handles that automatically in the callback
+#ifndef _WIN32
+    if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+        Window::getWindowCurrentlyMaximised() ? Window::restoreWindowState() : Window::maximiseWindow();
+#endif
+
+    const auto flags = getFlags();
+
+    // On Windows, moving is handled by the window callback
 #ifdef _WIN32
     if (flags & UIMGUI_CLIENT_SIDE_BAR_FLAG_MOVEABLE)
     {
@@ -218,7 +223,9 @@ void UImGui::ClientSideBar::EndManualRender(const FVector4 destructiveColour, co
         hoveringOnNonDragArea() = !ImGui::IsItemHovered();
     }
 #endif
-    
+
+    // Windows + Freedesktop. We do not render buttons on macOS because we use the native ones
+#ifndef __APPLE__
     const auto& style = ImGui::GetStyle();
     width = 0;
 
@@ -237,6 +244,9 @@ void UImGui::ClientSideBar::EndManualRender(const FVector4 destructiveColour, co
 #endif
     ImGui::EndGroup();
 
+    // Freedesktop-only. On Windows we use the window callback. On macOS, we make the titlebar area invisible and we
+    // move it down to the bar, which means that it's handled automatically.
+    //
     // Dragging for X11(The entire client-side bar feature does not work on Wayland in any way)
 #if !defined(__APPLE__) && !defined(_WIN32)
     // Mouse dragging code courtesy of https://github.com/ashifolfi/lynx-animator/blob/main/src/MainWindow.cpp
