@@ -15,6 +15,7 @@
     #endif
 #endif
 #include <GLFW/glfw3native.h>
+#include <Interfaces/RendererInterface.hpp>
 
 UImGui::Monitor UImGui::WindowGLFW::getWindowMonitor() noexcept
 {
@@ -90,7 +91,7 @@ float UImGui::MonitorGLFW::getPixelDensity(MonitorData& data) noexcept
 void* UImGui::MonitorGLFW::getPlatformHandle(MonitorData& data) noexcept
 {
 #ifdef __EMSCRIPTEN__
-    return (void*)"#canvas";
+    return (void*)Renderer::data().emscriptenCanvas;
 #elifdef _WIN32
     return reinterpret_cast<void*>(
                const_cast<char*>(

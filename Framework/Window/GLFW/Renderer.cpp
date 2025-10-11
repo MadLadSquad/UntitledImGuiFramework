@@ -1,6 +1,7 @@
 #include "WindowGLFW.hpp"
 #include <GLFW/glfw3.h>
 #include "imgui_impl_glfw.h"
+#include <Interfaces/RendererInterface.hpp>
 
 #ifndef __EMSCRIPTEN__
 void UImGui::WindowGLFW::ImGuiInitFor_Vulkan() noexcept
@@ -22,7 +23,7 @@ void UImGui::WindowGLFW::ImGuiInitFor_Other() noexcept
 void UImGui::WindowGLFW::ImGuiInstallCallbacks() noexcept
 {
 #ifdef __EMSCRIPTEN__
-    ImGui_ImplGlfw_InstallEmscriptenCallbacks(window, "canvas");
+    ImGui_ImplGlfw_InstallEmscriptenCallbacks(window, Renderer::data().emscriptenCanvas);
 #endif
 }
 

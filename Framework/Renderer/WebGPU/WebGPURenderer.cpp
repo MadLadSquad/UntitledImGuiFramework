@@ -64,7 +64,7 @@ void UImGui::WebGPURenderer::init(RendererInternalMetadata&) noexcept
     }
 
     wgpu::SurfaceDescriptorFromCanvasHTMLSelector HTMLSurfaceDescriptor{};
-    HTMLSurfaceDescriptor.selector = "#canvas";
+    HTMLSurfaceDescriptor.selector = Renderer::data().emscriptenCanvas;
 
     const wgpu::SurfaceDescriptor surfaceDescriptor = { .nextInChain = &HTMLSurfaceDescriptor };
     wgpu::Surface lsurface = inst.CreateSurface(&surfaceDescriptor);

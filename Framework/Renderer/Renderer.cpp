@@ -202,6 +202,17 @@ escape_render_type_loop:;
             data.idleFrameRate = powerSaving["idle-frames"].as<float>();
     }
 
+    const auto& emscripten = node["emscripten"];
+    if (emscripten)
+    {
+        if (emscripten["canvas-selector"])
+        {
+            // Doing this because the RendererData structure is in C and we use String there
+            tmpCanvasSelector = emscripten["canvas-selector"].as<FString>();
+            data.emscriptenCanvas = tmpCanvasSelector.c_str();
+        }
+    }
+
     renderer = CAST(decltype(renderer), renderers[static_cast<int>(data.rendererType)]);
     if (node["custom-renderer"])
     {
@@ -218,12 +229,20 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     out << YAML::Key << "renderer" << YAML::Value << RENDERER_TYPE_STRINGS[data.rendererType][0];
     out << YAML::Key << "v-sync" << YAML::Value << data.bUsingVSync;
     out << YAML::Key << "msaa-samples" << YAML::Value << data.msaaSamples;
+
     out << YAML::Key << "power-saving" << YAML::Value << YAML::BeginMap;
     out << YAML::Key << "enabled" << YAML::Value << data.bEnablePowerSavingMode;
     out << YAML::Key << "idle-frames" << YAML::Value << data.idleFrameRate;
     out << YAML::EndMap;
+
+    out << YAML::Key << "emscripten" << YAML::Value << YAML::BeginMap;
+    out << YAML::Key << "canvas-selector" << YAML::Value << data.emscriptenCanvas;
+    out << YAML::EndMap;
+
     if (customConfig && !customConfig.IsNull())
         out << YAML::Key << "custom-renderer" << YAML::Value << customConfig;
+
+    out << YAML::EndMap;
 
     std::ofstream fout((Instance::get()->initInfo.configDir + "Core/Renderer.yaml").c_str());
     fout << out.c_str();

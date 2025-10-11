@@ -103,6 +103,8 @@ macro(setup_platform_target_settings)
 
     multicast(target_compile_definitions PRIVATE "UIMGUI_PLATFORM_WASM")
     multicast(target_compile_options PRIVATE "-Wno-cast-function-type")
+
+    file(COPY "${CMAKE_SOURCE_DIR}/Config/WASM/" DESTINATION "${CMAKE_BINARY_DIR}")
 endmacro()
 
 macro(initialise_platform)

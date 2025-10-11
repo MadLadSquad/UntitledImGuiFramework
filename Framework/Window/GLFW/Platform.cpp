@@ -24,6 +24,7 @@
 #include <GLFW/glfw3native.h>
 
 #include <cstring>
+#include <Interfaces/RendererInterface.hpp>
 
 void UImGui::WindowGLFW::Platform_setWindowAlwaysOnTop() noexcept
 {
@@ -338,7 +339,7 @@ void* UImGui::WindowGLFW::Platform_getNativeWindowHandle() noexcept
 #elifdef _WIN32
     return glfwGetWin32Window(window);
 #elifdef __EMSCRIPTEN__
-    return (void*)"#canvas";
+    return (void*)Renderer::data().emscriptenCanvas;;
 #else
     return (glfwGetPlatform() == GLFW_PLATFORM_WAYLAND) ? glfwGetWaylandWindow(window) : reinterpret_cast<void*>(glfwGetX11Window(window));
 #endif

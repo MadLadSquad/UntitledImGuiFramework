@@ -4,3 +4,5 @@ msaa-samples: 8               # Multisampling sample count
 power-saving:                 # The power saving mode limits the number of frames that are drawn when idling. Will not work for applications with live plots or animations
   enabled: true
   idle-frames: 9              # The number of frames to output while idling
+emscripten:
+  canvas-selector: "#canvas"  # The HTML canvas selector to draw inside of

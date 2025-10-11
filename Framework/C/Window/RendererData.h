@@ -1,5 +1,6 @@
 #pragma once
 #include <C/CDefines.h>
+#include <C/CTypes.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -26,6 +27,7 @@ extern "C"
      * @var bEnablePowerSavingMode - Whether to enable power saving(rendering with a reduce frame rate when the
      * application sits idle). Note: do not use for highly dynamic applications with plots or animations
      * @var idleFrameRate - The number of frames to render per second when idle
+     * @var emscriptenCanvas - The HTML canvas selector to draw inside of
      */
     typedef struct UIMGUI_PUBLIC_API UImGui_RendererData
     {
@@ -36,6 +38,8 @@ extern "C"
 
         bool bEnablePowerSavingMode;
         float idleFrameRate;
+
+        UImGui_String emscriptenCanvas;
     } UImGui_RendererData;
 #ifdef __cplusplus
 }

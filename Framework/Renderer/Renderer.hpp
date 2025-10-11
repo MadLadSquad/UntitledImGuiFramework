@@ -67,13 +67,17 @@ namespace UImGui
             .bUsingVSync = true,
             .msaaSamples = 1,
             .bEnablePowerSavingMode = false,
-            .idleFrameRate = 9.0f
+            .idleFrameRate = 9.0f,
+            .emscriptenCanvas = "#canvas"
         };
 
         YAML::Node customConfig;
 
         double lastTime = 0.0f;
         bool bIdling = false;
+
+        // The string needs to be stored somewhere
+        FString tmpCanvasSelector;
     };
 
 }
