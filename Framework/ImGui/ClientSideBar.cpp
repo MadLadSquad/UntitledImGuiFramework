@@ -33,6 +33,22 @@ static bool& hoveringOnNonDragArea() noexcept
     return bHovering;
 }
 
+static void applyStyle(HWND hwnd) noexcept
+{
+    // Keep DWM composition and dark frame enabled
+    LONG_PTR lStyle = GetWindowLongPtr(hwnd, GWL_STYLE);
+    lStyle |= WS_THICKFRAME;
+    lStyle &= ~WS_CAPTION;
+    SetWindowLongPtr(hwnd, GWL_STYLE, lStyle);
+
+    RECT windowRect;
+    GetWindowRect(hwnd, &windowRect);
+    int width = windowRect.right - windowRect.left;
+    int height = windowRect.bottom - windowRect.top;
+
+    SetWindowPos(hwnd, NULL, 0, 0, width, height, SWP_FRAMECHANGED | SWP_NOMOVE);
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
@@ -113,6 +129,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             DwmExtendFrameIntoClientArea(hWnd, &margin);
             return 0;
         }
+    case WM_SIZE:
+        {
+            auto result = CallWindowProc(*getProc(), hWnd, msg, wParam, lParam);
+            applyStyle(hWnd);
+            return result;
+        }
+        
     }
 
     return CallWindowProc(*getProc(), hWnd, msg, wParam, lParam);
@@ -182,19 +205,8 @@ void UImGui::ClientSideBar::BeginManualRender() noexcept
         // Replace with our extended WndProc
         *getProc() = (WNDPROC)GetWindowLongPtr(hwnd, GWLP_WNDPROC);
         SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)WndProc);
-        
-        // Keep DWM composition and dark frame enabled
-        LONG_PTR lStyle = GetWindowLongPtr(hwnd, GWL_STYLE);
-        lStyle |= WS_THICKFRAME;
-        lStyle &= ~WS_CAPTION;
-        SetWindowLongPtr(hwnd, GWL_STYLE, lStyle);
 
-        RECT windowRect;
-        GetWindowRect(hwnd, &windowRect);
-        int width = windowRect.right - windowRect.left;
-        int height = windowRect.bottom - windowRect.top;
-
-        SetWindowPos(hwnd, NULL, 0, 0, width, height, SWP_FRAMECHANGED | SWP_NOMOVE);
+        applyStyle(hwnd);
         bFirst = false;
     }
 #endif
