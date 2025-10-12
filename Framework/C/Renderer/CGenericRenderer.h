@@ -1,11 +1,6 @@
 #pragma once
 #include <C/CDefines.h>
 #include <C/Window/RendererData.h>
-#ifdef __APPLE__
-    #include <OpenGL/GL.h>
-#else
-    #include <glad/include/glad/gl.h>
-#endif
 
 #ifdef __cplusplus
 extern "C"
