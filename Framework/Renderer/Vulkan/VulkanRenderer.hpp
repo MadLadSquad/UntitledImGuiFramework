@@ -10,7 +10,7 @@ namespace UImGui
     class UIMGUI_PUBLIC_API VulkanRenderer final : public GenericRenderer
     {
     public:
-        VulkanRenderer() = default;
+        VulkanRenderer() noexcept;
 
         virtual void parseCustomConfig(YAML::Node&) noexcept override;
 

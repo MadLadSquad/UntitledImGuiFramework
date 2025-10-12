@@ -12,6 +12,8 @@ extern "C"
     typedef struct UIMGUI_PUBLIC_API UImGui_CComponentData
     {
         UImGui_ComponentState state;
+        void* context;
+        size_t contextSize;
 
         UImGui_String name;
         uint64_t id;
@@ -24,6 +26,9 @@ extern "C"
     typedef struct UIMGUI_PUBLIC_API UImGui_CComponentData_P
     {
         UImGui_ComponentState* state;
+        void** context;
+        size_t* contextSize;
+
         uint64_t* id;
     } UImGui_CComponentData_P;
 

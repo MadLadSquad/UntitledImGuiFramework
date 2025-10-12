@@ -6,36 +6,41 @@ class CTitlebarComponentInternalClass final : public UImGui::TitlebarComponent
 public:
     CTitlebarComponentInternalClass()
     {
-        construct(&dataP);
+        construct(&data);
     }
 
     virtual void begin() override
     {
         beginAutohandle();
-        beginF(&dataP);
+        beginF(&data);
     }
 
     virtual void tick(const float deltaTime) override
     {
         tickAutohandle(deltaTime);
-        tickF(&dataP, deltaTime);
+        tickF(&data, deltaTime);
     }
 
     virtual void end() override
     {
         endAutohandle();
-        endF(&dataP);
+        endF(&data);
     }
 
     virtual ~CTitlebarComponentInternalClass() override
     {
-        destruct(&dataP);
+        destruct(&data);
     }
 
-    UImGui_CComponentData_P dataP =
+    void* context = nullptr;
+    size_t contextSize = 0;
+
+    UImGui_CComponentData_P data =
     {
         .state = &state,
-        .id = &id,
+        .context = &context,
+        .contextSize = &contextSize,
+        .id = &id
     };
 
     UImGui_ComponentRegularFun construct = [](UImGui_CComponentData_P*) -> void {};
@@ -57,6 +62,8 @@ UImGui_CComponentHandle* UImGui_Titlebar_makeCTitlebarComponent(const UImGui_Com
     handle->state = data.state;
     handle->name = data.name;
     handle->id = data.id;
+    handle->context = data.context;
+    handle->contextSize = data.contextSize;
 
     handle->construct = construct;
     handle->beginF = begin;
@@ -69,7 +76,7 @@ UImGui_CComponentHandle* UImGui_Titlebar_makeCTitlebarComponent(const UImGui_Com
 
 const UImGui_CComponentData_P* UImGui_Titlebar_getCTitlebarComponentData(const UImGui_CComponentHandle* const handle)
 {
-    return &CAST(const CTitlebarComponentInternalClass*, handle)->dataP;
+    return &CAST(const CTitlebarComponentInternalClass*, handle)->data;
 }
 
 void UImGui_Titlebar_destroyCTitlebarComponent(const UImGui_CComponentHandle* const handle)

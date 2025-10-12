@@ -10,7 +10,7 @@ namespace UImGui
     class UIMGUI_PUBLIC_API WebGPURenderer final : public GenericRenderer
     {
     public:
-        WebGPURenderer() noexcept = default;
+        WebGPURenderer() noexcept;
 
         virtual void parseCustomConfig(YAML::Node&) noexcept override;
 

@@ -17,6 +17,11 @@
 #include <Renderer/RendererUtils.hpp>
 #include <Interfaces/RendererInterface.hpp>
 
+UImGui::OpenGLRenderer::OpenGLRenderer() noexcept
+{
+    type = UIMGUI_RENDERER_API_TYPE_HINT_OPENGL;
+}
+
 void UImGui::OpenGLRenderer::parseCustomConfig(YAML::Node&) noexcept{}
 
 void UImGui::OpenGLRenderer::setupWindowIntegration() noexcept

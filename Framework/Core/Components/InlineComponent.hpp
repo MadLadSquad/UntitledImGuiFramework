@@ -70,7 +70,7 @@ namespace UImGui
          */
         static constexpr ComponentType componentType = UIMGUI_COMPONENT_TYPE_INLINE;
         /**
-         * @brief The name ID of the component as to provide a human readable way to differentiate between components,
+         * @brief The name ID of the component as to provide a human-readable way to differentiate between components,
          * not guaranteed to be unique
          */
         FString name{};

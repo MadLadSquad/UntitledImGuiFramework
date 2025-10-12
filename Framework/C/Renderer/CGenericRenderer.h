@@ -12,27 +12,52 @@ extern "C"
 {
 #endif
 
-    typedef void(*UImGui_CGenericRenderer_VoidVoidFun)();
-    typedef void(*UImGui_CGenericRenderer_TickEvent)(float);
+    struct UImGui_CGenericRenderer_InitInfo;
 
-    UIMGUI_PUBLIC_API UImGui_CGenericRenderer* UImGui_CGenericRenderer_init(
-        UImGui_CGenericRenderer_VoidVoidFun setupWindowIntegration,
-        UImGui_CGenericRenderer_VoidVoidFun setupPostWindowIntegration,
+    typedef void(*UImGui_CGenericRenderer_VoidVoidFun)(struct UImGui_CGenericRenderer_InitInfo*);
+    typedef void(*UImGui_CGenericRenderer_TickEvent)(struct UImGui_CGenericRenderer_InitInfo*, float);
 
-        UImGui_CGenericRenderer_VoidVoidFun init,
-        UImGui_CGenericRenderer_TickEvent renderStart,
-        UImGui_CGenericRenderer_TickEvent renderEnd,
-        UImGui_CGenericRenderer_VoidVoidFun destroy,
+    typedef enum UImGui_RendererAPITypeHint
+    {
+        UIMGUI_RENDERER_API_TYPE_HINT_OPENGL,
+        UIMGUI_RENDERER_API_TYPE_HINT_VULKAN,
+        UIMGUI_RENDERER_API_TYPE_HINT_WEBGPU,
+        UIMGUI_RENDERER_API_TYPE_HINT_METAL,
+        UIMGUI_RENDERER_API_TYPE_HINT_D3D,
+        UIMGUI_RENDERER_API_TYPE_HINT_OTHER
+    } UImGui_RendererAPITypeHint;
 
-        UImGui_CGenericRenderer_VoidVoidFun ImGuiNewFrame,
-        UImGui_CGenericRenderer_VoidVoidFun ImGuiShutdown,
-        UImGui_CGenericRenderer_VoidVoidFun ImGuiInit,
-        UImGui_CGenericRenderer_VoidVoidFun ImGuiRenderData,
+    typedef struct UIMGUI_PUBLIC_API UImGui_CGenericRenderer_InitInfo
+    {
+        UImGui_CGenericRenderer_VoidVoidFun setupWindowIntegration;
+        UImGui_CGenericRenderer_VoidVoidFun setupPostWindowIntegration;
 
-        UImGui_CGenericRenderer_VoidVoidFun waitOnGPU,
-        UImGui_CGenericRenderer_VoidVoidFun destruct
-    );
-    UIMGUI_PUBLIC_API void UImGui_CGenericRenderer_free(UImGui_CGenericRenderer* data);
+        UImGui_CGenericRenderer_VoidVoidFun init;
+
+        UImGui_CGenericRenderer_TickEvent renderStart;
+        UImGui_CGenericRenderer_TickEvent renderEnd;
+
+        UImGui_CGenericRenderer_VoidVoidFun destroy;
+
+        UImGui_CGenericRenderer_VoidVoidFun ImGuiNewFrame;
+        UImGui_CGenericRenderer_VoidVoidFun ImGuiShutdown;
+        UImGui_CGenericRenderer_VoidVoidFun ImGuiInit;
+        UImGui_CGenericRenderer_VoidVoidFun ImGuiRenderData;
+
+        UImGui_CGenericRenderer_VoidVoidFun waitOnGPU;
+        UImGui_CGenericRenderer_VoidVoidFun destruct;
+
+        UImGui_RendererAPITypeHint rendererAPI;
+
+        void* context;
+        size_t contextSize;
+
+        // Do not touch
+        UImGui_CGenericRenderer* instance;
+    } UImGui_CGenericRenderer_InitInfo;
+
+    UIMGUI_PUBLIC_API void UImGui_CGenericRenderer_init(UImGui_CGenericRenderer_InitInfo* initInfo);
+    UIMGUI_PUBLIC_API void UImGui_CGenericRenderer_free(const UImGui_CGenericRenderer_InitInfo* instance);
 #ifdef __cplusplus
 }
 #endif

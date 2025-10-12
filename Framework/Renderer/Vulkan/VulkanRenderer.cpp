@@ -4,6 +4,11 @@
 
 #include "Framework/Core/Interfaces/WindowInterface.hpp"
 
+UImGui::VulkanRenderer::VulkanRenderer() noexcept
+{
+    type = UIMGUI_RENDERER_API_TYPE_HINT_VULKAN;
+}
+
 void UImGui::VulkanRenderer::parseCustomConfig(YAML::Node&) noexcept{};
 
 void UImGui::VulkanRenderer::setupWindowIntegration() noexcept

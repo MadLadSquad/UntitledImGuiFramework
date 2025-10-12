@@ -32,9 +32,14 @@ public:
         destruct(&data);
     }
 
+    void* context = nullptr;
+    size_t contextSize = 0;
+
     UImGui_CComponentData_P data =
     {
         .state = &state,
+        .context = &context,
+        .contextSize = &contextSize,
         .id = &id
     };
 
@@ -54,6 +59,8 @@ UImGui_CComponentHandle* UImGui_Inline_makeCInlineComponent(const UImGui_Compone
     handle->state = data.state;
     handle->name = data.name;
     handle->id = data.id;
+    handle->context = data.context;
+    handle->contextSize = data.contextSize;
 
     handle->construct = construct;
     handle->beginF = begin;

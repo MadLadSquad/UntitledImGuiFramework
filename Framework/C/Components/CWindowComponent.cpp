@@ -32,10 +32,15 @@ public:
         destruct(&data);
     }
 
+    void* context = nullptr;
+    size_t contextSize = 0;
+
     UImGui_CComponentData_P data =
     {
         .state = &state,
-        .id = &id,
+        .context = &context,
+        .contextSize = &contextSize,
+        .id = &id
     };
 
     UImGui_ComponentRegularFun construct = [](UImGui_CComponentData_P*) -> void {};
@@ -54,6 +59,8 @@ UImGui_CComponentHandle* UImGui_WindowComponent_makeCWindowComponent(const UImGu
     handle->state = data.state;
     handle->name = data.name;
     handle->id = data.id;
+    handle->context = data.context;
+    handle->contextSize = data.contextSize;
 
     handle->construct = construct;
     handle->beginF = begin;

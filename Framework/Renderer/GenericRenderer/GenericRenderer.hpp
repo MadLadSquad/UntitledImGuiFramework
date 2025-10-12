@@ -1,10 +1,13 @@
 #pragma once
 #include <Types.hpp>
+#include <C/Renderer/CGenericRenderer.h>
 
 namespace UImGui
 {
     class RendererInternal;
     struct RendererInternalMetadata;
+
+    typedef UImGui_RendererAPITypeHint RendererAPITypeHint;
 
     class UIMGUI_PUBLIC_API GenericRenderer
     {
@@ -31,5 +34,7 @@ namespace UImGui
         virtual void waitOnGPU() noexcept = 0;
 
         virtual ~GenericRenderer() noexcept = default;
+
+        RendererAPITypeHint type = UIMGUI_RENDERER_API_TYPE_HINT_OTHER;
     };
 }

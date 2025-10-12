@@ -6,7 +6,7 @@ namespace UImGui
     class UIMGUI_PUBLIC_API OpenGLRenderer final : public GenericRenderer
     {
     public:
-        OpenGLRenderer() noexcept = default;
+        OpenGLRenderer() noexcept;
 
         virtual void parseCustomConfig(YAML::Node&) noexcept override;
 

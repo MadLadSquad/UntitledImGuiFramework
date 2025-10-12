@@ -12,121 +12,77 @@ public:
 
     virtual void setupWindowIntegration() noexcept override
     {
-        setupWindowIntegrationFun();
+        initInfo->setupWindowIntegration(initInfo);
     }
 
     virtual void setupPostWindowCreation() noexcept override
     {
-        setupPostWindowIntegrationFun();
+        initInfo->setupPostWindowIntegration(initInfo);
     }
 
     virtual void init(UImGui::RendererInternalMetadata&) noexcept override
     {
-        initFun();
+        initInfo->init(initInfo);
     }
 
     virtual void renderStart(const double deltaTime) noexcept override
     {
-        renderStartFun(deltaTime);
+        initInfo->renderStart(initInfo, deltaTime);
     }
 
     virtual void renderEnd(const double deltaTime) noexcept override
     {
-        renderEndFun(deltaTime);
+        initInfo->renderEnd(initInfo, deltaTime);
     }
 
     virtual void destroy() noexcept override
     {
-        destroyFun();
+        initInfo->destroy(initInfo);
     }
 
     virtual void ImGuiNewFrame() noexcept override
     {
-        ImGuiNewFrameFun();
+        initInfo->ImGuiNewFrame(initInfo);
     }
 
     virtual void ImGuiShutdown() noexcept override
     {
-        ImGuiShutdownFun();
+        initInfo->ImGuiShutdown(initInfo);
     }
 
     virtual void ImGuiInit() noexcept override
     {
-        ImGuiInitFun();
+        initInfo->ImGuiInit(initInfo);
     }
 
     virtual void ImGuiRenderData() noexcept override
     {
-        ImGuiRenderDataFun();
+        initInfo->ImGuiRenderData(initInfo);
     }
 
     // Only called on Vulkan, because there we need to wait for resources to be used before freeing resources,
     // like textures
     virtual void waitOnGPU() noexcept override
     {
-        waitOnGPUFun();
+        initInfo->waitOnGPU(initInfo);
     }
 
     ~CGenericRenderer() noexcept override
     {
-        destructFun();
+        initInfo->destruct(initInfo);
     }
 
-    UImGui_CGenericRenderer_VoidVoidFun setupWindowIntegrationFun;
-    UImGui_CGenericRenderer_VoidVoidFun setupPostWindowIntegrationFun;
-
-    UImGui_CGenericRenderer_VoidVoidFun initFun;
-    UImGui_CGenericRenderer_TickEvent renderStartFun;
-    UImGui_CGenericRenderer_TickEvent renderEndFun;
-    UImGui_CGenericRenderer_VoidVoidFun destroyFun;
-
-    UImGui_CGenericRenderer_VoidVoidFun ImGuiNewFrameFun;
-    UImGui_CGenericRenderer_VoidVoidFun ImGuiShutdownFun;
-    UImGui_CGenericRenderer_VoidVoidFun ImGuiInitFun;
-    UImGui_CGenericRenderer_VoidVoidFun ImGuiRenderDataFun;
-
-    UImGui_CGenericRenderer_VoidVoidFun waitOnGPUFun;
-    UImGui_CGenericRenderer_VoidVoidFun destructFun;
+    UImGui_CGenericRenderer_InitInfo* initInfo = nullptr;
 };
 
-UImGui_CGenericRenderer* UImGui_CGenericRenderer_init(
-    const UImGui_CGenericRenderer_VoidVoidFun setupWindowIntegration,
-    const UImGui_CGenericRenderer_VoidVoidFun setupPostWindowIntegration,
-
-    const UImGui_CGenericRenderer_VoidVoidFun init,
-    const UImGui_CGenericRenderer_TickEvent renderStart,
-    const UImGui_CGenericRenderer_TickEvent renderEnd,
-    const UImGui_CGenericRenderer_VoidVoidFun destroy,
-
-    const UImGui_CGenericRenderer_VoidVoidFun ImGuiNewFrame,
-    const UImGui_CGenericRenderer_VoidVoidFun ImGuiShutdown,
-    const UImGui_CGenericRenderer_VoidVoidFun ImGuiInit,
-    const UImGui_CGenericRenderer_VoidVoidFun ImGuiRenderData,
-
-    const UImGui_CGenericRenderer_VoidVoidFun waitOnGPU,
-    const UImGui_CGenericRenderer_VoidVoidFun destruct)
+void UImGui_CGenericRenderer_init(UImGui_CGenericRenderer_InitInfo* initInfo)
 {
     auto* a = new CGenericRenderer{};
-    a->setupWindowIntegrationFun = setupWindowIntegration;
-    a->setupPostWindowIntegrationFun = setupPostWindowIntegration;
-
-    a->initFun = init;
-    a->renderStartFun = renderStart;
-    a->renderEndFun = renderEnd;
-    a->destroyFun = destroy;
-
-    a->ImGuiNewFrameFun = ImGuiNewFrame;
-    a->ImGuiShutdownFun = ImGuiShutdown;
-    a->ImGuiInitFun = ImGuiInit;
-    a->ImGuiRenderDataFun = ImGuiRenderData;
-
-    a->waitOnGPUFun = waitOnGPU;
-    a->destructFun = destruct;
-
-    return static_cast<UImGui_CGenericRenderer*>(a);
+    initInfo->instance = a;
+    a->initInfo = initInfo;
 }
 
-void UImGui_CGenericRenderer_free(UImGui_CGenericRenderer* data)
+void UImGui_CGenericRenderer_free(const UImGui_CGenericRenderer_InitInfo* instance)
 {
-    delete static_cast<CGenericRenderer*>(data);
+    delete static_cast<CGenericRenderer*>(instance->instance);
 }
