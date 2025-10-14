@@ -159,6 +159,7 @@ extern "C"
         Keys_RightAlt = 346,
         Keys_RightSuper = 347,
         Keys_Menu = 348,
+
         Keys_MouseButton1 = 0,
         Keys_MouseButton2 = 1,
         Keys_MouseButton3 = 2,
@@ -167,15 +168,19 @@ extern "C"
         Keys_MouseButton6 = 5,
         Keys_MouseButton7 = 6,
         Keys_MouseButton8 = 7,
+
         Keys_MouseButtonLast = 7,
         Keys_MouseButtonLeft = 0,
         Keys_MouseButtonRight = 1,
         Keys_MouseButtonMiddle = 2,
+
         Keys_ScrollUp = 8,
         Keys_ScrollDown = 9,
         Keys_ScrollRight = 10,
         Keys_ScrollLeft = 11,
+
         Keys_None = 12,
+
         Keys_KeyReleased = 0,
         Keys_KeyPressed = 1,
         Keys_KeyRepeat = 2,

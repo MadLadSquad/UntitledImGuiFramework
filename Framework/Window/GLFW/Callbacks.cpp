@@ -66,6 +66,40 @@ void UImGui::WindowGLFW::mouseCursorPositionCallback(GLFWwindow* window, const d
 void UImGui::WindowGLFW::scrollInputCallback(GLFWwindow* window, const double xoffset, const double yoffset) noexcept
 {
     auto* windowInst = static_cast<WindowGLFW*>(glfwGetWindowUserPointer(window));
+
+    if (xoffset == 0)
+    {
+        windowInst->keys[Keys_ScrollLeft] = KeyStateReleased;
+        windowInst->keys[Keys_ScrollRight] = KeyStateReleased;
+    }
+    else if (xoffset > 0)
+    {
+        windowInst->keys[Keys_ScrollRight] = KeyStatePressed;
+        windowInst->keys[Keys_ScrollLeft] = KeyStateReleased;
+    }
+    else if (xoffset < 0)
+    {
+        windowInst->keys[Keys_ScrollRight] = KeyStateReleased;
+        windowInst->keys[Keys_ScrollLeft] = KeyStatePressed;
+    }
+
+    if (yoffset == 0)
+    {
+        windowInst->keys[Keys_ScrollUp] = KeyStateReleased;
+        windowInst->keys[Keys_ScrollDown] = KeyStateReleased;
+    }
+    else if (yoffset > 0)
+    {
+        windowInst->keys[Keys_ScrollUp] = KeyStatePressed;
+        windowInst->keys[Keys_ScrollDown] = KeyStateReleased;
+    }
+    else if (yoffset < 0)
+    {
+        windowInst->keys[Keys_ScrollDown] = KeyStatePressed;
+        windowInst->keys[Keys_ScrollUp] = KeyStateReleased;
+    }
+
+
     windowInst->scroll = { static_cast<float>(xoffset), static_cast<float>(yoffset) };
 }
 
