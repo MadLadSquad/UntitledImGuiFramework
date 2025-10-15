@@ -3158,15 +3158,6 @@ CIMGUI_API void cimgui::ImGuiListClipper_SeekCursorForItem(cimgui::ImGuiListClip
     reinterpret_cast<::ImGuiListClipper*>(self)->SeekCursorForItem(item_index);
 }
 
-#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-
-CIMGUI_API void cimgui::ImGuiListClipper_IncludeRangeByIndices(cimgui::ImGuiListClipper* self, int item_begin, int item_end)
-{
-    reinterpret_cast<::ImGuiListClipper*>(self)->IncludeRangeByIndices(item_begin, item_end);
-}
-
-#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-
 CIMGUI_API void    cimgui::ImColor_SetHSV(cimgui::ImColor* self, float h, float s, float v, float a)
 {
     reinterpret_cast<::ImColor*>(self)->SetHSV(h, s, v, a);
