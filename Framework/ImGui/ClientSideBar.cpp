@@ -10,7 +10,7 @@
 #endif
 
 #define UPDATE_PADDING (width += ImGui::GetItemRectSize().x + style.WindowPadding.x)
-#define ADD_PADDING_TO_ITEM_RECT(x, y, z) auto (x) = ImGui::GetItemRectMin(); \
+#define ADD_PADDING_TO_ITEM_RECT(x, y, z) auto x = ImGui::GetItemRectMin();   \
 auto y = ImGui::GetItemRectMax();                                             \
 auto z = style.FramePadding;                                                  \
 (x) += (z);                                                                   \
