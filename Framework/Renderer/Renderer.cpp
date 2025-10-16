@@ -153,9 +153,9 @@ void UImGui::RendererInternal::loadConfig() noexcept
         auto tmp = node["renderer"].as<FString>();
         Utility::toLower(tmp);
 
-        for (char i = 0; i < UIMGUI_RENDERER_TYPE_COUNT; i++)
+        for (int i = 0; i < UIMGUI_RENDERER_TYPE_COUNT; i++)
         {
-            for (char j = 0; j < UIMGUI_RENDERER_TYPE_ALT_NAMES_COUNT; j++)
+            for (int j = 0; j < UIMGUI_RENDERER_TYPE_ALT_NAMES_COUNT; j++)
             {
                 if (tmp == RENDERER_TYPE_STRINGS[i][j])
                 {

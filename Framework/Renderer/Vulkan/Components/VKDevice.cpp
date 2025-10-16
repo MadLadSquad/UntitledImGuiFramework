@@ -137,7 +137,7 @@ void UImGui::VKDevice::createPhysicalDevice() noexcept
         auto queueFamilyList = devices[i].getQueueFamilyProperties();
 
         // Select the queue family
-        for (int j = 0; j < queueFamilyList.size(); j++)
+        for (size_t j = 0; j < queueFamilyList.size(); j++)
         {
             const auto& a = queueFamilyList[j];
             if (a.queueCount > 0 && a.queueFlags & vk::QueueFlagBits::eGraphics)
