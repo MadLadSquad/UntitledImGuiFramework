@@ -313,6 +313,7 @@ int GLAD_GL_EXT_draw_instanced = 0;
 int GLAD_GL_EXT_draw_range_elements = 0;
 int GLAD_GL_EXT_external_buffer = 0;
 int GLAD_GL_EXT_fog_coord = 0;
+int GLAD_GL_EXT_fragment_shading_rate = 0;
 int GLAD_GL_EXT_framebuffer_blit = 0;
 int GLAD_GL_EXT_framebuffer_blit_layers = 0;
 int GLAD_GL_EXT_framebuffer_multisample = 0;
@@ -1221,6 +1222,7 @@ PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC glad_glFramebufferRenderbufferEXT = NULL;
 PFNGLFRAMEBUFFERSAMPLELOCATIONSFVARBPROC glad_glFramebufferSampleLocationsfvARB = NULL;
 PFNGLFRAMEBUFFERSAMPLELOCATIONSFVNVPROC glad_glFramebufferSampleLocationsfvNV = NULL;
 PFNGLFRAMEBUFFERSAMPLEPOSITIONSFVAMDPROC glad_glFramebufferSamplePositionsfvAMD = NULL;
+PFNGLFRAMEBUFFERSHADINGRATEEXTPROC glad_glFramebufferShadingRateEXT = NULL;
 PFNGLFRAMEBUFFERTEXTUREPROC glad_glFramebufferTexture = NULL;
 PFNGLFRAMEBUFFERTEXTURE1DPROC glad_glFramebufferTexture1D = NULL;
 PFNGLFRAMEBUFFERTEXTURE1DEXTPROC glad_glFramebufferTexture1DEXT = NULL;
@@ -1356,6 +1358,7 @@ PFNGLGETFRAGMENTLIGHTFVSGIXPROC glad_glGetFragmentLightfvSGIX = NULL;
 PFNGLGETFRAGMENTLIGHTIVSGIXPROC glad_glGetFragmentLightivSGIX = NULL;
 PFNGLGETFRAGMENTMATERIALFVSGIXPROC glad_glGetFragmentMaterialfvSGIX = NULL;
 PFNGLGETFRAGMENTMATERIALIVSGIXPROC glad_glGetFragmentMaterialivSGIX = NULL;
+PFNGLGETFRAGMENTSHADINGRATESEXTPROC glad_glGetFragmentShadingRatesEXT = NULL;
 PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC glad_glGetFramebufferAttachmentParameteriv = NULL;
 PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC glad_glGetFramebufferAttachmentParameterivEXT = NULL;
 PFNGLGETFRAMEBUFFERPARAMETERFVAMDPROC glad_glGetFramebufferParameterfvAMD = NULL;
@@ -2444,6 +2447,8 @@ PFNGLSHADEROP3EXTPROC glad_glShaderOp3EXT = NULL;
 PFNGLSHADERSOURCEPROC glad_glShaderSource = NULL;
 PFNGLSHADERSOURCEARBPROC glad_glShaderSourceARB = NULL;
 PFNGLSHADERSTORAGEBLOCKBINDINGPROC glad_glShaderStorageBlockBinding = NULL;
+PFNGLSHADINGRATECOMBINEROPSEXTPROC glad_glShadingRateCombinerOpsEXT = NULL;
+PFNGLSHADINGRATEEXTPROC glad_glShadingRateEXT = NULL;
 PFNGLSHADINGRATEIMAGEBARRIERNVPROC glad_glShadingRateImageBarrierNV = NULL;
 PFNGLSHADINGRATEIMAGEPALETTENVPROC glad_glShadingRateImagePaletteNV = NULL;
 PFNGLSHADINGRATESAMPLEORDERCUSTOMNVPROC glad_glShadingRateSampleOrderCustomNV = NULL;
@@ -5613,6 +5618,13 @@ static void glad_gl_load_GL_EXT_fog_coord( GLADuserptrloadfunc load, void* userp
     glad_glFogCoordfEXT = (PFNGLFOGCOORDFEXTPROC) load(userptr, "glFogCoordfEXT");
     glad_glFogCoordfvEXT = (PFNGLFOGCOORDFVEXTPROC) load(userptr, "glFogCoordfvEXT");
 }
+static void glad_gl_load_GL_EXT_fragment_shading_rate( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_EXT_fragment_shading_rate) return;
+    glad_glFramebufferShadingRateEXT = (PFNGLFRAMEBUFFERSHADINGRATEEXTPROC) load(userptr, "glFramebufferShadingRateEXT");
+    glad_glGetFragmentShadingRatesEXT = (PFNGLGETFRAGMENTSHADINGRATESEXTPROC) load(userptr, "glGetFragmentShadingRatesEXT");
+    glad_glShadingRateCombinerOpsEXT = (PFNGLSHADINGRATECOMBINEROPSEXTPROC) load(userptr, "glShadingRateCombinerOpsEXT");
+    glad_glShadingRateEXT = (PFNGLSHADINGRATEEXTPROC) load(userptr, "glShadingRateEXT");
+}
 static void glad_gl_load_GL_EXT_framebuffer_blit( GLADuserptrloadfunc load, void* userptr) {
     if(!GLAD_GL_EXT_framebuffer_blit) return;
     glad_glBlitFramebufferEXT = (PFNGLBLITFRAMEBUFFEREXTPROC) load(userptr, "glBlitFramebufferEXT");
@@ -7631,6 +7643,7 @@ static int glad_gl_find_extensions_gl(void) {
     GLAD_GL_EXT_draw_range_elements = glad_gl_has_extension(exts, exts_i, "GL_EXT_draw_range_elements");
     GLAD_GL_EXT_external_buffer = glad_gl_has_extension(exts, exts_i, "GL_EXT_external_buffer");
     GLAD_GL_EXT_fog_coord = glad_gl_has_extension(exts, exts_i, "GL_EXT_fog_coord");
+    GLAD_GL_EXT_fragment_shading_rate = glad_gl_has_extension(exts, exts_i, "GL_EXT_fragment_shading_rate");
     GLAD_GL_EXT_framebuffer_blit = glad_gl_has_extension(exts, exts_i, "GL_EXT_framebuffer_blit");
     GLAD_GL_EXT_framebuffer_blit_layers = glad_gl_has_extension(exts, exts_i, "GL_EXT_framebuffer_blit_layers");
     GLAD_GL_EXT_framebuffer_multisample = glad_gl_has_extension(exts, exts_i, "GL_EXT_framebuffer_multisample");
@@ -8205,6 +8218,7 @@ int gladLoadGLUserPtr( GLADuserptrloadfunc load, void *userptr) {
     glad_gl_load_GL_EXT_draw_range_elements(load, userptr);
     glad_gl_load_GL_EXT_external_buffer(load, userptr);
     glad_gl_load_GL_EXT_fog_coord(load, userptr);
+    glad_gl_load_GL_EXT_fragment_shading_rate(load, userptr);
     glad_gl_load_GL_EXT_framebuffer_blit(load, userptr);
     glad_gl_load_GL_EXT_framebuffer_blit_layers(load, userptr);
     glad_gl_load_GL_EXT_framebuffer_multisample(load, userptr);
