@@ -101,7 +101,7 @@ macro(setup_platform_target_settings)
             -sSUPPORT_LONGJMP=wasm
     )
 
-    multicast(target_compile_definitions PRIVATE "UIMGUI_PLATFORM_WASM")
+    multicast(target_compile_definitions PRIVATE "UIMGUI_PLATFORM_WASM" "IMGUI_IMPL_WEBGPU_BACKEND_WGPU")
     multicast(target_compile_options PRIVATE "-Wno-cast-function-type")
 
     file(COPY "${CMAKE_SOURCE_DIR}/Config/WASM/" DESTINATION "${CMAKE_BINARY_DIR}")
