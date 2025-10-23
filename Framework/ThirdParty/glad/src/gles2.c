@@ -136,6 +136,7 @@ int GLAD_GL_EXT_shader_pixel_local_storage = 0;
 int GLAD_GL_EXT_shader_pixel_local_storage2 = 0;
 int GLAD_GL_EXT_shader_samples_identical = 0;
 int GLAD_GL_EXT_shader_texture_lod = 0;
+int GLAD_GL_EXT_shader_texture_samples = 0;
 int GLAD_GL_EXT_shadow_samplers = 0;
 int GLAD_GL_EXT_sparse_texture = 0;
 int GLAD_GL_EXT_sparse_texture2 = 0;
@@ -2809,6 +2810,7 @@ static int glad_gl_find_extensions_gles2(void) {
     GLAD_GL_EXT_shader_pixel_local_storage2 = glad_gl_has_extension(exts, exts_i, "GL_EXT_shader_pixel_local_storage2");
     GLAD_GL_EXT_shader_samples_identical = glad_gl_has_extension(exts, exts_i, "GL_EXT_shader_samples_identical");
     GLAD_GL_EXT_shader_texture_lod = glad_gl_has_extension(exts, exts_i, "GL_EXT_shader_texture_lod");
+    GLAD_GL_EXT_shader_texture_samples = glad_gl_has_extension(exts, exts_i, "GL_EXT_shader_texture_samples");
     GLAD_GL_EXT_shadow_samplers = glad_gl_has_extension(exts, exts_i, "GL_EXT_shadow_samplers");
     GLAD_GL_EXT_sparse_texture = glad_gl_has_extension(exts, exts_i, "GL_EXT_sparse_texture");
     GLAD_GL_EXT_sparse_texture2 = glad_gl_has_extension(exts, exts_i, "GL_EXT_sparse_texture2");
