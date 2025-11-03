@@ -166,7 +166,7 @@ void UImGui::RendererInternal::loadConfig() noexcept
         }
 escape_render_type_loop:;
 #ifdef __EMSCRIPTEN__
-        data.rendererType = data.rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU ? static_cast<RendererType>(em_supports_wgpu()) : data.rendererType;
+        data.rendererType = data.rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU ? UIMGUI_RENDERER_TYPE_OPENGL : data.rendererType;
 #endif
         data.textureRendererType = data.rendererType;
 

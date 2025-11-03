@@ -7,7 +7,6 @@
 // Renderers
 #include <OpenGL/OpenGLRenderer.hpp>
 #include <Vulkan/VulkanRenderer.hpp>
-#include <WebGPU/WebGPURenderer.hpp>
 
 namespace UImGui
 {
@@ -41,9 +40,7 @@ namespace UImGui
         void saveConfig() const noexcept;
 
         OpenGLRenderer opengl{};
-#ifdef __EMSCRIPTEN__
-        WebGPURenderer wgpu{};
-#else
+#ifndef __EMSCRIPTEN__
         VulkanRenderer vulkan{};
 #endif
         GenericRenderer* custom = nullptr;
@@ -51,9 +48,7 @@ namespace UImGui
         GenericRenderer* renderers[UIMGUI_RENDERER_TYPE_COUNT] =
         {
             &opengl,
-#ifdef __EMSCRIPTEN__
-            &wgpu,
-#else
+#ifndef __EMSCRIPTEN__
             &vulkan,
 #endif
             custom

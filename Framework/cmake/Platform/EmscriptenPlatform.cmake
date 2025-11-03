@@ -6,7 +6,7 @@ macro(setup_pre_dependency_options)
     if (USE_HTML_GENERATION)
         set(CMAKE_EXECUTABLE_SUFFIX ".html")
     endif()
-    set(OPENGL_LIBRARIES "-sWASM=1 -sUSE_WEBGPU=1 -sUSE_WEBGL2=1 -sFULL_ES3=1 -O0 -fwasm-exceptions")
+    set(OPENGL_LIBRARIES "-sWASM=1 -sUSE_WEBGL2=1 -sFULL_ES3=1 -O0 -fwasm-exceptions")
 
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL " " FORCE)
     set(GLFW_BUILD_TESTS    OFF CACHE BOOL " " FORCE)
@@ -83,7 +83,9 @@ macro(setup_opengl_loader_sources)
 endmacro()
 
 macro(setup_platform_target_settings)
-    multicast(target_compile_options PRIVATE -fwasm-exceptions -sSUPPORT_LONGJMP=wasm -Wbad-function-cast -Wcast-function-type)
+    multicast(target_compile_options PRIVATE -fwasm-exceptions -sSUPPORT_LONGJMP=wasm
+        -Wbad-function-cast -Wcast-function-type
+    )
 
     set(EM_LINK_FLAGS "--extern-pre-js ${UIMGUI_SRC_PREFIX}/Framework/Core/Platform/framework_pre.js -fwasm-exceptions --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/Config@../Config --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/Content@../Content --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/uvproj.yaml@../uvproj.yaml")
 
@@ -97,11 +99,11 @@ macro(setup_platform_target_settings)
 
     multicast(set_target_properties PROPERTIES LINK_FLAGS "${EM_LINK_FLAGS}")
 
-    multicast(target_link_options PRIVATE -sUSE_WEBGPU=1 -sUSE_GLFW=3 -sALLOW_MEMORY_GROWTH=1 -fwasm-exceptions
-            -sSUPPORT_LONGJMP=wasm
+    multicast(target_link_options PRIVATE -sUSE_GLFW=3 -sALLOW_MEMORY_GROWTH=1 -fwasm-exceptions
+        -sSUPPORT_LONGJMP=wasm
     )
 
-    multicast(target_compile_definitions PRIVATE "UIMGUI_PLATFORM_WASM" "IMGUI_IMPL_WEBGPU_BACKEND_WGPU")
+    multicast(target_compile_definitions PRIVATE "UIMGUI_PLATFORM_WASM")
     multicast(target_compile_options PRIVATE "-Wno-cast-function-type")
 
     file(COPY "${CMAKE_SOURCE_DIR}/Config/WASM/" DESTINATION "${CMAKE_BINARY_DIR}")

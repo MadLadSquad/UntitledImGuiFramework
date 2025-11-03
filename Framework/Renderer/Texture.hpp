@@ -1,6 +1,5 @@
 #pragma once
 #include <OpenGL/OpenGLTexture.hpp>
-#include <WebGPU/WebGPUTexture.hpp>
 #include <Vulkan/VulkanTexture.hpp>
 #include <Renderer/RendererUtils.hpp>
 #include <Interfaces/RendererInterface.hpp>
@@ -66,9 +65,7 @@ namespace UImGui
         bool bCleared = false;
 
         OpenGLTexture opengl{};
-#ifdef __EMSCRIPTEN__
-        WebGPUTexture webgpu{};
-#else
+#ifndef __EMSCRIPTEN__
         VulkanTexture vulkan{};
 #endif
         GenericTexture* custom = nullptr;
@@ -76,9 +73,7 @@ namespace UImGui
         GenericTexture* textures[UIMGUI_RENDERER_TYPE_COUNT] =
         {
             &opengl,
-#ifdef __EMSCRIPTEN__
-            &webgpu,
-#else
+#ifndef __EMSCRIPTEN__
             &vulkan,
 #endif
             custom

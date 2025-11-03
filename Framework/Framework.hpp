@@ -33,10 +33,8 @@
 
 #include <ThirdParty/imgui/backends/imgui_impl_opengl3.h>
 #ifdef __EMSCRIPTEN__
-   #include <ThirdParty/imgui/backends/imgui_impl_wgpu.h>
-   #include <emscripten.h>
-   #include <emscripten/html5.h>
-   #include <emscripten/html5_webgpu.h>
+    #include <emscripten.h>
+    #include <emscripten/html5.h>
 #else
-   #include <ThirdParty/imgui/backends/imgui_impl_vulkan.h>
+    #include <ThirdParty/imgui/backends/imgui_impl_vulkan.h>
 #endif

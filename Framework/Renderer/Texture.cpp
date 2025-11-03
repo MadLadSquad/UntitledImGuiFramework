@@ -8,7 +8,11 @@ UImGui::Texture::Texture(const String location, const bool bFiltered) noexcept
 
 bool UImGui::Texture::init(const String location, const bool bFiltered) noexcept
 {
-    if (Renderer::data().textureRendererType == UIMGUI_RENDERER_TYPE_CUSTOM)
+    auto& type = Renderer::data().textureRendererType;
+#ifdef __EMSCRIPTEN__
+    type = (type == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU) ? UIMGUI_RENDERER_TYPE_OPENGL : type;
+#endif
+    if (type == UIMGUI_RENDERER_TYPE_CUSTOM)
     {
         auto& initInfo = Instance::get()->initInfo;
         if (initInfo.customTexture != nullptr)
@@ -22,7 +26,7 @@ bool UImGui::Texture::init(const String location, const bool bFiltered) noexcept
         }
     }
     bCleared = false;
-    textures[Renderer::data().textureRendererType]->init(dt, location, bFiltered);
+    textures[type]->init(dt, location, bFiltered);
     return true;
 }
 
