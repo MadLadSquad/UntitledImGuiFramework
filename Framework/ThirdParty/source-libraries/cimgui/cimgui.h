@@ -33,7 +33,7 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #define IMGUI_VERSION       "1.92.5 WIP"
-#define IMGUI_VERSION_NUM   19242
+#define IMGUI_VERSION_NUM   19243
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
 #define IMGUI_HAS_VIEWPORT           // In 'docking' WIP branch.
@@ -98,12 +98,15 @@ extern "C"
 #define CIMGUI_IMPL_API              CIMGUI_API
 #endif // #ifndef CIMGUI_IMPL_API
 // Helper Macros
+// (note: compiling with NDEBUG will usually strip out assert() to nothing, which is NOT recommended because we use asserts to notify of programmer mistakes.)
 #ifndef IM_ASSERT
 #include <assert.h>
 #define IM_ASSERT(_EXPR)            assert(_EXPR)                                // You can override the default assert handler by editing imconfig.h
 #endif // #ifndef IM_ASSERT
 #define IM_ARRAYSIZE(_ARR)          ((int)(sizeof(_ARR) / sizeof(*(_ARR))))      // Size of a static C-style array. Don't use on pointers!
 #define IM_UNUSED(_VAR)             ((void)(_VAR))                               // Used to silence "unused variable warnings". Often useful as asserts may be stripped out from final builds.
+#define IM_STRINGIFY_HELPER(_EXPR)  #_EXPR
+#define IM_STRINGIFY(_EXPR)         IM_STRINGIFY_HELPER(_EXPR)                   // Preprocessor idiom to stringify e.g. an integer or a macro.
 
 // Check that version and structures layouts are matching between compiled imgui code and caller. Read comments above DebugCheckVersionAndDataLayout() for details.
 #define CIMGUI_CHECKVERSION() ImGui_DebugCheckVersionAndDataLayout(IMGUI_VERSION, sizeof(ImGuiIO), sizeof(ImGuiStyle), sizeof(ImVec2), sizeof(ImVec4), sizeof(ImDrawVert), sizeof(ImDrawIdx))
@@ -778,7 +781,7 @@ CIMGUI_API bool ImGui_VSliderScalar(const char* label, ImVec2 size, ImGuiDataTyp
 CIMGUI_API bool ImGui_VSliderScalarEx(const char* label, ImVec2 size, ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max, const char* format /* = NULL */, ImGuiSliderFlags flags /* = 0 */);
 
 // Widgets: Input with Keyboard
-// - If you want to use InputText() with std::string or any custom dynamic string type, see misc/cpp/imgui_stdlib.h and comments in imgui_demo.cpp.
+// - If you want to use InputText() with std::string or any custom dynamic string type, use the wrapper in misc/cpp/imgui_stdlib.h/.cpp!
 // - Most of the ImGuiInputTextFlags flags are only useful for InputText() and not for InputFloatX, InputIntX, InputDouble etc.
 CIMGUI_API bool ImGui_InputText(const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags /* = 0 */);                              // Implied callback = NULL, user_data = NULL
 CIMGUI_API bool ImGui_InputTextEx(const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags /* = 0 */, ImGuiInputTextCallback callback /* = NULL */, void* user_data /* = NULL */);
