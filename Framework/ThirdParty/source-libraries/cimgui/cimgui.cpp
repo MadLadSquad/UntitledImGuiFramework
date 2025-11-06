@@ -2806,9 +2806,9 @@ CIMGUI_API void           cimgui::ImGui_DestroyPlatformWindows(void)
     ::ImGui::DestroyPlatformWindows();
 }
 
-CIMGUI_API cimgui::ImGuiViewport* cimgui::ImGui_FindViewportByID(ImGuiID id)
+CIMGUI_API cimgui::ImGuiViewport* cimgui::ImGui_FindViewportByID(ImGuiID viewport_id)
 {
-    return reinterpret_cast<::cimgui::ImGuiViewport*>(::ImGui::FindViewportByID(id));
+    return reinterpret_cast<::cimgui::ImGuiViewport*>(::ImGui::FindViewportByID(viewport_id));
 }
 
 CIMGUI_API cimgui::ImGuiViewport* cimgui::ImGui_FindViewportByPlatformHandle(void* platform_handle)
