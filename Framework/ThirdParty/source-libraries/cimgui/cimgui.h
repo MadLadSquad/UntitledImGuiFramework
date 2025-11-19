@@ -33,7 +33,7 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #define IMGUI_VERSION       "1.92.5 WIP"
-#define IMGUI_VERSION_NUM   19246
+#define IMGUI_VERSION_NUM   19247
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
 #define IMGUI_HAS_VIEWPORT           // In 'docking' WIP branch.
@@ -2614,6 +2614,7 @@ struct ImGuiIO_t
 
     // Docking options (when ImGuiConfigFlags_DockingEnable is set)
     bool              ConfigDockingNoSplit;                           // = false          // Simplified docking mode: disable window splitting, so docking is limited to merging multiple windows together into tab-bars.
+    bool              ConfigDockingNoDockingOver;                     // = false          // Simplified docking mode: disable window merging into a same tab-bar, so docking is limited to splitting windows.
     bool              ConfigDockingWithShift;                         // = false          // Enable docking with holding Shift key (reduce visual noise, allows dropping in wider space)
     bool              ConfigDockingAlwaysTabBar;                      // = false          // [BETA] [FIXME: This currently creates regression with auto-sizing and general overhead] Make every single floating window display within a docking node.
     bool              ConfigDockingTransparentPayload;                // = false          // [BETA] Make window or viewport transparent when docking and only display docking boxes on the target viewport. Useful if rendering of multiple viewport cannot be synced. Best used with ConfigViewportsNoAutoMerge.
