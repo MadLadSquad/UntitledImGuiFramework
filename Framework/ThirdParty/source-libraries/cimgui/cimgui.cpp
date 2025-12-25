@@ -2359,77 +2359,77 @@ CIMGUI_API void cimgui::ImGui_SetNextItemAllowOverlap(void)
     ::ImGui::SetNextItemAllowOverlap();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsItemHovered(ImGuiHoveredFlags flags)
+CIMGUI_API bool           cimgui::ImGui_IsItemHovered(ImGuiHoveredFlags flags)
 {
     return ::ImGui::IsItemHovered(flags);
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsItemActive(void)
+CIMGUI_API bool           cimgui::ImGui_IsItemActive(void)
 {
     return ::ImGui::IsItemActive();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsItemFocused(void)
+CIMGUI_API bool           cimgui::ImGui_IsItemFocused(void)
 {
     return ::ImGui::IsItemFocused();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsItemClicked(void)
+CIMGUI_API bool           cimgui::ImGui_IsItemClicked(void)
 {
     return ::ImGui::IsItemClicked();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsItemClickedEx(ImGuiMouseButton mouse_button)
+CIMGUI_API bool           cimgui::ImGui_IsItemClickedEx(ImGuiMouseButton mouse_button)
 {
     return ::ImGui::IsItemClicked(mouse_button);
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsItemVisible(void)
+CIMGUI_API bool           cimgui::ImGui_IsItemVisible(void)
 {
     return ::ImGui::IsItemVisible();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsItemEdited(void)
+CIMGUI_API bool           cimgui::ImGui_IsItemEdited(void)
 {
     return ::ImGui::IsItemEdited();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsItemActivated(void)
+CIMGUI_API bool           cimgui::ImGui_IsItemActivated(void)
 {
     return ::ImGui::IsItemActivated();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsItemDeactivated(void)
+CIMGUI_API bool           cimgui::ImGui_IsItemDeactivated(void)
 {
     return ::ImGui::IsItemDeactivated();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsItemDeactivatedAfterEdit(void)
+CIMGUI_API bool           cimgui::ImGui_IsItemDeactivatedAfterEdit(void)
 {
     return ::ImGui::IsItemDeactivatedAfterEdit();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsItemToggledOpen(void)
+CIMGUI_API bool           cimgui::ImGui_IsItemToggledOpen(void)
 {
     return ::ImGui::IsItemToggledOpen();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsAnyItemHovered(void)
+CIMGUI_API bool           cimgui::ImGui_IsAnyItemHovered(void)
 {
     return ::ImGui::IsAnyItemHovered();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsAnyItemActive(void)
+CIMGUI_API bool           cimgui::ImGui_IsAnyItemActive(void)
 {
     return ::ImGui::IsAnyItemActive();
 }
 
-CIMGUI_API bool    cimgui::ImGui_IsAnyItemFocused(void)
+CIMGUI_API bool           cimgui::ImGui_IsAnyItemFocused(void)
 {
     return ::ImGui::IsAnyItemFocused();
 }
 
-CIMGUI_API ImGuiID cimgui::ImGui_GetItemID(void)
+CIMGUI_API ImGuiID        cimgui::ImGui_GetItemID(void)
 {
     return ::ImGui::GetItemID();
 }
@@ -2447,6 +2447,11 @@ CIMGUI_API cimgui::ImVec2 cimgui::ImGui_GetItemRectMax(void)
 CIMGUI_API cimgui::ImVec2 cimgui::ImGui_GetItemRectSize(void)
 {
     return ConvertFromCPP_ImVec2(::ImGui::GetItemRectSize());
+}
+
+CIMGUI_API ImGuiItemFlags cimgui::ImGui_GetItemFlags(void)
+{
+    return ::ImGui::GetItemFlags();
 }
 
 CIMGUI_API cimgui::ImGuiViewport* cimgui::ImGui_GetMainViewport(void)
@@ -3776,6 +3781,16 @@ CIMGUI_API cimgui::ImFont*   cimgui::ImFontAtlas_AddFont(cimgui::ImFontAtlas* se
 CIMGUI_API cimgui::ImFont*   cimgui::ImFontAtlas_AddFontDefault(cimgui::ImFontAtlas* self, const cimgui::ImFontConfig* font_cfg)
 {
     return reinterpret_cast<::cimgui::ImFont*>(reinterpret_cast<::ImFontAtlas*>(self)->AddFontDefault(reinterpret_cast<const ::ImFontConfig*>(font_cfg)));
+}
+
+CIMGUI_API cimgui::ImFont*   cimgui::ImFontAtlas_AddFontDefaultVector(cimgui::ImFontAtlas* self, const cimgui::ImFontConfig* font_cfg)
+{
+    return reinterpret_cast<::cimgui::ImFont*>(reinterpret_cast<::ImFontAtlas*>(self)->AddFontDefaultVector(reinterpret_cast<const ::ImFontConfig*>(font_cfg)));
+}
+
+CIMGUI_API cimgui::ImFont*   cimgui::ImFontAtlas_AddFontDefaultBitmap(cimgui::ImFontAtlas* self, const cimgui::ImFontConfig* font_cfg)
+{
+    return reinterpret_cast<::cimgui::ImFont*>(reinterpret_cast<::ImFontAtlas*>(self)->AddFontDefaultBitmap(reinterpret_cast<const ::ImFontConfig*>(font_cfg)));
 }
 
 CIMGUI_API cimgui::ImFont*   cimgui::ImFontAtlas_AddFontFromFileTTF(cimgui::ImFontAtlas* self, const char* filename, float size_pixels, const cimgui::ImFontConfig* font_cfg, const ImWchar* glyph_ranges)
