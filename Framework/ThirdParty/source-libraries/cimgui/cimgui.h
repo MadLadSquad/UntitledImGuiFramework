@@ -34,7 +34,7 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #define IMGUI_VERSION       "1.92.6 WIP"
-#define IMGUI_VERSION_NUM   19257
+#define IMGUI_VERSION_NUM   19258
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
 #define IMGUI_HAS_VIEWPORT           // In 'docking' WIP branch.
@@ -1124,24 +1124,25 @@ CIMGUI_API void ImGui_SetNextItemAllowOverlap(void);  // allow next item to be o
 // Item/Widgets Utilities and Query Functions
 // - Most of the functions are referring to the previous Item that has been submitted.
 // - See Demo Window under "Widgets->Querying Status" for an interactive visualization of most of those functions.
-CIMGUI_API bool    ImGui_IsItemHovered(ImGuiHoveredFlags flags /* = 0 */);          // is the last item hovered? (and usable, aka not blocked by a popup, etc.). See ImGuiHoveredFlags for more options.
-CIMGUI_API bool    ImGui_IsItemActive(void);                                        // is the last item active? (e.g. button being held, text field being edited. This will continuously return true while holding mouse button on an item. Items that don't interact will always return false)
-CIMGUI_API bool    ImGui_IsItemFocused(void);                                       // is the last item focused for keyboard/gamepad navigation?
-CIMGUI_API bool    ImGui_IsItemClicked(void);                                       // Implied mouse_button = 0
-CIMGUI_API bool    ImGui_IsItemClickedEx(ImGuiMouseButton mouse_button /* = 0 */);  // is the last item hovered and mouse clicked on? (**)  == IsMouseClicked(mouse_button) && IsItemHovered()Important. (**) this is NOT equivalent to the behavior of e.g. Button(). Read comments in function definition.
-CIMGUI_API bool    ImGui_IsItemVisible(void);                                       // is the last item visible? (items may be out of sight because of clipping/scrolling)
-CIMGUI_API bool    ImGui_IsItemEdited(void);                                        // did the last item modify its underlying value this frame? or was pressed? This is generally the same as the "bool" return value of many widgets.
-CIMGUI_API bool    ImGui_IsItemActivated(void);                                     // was the last item just made active (item was previously inactive).
-CIMGUI_API bool    ImGui_IsItemDeactivated(void);                                   // was the last item just made inactive (item was previously active). Useful for Undo/Redo patterns with widgets that require continuous editing.
-CIMGUI_API bool    ImGui_IsItemDeactivatedAfterEdit(void);                          // was the last item just made inactive and made a value change when it was active? (e.g. Slider/Drag moved). Useful for Undo/Redo patterns with widgets that require continuous editing. Note that you may get false positives (some widgets such as Combo()/ListBox()/Selectable() will return true even when clicking an already selected item).
-CIMGUI_API bool    ImGui_IsItemToggledOpen(void);                                   // was the last item open state toggled? set by TreeNode().
-CIMGUI_API bool    ImGui_IsAnyItemHovered(void);                                    // is any item hovered?
-CIMGUI_API bool    ImGui_IsAnyItemActive(void);                                     // is any item active?
-CIMGUI_API bool    ImGui_IsAnyItemFocused(void);                                    // is any item focused?
-CIMGUI_API ImGuiID ImGui_GetItemID(void);                                           // get ID of last item (~~ often same ImGui::GetID(label) beforehand)
-CIMGUI_API ImVec2  ImGui_GetItemRectMin(void);                                      // get upper-left bounding rectangle of the last item (screen space)
-CIMGUI_API ImVec2  ImGui_GetItemRectMax(void);                                      // get lower-right bounding rectangle of the last item (screen space)
-CIMGUI_API ImVec2  ImGui_GetItemRectSize(void);                                     // get size of last item
+CIMGUI_API bool           ImGui_IsItemHovered(ImGuiHoveredFlags flags /* = 0 */);          // is the last item hovered? (and usable, aka not blocked by a popup, etc.). See ImGuiHoveredFlags for more options.
+CIMGUI_API bool           ImGui_IsItemActive(void);                                        // is the last item active? (e.g. button being held, text field being edited. This will continuously return true while holding mouse button on an item. Items that don't interact will always return false)
+CIMGUI_API bool           ImGui_IsItemFocused(void);                                       // is the last item focused for keyboard/gamepad navigation?
+CIMGUI_API bool           ImGui_IsItemClicked(void);                                       // Implied mouse_button = 0
+CIMGUI_API bool           ImGui_IsItemClickedEx(ImGuiMouseButton mouse_button /* = 0 */);  // is the last item hovered and mouse clicked on? (**)  == IsMouseClicked(mouse_button) && IsItemHovered()Important. (**) this is NOT equivalent to the behavior of e.g. Button(). Read comments in function definition.
+CIMGUI_API bool           ImGui_IsItemVisible(void);                                       // is the last item visible? (items may be out of sight because of clipping/scrolling)
+CIMGUI_API bool           ImGui_IsItemEdited(void);                                        // did the last item modify its underlying value this frame? or was pressed? This is generally the same as the "bool" return value of many widgets.
+CIMGUI_API bool           ImGui_IsItemActivated(void);                                     // was the last item just made active (item was previously inactive).
+CIMGUI_API bool           ImGui_IsItemDeactivated(void);                                   // was the last item just made inactive (item was previously active). Useful for Undo/Redo patterns with widgets that require continuous editing.
+CIMGUI_API bool           ImGui_IsItemDeactivatedAfterEdit(void);                          // was the last item just made inactive and made a value change when it was active? (e.g. Slider/Drag moved). Useful for Undo/Redo patterns with widgets that require continuous editing. Note that you may get false positives (some widgets such as Combo()/ListBox()/Selectable() will return true even when clicking an already selected item).
+CIMGUI_API bool           ImGui_IsItemToggledOpen(void);                                   // was the last item open state toggled? set by TreeNode().
+CIMGUI_API bool           ImGui_IsAnyItemHovered(void);                                    // is any item hovered?
+CIMGUI_API bool           ImGui_IsAnyItemActive(void);                                     // is any item active?
+CIMGUI_API bool           ImGui_IsAnyItemFocused(void);                                    // is any item focused?
+CIMGUI_API ImGuiID        ImGui_GetItemID(void);                                           // get ID of last item (~~ often same ImGui::GetID(label) beforehand)
+CIMGUI_API ImVec2         ImGui_GetItemRectMin(void);                                      // get upper-left bounding rectangle of the last item (screen space)
+CIMGUI_API ImVec2         ImGui_GetItemRectMax(void);                                      // get lower-right bounding rectangle of the last item (screen space)
+CIMGUI_API ImVec2         ImGui_GetItemRectSize(void);                                     // get size of last item
+CIMGUI_API ImGuiItemFlags ImGui_GetItemFlags(void);                                        // get generic flags of last item
 
 // Viewports
 // - Currently represents the Platform Window created by the application which is hosting our Dear ImGui windows.
@@ -1348,7 +1349,7 @@ typedef enum
 } ImGuiChildFlags_;
 
 // Flags for ImGui::PushItemFlag()
-// (Those are shared by all items)
+// (Those are shared by all submitted items)
 typedef enum
 {
     ImGuiItemFlags_None              = 0,     // (Default)
@@ -1358,6 +1359,7 @@ typedef enum
     ImGuiItemFlags_ButtonRepeat      = 1<<3,  // false    // Any button-like behavior will have repeat mode enabled (based on io.KeyRepeatDelay and io.KeyRepeatRate values). Note that you can also call IsItemActive() after any button to tell if it is being held.
     ImGuiItemFlags_AutoClosePopups   = 1<<4,  // true     // MenuItem()/Selectable() automatically close their parent popup window.
     ImGuiItemFlags_AllowDuplicateId  = 1<<5,  // false    // Allow submitting an item with the same identifier as an item already submitted this frame without triggering a warning tooltip if io.ConfigDebugHighlightIdConflicts is set.
+    ImGuiItemFlags_Disabled          = 1<<6,  // false    // [Internal] Disable interactions. DOES NOT affect visuals. This is used by BeginDisabled()/EndDisabled() and only provided here so you can read back via GetItemFlags().
 } ImGuiItemFlags_;
 
 // Flags for ImGui::InputText()
@@ -3662,11 +3664,10 @@ struct ImFontConfig_t
     // Options
     bool                MergeMode;             // false    // Merge into previous ImFont, so you can combine multiple inputs font into one ImFont (e.g. ASCII font + icons + Japanese glyphs). You may want to use GlyphOffset.y when merge font of different heights.
     bool                PixelSnapH;            // false    // Align every glyph AdvanceX to pixel boundaries. Prevents fractional font size from working correctly! Useful e.g. if you are merging a non-pixel aligned font with the default font. If enabled, you can set OversampleH/V to 1.
-    bool                PixelSnapV;            // false    // Align Scaled GlyphOffset.y to pixel boundaries. Prevents fractional font size from working correctly!.
     ImS8                OversampleH;           // 0 (2)    // Rasterize at higher quality for sub-pixel positioning. 0 == auto == 1 or 2 depending on size. Note the difference between 2 and 3 is minimal. You can reduce this to 1 for large glyphs save memory. Read https://github.com/nothings/stb/blob/master/tests/oversample/README.md for details.
     ImS8                OversampleV;           // 0 (1)    // Rasterize at higher quality for sub-pixel positioning. 0 == auto == 1. This is not really useful as we don't use sub-pixel positions on the Y axis.
     ImWchar             EllipsisChar;          // 0        // Explicitly specify Unicode codepoint of ellipsis character. When fonts are being merged first specified ellipsis will be used.
-    float               SizePixels;            //          // Size in pixels for rasterizer (more or less maps to the resulting font height).
+    float               SizePixels;            //          // Output size in pixels for rasterizer (more or less maps to the resulting font height).
     const ImWchar*      GlyphRanges;           // NULL     // *LEGACY* THE ARRAY DATA NEEDS TO PERSIST AS LONG AS THE FONT IS ALIVE. Pointer to a user-provided list of Unicode range (2 value per range, values are inclusive, zero-terminated list).
     const ImWchar*      GlyphExcludeRanges;    // NULL     // Pointer to a small user-provided list of Unicode ranges (2 value per range, values are inclusive, zero-terminated list). This is very close to GlyphRanges[] but designed to exclude ranges from a font source, when merging fonts with overlapping glyphs. Use "Input Glyphs Overlap Detection Tool" to find about your overlapping ranges.
     //ImVec2        GlyphExtraSpacing;      // 0, 0     // (REMOVED AT IT SEEMS LARGELY OBSOLETE. PLEASE REPORT IF YOU WERE USING THIS). Extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->AdvanceX. Only X axis is supported for now.
@@ -3676,15 +3677,20 @@ struct ImFontConfig_t
     float               GlyphExtraAdvanceX;    // 0        // Extra spacing (in pixels) between glyphs. Please contact us if you are using this. // FIXME-NEWATLAS: Intentionally unscaled
     ImU32               FontNo;                // 0        // Index of font within TTF/OTF file
     unsigned int        FontLoaderFlags;       // 0        // Settings for custom font builder. THIS IS BUILDER IMPLEMENTATION DEPENDENT. Leave as zero if unsure.
-    //unsigned int  FontBuilderFlags;       // --       // [Renamed in 1.92] Ue FontLoaderFlags.
+    //unsigned int  FontBuilderFlags;       // --       // [Renamed in 1.92] Use FontLoaderFlags.
     float               RasterizerMultiply;    // 1.0f     // Linearly brighten (>1.0f) or darken (<1.0f) font output. Brightening small fonts may be a good workaround to make them more readable. This is a silly thing we may remove in the future.
     float               RasterizerDensity;     // 1.0f     // [LEGACY: this only makes sense when ImGuiBackendFlags_RendererHasTextures is not supported] DPI scale multiplier for rasterization. Not altering other font metrics: makes it easy to swap between e.g. a 100% and a 400% fonts for a zooming display, or handle Retina screen. IMPORTANT: If you change this it is expected that you increase/decrease font scale roughly to the inverse of this, otherwise quality may look lowered.
+    float               ExtraSizeScale;        // 1.0f     // Extra rasterizer scale over SizePixels.
 
     // [Internal]
     ImFontFlags         Flags;                 // Font flags (don't use just yet, will be exposed in upcoming 1.92.X updates)
     ImFont*             DstFont;               // Target font (as we merging fonts, multiple ImFontConfig may target the same font)
     const ImFontLoader* FontLoader;            // Custom font backend for this source (default source is the one stored in ImFontAtlas)
     void*               FontLoaderData;        // Font loader opaque storage (per font config)
+
+#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+    bool                PixelSnapV;            // true    // [Obsoleted in 1.91.6] Align Scaled GlyphOffset.y to pixel boundaries.
+#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 };
 
 // Hold rendering data for one glyph.
@@ -3830,7 +3836,9 @@ struct ImFontAtlas_t
     //typedef ImFontGlyphRangesBuilder  GlyphRangesBuilder;      // OBSOLETED in 1.67+
 };
 CIMGUI_API ImFont*           ImFontAtlas_AddFont(ImFontAtlas* self, const ImFontConfig* font_cfg);
-CIMGUI_API ImFont*           ImFontAtlas_AddFontDefault(ImFontAtlas* self, const ImFontConfig* font_cfg /* = NULL */);
+CIMGUI_API ImFont*           ImFontAtlas_AddFontDefault(ImFontAtlas* self, const ImFontConfig* font_cfg /* = NULL */);                  // Selects between AddFontDefaultVector() and AddFontDefaultBitmap().
+CIMGUI_API ImFont*           ImFontAtlas_AddFontDefaultVector(ImFontAtlas* self, const ImFontConfig* font_cfg /* = NULL */);            // Embedded scalable font. Recommended at any higher size.
+CIMGUI_API ImFont*           ImFontAtlas_AddFontDefaultBitmap(ImFontAtlas* self, const ImFontConfig* font_cfg /* = NULL */);            // Embedded classic pixel-clean font. Recommended at Size 13px with no scaling.
 CIMGUI_API ImFont*           ImFontAtlas_AddFontFromFileTTF(ImFontAtlas* self, const char* filename, float size_pixels /* = 0.0f */, const ImFontConfig* font_cfg /* = NULL */, const ImWchar* glyph_ranges /* = NULL */);
 CIMGUI_API ImFont*           ImFontAtlas_AddFontFromMemoryTTF(ImFontAtlas* self, void* font_data, int font_data_size, float size_pixels /* = 0.0f */, const ImFontConfig* font_cfg /* = NULL */, const ImWchar* glyph_ranges /* = NULL */); // Note: Transfer ownership of 'ttf_data' to ImFontAtlas! Will be deleted after destruction of the atlas. Set font_cfg->FontDataOwnedByAtlas=false to keep ownership of your data and it won't be freed.
 CIMGUI_API ImFont*           ImFontAtlas_AddFontFromMemoryCompressedTTF(ImFontAtlas* self, const void* compressed_font_data, int compressed_font_data_size, float size_pixels /* = 0.0f */, const ImFontConfig* font_cfg /* = NULL */, const ImWchar* glyph_ranges /* = NULL */); // 'compressed_font_data' still owned by caller. Compress with binary_to_compressed_c.cpp.
