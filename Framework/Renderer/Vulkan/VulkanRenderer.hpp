@@ -12,7 +12,9 @@ namespace UImGui
     public:
         VulkanRenderer() noexcept;
 
-        virtual void parseCustomConfig(YAML::Node&) noexcept override;
+        virtual void parseCustomConfig(const ryml::ConstNodeRef&) noexcept override;
+        virtual void saveCustomConfig(ryml::NodeRef& config) noexcept override;
+
 
         virtual void setupWindowIntegration() noexcept override;
         virtual void setupPostWindowCreation() noexcept override;

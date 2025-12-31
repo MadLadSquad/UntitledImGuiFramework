@@ -12,10 +12,6 @@ macro(setup_glfw_vendored)
     setup_glfw_vendored_generic(ON)
 endmacro()
 
-macro(setup_yaml_cpp_vendored)
-    setup_yaml_cpp_vendored_generic(ON)
-endmacro()
-
 macro(setup_vulkan_vendored)
     set(VULKAN_LIBRARIES_T "vulkan-1")
     add_subdirectory("${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/vulkan-headers")
@@ -54,10 +50,10 @@ endmacro()
 macro(link_to_framework_libraries)
     if (NOT UIMGUI_SKIP_FRAMEWORK)
         target_link_libraries(UntitledImGuiFramework ${GLFW_LIBRARIES_T} ${OPENGL_LIBRARIES_T}
-                ${YAML_CPP_LIBRARIES_T} ${FREETYPE_LIBRARIES} ${VULKAN_LIBRARIES_T}
+                ${YAML_LIBRARIES_T} ${FREETYPE_LIBRARIES} ${VULKAN_LIBRARIES_T}
         )
     endif()
-    target_link_libraries(${APP_TARGET} UntitledImGuiFramework ${YAML_CPP_LIBRARIES_T})
+    target_link_libraries(${APP_TARGET} UntitledImGuiFramework ${YAML_LIBRARIES_T})
 
     multicast(target_link_libraries dwmapi)
 

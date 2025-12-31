@@ -6,7 +6,11 @@ class CGenericRenderer final : public UImGui::GenericRenderer
 public:
     CGenericRenderer() noexcept = default;
 
-    virtual void parseCustomConfig(YAML::Node&) noexcept override
+    virtual void parseCustomConfig(const ryml::ConstNodeRef&) noexcept override
+    {
+    }
+
+    virtual void saveCustomConfig(ryml::NodeRef& config) noexcept override
     {
     }
 

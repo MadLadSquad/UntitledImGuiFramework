@@ -3,7 +3,7 @@
     #include <emscripten.h>
     #include <imgui_internal.h>
 #endif
-#include <yaml-cpp/yaml.h>
+#include <ryml.hpp>
 #include <Core/Components/Instance.hpp>
 #include <ImGui/ImGui.hpp>
 #include <Window/WindowUtils.hpp>
@@ -136,115 +136,142 @@ void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
 void UImGui::RendererInternal::loadConfig() noexcept
 {
     auto& initInfo = Instance::get()->initInfo;
-
-    YAML::Node node;
-    try
+    const auto file = Utility::loadFileToString(initInfo.configDir + "Core/Renderer.yaml");
+    if (file.empty())
     {
-        node = YAML::LoadFile((initInfo.configDir + "Core/Renderer.yaml").c_str());
-    }
-    catch (YAML::BadFile&)
-    {
-        Logger::log("Invalid renderer config file, please fix this error before publishing for production! Because of the missing data we're using the default settings!", ULOG_LOG_TYPE_ERROR);
+        Logger::log("Couldn't load the renderer config file, please fix this error before publishing for production! Reverting to the default settings!", ULOG_LOG_TYPE_ERROR);
         return;
     }
 
-    if (node["renderer"])
+    auto tree = ryml::parse_in_arena(file.c_str());
+    if (tree.empty())
     {
-        auto tmp = node["renderer"].as<FString>();
-        Utility::toLower(tmp);
+        Logger::log("Invalid renderer config file, please fix this error before publishing for production! Reverting to the default settings!", ULOG_LOG_TYPE_ERROR);
+        return;
+    }
 
-        for (int i = 0; i < UIMGUI_RENDERER_TYPE_COUNT; i++)
+    const auto node = tree.rootref();
+
+    {
+        auto rendererConf = node["renderer"];
+        if (!rendererConf.invalid() && !rendererConf.empty())
         {
-            for (int j = 0; j < UIMGUI_RENDERER_TYPE_ALT_NAMES_COUNT; j++)
+            FString tmp;
+            rendererConf >> tmp;
+            Utility::toLower(tmp);
+
+            for (int i = 0; i < UIMGUI_RENDERER_TYPE_COUNT; i++)
             {
-                if (tmp == RENDERER_TYPE_STRINGS[i][j])
+                for (int j = 0; j < UIMGUI_RENDERER_TYPE_ALT_NAMES_COUNT; j++)
                 {
-                    data.rendererType = static_cast<RendererType>(i);
-                    goto escape_render_type_loop;
+                    if (tmp == RENDERER_TYPE_STRINGS[i][j])
+                    {
+                        data.rendererType = static_cast<RendererType>(i);
+                        goto escape_render_type_loop;
+                    }
                 }
             }
-        }
-escape_render_type_loop:;
+            escape_render_type_loop:;
 #ifdef __EMSCRIPTEN__
-        data.rendererType = data.rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU ? UIMGUI_RENDERER_TYPE_OPENGL : data.rendererType;
+            data.rendererType = data.rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU ? UIMGUI_RENDERER_TYPE_OPENGL : data.rendererType;
 #endif
-        data.textureRendererType = data.rendererType;
+            data.textureRendererType = data.rendererType;
 
-        if (data.rendererType == UIMGUI_RENDERER_TYPE_CUSTOM)
-        {
-            if (initInfo.customRenderer != nullptr)
-                custom = initInfo.customRenderer;
-            else if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->customRenderer != nullptr)
-                custom = static_cast<GenericRenderer*>(initInfo.cInitInfo->customRenderer);
-            else
+            if (data.rendererType == UIMGUI_RENDERER_TYPE_CUSTOM)
             {
-                Logger::log("Renderer set to \"custom\" but an invalid custom renderer was provided.\n"
-                    "Make sure to provide one in the init info struct of your instance in the constructor of the instance!", ULOG_LOG_TYPE_ERROR);
-                Logger::log("Switching to the OpenGL renderer.", ULOG_LOG_TYPE_NOTE);
+                if (initInfo.customRenderer != nullptr)
+                    custom = initInfo.customRenderer;
+                else if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->customRenderer != nullptr)
+                    custom = static_cast<GenericRenderer*>(initInfo.cInitInfo->customRenderer);
+                else
+                {
+                    Logger::log("Renderer set to \"custom\" but an invalid custom renderer was provided.\n"
+                        "Make sure to provide one in the init info struct of your instance in the constructor of the instance!", ULOG_LOG_TYPE_ERROR);
+                    Logger::log("Switching to the OpenGL renderer.", ULOG_LOG_TYPE_NOTE);
 
-                custom = nullptr;
-                data.rendererType = UIMGUI_RENDERER_TYPE_OPENGL;
+                    custom = nullptr;
+                    data.rendererType = UIMGUI_RENDERER_TYPE_OPENGL;
+                }
+                renderers[UIMGUI_RENDERER_TYPE_CUSTOM] = custom;
             }
-            renderers[UIMGUI_RENDERER_TYPE_CUSTOM] = custom;
         }
     }
-    if (node["v-sync"])
-        data.bUsingVSync = node["v-sync"].as<bool>();
-    if (node["msaa-samples"])
-        data.msaaSamples = node["msaa-samples"].as<uint32_t>();
 
-    const auto& powerSaving = node["power-saving"];
-    if (powerSaving)
     {
-        if (powerSaving["enabled"])
-            data.bEnablePowerSavingMode = powerSaving["enabled"].as<bool>();
-        if (powerSaving["idle-frames"])
-            data.idleFrameRate = powerSaving["idle-frames"].as<float>();
+        auto vsync = node["v-sync"];
+        if (!vsync.invalid() && !vsync.empty())
+            vsync >> data.bUsingVSync;
     }
 
-    const auto& emscripten = node["emscripten"];
-    if (emscripten)
     {
-        if (emscripten["canvas-selector"])
+        auto msaa = node["msaa-samples"];
+        if (!msaa.invalid() && !msaa.empty())
+            msaa >> data.msaaSamples;
+    }
+
+    {
+        auto powerSaving = node["power-saving"];
+        if (!powerSaving.invalid() && !powerSaving.empty())
         {
-            // Doing this because the RendererData structure is in C and we use String there
-            tmpCanvasSelector = emscripten["canvas-selector"].as<FString>();
-            data.emscriptenCanvas = tmpCanvasSelector.c_str();
+            auto enabled = powerSaving["enabled"];
+            if (!enabled.invalid() && !enabled.empty())
+                enabled >> data.bEnablePowerSavingMode;
+
+            auto idleFrames = node["idle-frames"];
+            if (!idleFrames.invalid() && !idleFrames.empty())
+                idleFrames >> data.idleFrameRate;
+        }
+    }
+
+    {
+        auto emscripten = node["emscripten"];
+        if (!emscripten.invalid() && !emscripten.empty())
+        {
+            auto canvasSelector = emscripten["canvas-selector"];
+            if (!canvasSelector.invalid() && !canvasSelector.empty())
+            {
+                // Doing this because the RendererData structure is in C and we use String there
+                FString tmpCanvasSelector;
+                canvasSelector >> tmpCanvasSelector;
+                data.emscriptenCanvas = tmpCanvasSelector.c_str();
+            }
         }
     }
 
     renderer = CAST(decltype(renderer), renderers[static_cast<int>(data.rendererType)]);
-    if (node["custom-renderer"])
+
     {
-        customConfig = node["custom-renderer"];
-        renderer->parseCustomConfig(customConfig);
+        auto customRenderer = node["custom-renderer"];
+        if (!customRenderer.invalid() && !customRenderer.empty())
+            renderer->parseCustomConfig(customRenderer);
     }
 }
 
 void UImGui::RendererInternal::saveConfig() const noexcept
 {
-    YAML::Emitter out;
-    out << YAML::BeginMap;
+    ryml::Tree tree;
 
-    out << YAML::Key << "renderer" << YAML::Value << RENDERER_TYPE_STRINGS[data.rendererType][0];
-    out << YAML::Key << "v-sync" << YAML::Value << data.bUsingVSync;
-    out << YAML::Key << "msaa-samples" << YAML::Value << data.msaaSamples;
+    ryml::NodeRef root = tree.rootref();
+    root |= ryml::MAP;
 
-    out << YAML::Key << "power-saving" << YAML::Value << YAML::BeginMap;
-    out << YAML::Key << "enabled" << YAML::Value << data.bEnablePowerSavingMode;
-    out << YAML::Key << "idle-frames" << YAML::Value << data.idleFrameRate;
-    out << YAML::EndMap;
+    root["renderer"] << RENDERER_TYPE_STRINGS[data.rendererType][0];
+    root["v-sync"] << data.bUsingVSync;
+    root["msaa-samples"] << data.msaaSamples;
 
-    out << YAML::Key << "emscripten" << YAML::Value << YAML::BeginMap;
-    out << YAML::Key << "canvas-selector" << YAML::Value << data.emscriptenCanvas;
-    out << YAML::EndMap;
+    auto powerSaving = root["power-saving"];
+    powerSaving |= ryml::MAP;
+    powerSaving["enabled"] << data.bEnablePowerSavingMode;
+    powerSaving["idle-frames"] << data.idleFrameRate;
 
-    if (customConfig && !customConfig.IsNull())
-        out << YAML::Key << "custom-renderer" << YAML::Value << customConfig;
+    auto emscripten = root["emscripten"];
+    emscripten |= ryml::MAP;
+    emscripten["canvas-selector"] = data.emscriptenCanvas;
 
-    out << YAML::EndMap;
+    auto customConfig = root["custom-renderer"];
+    if (!customConfig.invalid() && !customConfig.empty())
+        renderer->saveCustomConfig(customConfig);
 
     std::ofstream fout((Instance::get()->initInfo.configDir + "Core/Renderer.yaml").c_str());
-    fout << out.c_str();
+    fout << tree;
     fout.close();
 }

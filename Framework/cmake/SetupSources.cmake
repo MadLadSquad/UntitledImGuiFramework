@@ -7,7 +7,7 @@ set(FRAMEWORK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Source/" "${UIMGUI_SRC_PREFIX}/F
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/source-libraries/" ${GLFW_INCLUDE_DIRS} ${LM_INCLUDE_DIRS}
         "${UIMGUI_SRC_PREFIX}/Framework/Modules/CLIParser/ThirdParty/UntitledCLIParser/ThirdParty/"
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/vulkan-headers/include" "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/"
-        "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/source-libraries/cimgui/" ${YAML_CPP_INCLUDE_DIRS_T}
+        "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/source-libraries/cimgui/" ${YAML_INCLUDE_DIRS_T}
         "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/utfcpp/" "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/utfcpp/source/"
         ${FREETYPE_INCLUDE_DIRS}
 )

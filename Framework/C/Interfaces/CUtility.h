@@ -9,8 +9,13 @@ extern "C"
 #endif
     typedef void UImGui_CGlobal;
 
+    // Event safety - Any time
+    // WARNING: By calling this function you become the owner of the string, and you should dispose of it correctly
+    // using the UImGui_Allocator_deallocate function
+    UIMGUI_PUBLIC_API UImGui_String UImGui_Utility_loadFileToString(UImGui_String location);
+
     // Event Safety - Any time
-    // WARNING: By Calling this function you become the owner of the string, and you should dispose of it correctly
+    // WARNING: By calling this function you become the owner of the string, and you should dispose of it correctly
     // using the UImGui_Allocator_deallocate function
     UIMGUI_PUBLIC_API UImGui_String UImGui_Utility_sanitiseFilepath(UImGui_String str);
 

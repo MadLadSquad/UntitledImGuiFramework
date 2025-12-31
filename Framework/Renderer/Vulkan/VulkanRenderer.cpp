@@ -9,7 +9,8 @@ UImGui::VulkanRenderer::VulkanRenderer() noexcept
     type = UIMGUI_RENDERER_API_TYPE_HINT_VULKAN;
 }
 
-void UImGui::VulkanRenderer::parseCustomConfig(YAML::Node&) noexcept{};
+void UImGui::VulkanRenderer::parseCustomConfig(const ryml::ConstNodeRef&) noexcept{}
+void UImGui::VulkanRenderer::saveCustomConfig(ryml::NodeRef& config) noexcept{}
 
 void UImGui::VulkanRenderer::setupWindowIntegration() noexcept
 {

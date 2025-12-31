@@ -66,8 +66,6 @@ namespace UImGui
             .emscriptenCanvas = "#canvas"
         };
 
-        YAML::Node customConfig;
-
         double lastTime = 0.0f;
         bool bIdling = false;
 

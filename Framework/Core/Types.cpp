@@ -1,54 +1,118 @@
 #include "Types.hpp"
 
-YAML::Emitter& UImGui::operator<<(YAML::Emitter& out, const FString& t) noexcept
+template <>
+void c4::yml::write<UImGui::FString>(NodeRef* ref, UImGui::FString const& t)
 {
-    if (t.empty())
-        return out;
-    const std::string str(t);
-    out << str;
-    return out;
+    *ref << t.c_str();
 }
 
-YAML::Emitter& UImGui::operator<<(YAML::Emitter& out, const FString16& t) noexcept
+template <>
+bool c4::yml::read<UImGui::FString>(ConstNodeRef const& ref, UImGui::FString* t)
 {
-    if (t.empty())
-        return out;
+    const auto val = ref.val();
+    t->resize(val.len);
+    memcpy(t->data(), val.data(), val.size());
+    return true;
+}
+
+template <>
+void c4::yml::write<UImGui::FString16>(NodeRef* ref, UImGui::FString16 const& t)
+{
     const std::u16string str(t);
-    out << utf8::utf16to8(str);
-    return out;
+    *ref << utf8::utf16to8(str);
 }
 
-YAML::Emitter& UImGui::operator<<(YAML::Emitter& out, const FString32& t) noexcept
+template <>
+bool c4::yml::read<UImGui::FString16>(ConstNodeRef const& ref, UImGui::FString16* t)
 {
-    if (t.empty())
-        return out;
+    std::string str;
+    const auto val = ref.val();
+    str.resize(val.len);
+    memcpy(str.data(), val.data(), val.size());
+
+    *t = utf8::utf8to16(str);
+    return true;
+}
+
+template <>
+void c4::yml::write<UImGui::FString32>(NodeRef* ref, UImGui::FString32 const& t)
+{
     const std::u32string str(t);
-    out << utf8::utf32to8(str);
-    return out;
+    *ref << utf8::utf32to8(str);
+}
+
+template <>
+bool c4::yml::read<UImGui::FString32>(ConstNodeRef const& ref, UImGui::FString32* t)
+{
+    std::string str;
+    const auto val = ref.val();
+    str.resize(val.len);
+    memcpy(str.data(), val.data(), val.size());
+
+    *t = utf8::utf8to32(str);
+    return true;
 }
 
 // ----------------------------------------------------- Vectors -----------------------------------------------------
 
-
-YAML::Emitter& UImGui::operator<<(YAML::Emitter& out, const FVector4& vect) noexcept
+template <>
+void c4::yml::write<UImGui_FVector4>(NodeRef* ref, UImGui::FVector4 const& t)
 {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << vect.x << vect.y << vect.z << vect.w << YAML::EndSeq;
-    return out;
+    *ref |= SEQ | FLOW_SL;
+    ref->append_child() << t.x;
+    ref->append_child() << t.y;
+    ref->append_child() << t.z;
+    ref->append_child() << t.w;
 }
 
-YAML::Emitter& UImGui::operator<<(YAML::Emitter& out, const FVector& vect) noexcept
+template <>
+bool c4::yml::read<UImGui_FVector4>(ConstNodeRef const& ref, UImGui::FVector4* t)
 {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << vect.x << vect.y << vect.z << YAML::EndSeq;
-    return out;
+    if (ref.invalid() || !ref.is_seq() || ref.num_children() < 4)
+        return false;
+    ref.child(0) >> t->x;
+    ref.child(1) >> t->y;
+    ref.child(2) >> t->z;
+    ref.child(3) >> t->w;
+    return true;
 }
 
-YAML::Emitter& UImGui::operator<<(YAML::Emitter& out, const FVector2& vect) noexcept
+template <>
+void c4::yml::write<UImGui_FVector>(NodeRef* ref, UImGui::FVector const& t)
 {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << vect.x << vect.y << YAML::EndSeq;
-    return out;
+    *ref |= SEQ | FLOW_SL;
+    ref->append_child() << t.x;
+    ref->append_child() << t.y;
+    ref->append_child() << t.z;
+}
+
+template <>
+bool c4::yml::read<UImGui_FVector>(ConstNodeRef const& ref, UImGui::FVector* t)
+{
+    if (ref.invalid() || !ref.is_seq() || ref.num_children() < 3)
+        return false;
+    ref.child(0) >> t->x;
+    ref.child(1) >> t->y;
+    ref.child(2) >> t->z;
+    return true;
+}
+
+template <>
+void c4::yml::write<UImGui_FVector2>(NodeRef* ref, UImGui::FVector2 const& t)
+{
+    *ref |= SEQ | FLOW_SL;
+    ref->append_child() << t.x;
+    ref->append_child() << t.y;
+}
+
+template <>
+bool c4::yml::read<UImGui_FVector2>(ConstNodeRef const& ref, UImGui::FVector2* t)
+{
+    if (ref.invalid() || !ref.is_seq() || ref.num_children() < 2)
+        return false;
+    ref.child(0) >> t->x;
+    ref.child(1) >> t->y;
+    return true;
 }
 
 UImGui::FVector2 UImGui::operator+(const FVector2 x, const FVector2 y) noexcept

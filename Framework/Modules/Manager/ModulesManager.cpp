@@ -1,6 +1,6 @@
 #include "ModulesManager.hpp"
 #include <Core/Global.hpp>
-#include <yaml-cpp/yaml.h>
+#include <ryml.hpp>
 #ifdef UIMGUI_SPINNERS_MODULE_ENABLED
     #include "Modules/Spinners/ThirdParty/imspinner/imspinner.h"
 #endif
@@ -10,44 +10,49 @@
     #include "Modules/Knobs/ThirdParty/imgui-knobs/imgui-knobs.h"
 #endif
 
-#define CHECK_MODULE_ENABLED(x)     if (mod[#x])    \
-{                                                   \
-    settings.x = mod[#x].as<bool>();                \
+#define CHECK_MODULE_ENABLED(x)     if (!mod[#x].invalid() && !mod[#x].empty())     \
+{                                                                                   \
+    mod[#x] >> settings.x;                                                          \
 }
 
 #include <Utilities.hpp>
 #include <Components/Instance.hpp>
 
-
 void UImGui::ModulesManager::init(const FString& configDir)
 {
-    YAML::Node node;
-    try
+    const auto file = Utility::loadFileToString(configDir + "Core/Modules.yaml");
+    if (file.empty())
     {
-        node = YAML::LoadFile((configDir + "Core/Modules.yaml").c_str());
-    }
-    catch (YAML::BadFile&)
-    {
-        Logger::log("No Modules.yaml config file found, using the default configuration!", ULOG_LOG_TYPE_WARNING);
+        Logger::log("No Modules.yaml config file found! Reverting to the default configuration!", ULOG_LOG_TYPE_WARNING);
         return;
     }
 
-    if (node["undo-max-transactions"])
-        settings.maxTransactions = node["undo-max-transactions"].as<size_t>();
+    auto tree = ryml::parse_in_arena(file.c_str());
+    if (tree.empty())
+    {
+        Logger::log("Couldn't load Modules.yaml due to a parser error! Reverting to the default configuration", ULOG_LOG_TYPE_WARNING);
+        return;
+    }
+
+    const auto root = tree.rootref();
+
+    auto maxTransactions = root["max-transactions"];
+    if (!maxTransactions.invalid() && !maxTransactions.empty())
+        maxTransactions >> settings.maxTransactions;
 
     initModules(UImGui_InitInfo_getProjectDir());
 }
 
 void UImGui::ModulesManager::save(const FString& configDir) const noexcept
 {
-    YAML::Emitter out;
-    out << YAML::BeginMap;
+    ryml::Tree tree;
+    ryml::NodeRef root = tree.rootref();
+    root |= ryml::MAP;
 
-    out << YAML::Key << "undo-max-transactions" << YAML::Value << settings.maxTransactions;
-    out << YAML::EndMap;
+    root["undo-max-transations"] << settings.maxTransactions;
 
     std::ofstream fout((configDir + "Core/Modules.yaml").c_str());
-    fout << out.c_str();
+    fout << tree;
 }
 
 UImGui::ModuleSettings& UImGui::Modules::data() noexcept
@@ -65,31 +70,49 @@ UImGui::ModulesManager& UImGui::Modules::get() noexcept
     return Global::get().modulesManager;
 }
 
+static void loadStandardPlugins(const ryml::ConstNodeRef& root, const UImGui::String platform, UImGui::TVector<UImGui::FString>& plugins) noexcept
+{
+    auto p = root["plugins"];
+    if (!p.invalid() && !p.empty() && !p[platform].invalid() && !p[platform].empty())
+        p[platform] >> plugins;
+}
+
 void UImGui::ModulesManager::initModules(const FString& projectDir)
 {
-    YAML::Node node;
-    try
+    const auto file = Utility::loadFileToString(projectDir + "uvproj.yaml");
+    if (file.empty())
     {
-        node = YAML::LoadFile((projectDir + "uvproj.yaml").c_str());
-    }
-    catch (YAML::BadFile&)
-    {
-        Logger::log("No uvproj.yaml config file found, using the default configuration!", ULOG_LOG_TYPE_WARNING);
+        Logger::log("No uvproj.yaml config file found. Reverting to the default configuration!", ULOG_LOG_TYPE_WARNING);
         return;
     }
+
+    auto tree = ryml::parse_in_arena(file.c_str());
+    if (tree.empty())
+    {
+        Logger::log("Couldn't load uvproj.yaml due to a parser error! Reverting to the default configuration", ULOG_LOG_TYPE_WARNING);
+        return;
+    }
+
+    const auto root = tree.rootref();
+
     // Some specific applications may want to override the crash on error log functionality as they need to print errors
     // while not crashing. Examples: debuggers, language interpreters, validators, etc.
 #ifdef PRODUCTION
-    auto prodSettings = node["production"];
-    if (prodSettings)
+    auto prodSettings = root["production"];
+    if (!prodSettings.invalid() && !prodSettings.empty())
     {
-        if (prodSettings["crash-on-error"])
-            Logger::setCrashOnError(prodSettings["crash-on-error"].as<bool>());
+        auto crash = prodSettings["crash-on-error"];
+        if (!crash.invalid() && !crash.empty())
+        {
+            bool val;
+            crash >> val;
+            Logger::setCrashOnError(val);
+        }
     }
 #endif
 
-    auto mod = node["enabled-modules"];
-    if (!mod)
+    auto mod = root["enabled-modules"];
+    if (mod.invalid() || mod.empty())
         return;
 
     CHECK_MODULE_ENABLED(os);
@@ -108,12 +131,14 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
     CHECK_MODULE_ENABLED(open);
 
     // Fix up double forms
-    if (mod["undo-redo"])
-        settings.undo_redo = mod["undo-redo"].as<bool>();
-    if (mod["text-utils"])
-        settings.text_utils = mod["text-utils"].as<bool>();
-    if (mod["cli-parser"])
-        settings.cli_parser = mod["cli-parser"].as<bool>();
+    if (!mod["undo-redo"].invalid() && !mod["undo-redo"].empty())
+        mod["undo-redo"] >> settings.undo_redo;
+
+    if (!mod["text-utils"].invalid() && !mod["text-utils"].empty())
+        mod["text-utils"] >> settings.text_utils;
+
+    if (!mod["cli-parser"].invalid() && !mod["cli-parser"].empty())
+        mod["cli-parser"] >> settings.cli_parser;
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
     if (settings.undo_redo)
@@ -133,14 +158,11 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
 
     // Load standard plugins
 #ifdef __APPLE__
-    if (node["plugins"] && node["plugins"]["macos"])
-        Global::get().plugins.standardPlugins = node["plugins"]["macos"].as<decltype(Global::get().plugins.standardPlugins)>();
+    loadStandardPlugins(root, "macos", Global::get().plugins.standardPlugins);
 #elif _WIN32
-    if (node["plugins"] && node["plugins"]["windows"])
-        Global::get().plugins.standardPlugins = node["plugins"]["windows"].as<decltype(Global::get().plugins.standardPlugins)>();
+    loadStandardPlugins(root, "windows", Global::get().plugins.standardPlugins);
 #else
-    if (node["plugins"] && node["plugins"]["linux"])
-        Global::get().plugins.standardPlugins = node["plugins"]["linux"].as<decltype(Global::get().plugins.standardPlugins)>();
+    loadStandardPlugins(root, "linux", Global::get().plugins.standardPlugins);
 #endif
 }
 
@@ -155,7 +177,7 @@ void UImGui::ModulesManager::initialiseWithImGuiContext() const noexcept
 void UImGui::ModulesManager::applyCustomisations() const noexcept
 {
 #ifdef UIMGUI_THEME_MODULE_ENABLED
-    if (settings.theming && (Modules::data().themeLocation != nullptr || Modules::data().themeLocation != ""))
+    if (settings.theming && (Modules::data().themeLocation != nullptr || strcmp(Modules::data().themeLocation, "") != 0))
         Theme::load((Instance::get()->initInfo.configDir + "Theme/" + Modules::data().themeLocation + ".theme.yaml").c_str());
 #endif
 }

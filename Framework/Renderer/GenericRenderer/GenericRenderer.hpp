@@ -14,7 +14,8 @@ namespace UImGui
     public:
         GenericRenderer() noexcept = default;
 
-        virtual void parseCustomConfig(YAML::Node& config) noexcept = 0;
+        virtual void parseCustomConfig(const ryml::ConstNodeRef& config) noexcept = 0;
+        virtual void saveCustomConfig(ryml::NodeRef& config) noexcept = 0;
 
         virtual void setupWindowIntegration() noexcept = 0;
         virtual void setupPostWindowCreation() noexcept = 0;

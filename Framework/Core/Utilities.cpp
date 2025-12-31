@@ -13,6 +13,25 @@
 #ifdef UIMGUI_PLOTTING_MODULE_ENABLED
     #include <Plotting/ThirdParty/implot/implot_internal.h>
 #endif
+#include <fstream>
+
+UImGui::FString UImGui::Utility::loadFileToString(const FString& location) noexcept
+{
+    std::ifstream f(location.c_str());
+    if (!f.is_open())
+        return {};
+
+    f.seekg(0, std::ios::end);
+    const size_t size = f.tellg();
+
+    FString buffer(size, '\0');
+
+    f.seekg(0);
+    f.read(buffer.data(), static_cast<long>(size));
+    f.close();
+
+    return buffer;
+}
 
 void UImGui::Utility::sanitiseFilepath(FString& str) noexcept
 {

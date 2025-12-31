@@ -67,20 +67,27 @@ UImGui::Instance* UImGui::Instance::get() noexcept
 
 void UImGui::Instance::reloadApplicationMetadata() noexcept
 {
-    YAML::Node node;
-    try
+    const auto string = Utility::loadFileToString(initInfo.projectDir + "uvproj.yaml");
+    if (string.empty())
     {
-        node = YAML::LoadFile((initInfo.projectDir + "uvproj.yaml").c_str());
-    }
-    catch (YAML::BadFile&)
-    {
-        Logger::log("Couldn't open the uvproj.yaml file. Application name, application, version and engine version not available!", ULOG_LOG_TYPE_WARNING);
+        Logger::log("Couldn't open the uvproj.yaml file. Application name, version and other metadata are not available!", ULOG_LOG_TYPE_WARNING);
         return;
     }
-    if (node["name"])
-        applicationName = node["name"].as<FString>();
-    if (node["version"])
-        applicationVersion = node["version"].as<FString>();
-    if (node["engine-version"])
-        engineVersion = node["engine-version"].as<FString>();
+
+    const auto tree = ryml::parse_in_arena(string.c_str());
+    if (tree.empty())
+    {
+        Logger::log("Couldn't parse the uvproj.yaml file. Application name, version and other metadata are not available!", ULOG_LOG_TYPE_WARNING);
+        return;
+    }
+
+    const auto root = tree.rootref();
+    if (!root["name"].invalid() && !root["name"].empty())
+        root["name"] >> applicationName;
+
+    if (!root["version"].invalid() && !root["version"].empty())
+        root["version"] >> applicationVersion;
+
+    if (!root["engine-version"].invalid() && !root["engine-version"].empty())
+        root["engine-version"] >> engineVersion;
 }

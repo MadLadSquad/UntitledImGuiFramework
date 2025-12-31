@@ -1,5 +1,7 @@
 #include "GenericWindow.hpp"
 #include <Components/Instance.hpp>
+#include <Utilities.hpp>
+#include <Types.hpp>
 
 UImGui::FVector2 UImGui::GenericWindow::getMousePositionChange() noexcept
 {
@@ -25,50 +27,62 @@ UImGui::FVector2 UImGui::GenericWindow::getScroll() noexcept
     return ret;
 }
 
-#define SAVE_CONFIG_YAML_BASIC(x, y) out << YAML::Key << #x << YAML::Value << windowData.y
+#define SAVE_CONFIG_YAML_BASIC(x, y) root[#x] << windowData.y
 
 void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
 {
     auto* instance = Instance::get();
     std::ofstream fout((instance->initInfo.configDir + "Core/Window.yaml").c_str());
     {
-        YAML::Emitter out;
-        out << YAML::BeginMap;
+        ryml::Tree tree;
+
+        ryml::NodeRef root = tree.rootref();
+        root |= ryml::MAP;
 
         SAVE_CONFIG_YAML_BASIC(layout-location, layoutLocation);
         SAVE_CONFIG_YAML_BASIC(load-layout, bLoadLayout);
         SAVE_CONFIG_YAML_BASIC(save-layout, bSaveLayout);
         SAVE_CONFIG_YAML_BASIC(icon, iconLocation);
 
-        out << YAML::Key << "width" << YAML::Value << windowSizeS.x;
-        out << YAML::Key << "height" << YAML::Value << windowSizeS.y;
+        // Since we multiply by content scale when creating the window...
+        const auto contentScale = getWindowContentScale();
+        root["width"] << windowSizeS.x / contentScale.x;
+        root["height"] << windowSizeS.y / contentScale.y;
 
         SAVE_CONFIG_YAML_BASIC(fullscreen, fullscreen);
         SAVE_CONFIG_YAML_BASIC(window-name, name);
         SAVE_CONFIG_YAML_BASIC(resizeable, bResizeable);
         SAVE_CONFIG_YAML_BASIC(transparent-surface, bSurfaceTransparent);
         SAVE_CONFIG_YAML_BASIC(hidden, bHidden);
-        SAVE_CONFIG_YAML_BASIC(focusedisplay, bFocused);
+        SAVE_CONFIG_YAML_BASIC(focused, bFocused);
         SAVE_CONFIG_YAML_BASIC(size-limits, sizeLimits);
         SAVE_CONFIG_YAML_BASIC(aspect-ratio-size-limit, aspectRatioSizeLimit);
-        SAVE_CONFIG_YAML_BASIC(decoratedisplay, bDecorated);
-        SAVE_CONFIG_YAML_BASIC(maximisedisplay, bMaximised);
+        SAVE_CONFIG_YAML_BASIC(decorated, bDecorated);
+        SAVE_CONFIG_YAML_BASIC(maximised, bMaximised);
 
-        out << YAML::EndMap;
-
-        fout << out.c_str();
+        fout << tree;
         fout.close();
     }
 
     if (bSaveKeybinds)
     {
-        YAML::Emitter out;
-        out << YAML::BeginMap << YAML::Key << "bindings" << YAML::BeginSeq;
+        ryml::Tree tree;
+
+        ryml::NodeRef root = tree.rootref();
+        root |= ryml::MAP;
+
+        auto bindings = root["bindings"];
+        bindings |= ryml::SEQ;
 
         for (auto& a : inputActionList)
         {
-            out << YAML::BeginMap << YAML::Key << "key" << YAML::Value << a.name;
-            out << YAML::Key << "val" << YAML::Value << YAML::Flow << YAML::BeginSeq;
+            auto child = bindings.append_child();
+            child |= ryml::MAP;
+            child["key"] << a.name;
+
+            auto val = child["val"];
+            val |= ryml::SEQ | ryml::FLOW_SL;
+
             for (auto& f : a.keyCodes)
             {
                 // Sanitise keys that vary in function between platforms
@@ -100,76 +114,90 @@ void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
                 default:
                         break;
                 }
-                out << static_cast<int>(f);
+                val.append_child() << f;
             }
-            out << YAML::EndSeq;
-            out << YAML::EndMap;
         }
-        out << YAML::EndSeq << YAML::EndMap;
 
         fout = std::ofstream((instance->initInfo.configDir + "Core/Keybindings.yaml").c_str());
-        fout << out.c_str();
+        fout << tree;
         fout.close();
     }
 }
 
-#define OPEN_CONFIG_GET_YAML_BASIC(x, y, z) if (out[#x]) windowData.y = out[#x].as<z>()
+#define OPEN_CONFIG_GET_YAML_BASIC(x, y) if (!root[#x].invalid() && !root[#x].empty()) root[#x] >> windowData.y
 
 void UImGui::GenericWindow::openConfig() noexcept
 {
-    YAML::Node out;
-
     const auto* instance = Instance::get();
-    try
-    {
-        out = YAML::LoadFile((instance->initInfo.configDir + "Core/Window.yaml").c_str());
-    }
-    catch (YAML::BadFile&)
+    auto string = Utility::loadFileToString(instance->initInfo.configDir + "Core/Window.yaml");
+
+    c4::yml::Tree tree;
+    ryml::NodeRef root;
+
+    if (string.empty())
     {
         Logger::log("Couldn't open the Window.yaml config file, please fix this error before shipping for production! Starting with default settings!", ULOG_LOG_TYPE_ERROR);
         goto skip_window_config;
     }
 
-    if (out["width"] && out["height"])
+    tree = ryml::parse_in_arena(string.c_str());
+    if (tree.empty())
     {
-        windowSizeS.x = out["width"].as<float>();
-        windowSizeS.y = out["height"].as<float>();
+        Logger::log("Couldn't parse the Window.yaml config file. Please fix this error before shipping for production! Starting with default settings!", ULOG_LOG_TYPE_ERROR);
+        goto skip_window_config;
+    }
+    root = tree.rootref();
+
+    {
+        auto width = root["width"];
+        auto height = root["height"];
+
+        if (!width.invalid() && !width.empty() && !height.invalid() && !height.empty())
+        {
+            width >> windowSizeS.x;
+            height >> windowSizeS.y;
+        }
     }
 
-    OPEN_CONFIG_GET_YAML_BASIC(icon, iconLocation, FString);
-    OPEN_CONFIG_GET_YAML_BASIC(layout-location, layoutLocation, FString);
-    OPEN_CONFIG_GET_YAML_BASIC(load-layout, bLoadLayout, bool);
-    OPEN_CONFIG_GET_YAML_BASIC(save-layout, bSaveLayout, bool);
-    OPEN_CONFIG_GET_YAML_BASIC(fullscreen, fullscreen, bool);
-    OPEN_CONFIG_GET_YAML_BASIC(window-name, name, FString);
-    OPEN_CONFIG_GET_YAML_BASIC(resizeable, bResizeable, bool);
-    OPEN_CONFIG_GET_YAML_BASIC(transparent-surface, bSurfaceTransparent, bool);
-    OPEN_CONFIG_GET_YAML_BASIC(visible, bHidden, bool);
-    OPEN_CONFIG_GET_YAML_BASIC(focusedisplay, bFocused, bool);
-    OPEN_CONFIG_GET_YAML_BASIC(size-limits, sizeLimits, FVector4);
-    OPEN_CONFIG_GET_YAML_BASIC(aspect-ratio-size-limit, aspectRatioSizeLimit, FVector2);
-    OPEN_CONFIG_GET_YAML_BASIC(decoratedisplay, bDecorated, bool);
-    OPEN_CONFIG_GET_YAML_BASIC(maximisedisplay, bMaximised, bool);
+    OPEN_CONFIG_GET_YAML_BASIC(icon, iconLocation);
+    OPEN_CONFIG_GET_YAML_BASIC(layout-location, layoutLocation);
+    OPEN_CONFIG_GET_YAML_BASIC(load-layout, bLoadLayout);
+    OPEN_CONFIG_GET_YAML_BASIC(save-layout, bSaveLayout);
+    OPEN_CONFIG_GET_YAML_BASIC(fullscreen, fullscreen);
+    OPEN_CONFIG_GET_YAML_BASIC(window-name, name);
+    OPEN_CONFIG_GET_YAML_BASIC(resizeable, bResizeable);
+    OPEN_CONFIG_GET_YAML_BASIC(transparent-surface, bSurfaceTransparent);
+    OPEN_CONFIG_GET_YAML_BASIC(hidden, bHidden);
+    OPEN_CONFIG_GET_YAML_BASIC(focused, bFocused);
+    OPEN_CONFIG_GET_YAML_BASIC(size-limits, sizeLimits);
+    OPEN_CONFIG_GET_YAML_BASIC(aspect-ratio-size-limit, aspectRatioSizeLimit);
+    OPEN_CONFIG_GET_YAML_BASIC(decorated, bDecorated);
+    OPEN_CONFIG_GET_YAML_BASIC(maximised, bMaximised);
 skip_window_config:
 
-    try
+    string = Utility::loadFileToString(instance->initInfo.configDir + "Core/Keybindings.yaml");
+    if (string.empty())
     {
-        out = YAML::LoadFile((instance->initInfo.configDir + "Core/Keybindings.yaml").c_str());
-    }
-    catch (YAML::BadFile&)
-    {
-        Logger::log("Couldn't open the Keybindings.yaml config file, please fix this error before shipping for production! Starting with default settings!", ULOG_LOG_TYPE_ERROR);
+        Logger::log("Couldn't open the Keybindings.yaml config file! Please fix this error before shipping for production! Starting with default settings!", ULOG_LOG_TYPE_ERROR);
         return;
     }
 
-    auto binds = out["bindings"];
-    if (binds)
+    tree = ryml::parse_in_arena(string.c_str());
+    if (tree.empty())
     {
-        for (const YAML::Node& a : binds)
+        Logger::log("Couldn't parse the Keybindings.yaml config file! Please fix this error before shipping for production! Starting with default settings!", ULOG_LOG_TYPE_ERROR);
+        return;
+    }
+    root = tree.rootref();
+
+    auto binds = root["bindings"];
+    if (!binds.invalid() && !binds.empty() && binds.is_seq())
+    {
+        for (const auto& a : binds.children())
         {
             InputAction action;
-            action.name = a["key"].as<FString>();
-            action.keyCodes = a["val"].as<TVector<uint64_t>>();
+            a["key"] >> action.name;
+            a["val"] >> action.keyCodes;
 
             // Sanitise keys that vary in function between platforms
             for (auto& f : action.keyCodes)

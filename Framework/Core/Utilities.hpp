@@ -23,6 +23,9 @@ namespace UImGui
         typedef TArray<std::pair<FString, FString>, Keys_COUNT> KeyStringsArrType;
 
         // Event Safety - Any time
+        static FString loadFileToString(const FString& location) noexcept;
+
+        // Event Safety - Any time
         static void sanitiseFilepath(FString& str) noexcept;
 
         // Event Safety - Any time

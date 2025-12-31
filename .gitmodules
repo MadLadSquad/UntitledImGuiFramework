@@ -6,9 +6,6 @@
 	path = Framework/ThirdParty/logger
 	url = https://github.com/MadLadSquad/UntitledLog.git
 	branch = master
-[submodule "Framework/ThirdParty/yaml-cpp"]
-	path = Framework/ThirdParty/yaml-cpp
-	url = https://github.com/MadLadSquad/yaml-cpp.git
 [submodule "Framework/ThirdParty/imgui"]
 	path = Framework/ThirdParty/imgui
 	url = https://github.com/MadLadSquad/imgui.git
@@ -69,3 +66,6 @@
 [submodule "Framework/ThirdParty/source-libraries/cimgui/cimgui_extra"]
 	path = Framework/ThirdParty/source-libraries/cimgui/cimgui_extra
 	url = https://github.com/MadLadSquad/cimgui_extra.git
+[submodule "Framework/ThirdParty/rapidyaml"]
+	path = Framework/ThirdParty/rapidyaml
+	url = https://github.com/MadLadSquad/rapidyaml.git

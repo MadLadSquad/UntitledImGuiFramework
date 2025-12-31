@@ -109,3 +109,11 @@ UImGui_String UImGui_Utility_toUpper(char* str)
     }
     return strcpy(tmpRealloc, u8tmp.data());
 }
+
+UImGui_String UImGui_Utility_loadFileToString(const UImGui_String location)
+{
+    const auto content = UImGui::Utility::loadFileToString(location);
+    const auto result = static_cast<char*>(UImGui_Allocator_allocate(content.size()));
+    memcpy(result, content.data(), content.size());
+    return result;
+}
