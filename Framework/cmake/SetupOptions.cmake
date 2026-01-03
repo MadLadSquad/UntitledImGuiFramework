@@ -6,6 +6,7 @@ option(BUILD_VARIANT_STATIC "Builds the Framework, application library(exists on
     executable binary" OFF)
 option(BUILD_VARIANT_VENDOR "If set to OFF will use the globally installed framework(not available on Windows)" ON)
 option(UIMGUI_PRODUCTION_BUILD "Whether the current compilation is going to be targeting a production environment. Read the documentation for more information" OFF)
+option(UIMGUI_IN_BUNDLE "Enabled only if compiling as a macOS app bundle." OFF)
 
 setup_pre_dependency_options()
 
