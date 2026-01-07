@@ -149,52 +149,55 @@ namespace UImGui
 
 namespace c4::yml
 {
+    UIMGUI_PUBLIC_API bool keyValid(NodeRef ref) noexcept;
+    UIMGUI_PUBLIC_API bool keyValid(ConstNodeRef ref) noexcept;
+
     // ---------------------------------------------------- Strings ----------------------------------------------------
 
     template<>
-    void write<UImGui::FString>(NodeRef* ref, UImGui::FString const& t);
+    UIMGUI_PUBLIC_API void write<UImGui::FString>(NodeRef* ref, UImGui::FString const& t);
 
     template<>
-    bool read<UImGui::FString>(ConstNodeRef const& ref, UImGui::FString* t);
+    UIMGUI_PUBLIC_API bool read<UImGui::FString>(ConstNodeRef const& ref, UImGui::FString* t);
 
     template<>
-    void write<UImGui::FString16>(NodeRef* ref, UImGui::FString16 const& t);
+    UIMGUI_PUBLIC_API void write<UImGui::FString16>(NodeRef* ref, UImGui::FString16 const& t);
 
     template<>
-    bool read<UImGui::FString16>(ConstNodeRef const& ref, UImGui::FString16* t);
+    UIMGUI_PUBLIC_API bool read<UImGui::FString16>(ConstNodeRef const& ref, UImGui::FString16* t);
 
     template<>
-    void write<UImGui::FString32>(NodeRef* ref, UImGui::FString32 const& t);
+    UIMGUI_PUBLIC_API void write<UImGui::FString32>(NodeRef* ref, UImGui::FString32 const& t);
 
     template<>
-    bool read<UImGui::FString32>(ConstNodeRef const& ref, UImGui::FString32* t);
+    UIMGUI_PUBLIC_API bool read<UImGui::FString32>(ConstNodeRef const& ref, UImGui::FString32* t);
 
     // ---------------------------------------------------- Vectors ----------------------------------------------------
 
     template<>
-    void write<UImGui::FVector4>(NodeRef* ref, UImGui::FVector4 const& t);
+    UIMGUI_PUBLIC_API void write<UImGui::FVector4>(NodeRef* ref, UImGui::FVector4 const& t);
 
     template<>
-    bool read<UImGui::FVector4>(ConstNodeRef const& ref, UImGui::FVector4* t);
+    UIMGUI_PUBLIC_API bool read<UImGui::FVector4>(ConstNodeRef const& ref, UImGui::FVector4* t);
 
     template<>
-    void write<UImGui::FVector>(NodeRef* ref, UImGui::FVector const& t);
+    UIMGUI_PUBLIC_API void write<UImGui::FVector>(NodeRef* ref, UImGui::FVector const& t);
 
     template<>
-    bool read<UImGui::FVector>(ConstNodeRef const& ref, UImGui::FVector* t);
+    UIMGUI_PUBLIC_API bool read<UImGui::FVector>(ConstNodeRef const& ref, UImGui::FVector* t);
 
     template<>
-    void write<UImGui::FVector2>(NodeRef* ref, UImGui::FVector2 const& t);
+    UIMGUI_PUBLIC_API void write<UImGui::FVector2>(NodeRef* ref, UImGui::FVector2 const& t);
 
     template<>
-    bool read<UImGui::FVector2>(ConstNodeRef const& ref, UImGui::FVector2* t);
+    UIMGUI_PUBLIC_API bool read<UImGui::FVector2>(ConstNodeRef const& ref, UImGui::FVector2* t);
 
     // --------------------------------------------------- Sequences ---------------------------------------------------
 
     template<template<typename> class C, typename T>
     bool read(ConstNodeRef const& ref, C<T>* t)
     {
-        if (!ref.is_seq() || ref.invalid() || ref.empty())
+        if (!keyValid(ref) || !ref.is_seq())
             return false;
 
         for (const auto& a : ref.children())
@@ -214,10 +217,21 @@ namespace c4::yml
             ref->append_child() << a;
     }
 
+    // Check if similar to std::string
+    template<typename T>
+    concept IsStringLike = requires(T s, std::size_t n)
+    {
+        typename T::value_type;
+
+        { s.data() } -> std::same_as<typename T::value_type*>;
+        { std::as_const(s).data() } -> std::same_as<const typename T::value_type*>;
+        { s.resize(n) } -> std::same_as<void>;
+    } && std::is_trivial_v<typename T::value_type>;
+
     template<template<typename, typename, typename...> class C, typename Key, typename Val, typename ...Extra>
     bool read_dict(ConstNodeRef const& ref, C<Key, Val, Extra...>* t)
     {
-        if (!ref.is_seq() || ref.invalid() || ref.empty())
+        if (!keyValid(ref) || !ref.is_seq())
             return false;
 
         for (const auto& a : ref.children())
@@ -225,8 +239,16 @@ namespace c4::yml
             if (!a.is_map())
                 continue;
 
+            auto k = a.key();
+
             Key key{};
-            key = a.key().str;
+            if constexpr (IsStringLike<Key>)
+            {
+                key.resize(k.len);
+                memcpy(&key.data(), k.data(), k.len);
+            }
+            else
+                key = k.str;
 
             Val val{};
             a >> val;

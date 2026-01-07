@@ -82,12 +82,12 @@ void UImGui::Instance::reloadApplicationMetadata() noexcept
     }
 
     const auto root = tree.rootref();
-    if (!root["name"].invalid() && !root["name"].empty())
+    if (keyValid(root["name"]))
         root["name"] >> applicationName;
 
-    if (!root["version"].invalid() && !root["version"].empty())
+    if (keyValid(root["version"]))
         root["version"] >> applicationVersion;
 
-    if (!root["engine-version"].invalid() && !root["engine-version"].empty())
+    if (keyValid(root["engine-version"]))
         root["engine-version"] >> engineVersion;
 }

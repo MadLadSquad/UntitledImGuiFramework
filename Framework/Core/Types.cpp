@@ -68,7 +68,7 @@ void c4::yml::write<UImGui_FVector4>(NodeRef* ref, UImGui::FVector4 const& t)
 template <>
 bool c4::yml::read<UImGui_FVector4>(ConstNodeRef const& ref, UImGui::FVector4* t)
 {
-    if (ref.invalid() || !ref.is_seq() || ref.num_children() < 4)
+    if (!keyValid(ref) || !ref.is_seq() || ref.num_children() < 4)
         return false;
     ref.child(0) >> t->x;
     ref.child(1) >> t->y;
@@ -89,7 +89,7 @@ void c4::yml::write<UImGui_FVector>(NodeRef* ref, UImGui::FVector const& t)
 template <>
 bool c4::yml::read<UImGui_FVector>(ConstNodeRef const& ref, UImGui::FVector* t)
 {
-    if (ref.invalid() || !ref.is_seq() || ref.num_children() < 3)
+    if (!keyValid(ref) || !ref.is_seq() || ref.num_children() < 3)
         return false;
     ref.child(0) >> t->x;
     ref.child(1) >> t->y;
@@ -108,7 +108,7 @@ void c4::yml::write<UImGui_FVector2>(NodeRef* ref, UImGui::FVector2 const& t)
 template <>
 bool c4::yml::read<UImGui_FVector2>(ConstNodeRef const& ref, UImGui::FVector2* t)
 {
-    if (ref.invalid() || !ref.is_seq() || ref.num_children() < 2)
+    if (!keyValid(ref) || !ref.is_seq() || ref.num_children() < 2)
         return false;
     ref.child(0) >> t->x;
     ref.child(1) >> t->y;
@@ -233,4 +233,14 @@ UImGui::FVector UImGui::operator/(const FVector x, const float y) noexcept
 UImGui::FVector4 UImGui::operator/(const FVector4 x, const float y) noexcept
 {
     return { x.x / y, x.y / y, x.z / y, x.w / y };
+}
+
+bool c4::yml::keyValid(const NodeRef ref) noexcept
+{
+    return !ref.invalid() && ref.readable() && !ref.empty();
+}
+
+bool c4::yml::keyValid(const ConstNodeRef ref) noexcept
+{
+    return !ref.invalid() && ref.readable() && !ref.empty();
 }

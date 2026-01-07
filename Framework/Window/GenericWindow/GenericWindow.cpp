@@ -124,7 +124,7 @@ void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
     }
 }
 
-#define OPEN_CONFIG_GET_YAML_BASIC(x, y) if (!root[#x].invalid() && !root[#x].empty()) root[#x] >> windowData.y
+#define OPEN_CONFIG_GET_YAML_BASIC(x, y) if (keyValid(root[#x])) root[#x] >> windowData.y
 
 void UImGui::GenericWindow::openConfig() noexcept
 {
@@ -152,7 +152,7 @@ void UImGui::GenericWindow::openConfig() noexcept
         auto width = root["width"];
         auto height = root["height"];
 
-        if (!width.invalid() && !width.empty() && !height.invalid() && !height.empty())
+        if (keyValid(width) && keyValid(height))
         {
             width >> windowSizeS.x;
             height >> windowSizeS.y;
@@ -191,7 +191,7 @@ skip_window_config:
     root = tree.rootref();
 
     auto binds = root["bindings"];
-    if (!binds.invalid() && !binds.empty() && binds.is_seq())
+    if (keyValid(binds) && binds.is_seq())
     {
         for (const auto& a : binds.children())
         {

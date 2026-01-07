@@ -154,7 +154,7 @@ void UImGui::RendererInternal::loadConfig() noexcept
 
     {
         auto rendererConf = node["renderer"];
-        if (!rendererConf.invalid() && !rendererConf.empty())
+        if (keyValid(rendererConf))
         {
             FString tmp;
             rendererConf >> tmp;
@@ -199,36 +199,36 @@ void UImGui::RendererInternal::loadConfig() noexcept
 
     {
         auto vsync = node["v-sync"];
-        if (!vsync.invalid() && !vsync.empty())
+        if (keyValid(vsync))
             vsync >> data.bUsingVSync;
     }
 
     {
         auto msaa = node["msaa-samples"];
-        if (!msaa.invalid() && !msaa.empty())
+        if (keyValid(msaa))
             msaa >> data.msaaSamples;
     }
 
     {
         auto powerSaving = node["power-saving"];
-        if (!powerSaving.invalid() && !powerSaving.empty())
+        if (keyValid(powerSaving))
         {
             auto enabled = powerSaving["enabled"];
-            if (!enabled.invalid() && !enabled.empty())
+            if (keyValid(enabled))
                 enabled >> data.bEnablePowerSavingMode;
 
             auto idleFrames = node["idle-frames"];
-            if (!idleFrames.invalid() && !idleFrames.empty())
+            if (keyValid(idleFrames))
                 idleFrames >> data.idleFrameRate;
         }
     }
 
     {
         auto emscripten = node["emscripten"];
-        if (!emscripten.invalid() && !emscripten.empty())
+        if (keyValid(emscripten))
         {
             auto canvasSelector = emscripten["canvas-selector"];
-            if (!canvasSelector.invalid() && !canvasSelector.empty())
+            if (keyValid(canvasSelector))
             {
                 // Doing this because the RendererData structure is in C and we use String there
                 FString tmpCanvasSelector;
@@ -242,7 +242,7 @@ void UImGui::RendererInternal::loadConfig() noexcept
 
     {
         auto customRenderer = node["custom-renderer"];
-        if (!customRenderer.invalid() && !customRenderer.empty())
+        if (keyValid(customRenderer))
             renderer->parseCustomConfig(customRenderer);
     }
 }
@@ -268,7 +268,7 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     emscripten["canvas-selector"] = data.emscriptenCanvas;
 
     auto customConfig = root["custom-renderer"];
-    if (!customConfig.invalid() && !customConfig.empty())
+    if (keyValid(customConfig))
         renderer->saveCustomConfig(customConfig);
 
     std::ofstream fout((Instance::get()->initInfo.configDir + "Core/Renderer.yaml").c_str());

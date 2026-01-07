@@ -10,7 +10,7 @@
     #include "Modules/Knobs/ThirdParty/imgui-knobs/imgui-knobs.h"
 #endif
 
-#define CHECK_MODULE_ENABLED(x)     if (!mod[#x].invalid() && !mod[#x].empty())     \
+#define CHECK_MODULE_ENABLED(x)     if (keyValid(mod[#x]))     \
 {                                                                                   \
     mod[#x] >> settings.x;                                                          \
 }
@@ -37,7 +37,7 @@ void UImGui::ModulesManager::init(const FString& configDir)
     const auto root = tree.rootref();
 
     auto maxTransactions = root["max-transactions"];
-    if (!maxTransactions.invalid() && !maxTransactions.empty())
+    if (keyValid(maxTransactions))
         maxTransactions >> settings.maxTransactions;
 
     initModules(UImGui_InitInfo_getProjectDir());
@@ -73,7 +73,7 @@ UImGui::ModulesManager& UImGui::Modules::get() noexcept
 static void loadStandardPlugins(const ryml::ConstNodeRef& root, const UImGui::String platform, UImGui::TVector<UImGui::FString>& plugins) noexcept
 {
     auto p = root["plugins"];
-    if (!p.invalid() && !p.empty() && !p[platform].invalid() && !p[platform].empty())
+    if (keyValid(p) && keyValid(p[platform]))
         p[platform] >> plugins;
 }
 
@@ -99,10 +99,10 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
     // while not crashing. Examples: debuggers, language interpreters, validators, etc.
 #ifdef PRODUCTION
     auto prodSettings = root["production"];
-    if (!prodSettings.invalid() && !prodSettings.empty())
+    if (keyValid(prodSettings))
     {
         auto crash = prodSettings["crash-on-error"];
-        if (!crash.invalid() && !crash.empty())
+        if (keyValid(crash))
         {
             bool val;
             crash >> val;
@@ -112,7 +112,7 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
 #endif
 
     auto mod = root["enabled-modules"];
-    if (mod.invalid() || mod.empty())
+    if (keyValid(mod))
         return;
 
     CHECK_MODULE_ENABLED(os);
@@ -131,13 +131,13 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
     CHECK_MODULE_ENABLED(open);
 
     // Fix up double forms
-    if (!mod["undo-redo"].invalid() && !mod["undo-redo"].empty())
+    if (keyValid(mod["undo-redo"]))
         mod["undo-redo"] >> settings.undo_redo;
 
-    if (!mod["text-utils"].invalid() && !mod["text-utils"].empty())
+    if (keyValid(mod["text-utils"]))
         mod["text-utils"] >> settings.text_utils;
 
-    if (!mod["cli-parser"].invalid() && !mod["cli-parser"].empty())
+    if (keyValid(mod["cli-parser"]))
         mod["cli-parser"] >> settings.cli_parser;
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
