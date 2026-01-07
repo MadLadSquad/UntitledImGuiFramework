@@ -102,8 +102,6 @@ function compile()
   if [ "${windows}" == true ]; then
     cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE || exit
     MSBuild.exe "${prjname}".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || exit
-
-    cp ../UVKBuildTool/build/Release/UVKBuildToolLib.dll . || exit
   elif [ "$2" == "wasm" ]; then
     emcmake cmake .. -DCMAKE_BUILD_TYPE=RELEASE || exit
     make -j "${cpus}" || exit
