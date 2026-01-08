@@ -150,7 +150,7 @@ void UImGui::RendererInternal::loadConfig() noexcept
         return;
     }
 
-    const auto node = tree.rootref();
+    auto node = tree.rootref();
 
     {
         auto rendererConf = node["renderer"];

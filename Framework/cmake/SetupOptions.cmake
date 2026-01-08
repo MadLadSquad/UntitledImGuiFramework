@@ -108,7 +108,7 @@ endif()
 
 if (USE_I18N_MODULE)
     if (BUILD_VARIANT_VENDOR)
-        # TODO: remove: set(USE_PRECONFIGURED_YAML ON)
+        set(USE_PRECONFIGURED_YAML ON)
         add_subdirectory("${UIMGUI_SRC_PREFIX}/Framework/Modules/i18n/ThirdParty/UntitledI18N")
         list(APPEND ENABLED_LIBRARIES UntitledI18N)
     else()

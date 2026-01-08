@@ -34,7 +34,7 @@ void UImGui::ModulesManager::init(const FString& configDir)
         return;
     }
 
-    const auto root = tree.rootref();
+    auto root = tree.rootref();
 
     auto maxTransactions = root["max-transactions"];
     if (keyValid(maxTransactions))
