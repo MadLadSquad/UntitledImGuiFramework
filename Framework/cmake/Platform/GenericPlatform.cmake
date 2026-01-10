@@ -41,8 +41,10 @@ macro(setup_yaml_vendored)
         set_target_properties(ryml PROPERTIES POSITION_INDEPENDENT_CODE ON)
         set(YAML_LIBRARIES_T "ryml")
     endif()
-    set(RYML_INCLUDE_DIRS_T "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/rapidyaml/src/")
-    set(YAML_INCLUDE_DIRS_T "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/rapidyaml/src/")
+    set(RYML_INCLUDE_DIRS_T
+            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/rapidyaml/src/"
+            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/rapidyaml/ext/c4core/src"
+    )
 endmacro()
 
 macro(setup_freetype_vendored_generic)
