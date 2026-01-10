@@ -28,6 +28,7 @@ extern "C"
      * application sits idle). Note: do not use for highly dynamic applications with plots or animations
      * @var idleFrameRate - The number of frames to render per second when idle
      * @var emscriptenCanvas - The HTML canvas selector to draw inside of
+     * @var bFreeCanvas - Whether to free the canvas string when the application closes
      */
     typedef struct UIMGUI_PUBLIC_API UImGui_RendererData
     {
@@ -39,7 +40,8 @@ extern "C"
         bool bEnablePowerSavingMode;
         float idleFrameRate;
 
-        UImGui_String emscriptenCanvas;
+        char* emscriptenCanvas;
+        bool bFreeCanvas;
     } UImGui_RendererData;
 #ifdef __cplusplus
 }

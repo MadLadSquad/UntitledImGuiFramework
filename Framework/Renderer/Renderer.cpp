@@ -56,6 +56,10 @@ void UImGui::RendererInternal::stop() const noexcept
     renderer->destroy();
     Modules::get().destroy();
     Window::get()->destroyWindow();
+
+    // Free the canvas if it comes from config
+    if (data.bFreeCanvas)
+        UImGui_Allocator_deallocate(data.emscriptenCanvas);
 }
 
 void UImGui::RendererInternal::tick(void* rendererInstance) noexcept
@@ -173,7 +177,7 @@ void UImGui::RendererInternal::loadConfig() noexcept
             }
             escape_render_type_loop:;
 #ifdef __EMSCRIPTEN__
-            data.rendererType = data.rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU ? UIMGUI_RENDERER_TYPE_OPENGL : data.rendererType;
+            data.rendererType = !RendererUtils::WebGPU::supported() && data.rendererType == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU ? UIMGUI_RENDERER_TYPE_OPENGL : data.rendererType;
 #endif
             data.textureRendererType = data.rendererType;
 
@@ -231,9 +235,12 @@ void UImGui::RendererInternal::loadConfig() noexcept
             if (keyValid(canvasSelector))
             {
                 // Doing this because the RendererData structure is in C and we use String there
-                FString tmpCanvasSelector;
-                canvasSelector >> tmpCanvasSelector;
-                data.emscriptenCanvas = tmpCanvasSelector.c_str();
+                FString tmp{};
+                canvasSelector >> tmp;
+
+                data.emscriptenCanvas = static_cast<char*>(UImGui_Allocator_allocate(tmp.size()));
+                memcpy(data.emscriptenCanvas, tmp.data(), tmp.size());
+                data.bFreeCanvas = true;
             }
         }
     }

@@ -30,7 +30,7 @@ macro(link_to_framework_libraries_generic_unix)
         )
     endif()
     target_link_libraries(${APP_LIB_TARGET} UntitledImGuiFramework ${YAML_LIBRARIES_T})
-    target_link_libraries(${APP_TARGET} UntitledImGuiFramework ${APP_LIB_TARGET} ${YAML_LIBRARIES_T})
+    target_link_libraries(${APP_TARGET} UntitledImGuiFramework ${APP_LIB_TARGET})
 
     foreach(f IN ITEMS ${ENABLED_LIBRARIES})
         target_link_libraries(${APP_LIB_TARGET} ${f})

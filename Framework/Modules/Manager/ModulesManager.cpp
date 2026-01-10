@@ -10,9 +10,11 @@
     #include "Modules/Knobs/ThirdParty/imgui-knobs/imgui-knobs.h"
 #endif
 
-#define CHECK_MODULE_ENABLED(x)     if (keyValid(mod[#x]))     \
-{                                                                                   \
-    mod[#x] >> settings.x;                                                          \
+#define CHECK_MODULE_ENABLED(x)     \
+{                                   \
+    auto p = mod[#x];               \
+    if (keyValid(p))                \
+        p >> settings.x;            \
 }
 
 #include <Utilities.hpp>
@@ -70,7 +72,7 @@ UImGui::ModulesManager& UImGui::Modules::get() noexcept
     return Global::get().modulesManager;
 }
 
-static void loadStandardPlugins(const ryml::ConstNodeRef& root, const UImGui::String platform, UImGui::TVector<UImGui::FString>& plugins) noexcept
+static void loadStandardPlugins(ryml::NodeRef root, const UImGui::String platform, UImGui::TVector<UImGui::FString>& plugins) noexcept
 {
     auto p = root["plugins"];
     if (keyValid(p) && keyValid(p[platform]))
@@ -93,7 +95,7 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
         return;
     }
 
-    const auto root = tree.rootref();
+    auto root = tree.rootref();
 
     // Some specific applications may want to override the crash on error log functionality as they need to print errors
     // while not crashing. Examples: debuggers, language interpreters, validators, etc.
@@ -112,7 +114,7 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
 #endif
 
     auto mod = root["enabled-modules"];
-    if (keyValid(mod))
+    if (!keyValid(mod))
         return;
 
     CHECK_MODULE_ENABLED(os);

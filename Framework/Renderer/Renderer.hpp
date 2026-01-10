@@ -7,6 +7,7 @@
 // Renderers
 #include <OpenGL/OpenGLRenderer.hpp>
 #include <Vulkan/VulkanRenderer.hpp>
+#include <WebGPU/WebGPURenderer.hpp>
 
 namespace UImGui
 {
@@ -42,6 +43,8 @@ namespace UImGui
         OpenGLRenderer opengl{};
 #ifndef __EMSCRIPTEN__
         VulkanRenderer vulkan{};
+#else
+        WebGPURenderer wgpu{};
 #endif
         GenericRenderer* custom = nullptr;
 
@@ -50,6 +53,8 @@ namespace UImGui
             &opengl,
 #ifndef __EMSCRIPTEN__
             &vulkan,
+#else
+            &wgpu,
 #endif
             custom
         };
@@ -63,7 +68,8 @@ namespace UImGui
             .msaaSamples = 1,
             .bEnablePowerSavingMode = false,
             .idleFrameRate = 9.0f,
-            .emscriptenCanvas = "#canvas"
+            .emscriptenCanvas = const_cast<char*>("#canvas"),
+            .bFreeCanvas = false
         };
 
         double lastTime = 0.0f;

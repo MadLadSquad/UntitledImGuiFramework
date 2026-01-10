@@ -10,7 +10,7 @@ bool UImGui::Texture::init(const String location, const bool bFiltered) noexcept
 {
     auto& type = Renderer::data().textureRendererType;
 #ifdef __EMSCRIPTEN__
-    type = (type == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU) ? UIMGUI_RENDERER_TYPE_OPENGL : type;
+    type = !RendererUtils::WebGPU::supported() && type == UIMGUI_RENDERER_TYPE_VULKAN_WEBGPU ? UIMGUI_RENDERER_TYPE_OPENGL : type;
 #endif
     if (type == UIMGUI_RENDERER_TYPE_CUSTOM)
     {
