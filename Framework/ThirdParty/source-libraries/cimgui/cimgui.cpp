@@ -4151,26 +4151,6 @@ CIMGUI_API cimgui::ImVec2 cimgui::ImGui_GetWindowContentRegionMax(void)
     return ConvertFromCPP_ImVec2(::ImGui::GetWindowContentRegionMax());
 }
 
-CIMGUI_API bool   cimgui::ImGui_BeginChildFrame(ImGuiID id, cimgui::ImVec2 size)
-{
-    return ::ImGui::BeginChildFrame(id, ConvertToCPP_ImVec2(size));
-}
-
-CIMGUI_API bool   cimgui::ImGui_BeginChildFrameEx(ImGuiID id, cimgui::ImVec2 size, ImGuiWindowFlags window_flags)
-{
-    return ::ImGui::BeginChildFrame(id, ConvertToCPP_ImVec2(size), window_flags);
-}
-
-CIMGUI_API void   cimgui::ImGui_EndChildFrame(void)
-{
-    ::ImGui::EndChildFrame();
-}
-
-CIMGUI_API void   cimgui::ImGui_ShowStackToolWindow(bool* p_open)
-{
-    ::ImGui::ShowStackToolWindow(p_open);
-}
-
 CIMGUI_API bool   cimgui::ImGui_ComboObsolete(const char* label, int* current_item, bool (*old_callback)(void* user_data, int idx, const char** out_text), void* user_data, int items_count)
 {
     return ::ImGui::Combo(label, current_item, old_callback, user_data, items_count);
