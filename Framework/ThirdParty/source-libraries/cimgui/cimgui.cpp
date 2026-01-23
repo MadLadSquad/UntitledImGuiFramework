@@ -2926,6 +2926,11 @@ CIMGUI_API void cimgui::ImGuiInputTextCallbackData_SelectAll(cimgui::ImGuiInputT
     reinterpret_cast<::ImGuiInputTextCallbackData*>(self)->SelectAll();
 }
 
+CIMGUI_API void cimgui::ImGuiInputTextCallbackData_SetSelection(cimgui::ImGuiInputTextCallbackData* self, int s, int e)
+{
+    reinterpret_cast<::ImGuiInputTextCallbackData*>(self)->SetSelection(s, e);
+}
+
 CIMGUI_API void cimgui::ImGuiInputTextCallbackData_ClearSelection(cimgui::ImGuiInputTextCallbackData* self)
 {
     reinterpret_cast<::ImGuiInputTextCallbackData*>(self)->ClearSelection();
