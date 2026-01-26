@@ -1026,8 +1026,6 @@ typedef void (*GLADpostcallback)(void *ret, const char *name, GLADapiproc apipro
 #define GL_HSL_SATURATION 0x92AE
 #define GL_HSL_SATURATION_KHR 0x92AE
 #define GL_HSL_SATURATION_NV 0x92AE
-#define GL_HUAWEI_PROGRAM_BINARY 0x9771
-#define GL_HUAWEI_SHADER_BINARY 0x9770
 #define GL_IMAGE_2D 0x904D
 #define GL_IMAGE_2D_ARRAY 0x9053
 #define GL_IMAGE_3D 0x904E
@@ -1774,6 +1772,7 @@ typedef void (*GLADpostcallback)(void *ret, const char *name, GLADapiproc apipro
 #define GL_PROGRAM_BINARY_FORMATS 0x87FF
 #define GL_PROGRAM_BINARY_FORMATS_OES 0x87FF
 #define GL_PROGRAM_BINARY_FORMAT_MESA 0x875F
+#define GL_PROGRAM_BINARY_HUAWEI 0x9771
 #define GL_PROGRAM_BINARY_LENGTH 0x8741
 #define GL_PROGRAM_BINARY_LENGTH_OES 0x8741
 #define GL_PROGRAM_BINARY_RETRIEVABLE_HINT 0x8257
@@ -2040,6 +2039,7 @@ typedef void (*GLADpostcallback)(void *ret, const char *name, GLADapiproc apipro
 #define GL_SHADER 0x82E1
 #define GL_SHADER_BINARY_DMP 0x9250
 #define GL_SHADER_BINARY_FORMATS 0x8DF8
+#define GL_SHADER_BINARY_HUAWEI 0x9770
 #define GL_SHADER_BINARY_VIV 0x8FC4
 #define GL_SHADER_COMPILER 0x8DFA
 #define GL_SHADER_CORE_ACTIVE_COUNT_ARM 0x96F1
