@@ -2,7 +2,7 @@
 // **DO NOT EDIT DIRECTLY**
 // https://github.com/dearimgui/dear_bindings
 
-// dear imgui, v1.92.6 WIP
+// dear imgui, v1.92.6
 // (headers)
 
 // Help:
@@ -33,8 +33,8 @@
 
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
-#define IMGUI_VERSION       "1.92.6 WIP"
-#define IMGUI_VERSION_NUM   19260
+#define IMGUI_VERSION       "1.92.6"
+#define IMGUI_VERSION_NUM   19261
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
 #define IMGUI_HAS_VIEWPORT           // In 'docking' WIP branch.
@@ -4276,6 +4276,7 @@ CIMGUI_API void   ImGui_PushButtonRepeat(bool repeat);
 CIMGUI_API void   ImGui_PopButtonRepeat(void);
 CIMGUI_API void   ImGui_PushTabStop(bool tab_stop);
 CIMGUI_API void   ImGui_PopTabStop(void);
+// You do not need those functions! See #7838 on GitHub for more info.
 CIMGUI_API ImVec2 ImGui_GetContentRegionMax(void);                                                                                         // Content boundaries max (e.g. window boundaries including scrolling, or current column boundaries). You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
 CIMGUI_API ImVec2 ImGui_GetWindowContentRegionMin(void);                                                                                   // Content boundaries min for the window (roughly (0,0)-Scroll), in window-local coordinates. You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
 CIMGUI_API ImVec2 ImGui_GetWindowContentRegionMax(void);                                                                                   // Content boundaries max for the window (roughly (0,0)+Size-Scroll), in window-local coordinates. You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
