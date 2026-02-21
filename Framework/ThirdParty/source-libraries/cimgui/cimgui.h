@@ -2,7 +2,7 @@
 // **DO NOT EDIT DIRECTLY**
 // https://github.com/dearimgui/dear_bindings
 
-// dear imgui, v1.92.6
+// dear imgui, v1.92.7 WIP
 // (headers)
 
 // Help:
@@ -33,8 +33,8 @@
 
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
-#define IMGUI_VERSION       "1.92.6"
-#define IMGUI_VERSION_NUM   19261
+#define IMGUI_VERSION       "1.92.7 WIP"
+#define IMGUI_VERSION_NUM   19262
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
 #define IMGUI_HAS_VIEWPORT           // In 'docking' WIP branch.
@@ -1438,7 +1438,7 @@ typedef enum
     ImGuiTreeNodeFlags_DefaultOpen          = 1<<5,                                     // Default node to be open
     ImGuiTreeNodeFlags_OpenOnDoubleClick    = 1<<6,                                     // Open on double-click instead of simple click (default for multi-select unless any _OpenOnXXX behavior is set explicitly). Both behaviors may be combined.
     ImGuiTreeNodeFlags_OpenOnArrow          = 1<<7,                                     // Open when clicking on the arrow part (default for multi-select unless any _OpenOnXXX behavior is set explicitly). Both behaviors may be combined.
-    ImGuiTreeNodeFlags_Leaf                 = 1<<8,                                     // No collapsing, no arrow (use as a convenience for leaf nodes).
+    ImGuiTreeNodeFlags_Leaf                 = 1<<8,                                     // No collapsing, no arrow (use as a convenience for leaf nodes). Note: will always open a tree/id scope and return true. If you never use that scope, add ImGuiTreeNodeFlags_NoTreePushOnOpen.
     ImGuiTreeNodeFlags_Bullet               = 1<<9,                                     // Display a bullet instead of arrow. IMPORTANT: node can still be marked open/close if you don't set the _Leaf flag!
     ImGuiTreeNodeFlags_FramePadding         = 1<<10,                                    // Use FramePadding (even for an unframed text node) to vertically align text baseline to regular widget height. Equivalent to calling AlignTextToFramePadding() before the node.
     ImGuiTreeNodeFlags_SpanAvailWidth       = 1<<11,                                    // Extend hit box to the right-most edge, even if not framed. This is not the default in order to allow adding other items on the same line without using AllowOverlap mode.
@@ -2571,7 +2571,7 @@ struct ImGuiStyle_t
     ImGuiHoveredFlags  HoverFlagsForTooltipNav;           // Default flags when using IsItemHovered(ImGuiHoveredFlags_ForTooltip) or BeginItemTooltip()/SetItemTooltip() while using keyboard/gamepad.
 
     // [Internal]
-    float              _MainScale;                        // FIXME-WIP: Reference scale, as applied by ScaleAllSizes().
+    float              _MainScale;                        // FIXME-WIP: Reference scale, as applied by ScaleAllSizes(). PLEASE DO NOT USE THIS FOR NOW.
     float              _NextFrameFontSizeBase;            // FIXME: Temporary hack until we finish remaining work.
 };
 CIMGUI_API void ImGuiStyle_ScaleAllSizes(ImGuiStyle* self, float scale_factor);  // Scale all spacing/padding/thickness values. Do not scale fonts.
