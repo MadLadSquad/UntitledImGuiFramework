@@ -34,7 +34,7 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #define IMGUI_VERSION       "1.92.7 WIP"
-#define IMGUI_VERSION_NUM   19262
+#define IMGUI_VERSION_NUM   19263
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
 #define IMGUI_HAS_VIEWPORT           // In 'docking' WIP branch.
@@ -824,8 +824,8 @@ CIMGUI_API void ImGui_SetColorEditOptions(ImGuiColorEditFlags flags);           
 // Widgets: Trees
 // - TreeNode functions return true when the node is open, in which case you need to also call TreePop() when you are finished displaying the tree node contents.
 CIMGUI_API bool  ImGui_TreeNode(const char* label);
-CIMGUI_API bool  ImGui_TreeNodeStr(const char* str_id, const char* fmt, ...) IM_FMTARGS(2);                                        // helper variation to easily decorrelate the id from the displayed string. Read the FAQ about why and how to use ID. to align arbitrary text at the same level as a TreeNode() you can use Bullet().
-CIMGUI_API bool  ImGui_TreeNodePtr(const void* ptr_id, const char* fmt, ...) IM_FMTARGS(2);                                        // "
+CIMGUI_API bool  ImGui_TreeNodeStr(const char* str_id, const char* fmt, ...) IM_FMTARGS(2);                                     // helper variation to easily decorrelate the id from the displayed string. Read the FAQ about why and how to use ID. to align arbitrary text at the same level as a TreeNode() you can use Bullet().
+CIMGUI_API bool  ImGui_TreeNodePtr(const void* ptr_id, const char* fmt, ...) IM_FMTARGS(2);                                     // "
 CIMGUI_API bool  ImGui_TreeNodeV(const char* str_id, const char* fmt, va_list args) IM_FMTLIST(2);
 CIMGUI_API bool  ImGui_TreeNodeVPtr(const void* ptr_id, const char* fmt, va_list args) IM_FMTLIST(2);
 CIMGUI_API bool  ImGui_TreeNodeEx(const char* label, ImGuiTreeNodeFlags flags /* = 0 */);
@@ -833,14 +833,15 @@ CIMGUI_API bool  ImGui_TreeNodeExStr(const char* str_id, ImGuiTreeNodeFlags flag
 CIMGUI_API bool  ImGui_TreeNodeExPtr(const void* ptr_id, ImGuiTreeNodeFlags flags, const char* fmt, ...) IM_FMTARGS(3);
 CIMGUI_API bool  ImGui_TreeNodeExV(const char* str_id, ImGuiTreeNodeFlags flags, const char* fmt, va_list args) IM_FMTLIST(3);
 CIMGUI_API bool  ImGui_TreeNodeExVPtr(const void* ptr_id, ImGuiTreeNodeFlags flags, const char* fmt, va_list args) IM_FMTLIST(3);
-CIMGUI_API void  ImGui_TreePush(const char* str_id);                                                                               // ~ Indent()+PushID(). Already called by TreeNode() when returning true, but you can call TreePush/TreePop yourself if desired.
-CIMGUI_API void  ImGui_TreePushPtr(const void* ptr_id);                                                                            // "
-CIMGUI_API void  ImGui_TreePop(void);                                                                                              // ~ Unindent()+PopID()
-CIMGUI_API float ImGui_GetTreeNodeToLabelSpacing(void);                                                                            // horizontal distance preceding label when using TreeNode*() or Bullet() == (g.FontSize + style.FramePadding.x*2) for a regular unframed TreeNode
-CIMGUI_API bool  ImGui_CollapsingHeader(const char* label, ImGuiTreeNodeFlags flags /* = 0 */);                                    // if returning 'true' the header is open. doesn't indent nor push on ID stack. user doesn't have to call TreePop().
-CIMGUI_API bool  ImGui_CollapsingHeaderBoolPtr(const char* label, bool* p_visible, ImGuiTreeNodeFlags flags /* = 0 */);            // when 'p_visible != NULL': if '*p_visible==true' display an additional small close button on upper right of the header which will set the bool to false when clicked, if '*p_visible==false' don't display the header.
-CIMGUI_API void  ImGui_SetNextItemOpen(bool is_open, ImGuiCond cond /* = 0 */);                                                    // set next TreeNode/CollapsingHeader open state.
-CIMGUI_API void  ImGui_SetNextItemStorageID(ImGuiID storage_id);                                                                   // set id to use for open/close storage (default to same as item id).
+CIMGUI_API void  ImGui_TreePush(const char* str_id);                                                                            // ~ Indent()+PushID(). Already called by TreeNode() when returning true, but you can call TreePush/TreePop yourself if desired.
+CIMGUI_API void  ImGui_TreePushPtr(const void* ptr_id);                                                                         // "
+CIMGUI_API void  ImGui_TreePop(void);                                                                                           // ~ Unindent()+PopID()
+CIMGUI_API float ImGui_GetTreeNodeToLabelSpacing(void);                                                                         // horizontal distance preceding label when using TreeNode*() or Bullet() == (g.FontSize + style.FramePadding.x*2) for a regular unframed TreeNode
+CIMGUI_API bool  ImGui_CollapsingHeader(const char* label, ImGuiTreeNodeFlags flags /* = 0 */);                                 // if returning 'true' the header is open. doesn't indent nor push on ID stack. user doesn't have to call TreePop().
+CIMGUI_API bool  ImGui_CollapsingHeaderBoolPtr(const char* label, bool* p_visible, ImGuiTreeNodeFlags flags /* = 0 */);         // when 'p_visible != NULL': if '*p_visible==true' display an additional small close button on upper right of the header which will set the bool to false when clicked, if '*p_visible==false' don't display the header.
+CIMGUI_API void  ImGui_SetNextItemOpen(bool is_open, ImGuiCond cond /* = 0 */);                                                 // set next TreeNode/CollapsingHeader open state.
+CIMGUI_API void  ImGui_SetNextItemStorageID(ImGuiID storage_id);                                                                // set id to use for open/close storage (default to same as item id).
+CIMGUI_API bool  ImGui_TreeNodeGetOpen(ImGuiID storage_id);                                                                     // retrieve tree node open/close state.
 
 // Widgets: Selectables
 // - A selectable highlights when hovered, and can display another color when selected.
@@ -1390,7 +1391,7 @@ typedef enum
     ImGuiInputTextFlags_AllowTabInput       = 1<<5,   // Pressing TAB input a '\t' character into the text field
     ImGuiInputTextFlags_EnterReturnsTrue    = 1<<6,   // Return 'true' when Enter is pressed (as opposed to every time the value was modified). Consider using IsItemDeactivatedAfterEdit() instead!
     ImGuiInputTextFlags_EscapeClearsAll     = 1<<7,   // Escape key clears content if not empty, and deactivate otherwise (contrast to default behavior of Escape to revert)
-    ImGuiInputTextFlags_CtrlEnterForNewLine = 1<<8,   // In multi-line mode, validate with Enter, add new line with Ctrl+Enter (default is opposite: validate with Ctrl+Enter, add line with Enter).
+    ImGuiInputTextFlags_CtrlEnterForNewLine = 1<<8,   // In multi-line mode: validate with Enter, add new line with Ctrl+Enter (default is opposite: validate with Ctrl+Enter, add line with Enter). Note that Shift+Enter always enter a new line either way.
 
     // Other options
     ImGuiInputTextFlags_ReadOnly            = 1<<9,   // Read-only mode
@@ -3072,6 +3073,7 @@ struct ImGuiListClipper_t
     ImGuiContext*         Ctx;               // Parent UI context
     int                   DisplayStart;      // First item to display, updated by each call to Step()
     int                   DisplayEnd;        // End of items to display (exclusive)
+    int                   UserIndex;         // Helper storage for user convenience/code. Optional, and otherwise unused if you don't use it.
     int                   ItemsCount;        // [Internal] Number of items
     float                 ItemsHeight;       // [Internal] Height of item after a first step and item submission can calculate it
     double                StartPosY;         // [Internal] Cursor position at the time of Begin() or after table frozen rows are all processed
@@ -4268,26 +4270,23 @@ struct ImGuiPlatformImeData_t
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 // OBSOLETED in 1.92.0 (from June 2025)
 CIMGUI_API void   ImGui_PushFont(ImFont* font);
-CIMGUI_API void   ImGui_SetWindowFontScale(float scale);                                                                                   // Set font scale factor for current window. Prefer using PushFont(NULL, style.FontSizeBase * factor) or use style.FontScaleMain to scale all windows.
+CIMGUI_API void   ImGui_SetWindowFontScale(float scale);  // Set font scale factor for current window. Prefer using PushFont(NULL, style.FontSizeBase * factor) or use style.FontScaleMain to scale all windows.
 // OBSOLETED in 1.91.9 (from February 2025)
-CIMGUI_API void   ImGui_ImageImVec4(ImTextureRef tex_ref, ImVec2 image_size, ImVec2 uv0, ImVec2 uv1, ImVec4 tint_col, ImVec4 border_col);  // <-- 'border_col' was removed in favor of ImGuiCol_ImageBorder. If you use 'tint_col', use ImageWithBg() instead.
+CIMGUI_API void   ImGui_ImageImVec4(ImTextureRef tex_ref, ImVec2 image_size, ImVec2 uv0, ImVec2 uv1, ImVec4 tint_col, ImVec4 border_col); // <-- 'border_col' was removed in favor of ImGuiCol_ImageBorder. If you use 'tint_col', use ImageWithBg() instead.
 // OBSOLETED in 1.91.0 (from July 2024)
 CIMGUI_API void   ImGui_PushButtonRepeat(bool repeat);
 CIMGUI_API void   ImGui_PopButtonRepeat(void);
 CIMGUI_API void   ImGui_PushTabStop(bool tab_stop);
 CIMGUI_API void   ImGui_PopTabStop(void);
 // You do not need those functions! See #7838 on GitHub for more info.
-CIMGUI_API ImVec2 ImGui_GetContentRegionMax(void);                                                                                         // Content boundaries max (e.g. window boundaries including scrolling, or current column boundaries). You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
-CIMGUI_API ImVec2 ImGui_GetWindowContentRegionMin(void);                                                                                   // Content boundaries min for the window (roughly (0,0)-Scroll), in window-local coordinates. You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
-CIMGUI_API ImVec2 ImGui_GetWindowContentRegionMax(void);                                                                                   // Content boundaries max for the window (roughly (0,0)+Size-Scroll), in window-local coordinates. You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
-// OBSOLETED in 1.90.0 (from September 2023)
-CIMGUI_API bool   ImGui_ComboObsolete(const char* label, int* current_item, bool (*old_callback)(void* user_data, int idx, const char** out_text), void* user_data, int items_count); // Implied popup_max_height_in_items = -1
-CIMGUI_API bool   ImGui_ComboObsoleteEx(const char* label, int* current_item, bool (*old_callback)(void* user_data, int idx, const char** out_text), void* user_data, int items_count, int popup_max_height_in_items /* = -1 */);
-CIMGUI_API bool   ImGui_ListBoxObsolete(const char* label, int* current_item, bool (*old_callback)(void* user_data, int idx, const char** out_text), void* user_data, int items_count); // Implied height_in_items = -1
-CIMGUI_API bool   ImGui_ListBoxObsoleteEx(const char* label, int* current_item, bool (*old_callback)(void* user_data, int idx, const char** out_text), void* user_data, int items_count, int height_in_items /* = -1 */);
+CIMGUI_API ImVec2 ImGui_GetContentRegionMax(void);        // Content boundaries max (e.g. window boundaries including scrolling, or current column boundaries). You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
+CIMGUI_API ImVec2 ImGui_GetWindowContentRegionMin(void);  // Content boundaries min for the window (roughly (0,0)-Scroll), in window-local coordinates. You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
+CIMGUI_API ImVec2 ImGui_GetWindowContentRegionMax(void);  // Content boundaries max for the window (roughly (0,0)+Size-Scroll), in window-local coordinates. You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
 
 // Some of the older obsolete names along with their replacement (commented out so they are not reported in IDE)
 // OBSOLETED in 1.90.0 (from September 2023)
+//IMGUI_API bool      Combo(const char* label, int* current_item, bool (*old_callback)(void* user_data, int idx, const char** out_text), void* user_data, int items_count, int popup_max_height_in_items = -1); // Getter signature changed. See 2023/09/15 and 2026/02/27 commits.
+//IMGUI_API bool      ListBox(const char* label, int* current_item, bool (*old_callback)(void* user_data, int idx, const char** out_text), void* user_data, int items_count, int height_in_items = -1);         // Getter signature changed. See 2023/09/15 and 2026/02/27 commits.
 //inline bool         BeginChild(const char* str_id, const ImVec2& size_arg, bool borders, ImGuiWindowFlags window_flags) { return BeginChild(str_id, size_arg, borders ? ImGuiChildFlags_Borders : ImGuiChildFlags_None, window_flags); } // Unnecessary as true == ImGuiChildFlags_Borders
 //inline bool         BeginChild(ImGuiID id, const ImVec2& size_arg, bool borders, ImGuiWindowFlags window_flags)         { return BeginChild(id, size_arg, borders ? ImGuiChildFlags_Borders : ImGuiChildFlags_None, window_flags);     } // Unnecessary as true == ImGuiChildFlags_Borders
 //inline bool         BeginChildFrame(ImGuiID id, const ImVec2& size, ImGuiWindowFlags flags = 0) { return BeginChild(id, size, ImGuiChildFlags_FrameStyle, flags); }
