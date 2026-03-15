@@ -245,7 +245,7 @@ namespace c4::yml
             if constexpr (IsStringLike<Key>)
             {
                 key.resize(k.len);
-                memcpy(&key.data(), k.data(), k.len);
+                memcpy(key.data(), k.data(), k.len);
             }
             else
                 key = k.str;

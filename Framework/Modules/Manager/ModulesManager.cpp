@@ -179,7 +179,7 @@ void UImGui::ModulesManager::initialiseWithImGuiContext() const noexcept
 void UImGui::ModulesManager::applyCustomisations() const noexcept
 {
 #ifdef UIMGUI_THEME_MODULE_ENABLED
-    if (settings.theming && (Modules::data().themeLocation != nullptr || strcmp(Modules::data().themeLocation, "") != 0))
+    if (settings.theming && Modules::data().themeLocation != nullptr && strcmp(Modules::data().themeLocation, "") != 0)
         Theme::load((Instance::get()->initInfo.configDir + "Theme/" + Modules::data().themeLocation + ".theme.yaml").c_str());
 #endif
 }

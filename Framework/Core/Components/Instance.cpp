@@ -20,10 +20,10 @@ UImGui::Instance::~Instance() noexcept
     initInfo.inlineComponents.clear();
 
     // Delete doesn't work with void*
-    if (initInfo.bGlobalAllocatedOnHeap)
-        free(initInfo.globalData);
+    if (initInfo.bGlobalAllocatedOnHeap && initInfo.globalData != nullptr)
+        UImGui_Allocator_deallocate(initInfo.globalData);
     if (initInfo.cInitInfo != nullptr && initInfo.cInitInfo->bGlobalAllocatedOnHeap)
-        free(initInfo.cInitInfo->globalData);
+        UImGui_Allocator_deallocate(initInfo.cInitInfo->globalData);
 
     for (auto& a : Plugins::getPlugins())
         a.detach();

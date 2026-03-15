@@ -22,12 +22,15 @@ UImGui::FString UImGui::Utility::loadFileToString(const FString& location) noexc
         return {};
 
     f.seekg(0, std::ios::end);
+
     const size_t size = f.tellg();
+    if (size == std::ifstream::pos_type(-1))
+        return {};
 
     FString buffer(size, '\0');
 
     f.seekg(0);
-    f.read(buffer.data(), static_cast<long>(size));
+    f.read(buffer.data(), static_cast<std::streamsize>(size));
     f.close();
 
     return buffer;

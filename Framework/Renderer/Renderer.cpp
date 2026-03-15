@@ -58,7 +58,7 @@ void UImGui::RendererInternal::stop() const noexcept
     Window::get()->destroyWindow();
 
     // Free the canvas if it comes from config
-    if (data.bFreeCanvas)
+    if (data.bFreeCanvas && data.emscriptenCanvas != nullptr)
         UImGui_Allocator_deallocate(data.emscriptenCanvas);
 }
 
@@ -238,8 +238,8 @@ void UImGui::RendererInternal::loadConfig() noexcept
                 FString tmp{};
                 canvasSelector >> tmp;
 
-                data.emscriptenCanvas = static_cast<char*>(UImGui_Allocator_allocate(tmp.size()));
-                memcpy(data.emscriptenCanvas, tmp.data(), tmp.size());
+                data.emscriptenCanvas = static_cast<char*>(UImGui_Allocator_allocate(tmp.size() + 1));
+                memcpy(data.emscriptenCanvas, tmp.c_str(), tmp.size() + 1);
                 data.bFreeCanvas = true;
             }
         }

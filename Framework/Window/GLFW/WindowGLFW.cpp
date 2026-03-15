@@ -128,6 +128,12 @@ UImGui::String UImGui::WindowGLFW::getTitleSetting() noexcept
 void UImGui::WindowGLFW::setIcon(const String name) noexcept
 {
 #ifndef __EMSCRIPTEN__
+    if (name == nullptr)
+    {
+        Logger::log("Couldn't load window icon because its location is nullptr!", ULOG_LOG_TYPE_WARNING);
+        return;
+    }
+
     GLFWimage images[1];
     images[0].pixels = stbi_load(name, &images[0].width, &images[0].height, nullptr, 4);
     if (images[0].pixels != nullptr)

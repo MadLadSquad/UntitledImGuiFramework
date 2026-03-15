@@ -5,7 +5,7 @@
 #include <Renderer/RendererUtils.hpp>
 #include <Interfaces/RendererInterface.hpp>
 
-#define TEX_RUN(x) return textures[static_cast<int>(Renderer::data().textureRendererType)]->x;
+#define TEX_RUN(x, y) return (textures != nullptr) ? textures[static_cast<int>(Renderer::data().textureRendererType)]->x : y;
 
 namespace UImGui
 {

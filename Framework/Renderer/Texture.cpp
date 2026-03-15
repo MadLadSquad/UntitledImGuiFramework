@@ -30,15 +30,14 @@ bool UImGui::Texture::init(const String location, const bool bFiltered) noexcept
     return true;
 }
 
-void UImGui::Texture::load(void* data, const FVector2 size, const uint32_t depth, const bool bFreeImageData,
-    const TFunction<void(void*)>& freeFunc) noexcept
+void UImGui::Texture::load(void* data, const FVector2 size, const uint32_t depth, const bool bFreeImageData, const TFunction<void(void*)>& freeFunc) noexcept
 {
-    TEX_RUN(load(dt, data, size, depth, bFreeImageData, freeFunc));
+    TEX_RUN(load(dt, data, size, depth, bFreeImageData, freeFunc), void());
 }
 
 uintptr_t UImGui::Texture::get() noexcept
 {
-    TEX_RUN(get(dt));
+    TEX_RUN(get(dt), 0);
 }
 
 void UImGui::Texture::setCustomSaveFunction(const CustomSaveFunction f) noexcept
@@ -59,7 +58,7 @@ void UImGui::Texture::clear() noexcept
         RendererUtils::getRenderer()->waitOnGPU();
         // CAUTION: if you get a crash here you probably forgot to clear your texture
         // in a function marked as event safe during "end"(*::end methods of components/instance for example)
-        TEX_RUN(clear(dt));
+        TEX_RUN(clear(dt), void());
     }
 }
 

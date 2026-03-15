@@ -72,8 +72,12 @@ void UImGui::VKInstance::init() noexcept
 void UImGui::VKInstance::destroy() const noexcept
 {
 #ifdef DEVELOPMENT
-    const auto destroyDebugCallback = reinterpret_cast<PFN_vkDestroyDebugReportCallbackEXT>(instance.getProcAddr(VK_DESTROY_DEBUG_REPORT_CALLBACK_EXT_NAME));
-    destroyDebugCallback(instance, callback, nullptr);
+    const auto* address = instance.getProcAddr(VK_DESTROY_DEBUG_REPORT_CALLBACK_EXT_NAME);
+    if (address != nullptr)
+    {
+        const auto destroyDebugCallback = reinterpret_cast<PFN_vkDestroyDebugReportCallbackEXT>(address);
+        destroyDebugCallback(instance, callback, nullptr);
+    }
 #endif
     instance.destroy();
 }

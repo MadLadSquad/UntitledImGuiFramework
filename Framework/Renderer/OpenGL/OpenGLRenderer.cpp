@@ -73,16 +73,29 @@ void UImGui::OpenGLRenderer::setupPostWindowCreation() noexcept
 
 void UImGui::OpenGLRenderer::init(RendererInternalMetadata& metadata) noexcept
 {
-    metadata.vendorString = FCAST(const char*, glGetString(GL_VENDOR));
+    const auto* vendorString = FCAST(const char*, glGetString(GL_VENDOR));
+    if (vendorString != nullptr)
+        metadata.vendorString = vendorString;
+
     if (metadata.vendorString.starts_with("NVIDIA"))
     {
-        metadata.driverVersion = FCAST(const char*, glGetString(GL_VERSION));
+        const auto* driverVersion = FCAST(const char*, glGetString(GL_VERSION));
+        if (driverVersion != nullptr)
+            metadata.driverVersion = driverVersion;
+
         metadata.apiVersion = metadata.driverVersion;
 
-        metadata.driverVersion.erase(0, metadata.driverVersion.find("NVIDIA ") + strlen("NVIDIA "));
-        metadata.apiVersion.erase(metadata.apiVersion.find(" NVIDIA"));
+        auto position = metadata.driverVersion.find("NVIDIA ");
+        if (position != FString::npos)
+            metadata.driverVersion.erase(0, position + strlen("NVIDIA "));
+
+        position = metadata.apiVersion.find(" NVIDIA");
+        if (position != FString::npos)
+            metadata.apiVersion.erase(position);
     }
-    metadata.gpuName = FCAST(const char*, glGetString(GL_RENDERER));
+    const auto* gpuName = FCAST(const char*, glGetString(GL_RENDERER));
+    if (gpuName != nullptr)
+        metadata.gpuName = gpuName;
 
     Logger::log("Running on device - ", ULOG_LOG_TYPE_NOTE, metadata.gpuName);
 

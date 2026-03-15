@@ -12,8 +12,8 @@ UImGui_String UImGui_Utility_sanitiseFilepath(const UImGui_String str)
     UImGui::FString s = str;
     UImGui::Utility::sanitiseFilepath(s);
 
-    auto* ss = static_cast<char*>(UImGui_Allocator_allocate(s.size()));
-    memcpy(ss, s.data(), s.size() + 1);
+    auto* ss = static_cast<char*>(UImGui_Allocator_allocate(s.size() + 1));
+    memcpy(ss, s.c_str(), s.size() + 1);
     return ss;
 }
 
