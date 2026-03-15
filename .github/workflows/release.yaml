@@ -21,7 +21,7 @@ jobs:
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
       - name: "Import bot's GPG key for signing commits"
         id: import-gpg
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@v7
         with:
           gpg_private_key: ${{ secrets.ACTION_COMMIT_SING_PRIVATE_KEY }}
           passphrase: ${{ secrets.ACTION_COMMIT_SING_PASS }}
