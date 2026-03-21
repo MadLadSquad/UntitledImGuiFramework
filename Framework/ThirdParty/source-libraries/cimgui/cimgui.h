@@ -24,7 +24,7 @@
 //   - Software using Dear ImGui  https://github.com/ocornut/imgui/wiki/Software-using-dear-imgui
 // - Issues & support ........... https://github.com/ocornut/imgui/issues
 // - Test Engine & Automation ... https://github.com/ocornut/imgui_test_engine (test suite, test engine to automate your apps)
-// - Web version of the Demo .... https://pthom.github.io/imgui_manual (w/ source code browser)
+// - Web version of the Demo .... https://pthom.github.io/imgui_explorer (w/ source code browser)
 
 // For FIRST-TIME users having issues compiling/linking/running:
 // please post in https://github.com/ocornut/imgui/discussions if you cannot find a solution in resources above.
@@ -34,7 +34,7 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #define IMGUI_VERSION       "1.92.7 WIP"
-#define IMGUI_VERSION_NUM   19265
+#define IMGUI_VERSION_NUM   19266
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
 #define IMGUI_HAS_VIEWPORT           // In 'docking' WIP branch.
@@ -377,10 +377,10 @@ IM_MSVC_RUNTIME_CHECKS_RESTORE
 typedef ImU64 ImTextureID;  // Default: store up to 64-bits (any pointer or integer). A majority of backends are ok with that.
 #endif // #ifndef ImTextureID
 // Define this if you need to change the invalid value for your backend.
-// - in v1.92.7 (2025/03/12): we changed default value from 0 to -1 as it is a better default, which supports storing offsets/indices.
-// - If this is causing problem with your custom ImTextureID definition, you can add '#define ImTextureID_Invalid' to your imconfig + please report this to GitHub.
+// - If your backend is using ImTextureID to store an index/offset and you need 0 to be valid, You can add '#define ImTextureID_Invalid ((ImTextureID)-1)' in your imconfig.h file.
+// - From 2026/03/12 to 2026/03/19 we experimented with changing to default to -1, but I worried it would cause too many issues in third-party code so it was reverted.
 #ifndef ImTextureID_Invalid
-#define ImTextureID_Invalid     ((ImTextureID)-1)
+#define ImTextureID_Invalid     ((ImTextureID)0)
 #endif // #ifndef ImTextureID_Invalid
 // ImTextureRef = higher-level identifier for a texture. Store a ImTextureID _or_ a ImTextureData*.
 // The identifier is valid even before the texture has been uploaded to the GPU/graphics system.
@@ -1127,7 +1127,7 @@ CIMGUI_API void ImGui_SetKeyboardFocusHereEx(int offset /* = 0 */);  // focus ke
 CIMGUI_API void ImGui_SetNavCursorVisible(bool visible);  // alter visibility of keyboard/gamepad cursor. by default: show when using an arrow key, hide when clicking with mouse.
 
 // Overlapping mode
-CIMGUI_API void ImGui_SetNextItemAllowOverlap(void);  // allow next item to be overlapped by a subsequent item. Useful with invisible buttons, selectable, treenode covering an area where subsequent items may need to be added. Note that both Selectable() and TreeNode() have dedicated flags doing this.
+CIMGUI_API void ImGui_SetNextItemAllowOverlap(void);  // allow next item to be overlapped by a subsequent item. Typically useful with InvisibleButton(), Selectable(), TreeNode() covering an area where subsequent items may need to be added. Note that both Selectable() and TreeNode() have dedicated flags doing this.
 
 // Item/Widgets Utilities and Query Functions
 // - Most of the functions are referring to the previous Item that has been submitted.
@@ -1435,7 +1435,7 @@ typedef enum
     ImGuiTreeNodeFlags_None                 = 0,
     ImGuiTreeNodeFlags_Selected             = 1<<0,                                     // Draw as selected
     ImGuiTreeNodeFlags_Framed               = 1<<1,                                     // Draw frame with background (e.g. for CollapsingHeader)
-    ImGuiTreeNodeFlags_AllowOverlap         = 1<<2,                                     // Hit testing to allow subsequent widgets to overlap this one
+    ImGuiTreeNodeFlags_AllowOverlap         = 1<<2,                                     // Hit testing will allow subsequent widgets to overlap this one. Require previous frame HoveredId to match before being usable. Shortcut to calling SetNextItemAllowOverlap().
     ImGuiTreeNodeFlags_NoTreePushOnOpen     = 1<<3,                                     // Don't do a TreePush() when open (e.g. for CollapsingHeader) = no extra indent nor pushing on ID stack
     ImGuiTreeNodeFlags_NoAutoOpenOnLog      = 1<<4,                                     // Don't automatically and temporarily open node when Logging is active (by default logging will automatically open tree nodes)
     ImGuiTreeNodeFlags_DefaultOpen          = 1<<5,                                     // Default node to be open
@@ -1495,7 +1495,7 @@ typedef enum
     ImGuiSelectableFlags_SpanAllColumns    = 1<<1,                                    // Frame will span all columns of its container table (text will still fit in current column)
     ImGuiSelectableFlags_AllowDoubleClick  = 1<<2,                                    // Generate press events on double clicks too
     ImGuiSelectableFlags_Disabled          = 1<<3,                                    // Cannot be selected, display grayed out text
-    ImGuiSelectableFlags_AllowOverlap      = 1<<4,                                    // (WIP) Hit testing to allow subsequent widgets to overlap this one
+    ImGuiSelectableFlags_AllowOverlap      = 1<<4,                                    // Hit testing will allow subsequent widgets to overlap this one. Require previous frame HoveredId to match before being usable. Shortcut to calling SetNextItemAllowOverlap().
     ImGuiSelectableFlags_Highlight         = 1<<5,                                    // Make the item be displayed as if it is hovered
     ImGuiSelectableFlags_SelectOnNav       = 1<<6,                                    // Auto-select when moved into, unless Ctrl is held. Automatic when in a BeginMultiSelect() block.
 
@@ -2111,11 +2111,12 @@ typedef enum
 typedef enum
 {
     ImGuiButtonFlags_None              = 0,
-    ImGuiButtonFlags_MouseButtonLeft   = 1<<0,  // React on left mouse button (default)
-    ImGuiButtonFlags_MouseButtonRight  = 1<<1,  // React on right mouse button
-    ImGuiButtonFlags_MouseButtonMiddle = 1<<2,  // React on center mouse button
+    ImGuiButtonFlags_MouseButtonLeft   = 1<<0,   // React on left mouse button (default)
+    ImGuiButtonFlags_MouseButtonRight  = 1<<1,   // React on right mouse button
+    ImGuiButtonFlags_MouseButtonMiddle = 1<<2,   // React on center mouse button
     ImGuiButtonFlags_MouseButtonMask_  = ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight | ImGuiButtonFlags_MouseButtonMiddle, // [Internal]
-    ImGuiButtonFlags_EnableNav         = 1<<3,  // InvisibleButton(): do not disable navigation/tabbing. Otherwise disabled by default.
+    ImGuiButtonFlags_EnableNav         = 1<<3,   // InvisibleButton(): do not disable navigation/tabbing. Otherwise disabled by default.
+    ImGuiButtonFlags_AllowOverlap      = 1<<12,  // Hit testing will allow subsequent widgets to overlap this one. Require previous frame HoveredId to match before being usable. Shortcut to calling SetNextItemAllowOverlap().
 } ImGuiButtonFlags_;
 
 // Flags for ColorEdit3() / ColorEdit4() / ColorPicker3() / ColorPicker4() / ColorButton()
@@ -3186,24 +3187,31 @@ CIMGUI_API ImColor ImColor_HSV(float h, float s, float v, float a /* = 1.0f */);
 typedef enum
 {
     ImGuiMultiSelectFlags_None                  = 0,
-    ImGuiMultiSelectFlags_SingleSelect          = 1<<0,   // Disable selecting more than one item. This is available to allow single-selection code to share same code/logic if desired. It essentially disables the main purpose of BeginMultiSelect() tho!
-    ImGuiMultiSelectFlags_NoSelectAll           = 1<<1,   // Disable Ctrl+A shortcut to select all.
-    ImGuiMultiSelectFlags_NoRangeSelect         = 1<<2,   // Disable Shift+selection mouse/keyboard support (useful for unordered 2D selection). With BoxSelect is also ensure contiguous SetRange requests are not combined into one. This allows not handling interpolation in SetRange requests.
-    ImGuiMultiSelectFlags_NoAutoSelect          = 1<<3,   // Disable selecting items when navigating (useful for e.g. supporting range-select in a list of checkboxes).
-    ImGuiMultiSelectFlags_NoAutoClear           = 1<<4,   // Disable clearing selection when navigating or selecting another one (generally used with ImGuiMultiSelectFlags_NoAutoSelect. useful for e.g. supporting range-select in a list of checkboxes).
-    ImGuiMultiSelectFlags_NoAutoClearOnReselect = 1<<5,   // Disable clearing selection when clicking/selecting an already selected item.
-    ImGuiMultiSelectFlags_BoxSelect1d           = 1<<6,   // Enable box-selection with same width and same x pos items (e.g. full row Selectable()). Box-selection works better with little bit of spacing between items hit-box in order to be able to aim at empty space.
-    ImGuiMultiSelectFlags_BoxSelect2d           = 1<<7,   // Enable box-selection with varying width or varying x pos items support (e.g. different width labels, or 2D layout/grid). This is slower: alters clipping logic so that e.g. horizontal movements will update selection of normally clipped items.
-    ImGuiMultiSelectFlags_BoxSelectNoScroll     = 1<<8,   // Disable scrolling when box-selecting near edges of scope.
-    ImGuiMultiSelectFlags_ClearOnEscape         = 1<<9,   // Clear selection when pressing Escape while scope is focused.
-    ImGuiMultiSelectFlags_ClearOnClickVoid      = 1<<10,  // Clear selection when clicking on empty location within scope.
-    ImGuiMultiSelectFlags_ScopeWindow           = 1<<11,  // Scope for _BoxSelect and _ClearOnClickVoid is whole window (Default). Use if BeginMultiSelect() covers a whole window or used a single time in same window.
-    ImGuiMultiSelectFlags_ScopeRect             = 1<<12,  // Scope for _BoxSelect and _ClearOnClickVoid is rectangle encompassing BeginMultiSelect()/EndMultiSelect(). Use if BeginMultiSelect() is called multiple times in same window.
-    ImGuiMultiSelectFlags_SelectOnClick         = 1<<13,  // Apply selection on mouse down when clicking on unselected item. (Default)
-    ImGuiMultiSelectFlags_SelectOnClickRelease  = 1<<14,  // Apply selection on mouse release when clicking an unselected item. Allow dragging an unselected item without altering selection.
+    ImGuiMultiSelectFlags_SingleSelect          = 1<<0,                                // Disable selecting more than one item. This is available to allow single-selection code to share same code/logic if desired. It essentially disables the main purpose of BeginMultiSelect() tho!
+    ImGuiMultiSelectFlags_NoSelectAll           = 1<<1,                                // Disable Ctrl+A shortcut to select all.
+    ImGuiMultiSelectFlags_NoRangeSelect         = 1<<2,                                // Disable Shift+selection mouse/keyboard support (useful for unordered 2D selection). With BoxSelect is also ensure contiguous SetRange requests are not combined into one. This allows not handling interpolation in SetRange requests.
+    ImGuiMultiSelectFlags_NoAutoSelect          = 1<<3,                                // Disable selecting items when navigating (useful for e.g. supporting range-select in a list of checkboxes).
+    ImGuiMultiSelectFlags_NoAutoClear           = 1<<4,                                // Disable clearing selection when navigating or selecting another one (generally used with ImGuiMultiSelectFlags_NoAutoSelect. useful for e.g. supporting range-select in a list of checkboxes).
+    ImGuiMultiSelectFlags_NoAutoClearOnReselect = 1<<5,                                // Disable clearing selection when clicking/selecting an already selected item.
+    ImGuiMultiSelectFlags_BoxSelect1d           = 1<<6,                                // Enable box-selection with same width and same x pos items (e.g. full row Selectable()). Box-selection works better with little bit of spacing between items hit-box in order to be able to aim at empty space.
+    ImGuiMultiSelectFlags_BoxSelect2d           = 1<<7,                                // Enable box-selection with varying width or varying x pos items support (e.g. different width labels, or 2D layout/grid). This is slower: alters clipping logic so that e.g. horizontal movements will update selection of normally clipped items.
+    ImGuiMultiSelectFlags_BoxSelectNoScroll     = 1<<8,                                // Disable scrolling when box-selecting and moving mouse near edges of scope.
+    ImGuiMultiSelectFlags_ClearOnEscape         = 1<<9,                                // Clear selection when pressing Escape while scope is focused.
+    ImGuiMultiSelectFlags_ClearOnClickVoid      = 1<<10,                               // Clear selection when clicking on empty location within scope.
+    ImGuiMultiSelectFlags_ScopeWindow           = 1<<11,                               // Scope for _BoxSelect and _ClearOnClickVoid is whole window (Default). Use if BeginMultiSelect() covers a whole window or used a single time in same window.
+    ImGuiMultiSelectFlags_ScopeRect             = 1<<12,                               // Scope for _BoxSelect and _ClearOnClickVoid is rectangle encompassing BeginMultiSelect()/EndMultiSelect(). Use if BeginMultiSelect() is called multiple times in same window.
+    ImGuiMultiSelectFlags_SelectOnAuto          = 1<<13,                               // Apply selection on mouse down when clicking on unselected item, on mouse up when clicking on selected item. (Default)
+    ImGuiMultiSelectFlags_SelectOnClickAlways   = 1<<14,                               // Apply selection on mouse down when clicking on any items. Prevents Drag and Drop from being used on multiple-selection, but allows e.g. BoxSelect to always reselect even when clicking inside an existing selection. (Excel style behavior)
+    ImGuiMultiSelectFlags_SelectOnClickRelease  = 1<<15,                               // Apply selection on mouse release when clicking an unselected item. Allow dragging an unselected item without altering selection.
     //ImGuiMultiSelectFlags_RangeSelect2d       = 1 << 15,  // Shift+Selection uses 2d geometry instead of linear sequence, so possible to use Shift+up/down to select vertically in grid. Analogous to what BoxSelect does.
-    ImGuiMultiSelectFlags_NavWrapX              = 1<<16,  // [Temporary] Enable navigation wrapping on X axis. Provided as a convenience because we don't have a design for the general Nav API for this yet. When the more general feature be public we may obsolete this flag in favor of new one.
-    ImGuiMultiSelectFlags_NoSelectOnRightClick  = 1<<17,  // Disable default right-click processing, which selects item on mouse down, and is designed for context-menus.
+    ImGuiMultiSelectFlags_NavWrapX              = 1<<16,                               // [Temporary] Enable navigation wrapping on X axis. Provided as a convenience because we don't have a design for the general Nav API for this yet. When the more general feature be public we may obsolete this flag in favor of new one.
+    ImGuiMultiSelectFlags_NoSelectOnRightClick  = 1<<17,                               // Disable default right-click processing, which selects item on mouse down, and is designed for context-menus.
+    ImGuiMultiSelectFlags_SelectOnMask_         = ImGuiMultiSelectFlags_SelectOnAuto | ImGuiMultiSelectFlags_SelectOnClickAlways | ImGuiMultiSelectFlags_SelectOnClickRelease,
+
+    // Obsolete names
+#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+    ImGuiMultiSelectFlags_SelectOnClick         = ImGuiMultiSelectFlags_SelectOnAuto,  // RENAMED in 1.92.6
+#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 } ImGuiMultiSelectFlags_;
 
 // Main IO structure returned by BeginMultiSelect()/EndMultiSelect().

@@ -1142,7 +1142,7 @@ typedef void (GLAD_API_PTR *PFNGLGETDRIVERCONTROLSTRINGQCOMPROC)(GLuint driverCo
 typedef void (GLAD_API_PTR *PFNGLGETDRIVERCONTROLSQCOMPROC)(GLint * num, GLsizei size, GLuint * driverControls);
 typedef GLenum (GLAD_API_PTR *PFNGLGETERRORPROC)(void);
 typedef void (GLAD_API_PTR *PFNGLGETFENCEIVNVPROC)(GLuint fence, GLenum pname, GLint * params);
-typedef void (GLAD_API_PTR *PFNGLGETFIXEDVPROC)(GLenum pname, GLfixed * params);
+typedef void (GLAD_API_PTR *PFNGLGETFIXEDVPROC)(GLenum pname, GLfixed * data);
 typedef void (GLAD_API_PTR *PFNGLGETFIXEDVOESPROC)(GLenum pname, GLfixed * params);
 typedef void (GLAD_API_PTR *PFNGLGETFLOATVPROC)(GLenum pname, GLfloat * data);
 typedef void (GLAD_API_PTR *PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVOESPROC)(GLenum target, GLenum attachment, GLenum pname, GLint * params);
