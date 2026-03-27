@@ -4099,6 +4099,11 @@ CIMGUI_API cimgui::ImVec2 cimgui::ImGuiViewport_GetWorkCenter(const cimgui::ImGu
     return ConvertFromCPP_ImVec2(reinterpret_cast<const ::ImGuiViewport*>(self)->GetWorkCenter());
 }
 
+CIMGUI_API const char* cimgui::ImGuiViewport_GetDebugName(const cimgui::ImGuiViewport* self)
+{
+    return reinterpret_cast<const ::ImGuiViewport*>(self)->GetDebugName();
+}
+
 CIMGUI_API void cimgui::ImGuiPlatformIO_ClearPlatformHandlers(cimgui::ImGuiPlatformIO* self)
 {
     reinterpret_cast<::ImGuiPlatformIO*>(self)->ClearPlatformHandlers();

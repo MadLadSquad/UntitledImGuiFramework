@@ -4092,8 +4092,9 @@ struct ImGuiViewport_t
     bool               PlatformRequestClose;   // Platform window requested closure (e.g. window was moved by the OS / host window manager, e.g. pressing ALT-F4)
 };
 // Helpers
-CIMGUI_API ImVec2 ImGuiViewport_GetCenter(const ImGuiViewport* self);
-CIMGUI_API ImVec2 ImGuiViewport_GetWorkCenter(const ImGuiViewport* self);
+CIMGUI_API ImVec2      ImGuiViewport_GetCenter(const ImGuiViewport* self);
+CIMGUI_API ImVec2      ImGuiViewport_GetWorkCenter(const ImGuiViewport* self);
+CIMGUI_API const char* ImGuiViewport_GetDebugName(const ImGuiViewport* self);
 
 //-----------------------------------------------------------------------------
 // [SECTION] ImGuiPlatformIO + other Platform Dependent Interfaces (ImGuiPlatformMonitor, ImGuiPlatformImeData)
