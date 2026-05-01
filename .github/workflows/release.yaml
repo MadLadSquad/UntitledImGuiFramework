@@ -58,7 +58,7 @@ jobs:
 
           tar cfJ ${{ steps.tag.outputs.out }}.tar.xz ${{ steps.tag.outputs.out }} || echo "Might have failed"
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           body: |
             Check our discord for patch notes: https://discord.gg/4kyWu2Vu
