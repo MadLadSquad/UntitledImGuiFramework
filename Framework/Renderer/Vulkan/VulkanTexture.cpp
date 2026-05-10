@@ -98,27 +98,7 @@ void UImGui::VulkanTexture::load(TextureData& dt, void* data, FVector2 size, uin
         return;
     }
 
-    const vk::SamplerCreateInfo samplerCreateInfo
-    {
-        .sType = vk::StructureType::eSamplerCreateInfo,
-        .magFilter = dt.bFiltered ? vk::Filter::eLinear : vk::Filter::eNearest,
-        .minFilter = dt.bFiltered ? vk::Filter::eLinear : vk::Filter::eNearest,
-        .mipmapMode = vk::SamplerMipmapMode::eLinear,
-        .addressModeU = vk::SamplerAddressMode::eRepeat,
-        .addressModeV = vk::SamplerAddressMode::eRepeat,
-        .addressModeW = vk::SamplerAddressMode::eRepeat,
-        .maxAnisotropy = 1.0f,
-        .minLod = -1000,
-        .maxLod = 1000,
-    };
-    result = device.createSampler(&samplerCreateInfo, nullptr, &texDt->sampler);
-    if (result != vk::Result::eSuccess)
-    {
-        Logger::log("Couldn't create image sampler for Vulkan texture at location: ", ULOG_LOG_TYPE_WARNING, dt.filename);
-        return;
-    }
-
-    texDt->descriptorSet = ImGui_ImplVulkan_AddTexture(texDt->sampler, texDt->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    texDt->descriptorSet = ImGui_ImplVulkan_AddTexture(texDt->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     const vk::BufferCreateInfo bufferCreateInfo =
     {
@@ -296,7 +276,6 @@ void UImGui::VulkanTexture::clear(TextureData& dt) noexcept
 
         device.freeMemory(texDt->uploadBufferMemory, nullptr);
         device.destroyBuffer(texDt->uploadBuffer, nullptr);
-        device.destroySampler(texDt->sampler, nullptr);
         device.destroyImageView(texDt->imageView, nullptr);
         device.destroyImage(texDt->image, nullptr);
         device.freeMemory(texDt->imageMemory, nullptr);
