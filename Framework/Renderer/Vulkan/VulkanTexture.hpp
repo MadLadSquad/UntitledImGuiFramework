@@ -34,7 +34,6 @@ namespace UImGui
             vk::ImageView imageView{};
             vk::Image image{};
             vk::DeviceMemory imageMemory{};
-            vk::Sampler sampler{};
             vk::Buffer uploadBuffer{};
             vk::DeviceMemory uploadBufferMemory{};
         };
