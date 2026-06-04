@@ -30,6 +30,8 @@
     #ifndef UIMGUI_EXECUTABLE
         #define IMSPINNER_DEMO
         #include "Modules/Spinners/ThirdParty/imspinner/imspinner.h"
+        #include "Modules/Spinners/ThirdParty/imspinner/imspinner_demo.h"
+        #include "Modules/Spinners/ThirdParty/imspinner/imspinner_text.h"
     #endif
 #endif
 
