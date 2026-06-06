@@ -29,9 +29,13 @@
 #ifdef UIMGUI_SPINNERS_MODULE_ENABLED
     #ifndef UIMGUI_EXECUTABLE
         #define IMSPINNER_DEMO
+        #include <cmath>
         #include "Modules/Spinners/ThirdParty/imspinner/imspinner.h"
         #include "Modules/Spinners/ThirdParty/imspinner/imspinner_demo.h"
         #include "Modules/Spinners/ThirdParty/imspinner/imspinner_text.h"
+        #include "Modules/Spinners/ThirdParty/imspinner/imspinner_bars.h"
+        #include "Modules/Spinners/ThirdParty/imspinner/imspinner_dots.h"
+        #include "Modules/Spinners/ThirdParty/imspinner/imspinner_shapes.h"
     #endif
 #endif
 
