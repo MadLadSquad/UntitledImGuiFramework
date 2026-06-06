@@ -52,3 +52,5 @@ CMakeLists.txt
 docs/
 
 .DS_Store
+
+.antigravitycli/
