@@ -2,6 +2,7 @@
 #include <Core/Global.hpp>
 #include <Renderer/Texture.hpp>
 #include <stb_image.h>
+#include <ImGui/UImGuiExtensions.hpp>
 
 #define cast(x) ((UImGui::Texture*)(x))
 
@@ -59,4 +60,88 @@ void UImGui_Texture_release(const UImGui_CTexture* texture)
             return;
         }
     }
+}
+
+void UImGui_Image(const UImGui_CTexture* texture)
+{
+    ImGui::Image(*cast(texture));
+}
+
+void UImGui_ImageEx(const UImGui_CTexture* texture, UImGui_FVector2 image_size, UImGui_FVector2 uv0, UImGui_FVector2 uv1)
+{
+    ImGui::Image(*cast(texture), { image_size.x, image_size.y }, { uv0.x, uv0.y }, { uv1.x, uv1.y });
+}
+
+void UImGui_ImageWithBg(const UImGui_CTexture* texture)
+{
+    ImGui::ImageWithBg(*cast(texture));
+}
+
+void UImGui_ImageWithBgEx(const UImGui_CTexture* texture, UImGui_FVector2 image_size, UImGui_FVector2 uv0, UImGui_FVector2 uv1, UImGui_FVector4 bg_col, UImGui_FVector4 tint_col)
+{
+    ImGui::ImageWithBg(
+        *cast(texture),
+        {
+            image_size.x,
+            image_size.y
+        },
+        {
+            uv0.x,
+            uv0.y
+        },
+        {
+            uv1.x,
+            uv1.y
+        },
+        {
+            bg_col.x,
+            bg_col.y,
+            bg_col.z,
+            bg_col.w
+        },
+        {
+            tint_col.x,
+            tint_col.y,
+            tint_col.z,
+            tint_col.w
+        }
+    );
+}
+
+
+bool UImGui_ImageButton(const char* str_id, const UImGui_CTexture* texture)
+{
+    return ImGui::ImageButton(str_id, *cast(texture));
+}
+
+bool UImGui_ImageButtonEx(const char* str_id, const UImGui_CTexture* texture, UImGui_FVector2 image_size, UImGui_FVector2 uv0, UImGui_FVector2 uv1, UImGui_FVector4 bg_col, UImGui_FVector4 tint_col)
+{
+    return ImGui::ImageButton(
+        str_id,
+        *cast(texture),
+        {
+            image_size.x,
+            image_size.y
+        },
+        {
+            uv0.x,
+            uv0.y
+        },
+        {
+            uv1.x,
+            uv1.y
+        },
+        {
+            bg_col.x,
+            bg_col.y,
+            bg_col.z,
+            bg_col.w
+        },
+        {
+            tint_col.x,
+            tint_col.y,
+            tint_col.z,
+            tint_col.w
+        }
+    );
 }

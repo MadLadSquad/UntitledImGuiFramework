@@ -225,7 +225,7 @@ public:
 
     UImGui::FVector2& getWindowSizeSetting() noexcept override
     {
-        return *initInfo->getWindowSizeSetting(initInfo);
+        return *reinterpret_cast<UImGui::FVector2*>(initInfo->getWindowSizeSetting(initInfo));
     }
 
     bool getWindowFullscreen() noexcept override
@@ -501,12 +501,12 @@ public:
 
     UImGui::FVector4& getSizeLimits() noexcept override
     {
-        return *initInfo->getSizeLimits(initInfo);
+        return *reinterpret_cast<UImGui::FVector4*>(initInfo->getSizeLimits(initInfo));
     }
 
     UImGui::FVector2& getAspectRatioSizeLimits() noexcept override
     {
-        return *initInfo->getAspectRatioSizeLimits(initInfo);
+        return *reinterpret_cast<UImGui::FVector2*>(initInfo->getAspectRatioSizeLimits(initInfo));
     }
 
 

@@ -104,6 +104,14 @@ extern "C"
     // Frees the Texture handle
     // Event safety - Post-begin
     UIMGUI_PUBLIC_API void UImGui_Texture_release(const UImGui_CTexture* texture);
+
+    UIMGUI_PUBLIC_API void UImGui_Image(const UImGui_CTexture* texture);
+    UIMGUI_PUBLIC_API void UImGui_ImageEx(const UImGui_CTexture* texture, UImGui_FVector2 image_size, UImGui_FVector2 uv0, UImGui_FVector2 uv1);
+    UIMGUI_PUBLIC_API void UImGui_ImageWithBg(const UImGui_CTexture* texture);
+    UIMGUI_PUBLIC_API void UImGui_ImageWithBgEx(const UImGui_CTexture* texture, UImGui_FVector2 image_size, UImGui_FVector2 uv0, UImGui_FVector2 uv1, UImGui_FVector4 bg_col, UImGui_FVector4 tint_col);
+    UIMGUI_PUBLIC_API bool UImGui_ImageButton(const char* str_id, const UImGui_CTexture* texture);
+    UIMGUI_PUBLIC_API bool UImGui_ImageButtonEx(const char* str_id, const UImGui_CTexture* texture, UImGui_FVector2 image_size, UImGui_FVector2 uv0, UImGui_FVector2 uv1, UImGui_FVector4 bg_col, UImGui_FVector4 tint_col);
+
 #ifdef __cplusplus
 };
 #endif

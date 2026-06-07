@@ -1,4 +1,5 @@
 #include "UImGuiExtensions.hpp"
+#include <Renderer/Texture.hpp>
 
 struct InputTextCallbackUserData
 {
@@ -68,4 +69,54 @@ bool ImGui::InputTextWithHint(const char* label, const char* hint, UImGui::FStri
         .chainCallbackContext = user_data,
     };
     return InputTextWithHint(label, hint, str->data(), str->capacity() + 1, flags, InputTextCallback, &cb_user_data);
+}
+
+static void samplerNearest() noexcept
+{
+    const auto& pio = ImGui::GetPlatformIO();
+    if (pio.DrawCallback_SetSamplerNearest != nullptr)
+        ImGui::GetWindowDrawList()->AddCallback(pio.DrawCallback_SetSamplerNearest, nullptr);
+}
+
+static void restoreSamplerLinear() noexcept
+{
+    const auto& pio = ImGui::GetPlatformIO();
+    if (pio.DrawCallback_SetSamplerLinear != nullptr)
+        ImGui::GetWindowDrawList()->AddCallback(pio.DrawCallback_SetSamplerLinear, nullptr);
+}
+
+static inline ImVec2 getImageSize(const ImVec2 image_size, const UImGui::FVector2 texture_size) noexcept
+{
+    return image_size.x == 0.0f && image_size.y == 0.0f ? std::move(texture_size) : std::move(image_size);
+}
+
+void ImGui::Image(const UImGui::Texture& texture, const ImVec2 image_size, const ImVec2 uv0, const ImVec2 uv1)
+{
+    const bool bFiltered = texture.getData().bFiltered;
+    if (!bFiltered)
+        samplerNearest();
+    Image(texture.get(), getImageSize(std::move(image_size), std::move(texture.size())), uv0, uv1);
+    if (!bFiltered)
+        restoreSamplerLinear();
+}
+
+void ImGui::ImageWithBg(const UImGui::Texture& texture, const ImVec2 image_size, const ImVec2 uv0, const ImVec2 uv1, const ImVec4 bg_col, const ImVec4 tint_col)
+{
+    const bool bFiltered = texture.getData().bFiltered;
+    if (!bFiltered)
+        samplerNearest();
+    ImageWithBg(texture.get(), getImageSize(std::move(image_size), std::move(texture.size())), uv0, uv1, bg_col, tint_col);
+    if (!bFiltered)
+        restoreSamplerLinear();
+}
+
+bool ImGui::ImageButton(const char* str_id, const UImGui::Texture& texture, const ImVec2 image_size, const ImVec2 uv0, const ImVec2 uv1, const ImVec4 bg_col, const ImVec4 tint_col)
+{
+    const bool bFiltered = texture.getData().bFiltered;
+    if (!bFiltered)
+        samplerNearest();
+    const bool result = ImageButton(str_id, texture.get(), getImageSize(std::move(image_size), std::move(texture.size())), uv0, uv1, bg_col, tint_col);
+    if (!bFiltered)
+        restoreSamplerLinear();
+    return result;
 }

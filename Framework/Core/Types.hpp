@@ -28,12 +28,35 @@
 
 using namespace ULog;
 
+struct ImVec2;
+struct ImVec4;
+
 namespace UImGui
 {
-    // Redefine for C++
-    typedef UImGui_FVector2 FVector2;
-    typedef UImGui_FVector FVector;
-    typedef UImGui_FVector4 FVector4;
+    struct UIMGUI_PUBLIC_API FVector2 : UImGui_FVector2
+    {
+        FVector2() noexcept = default;
+        FVector2(float x, float y) noexcept;
+        FVector2(const UImGui_FVector2& vec) : UImGui_FVector2(vec) {}
+
+        operator ImVec2() const noexcept;
+    };
+
+    struct UIMGUI_PUBLIC_API FVector : UImGui_FVector
+    {
+        FVector() noexcept = default;
+        FVector(float x, float y, float z) noexcept;
+        FVector(const UImGui_FVector& vec) : UImGui_FVector(vec) {}
+    };
+
+    struct UIMGUI_PUBLIC_API FVector4 : UImGui_FVector4
+    {
+        FVector4() noexcept = default;
+        FVector4(float x, float y, float z, float w) noexcept;
+        FVector4(const UImGui_FVector4& vec) : UImGui_FVector4(vec) {}
+
+        operator ImVec4() const noexcept;
+    };
 
     typedef UImGui_String String;
 

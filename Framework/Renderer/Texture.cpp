@@ -35,7 +35,7 @@ void UImGui::Texture::load(void* data, const FVector2 size, const uint32_t depth
     TEX_RUN(load(dt, data, size, depth, bFreeImageData, freeFunc), void());
 }
 
-uintptr_t UImGui::Texture::get() noexcept
+uintptr_t UImGui::Texture::get() const noexcept
 {
     TEX_RUN(get(dt), 0);
 }
@@ -67,7 +67,7 @@ UImGui::Texture::~Texture() noexcept
     clear();
 }
 
-UImGui::TextureData& UImGui::Texture::getData() noexcept
+UImGui::TextureData& UImGui::Texture::getData() const noexcept
 {
     return dt;
 }

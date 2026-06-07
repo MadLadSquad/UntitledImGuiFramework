@@ -1,4 +1,5 @@
 #include "Types.hpp"
+#include <imgui.h>
 
 template <>
 void c4::yml::write<UImGui::FString>(NodeRef* ref, UImGui::FString const& t)
@@ -56,7 +57,7 @@ bool c4::yml::read<UImGui::FString32>(ConstNodeRef const& ref, UImGui::FString32
 // ----------------------------------------------------- Vectors -----------------------------------------------------
 
 template <>
-void c4::yml::write<UImGui_FVector4>(NodeRef* ref, UImGui::FVector4 const& t)
+void c4::yml::write<UImGui::FVector4>(NodeRef* ref, UImGui::FVector4 const& t)
 {
     *ref |= SEQ | FLOW_SL;
     ref->append_child() << t.x;
@@ -66,7 +67,7 @@ void c4::yml::write<UImGui_FVector4>(NodeRef* ref, UImGui::FVector4 const& t)
 }
 
 template <>
-bool c4::yml::read<UImGui_FVector4>(ConstNodeRef const& ref, UImGui::FVector4* t)
+bool c4::yml::read<UImGui::FVector4>(ConstNodeRef const& ref, UImGui::FVector4* t)
 {
     if (!keyValid(ref) || !ref.is_seq() || ref.num_children() < 4)
         return false;
@@ -78,7 +79,7 @@ bool c4::yml::read<UImGui_FVector4>(ConstNodeRef const& ref, UImGui::FVector4* t
 }
 
 template <>
-void c4::yml::write<UImGui_FVector>(NodeRef* ref, UImGui::FVector const& t)
+void c4::yml::write<UImGui::FVector>(NodeRef* ref, UImGui::FVector const& t)
 {
     *ref |= SEQ | FLOW_SL;
     ref->append_child() << t.x;
@@ -87,7 +88,7 @@ void c4::yml::write<UImGui_FVector>(NodeRef* ref, UImGui::FVector const& t)
 }
 
 template <>
-bool c4::yml::read<UImGui_FVector>(ConstNodeRef const& ref, UImGui::FVector* t)
+bool c4::yml::read<UImGui::FVector>(ConstNodeRef const& ref, UImGui::FVector* t)
 {
     if (!keyValid(ref) || !ref.is_seq() || ref.num_children() < 3)
         return false;
@@ -98,7 +99,7 @@ bool c4::yml::read<UImGui_FVector>(ConstNodeRef const& ref, UImGui::FVector* t)
 }
 
 template <>
-void c4::yml::write<UImGui_FVector2>(NodeRef* ref, UImGui::FVector2 const& t)
+void c4::yml::write<UImGui::FVector2>(NodeRef* ref, UImGui::FVector2 const& t)
 {
     *ref |= SEQ | FLOW_SL;
     ref->append_child() << t.x;
@@ -106,13 +107,44 @@ void c4::yml::write<UImGui_FVector2>(NodeRef* ref, UImGui::FVector2 const& t)
 }
 
 template <>
-bool c4::yml::read<UImGui_FVector2>(ConstNodeRef const& ref, UImGui::FVector2* t)
+bool c4::yml::read<UImGui::FVector2>(ConstNodeRef const& ref, UImGui::FVector2* t)
 {
     if (!keyValid(ref) || !ref.is_seq() || ref.num_children() < 2)
         return false;
     ref.child(0) >> t->x;
     ref.child(1) >> t->y;
     return true;
+}
+
+UImGui::FVector2::FVector2(const float x, const float y) noexcept
+{
+    this->x = x;
+    this->y = y;
+}
+
+UImGui::FVector::FVector(const float x, const float y, const float z) noexcept
+{
+    this->x = x;
+    this->y = y;
+    this->z = z;
+}
+
+UImGui::FVector4::FVector4(const float x, const float y, const float z, const float w) noexcept
+{
+    this->x = x;
+    this->y = y;
+    this->z = z;
+    this->w = w;
+}
+
+UImGui::FVector2::operator ImVec2() const noexcept
+{
+    return { this->x, this->y };
+}
+
+UImGui::FVector4::operator ImVec4() const noexcept
+{
+    return { this->x, this->y, this->z, this->w };
 }
 
 UImGui::FVector2 UImGui::operator+(const FVector2 x, const FVector2 y) noexcept

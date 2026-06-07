@@ -28,7 +28,7 @@ namespace UImGui
                 const TFunction<void(void*)>& freeFunc = UImGui_Texture_defaultFreeFunc) noexcept;
 
         // Event Safety - Post-begin
-        [[nodiscard]] uintptr_t get() noexcept;
+        [[nodiscard]] uintptr_t get() const noexcept;
 
         /**
          * @brief Outputs an image with a given format to a file. Only works if the image buffer is not freed
@@ -56,7 +56,7 @@ namespace UImGui
         [[nodiscard]] FVector2 size() const noexcept;
 
         // Event Safety - Any time
-        TextureData& getData() noexcept;
+        TextureData& getData() const noexcept;
 
         // Cleans up the image data
         // Event Safety - All initiated
@@ -83,6 +83,6 @@ namespace UImGui
 #endif
             custom
         };
-        TextureData dt{};
+        mutable TextureData dt{};
     };
 }
