@@ -126,6 +126,7 @@ jobs:
       - name: Checkout submodules
         shell: bash
         run: |
+          sed -i "s/std::sqrtf/sqrtf/g" Framework/Modules/Spinners/ThirdParty/imspinner/imspinner.h
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
       - name: Get dependencies
