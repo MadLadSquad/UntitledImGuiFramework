@@ -306,7 +306,7 @@ public:
 
     void Platform_setWindowAlwaysOnBottom() noexcept override
     {
-        initInfo->Platform_setWindowAlwaysOnTop(initInfo);
+        initInfo->Platform_setWindowAlwaysOnBottom(initInfo);
     }
 
 
@@ -443,7 +443,7 @@ public:
 
     bool& getWindowFocusedSetting() noexcept override
     {
-        return *initInfo->getWindowFocusSetting(initInfo);
+        return *initInfo->getWindowFocusedSetting(initInfo);
     }
 
     bool getWindowCurrentlyFocused() noexcept override
@@ -542,7 +542,7 @@ public:
 
     bool& getWindowMaximisedSetting() noexcept override
     {
-        return *initInfo->getWindowMaximizedSetting(initInfo);
+        return *initInfo->getWindowMaximisedSetting(initInfo);
     }
 
     void pushWindowMaximiseCallback(const TFunction<void(bool)>& f) noexcept override

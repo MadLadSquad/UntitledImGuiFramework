@@ -103,7 +103,7 @@ extern "C"
         void(*pushWindowCloseCallback)(struct UImGui_CGenericWindowInitInfo*, const void*);
 
         void(*Platform_setWindowAlwaysOnTop)(struct UImGui_CGenericWindowInitInfo*);
-        void(*Platform_setWindowAlwaysOnBotton)(struct UImGui_CGenericWindowInitInfo*);
+        void(*Platform_setWindowAlwaysOnBottom)(struct UImGui_CGenericWindowInitInfo*);
 
         void(*Platform_setWindowShowingOnPager)(struct UImGui_CGenericWindowInitInfo*, bool);
         bool(*Platform_getWindowShowingOnPager)(struct UImGui_CGenericWindowInitInfo*);
@@ -139,7 +139,7 @@ extern "C"
         bool*(*getWindowSurfaceTransparentSetting)(struct UImGui_CGenericWindowInitInfo*);
 
         void(*focusWindow)(struct UImGui_CGenericWindowInitInfo*);
-        bool*(*getWindowFocusSetting)(struct UImGui_CGenericWindowInitInfo*);
+        bool*(*getWindowFocusedSetting)(struct UImGui_CGenericWindowInitInfo*);
         bool(*getWindowCurrentlyFocused)(struct UImGui_CGenericWindowInitInfo*);
         void(*pushWindowFocusCallback)(struct UImGui_CGenericWindowInitInfo*, const void*);
 
@@ -164,7 +164,7 @@ extern "C"
         void(*pushWindowRefreshCallback)(struct UImGui_CGenericWindowInitInfo*, const void*);
 
         void(*maximiseWindow)(struct UImGui_CGenericWindowInitInfo*);
-        bool*(*getWindowMaximizedSetting)(struct UImGui_CGenericWindowInitInfo*);
+        bool*(*getWindowMaximisedSetting)(struct UImGui_CGenericWindowInitInfo*);
         void(*pushWindowMaximiseCallback)(struct UImGui_CGenericWindowInitInfo*, const void*);
         bool(*getWindowCurrentlyMaximised)(struct UImGui_CGenericWindowInitInfo*);
 
