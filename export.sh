@@ -61,7 +61,7 @@ function process_files()
   find . -name "*.vcxproj" -exec rm -rf {} \; &> /dev/null # Delete all vcproj files
   find . -name "x64" -type d -exec rm -rf "{}" \; &> /dev/null # Delete all x64 folders, that contain logs
   find . -name "*.dir" -type d -exec rm -rf "{}" \; &> /dev/null # Delete all object file folders
-  find . -name "*.sln" -exec rm -rf {} \; &> /dev/null # Delete all VS solution files
+  find . -name "*.sln*" -exec rm -rf {} \; &> /dev/null # Delete all VS solution files
   cd .. || die_
 }
 
@@ -118,7 +118,7 @@ fi
 
 if [ "${windows}" == true ]; then
   cmake_i .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "${@:4}" || die_
-  MSBuild.exe "$1".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${jobs}" || die_
+  MSBuild.exe "$1".sln* -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${jobs}" || die_
   cp Release/"$1".exe Release/*.dll . || die_
 else
   cmake_i .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$2" "${@:4}" || die_

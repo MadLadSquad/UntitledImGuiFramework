@@ -60,7 +60,7 @@ function install_build_tool()
 
   if [ "${windows}" == true ]; then
     cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DUBT_COMPILING_FOR_WEB=OFF -DCMAKE_BUILD_TYPE=RELEASE -DUBT_FRAMEWORK_DIR="$(realpath ../../)" || die_
-    MSBuild.exe UVKBuildTool.sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || die_
+    MSBuild.exe UVKBuildTool.sln* -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || die_
 
     cp Release/UVKBuildTool.exe . &> /dev/null
     cp Release/*.dll . &> /dev/null

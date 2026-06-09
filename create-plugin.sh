@@ -86,7 +86,7 @@ function compile()
   cp ../"${prjname}"/Framework/ThirdParty/vulkan/vulkan-1.lib ../"${prjname}"/Framework/ThirdParty/vulkan/libvulkan.1.dylib . || exit
   if [ "${windows}" == true ]; then
     cmake .. -G "Visual Studio ${VSShortVer} ${VSVer}" -DCMAKE_BUILD_TYPE=RELEASE || exit
-    MSBuild.exe "${plugin_name}".sln -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || exit
+    MSBuild.exe "${plugin_name}".sln* -property:Configuration=Release -property:Platform=x64 -property:maxCpuCount="${cpus}" || exit
   else
     cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE || exit
     make -j "${cpus}" || exit
