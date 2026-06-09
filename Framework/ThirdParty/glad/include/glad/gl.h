@@ -6135,7 +6135,7 @@ typedef void (GLAD_API_PTR *PFNGLACTIVESTENCILFACEEXTPROC)(GLenum face);
 typedef void (GLAD_API_PTR *PFNGLACTIVETEXTUREPROC)(GLenum texture);
 typedef void (GLAD_API_PTR *PFNGLACTIVETEXTUREARBPROC)(GLenum texture);
 typedef void (GLAD_API_PTR *PFNGLACTIVEVARYINGNVPROC)(GLuint program, const GLchar * name);
-typedef void (GLAD_API_PTR *PFNGLADDCLIENTPOINTERRANGEMESAPROC)(GLvoid * addr, GLsizeiptr size);
+typedef void (GLAD_API_PTR *PFNGLADDCLIENTPOINTERRANGEMESAPROC)(void * addr, GLsizeiptr size);
 typedef void (GLAD_API_PTR *PFNGLALPHAFRAGMENTOP1ATIPROC)(GLenum op, GLuint dst, GLuint dstMod, GLuint arg1, GLuint arg1Rep, GLuint arg1Mod);
 typedef void (GLAD_API_PTR *PFNGLALPHAFRAGMENTOP2ATIPROC)(GLenum op, GLuint dst, GLuint dstMod, GLuint arg1, GLuint arg1Rep, GLuint arg1Mod, GLuint arg2, GLuint arg2Rep, GLuint arg2Mod);
 typedef void (GLAD_API_PTR *PFNGLALPHAFRAGMENTOP3ATIPROC)(GLenum op, GLuint dst, GLuint dstMod, GLuint arg1, GLuint arg1Rep, GLuint arg1Mod, GLuint arg2, GLuint arg2Rep, GLuint arg2Mod, GLuint arg3, GLuint arg3Rep, GLuint arg3Mod);
