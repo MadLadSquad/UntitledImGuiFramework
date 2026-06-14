@@ -37,7 +37,7 @@ void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
         ryml::Tree tree;
 
         ryml::NodeRef root = tree.rootref();
-        root |= ryml::MAP;
+        root.set_map();
 
         SAVE_CONFIG_YAML_BASIC(layout-location, layoutLocation);
         SAVE_CONFIG_YAML_BASIC(load-layout, bLoadLayout);
@@ -69,19 +69,19 @@ void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
         ryml::Tree tree;
 
         ryml::NodeRef root = tree.rootref();
-        root |= ryml::MAP;
+        root.set_map();
 
         auto bindings = root["bindings"];
-        bindings |= ryml::SEQ;
+        bindings.set_seq();
 
         for (auto& a : inputActionList)
         {
             auto child = bindings.append_child();
-            child |= ryml::MAP;
+            child.set_map();
             child["key"] << a.name;
 
             auto val = child["val"];
-            val |= ryml::SEQ | ryml::FLOW_SL;
+            val.set_seq(ryml::FLOW_SL);
 
             for (auto& f : a.keyCodes)
             {

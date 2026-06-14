@@ -49,7 +49,7 @@ void UImGui::ModulesManager::save(const FString& configDir) const noexcept
 {
     ryml::Tree tree;
     ryml::NodeRef root = tree.rootref();
-    root |= ryml::MAP;
+    root.set_map();
 
     root["undo-max-transations"] << settings.maxTransactions;
 

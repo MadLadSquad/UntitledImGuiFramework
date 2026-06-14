@@ -59,7 +59,8 @@ bool c4::yml::read<UImGui::FString32>(ConstNodeRef const& ref, UImGui::FString32
 template <>
 void c4::yml::write<UImGui::FVector4>(NodeRef* ref, UImGui::FVector4 const& t)
 {
-    *ref |= SEQ | FLOW_SL;
+    ref->set_seq(FLOW_SL);
+
     ref->append_child() << t.x;
     ref->append_child() << t.y;
     ref->append_child() << t.z;
@@ -81,7 +82,8 @@ bool c4::yml::read<UImGui::FVector4>(ConstNodeRef const& ref, UImGui::FVector4* 
 template <>
 void c4::yml::write<UImGui::FVector>(NodeRef* ref, UImGui::FVector const& t)
 {
-    *ref |= SEQ | FLOW_SL;
+    ref->set_seq(FLOW_SL);
+
     ref->append_child() << t.x;
     ref->append_child() << t.y;
     ref->append_child() << t.z;
@@ -101,7 +103,8 @@ bool c4::yml::read<UImGui::FVector>(ConstNodeRef const& ref, UImGui::FVector* t)
 template <>
 void c4::yml::write<UImGui::FVector2>(NodeRef* ref, UImGui::FVector2 const& t)
 {
-    *ref |= SEQ | FLOW_SL;
+    ref->set_seq(FLOW_SL);
+
     ref->append_child() << t.x;
     ref->append_child() << t.y;
 }
@@ -116,20 +119,20 @@ bool c4::yml::read<UImGui::FVector2>(ConstNodeRef const& ref, UImGui::FVector2* 
     return true;
 }
 
-UImGui::FVector2::FVector2(const float x, const float y) noexcept
+UImGui::FVector2::FVector2(const float x, const float y) noexcept : UImGui_FVector2()
 {
     this->x = x;
     this->y = y;
 }
 
-UImGui::FVector::FVector(const float x, const float y, const float z) noexcept
+UImGui::FVector::FVector(const float x, const float y, const float z) noexcept : UImGui_FVector()
 {
     this->x = x;
     this->y = y;
     this->z = z;
 }
 
-UImGui::FVector4::FVector4(const float x, const float y, const float z, const float w) noexcept
+UImGui::FVector4::FVector4(const float x, const float y, const float z, const float w) noexcept : UImGui_FVector4()
 {
     this->x = x;
     this->y = y;

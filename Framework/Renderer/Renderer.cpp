@@ -259,20 +259,20 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     ryml::Tree tree;
 
     ryml::NodeRef root = tree.rootref();
-    root |= ryml::MAP;
+    root.set_map();
 
     root["renderer"] << RENDERER_TYPE_STRINGS[data.rendererType][0];
     root["v-sync"] << data.bUsingVSync;
     root["msaa-samples"] << data.msaaSamples;
 
     auto powerSaving = root["power-saving"];
-    powerSaving |= ryml::MAP;
+    powerSaving.set_map();
     powerSaving["enabled"] << data.bEnablePowerSavingMode;
     powerSaving["idle-frames"] << data.idleFrameRate;
 
     auto emscripten = root["emscripten"];
-    emscripten |= ryml::MAP;
-    emscripten["canvas-selector"] = data.emscriptenCanvas;
+    emscripten.set_map();
+    emscripten["canvas-selector"] << data.emscriptenCanvas;
 
     auto customConfig = root["custom-renderer"];
     if (keyValid(customConfig))

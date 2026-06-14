@@ -235,7 +235,7 @@ namespace c4::yml
     template<template<typename> class C, typename T>
     void write(NodeRef* ref, C<T> const& t)
     {
-        *ref |= SEQ;
+        ref->set_seq();
         for (const auto& a : t)
             ref->append_child() << a;
     }
@@ -262,21 +262,26 @@ namespace c4::yml
             if (!a.is_map())
                 continue;
 
-            auto k = a.key();
-
-            Key key{};
-            if constexpr (IsStringLike<Key>)
+            // Each sequence element is a single-pair map ('- key: value'), so descend into its
+            // key/value pair instead of reading the keyless seq element itself.
+            for (const auto& entry : a.children())
             {
-                key.resize(k.len);
-                memcpy(key.data(), k.data(), k.len);
+                auto k = entry.key();
+
+                Key key{};
+                if constexpr (IsStringLike<Key>)
+                {
+                    key.resize(k.len);
+                    memcpy(key.data(), k.data(), k.len);
+                }
+                else
+                    key = k.str;
+
+                Val val{};
+                entry >> val;
+
+                t->insert({key, val});
             }
-            else
-                key = k.str;
-
-            Val val{};
-            a >> val;
-
-            t->insert({key, val});
         }
 
         return true;
@@ -291,11 +296,11 @@ namespace c4::yml
     template<template<typename, typename, typename...> class C, typename Key, typename Val, typename ...Extra>
     void write_dict(NodeRef* ref, C<Key, Val, Extra...> const& t)
     {
-        *ref |= SEQ;
+        ref->set_seq();
         for (const auto& a : t)
         {
             auto child = ref->append_child();
-            child |= MAP;
+            child.set_map();
             if constexpr (HasToChars<Key>)
                 child[a.first] << a.second;
             else
