@@ -2066,9 +2066,9 @@ CIMGUI_API void cimgui::ImGui_TableSetupColumn(const char* label, ImGuiTableColu
     ::ImGui::TableSetupColumn(label, flags);
 }
 
-CIMGUI_API void cimgui::ImGui_TableSetupColumnEx(const char* label, ImGuiTableColumnFlags flags, float init_width_or_weight, ImGuiID user_id)
+CIMGUI_API void cimgui::ImGui_TableSetupColumnEx(const char* label, ImGuiTableColumnFlags flags, float init_width_or_weight, ImGuiID user_data)
 {
-    ::ImGui::TableSetupColumn(label, flags, init_width_or_weight, user_id);
+    ::ImGui::TableSetupColumn(label, flags, init_width_or_weight, user_data);
 }
 
 CIMGUI_API void cimgui::ImGui_TableSetupScrollFreeze(int cols, int rows)
