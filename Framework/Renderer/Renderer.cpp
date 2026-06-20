@@ -161,7 +161,7 @@ void UImGui::RendererInternal::loadConfig() noexcept
         if (keyValid(rendererConf))
         {
             FString tmp;
-            rendererConf >> tmp;
+            rendererConf.load(&tmp);
             Utility::toLower(tmp);
 
             for (int i = 0; i < UIMGUI_RENDERER_TYPE_COUNT; i++)
@@ -204,13 +204,13 @@ void UImGui::RendererInternal::loadConfig() noexcept
     {
         auto vsync = node["v-sync"];
         if (keyValid(vsync))
-            vsync >> data.bUsingVSync;
+            vsync.load(&data.bUsingVSync);
     }
 
     {
         auto msaa = node["msaa-samples"];
         if (keyValid(msaa))
-            msaa >> data.msaaSamples;
+            msaa.load(&data.msaaSamples);
     }
 
     {
@@ -219,11 +219,11 @@ void UImGui::RendererInternal::loadConfig() noexcept
         {
             auto enabled = powerSaving["enabled"];
             if (keyValid(enabled))
-                enabled >> data.bEnablePowerSavingMode;
+                enabled.load(&data.bEnablePowerSavingMode);
 
             auto idleFrames = node["idle-frames"];
             if (keyValid(idleFrames))
-                idleFrames >> data.idleFrameRate;
+                idleFrames.load(&data.idleFrameRate);
         }
     }
 
@@ -236,7 +236,7 @@ void UImGui::RendererInternal::loadConfig() noexcept
             {
                 // Doing this because the RendererData structure is in C and we use String there
                 FString tmp{};
-                canvasSelector >> tmp;
+                canvasSelector.load(&tmp);
 
                 data.emscriptenCanvas = static_cast<char*>(UImGui_Allocator_allocate(tmp.size() + 1));
                 memcpy(data.emscriptenCanvas, tmp.c_str(), tmp.size() + 1);
@@ -261,18 +261,18 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     ryml::NodeRef root = tree.rootref();
     root.set_map();
 
-    root["renderer"] << RENDERER_TYPE_STRINGS[data.rendererType][0];
-    root["v-sync"] << data.bUsingVSync;
-    root["msaa-samples"] << data.msaaSamples;
+    root["renderer"].save(RENDERER_TYPE_STRINGS[data.rendererType][0]);
+    root["v-sync"].save(data.bUsingVSync);
+    root["msaa-samples"].save(data.msaaSamples);
 
     auto powerSaving = root["power-saving"];
     powerSaving.set_map();
-    powerSaving["enabled"] << data.bEnablePowerSavingMode;
-    powerSaving["idle-frames"] << data.idleFrameRate;
+    powerSaving["enabled"].save(data.bEnablePowerSavingMode);
+    powerSaving["idle-frames"].save(data.idleFrameRate);
 
     auto emscripten = root["emscripten"];
     emscripten.set_map();
-    emscripten["canvas-selector"] << data.emscriptenCanvas;
+    emscripten["canvas-selector"].save(data.emscriptenCanvas);
 
     auto customConfig = root["custom-renderer"];
     if (keyValid(customConfig))

@@ -27,7 +27,7 @@ UImGui::FVector2 UImGui::GenericWindow::getScroll() noexcept
     return ret;
 }
 
-#define SAVE_CONFIG_YAML_BASIC(x, y) root[#x] << windowData.y
+#define SAVE_CONFIG_YAML_BASIC(x, y) root[#x].save(windowData.y)
 
 void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
 {
@@ -46,8 +46,8 @@ void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
 
         // Since we multiply by content scale when creating the window...
         const auto contentScale = getWindowContentScale();
-        root["width"] << windowSizeS.x / contentScale.x;
-        root["height"] << windowSizeS.y / contentScale.y;
+        root["width"].save(windowSizeS.x / contentScale.x);
+        root["height"].save(windowSizeS.y / contentScale.y);
 
         SAVE_CONFIG_YAML_BASIC(fullscreen, fullscreen);
         SAVE_CONFIG_YAML_BASIC(window-name, name);
@@ -78,7 +78,7 @@ void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
         {
             auto child = bindings.append_child();
             child.set_map();
-            child["key"] << a.name;
+            child["key"].save(a.name);
 
             auto val = child["val"];
             val.set_seq(ryml::FLOW_SL);
@@ -114,7 +114,7 @@ void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
                 default:
                         break;
                 }
-                val.append_child() << f;
+                val.append_child().save(f);
             }
         }
 
@@ -124,7 +124,7 @@ void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
     }
 }
 
-#define OPEN_CONFIG_GET_YAML_BASIC(x, y) if (keyValid(root[#x])) root[#x] >> windowData.y
+#define OPEN_CONFIG_GET_YAML_BASIC(x, y) if (keyValid(root[#x])) root[#x].load(&windowData.y)
 
 void UImGui::GenericWindow::openConfig() noexcept
 {
@@ -154,8 +154,8 @@ void UImGui::GenericWindow::openConfig() noexcept
 
         if (keyValid(width) && keyValid(height))
         {
-            width >> windowSizeS.x;
-            height >> windowSizeS.y;
+            width.load(&windowSizeS.x);
+            height.load(&windowSizeS.y);
         }
     }
 
@@ -196,8 +196,8 @@ skip_window_config:
         for (const auto& a : binds.children())
         {
             InputAction action;
-            a["key"] >> action.name;
-            a["val"] >> action.keyCodes;
+            a["key"].load(&action.name);
+            a["val"].load(&action.keyCodes);
 
             // Sanitise keys that vary in function between platforms
             for (auto& f : action.keyCodes)

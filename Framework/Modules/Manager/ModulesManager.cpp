@@ -14,7 +14,7 @@
 {                                   \
     auto p = mod[#x];               \
     if (keyValid(p))                \
-        p >> settings.x;            \
+        p.load(&settings.x);        \
 }
 
 #include <Utilities.hpp>
@@ -40,7 +40,7 @@ void UImGui::ModulesManager::init(const FString& configDir)
 
     auto maxTransactions = root["max-transactions"];
     if (keyValid(maxTransactions))
-        maxTransactions >> settings.maxTransactions;
+        maxTransactions.load(&settings.maxTransactions);
 
     initModules(UImGui_InitInfo_getProjectDir());
 }
@@ -51,7 +51,7 @@ void UImGui::ModulesManager::save(const FString& configDir) const noexcept
     ryml::NodeRef root = tree.rootref();
     root.set_map();
 
-    root["undo-max-transations"] << settings.maxTransactions;
+    root["undo-max-transations"].save(settings.maxTransactions);
 
     std::ofstream fout((configDir + "Core/Modules.yaml").c_str());
     fout << tree;
@@ -76,7 +76,7 @@ static void loadStandardPlugins(ryml::NodeRef root, const UImGui::String platfor
 {
     auto p = root["plugins"];
     if (keyValid(p) && keyValid(p[platform]))
-        p[platform] >> plugins;
+        p[platform].load(&plugins);
 }
 
 void UImGui::ModulesManager::initModules(const FString& projectDir)
@@ -107,7 +107,7 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
         if (keyValid(crash))
         {
             bool val;
-            crash >> val;
+            crash.load(&val);
             Logger::setCrashOnError(val);
         }
     }
@@ -134,13 +134,13 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
 
     // Fix up double forms
     if (keyValid(mod["undo-redo"]))
-        mod["undo-redo"] >> settings.undo_redo;
+        mod["undo-redo"].load(&settings.undo_redo);
 
     if (keyValid(mod["text-utils"]))
-        mod["text-utils"] >> settings.text_utils;
+        mod["text-utils"].load(&settings.text_utils);
 
     if (keyValid(mod["cli-parser"]))
-        mod["cli-parser"] >> settings.cli_parser;
+        mod["cli-parser"].load(&settings.cli_parser);
 
 #ifdef UIMGUI_UNDO_MODULE_ENABLED
     if (settings.undo_redo)

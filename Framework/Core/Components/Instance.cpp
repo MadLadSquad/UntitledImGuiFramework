@@ -83,11 +83,11 @@ void UImGui::Instance::reloadApplicationMetadata() noexcept
 
     const auto root = tree.rootref();
     if (keyValid(root["name"]))
-        root["name"] >> applicationName;
+        root["name"].load(&applicationName);
 
     if (keyValid(root["version"]))
-        root["version"] >> applicationVersion;
+        root["version"].load(&applicationVersion);
 
     if (keyValid(root["engine-version"]))
-        root["engine-version"] >> engineVersion;
+        root["engine-version"].load(&engineVersion);
 }

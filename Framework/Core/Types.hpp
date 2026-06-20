@@ -177,43 +177,35 @@ namespace c4::yml
 
     // ---------------------------------------------------- Strings ----------------------------------------------------
 
+    // NOTE: read() is provided as a plain overload (not an explicit specialisation) because, since the
+    // rapidyaml ReadResult update, the primary read() template returns ReadResult instead of bool. A bool
+    // overload is still supported via ReadResult's legacy adapter constructor and avoids matching the
+    // primary template's exact signature.
     template<>
     UIMGUI_PUBLIC_API void write<UImGui::FString>(NodeRef* ref, UImGui::FString const& t);
-
-    template<>
-    UIMGUI_PUBLIC_API bool read<UImGui::FString>(ConstNodeRef const& ref, UImGui::FString* t);
+    UIMGUI_PUBLIC_API bool read(ConstNodeRef const& ref, UImGui::FString* t);
 
     template<>
     UIMGUI_PUBLIC_API void write<UImGui::FString16>(NodeRef* ref, UImGui::FString16 const& t);
-
-    template<>
-    UIMGUI_PUBLIC_API bool read<UImGui::FString16>(ConstNodeRef const& ref, UImGui::FString16* t);
+    UIMGUI_PUBLIC_API bool read(ConstNodeRef const& ref, UImGui::FString16* t);
 
     template<>
     UIMGUI_PUBLIC_API void write<UImGui::FString32>(NodeRef* ref, UImGui::FString32 const& t);
-
-    template<>
-    UIMGUI_PUBLIC_API bool read<UImGui::FString32>(ConstNodeRef const& ref, UImGui::FString32* t);
+    UIMGUI_PUBLIC_API bool read(ConstNodeRef const& ref, UImGui::FString32* t);
 
     // ---------------------------------------------------- Vectors ----------------------------------------------------
 
     template<>
     UIMGUI_PUBLIC_API void write<UImGui::FVector4>(NodeRef* ref, UImGui::FVector4 const& t);
-
-    template<>
-    UIMGUI_PUBLIC_API bool read<UImGui::FVector4>(ConstNodeRef const& ref, UImGui::FVector4* t);
+    UIMGUI_PUBLIC_API bool read(ConstNodeRef const& ref, UImGui::FVector4* t);
 
     template<>
     UIMGUI_PUBLIC_API void write<UImGui::FVector>(NodeRef* ref, UImGui::FVector const& t);
-
-    template<>
-    UIMGUI_PUBLIC_API bool read<UImGui::FVector>(ConstNodeRef const& ref, UImGui::FVector* t);
+    UIMGUI_PUBLIC_API bool read(ConstNodeRef const& ref, UImGui::FVector* t);
 
     template<>
     UIMGUI_PUBLIC_API void write<UImGui::FVector2>(NodeRef* ref, UImGui::FVector2 const& t);
-
-    template<>
-    UIMGUI_PUBLIC_API bool read<UImGui::FVector2>(ConstNodeRef const& ref, UImGui::FVector2* t);
+    UIMGUI_PUBLIC_API bool read(ConstNodeRef const& ref, UImGui::FVector2* t);
 
     // --------------------------------------------------- Sequences ---------------------------------------------------
 
@@ -226,7 +218,7 @@ namespace c4::yml
         for (const auto& a : ref.children())
         {
             T val{};
-            a >> val;
+            a.load(&val);
             t->push_back(val);
         }
         return true;
@@ -237,7 +229,7 @@ namespace c4::yml
     {
         ref->set_seq();
         for (const auto& a : t)
-            ref->append_child() << a;
+            ref->append_child().save(a);
     }
 
     // Check if similar to std::string
@@ -278,7 +270,7 @@ namespace c4::yml
                     key = k.str;
 
                 Val val{};
-                entry >> val;
+                entry.load(&val);
 
                 t->insert({key, val});
             }
@@ -302,9 +294,9 @@ namespace c4::yml
             auto child = ref->append_child();
             child.set_map();
             if constexpr (HasToChars<Key>)
-                child[a.first] << a.second;
+                child[a.first].save(a.second);
             else
-                child[a.first.c_str()] << a.second;
+                child[a.first.c_str()].save(a.second);
         }
     }
 
