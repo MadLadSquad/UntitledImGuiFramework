@@ -54,3 +54,6 @@ docs/
 .DS_Store
 
 .antigravitycli/
+.claude/
+.agents/
+graphify-out/
