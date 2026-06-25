@@ -37,7 +37,7 @@
 #define IMGUI_VERSION       "1.92.9 WIP"
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
-#define IMGUI_VERSION_NUM   19283
+#define IMGUI_VERSION_NUM   19284
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
@@ -694,7 +694,7 @@ CIMGUI_API bool ImGui_TextLinkOpenURLEx(const char* label, const char* url /* = 
 // Widgets: Images
 // - Read about ImTextureID/ImTextureRef  here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
 // - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
-// - Image() pads adds style.ImageBorderSize on each side, ImageButton() adds style.FramePadding on each side.
+// - Image() adds style.ImageBorderSize on each side, ImageButton() adds style.FramePadding on each side.
 // - ImageButton() draws a background based on regular Button() color + optionally an inner background if specified.
 // - An obsolete version of Image(), before 1.91.9 (March 2025), had a 'tint_col' parameter which is now supported by the ImageWithBg() function.
 CIMGUI_API void ImGui_Image(ImTextureRef tex_ref, ImVec2 image_size);                                                                      // Implied uv0 = ImVec2(0, 0), uv1 = ImVec2(1, 1)
@@ -899,7 +899,7 @@ CIMGUI_API void ImGui_PlotHistogramCallbackEx(const char* label, float (*values_
 // - Use BeginMenuBar() on a window ImGuiWindowFlags_MenuBar to append to its menu bar.
 // - Use BeginMainMenuBar() to create a menu bar at the top of the screen and append to it.
 // - Use BeginMenu() to create a menu. You can call BeginMenu() multiple time with the same identifier to append more items to it.
-// - Not that MenuItem() keyboardshortcuts are displayed as a convenience but _not processed_ by Dear ImGui at the moment.
+// - Note that MenuItem() keyboard shortcuts are displayed as a convenience but _not processed_ by Dear ImGui at the moment.
 CIMGUI_API bool ImGui_BeginMenuBar(void);                                         // append to menu-bar of current window (requires ImGuiWindowFlags_MenuBar flag set on parent window).
 CIMGUI_API void ImGui_EndMenuBar(void);                                           // only call EndMenuBar() if BeginMenuBar() returns true!
 CIMGUI_API bool ImGui_BeginMainMenuBar(void);                                     // create and append to a full screen menu-bar.
