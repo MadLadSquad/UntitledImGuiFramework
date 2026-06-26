@@ -20,6 +20,8 @@
 #include <Utilities.hpp>
 #include <Components/Instance.hpp>
 
+#include "Interfaces/WindowInterface.hpp"
+
 void UImGui::ModulesManager::init(const FString& configDir)
 {
     const auto file = Utility::loadFileToString(configDir + "Core/Modules.yaml");
@@ -154,7 +156,7 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
 #ifdef UIMGUI_OS_MODULE_ENABLED
     #ifdef UIMGUI_OPEN_SUBMODULE_ENABLED
         if (settings.open)
-            UOpen::init();
+            UOpen::init(Window::Platform::getCurrentWindowPlatform() == UIMGUI_WINDOW_PLATFORM_WAYLAND ? Window::Platform::getNativeDisplay() : nullptr);
     #endif
 #endif
 
