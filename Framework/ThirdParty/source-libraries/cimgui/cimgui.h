@@ -1157,6 +1157,8 @@ CIMGUI_API ImVec2         ImGui_GetItemRectMin(void);                           
 CIMGUI_API ImVec2         ImGui_GetItemRectMax(void);                                      // get lower-right bounding rectangle of the last item (screen space)
 CIMGUI_API ImVec2         ImGui_GetItemRectSize(void);                                     // get size of last item
 CIMGUI_API ImGuiItemFlags ImGui_GetItemFlags(void);                                        // get generic flags of last item
+CIMGUI_API int            ImGui_GetItemClickedCountWithSingleClickDelay(void);             // Implied mouse_button = 0, delay = -1.0f
+CIMGUI_API int            ImGui_GetItemClickedCountWithSingleClickDelayEx(ImGuiMouseButton mouse_button /* = 0 */, float delay /* = -1.0f */); // [BETA] building block for disambiguation between single-click and double-click. Returns 1 on single-click but delayed by io.MouseSingleClickDelay after mouse release. Returns 2+ on double-click or repeated clicks.
 
 // Viewports
 // - Currently represents the Platform Window created by the application which is hosting our Dear ImGui windows.
@@ -1239,26 +1241,27 @@ CIMGUI_API bool ImGui_SetItemKeyOwner(ImGuiKey key);  // Set key owner to last i
 // - To refer to a mouse button, you may use named enums in your code e.g. ImGuiMouseButton_Left, ImGuiMouseButton_Right.
 // - You can also use regular integer: it is forever guaranteed that 0=Left, 1=Right, 2=Middle.
 // - Dragging operations are only reported after mouse has moved a certain distance away from the initial clicking position (see 'lock_threshold' and 'io.MouseDraggingThreshold')
-CIMGUI_API bool             ImGui_IsMouseDown(ImGuiMouseButton button);                                          // is mouse button held?
-CIMGUI_API bool             ImGui_IsMouseClicked(ImGuiMouseButton button);                                       // Implied repeat = false
-CIMGUI_API bool             ImGui_IsMouseClickedEx(ImGuiMouseButton button, bool repeat /* = false */);          // did mouse button clicked? (went from !Down to Down). Same as GetMouseClickedCount() == 1.
-CIMGUI_API bool             ImGui_IsMouseReleased(ImGuiMouseButton button);                                      // did mouse button released? (went from Down to !Down)
-CIMGUI_API bool             ImGui_IsMouseDoubleClicked(ImGuiMouseButton button);                                 // did mouse button double-clicked? Same as GetMouseClickedCount() == 2. (note that a double-click will also report IsMouseClicked() == true)
-CIMGUI_API bool             ImGui_IsMouseReleasedWithDelay(ImGuiMouseButton button, float delay);                // delayed mouse release (use very sparingly!). Generally used with 'delay >= io.MouseDoubleClickTime' + combined with a 'io.MouseClickedLastCount==1' test. This is a very rarely used UI idiom, but some apps use this: e.g. MS Explorer single click on an icon to rename.
-CIMGUI_API int              ImGui_GetMouseClickedCount(ImGuiMouseButton button);                                 // return the number of successive mouse-clicks at the time where a click happen (otherwise 0).
-CIMGUI_API bool             ImGui_IsMouseHoveringRect(ImVec2 r_min, ImVec2 r_max);                               // Implied clip = true
-CIMGUI_API bool             ImGui_IsMouseHoveringRectEx(ImVec2 r_min, ImVec2 r_max, bool clip /* = true */);     // is mouse hovering given bounding rect (in screen space). clipped by current clipping settings, but disregarding of other consideration of focus/window ordering/popup-block.
-CIMGUI_API bool             ImGui_IsMousePosValid(const ImVec2* mouse_pos /* = NULL */);                         // by convention we use (-FLT_MAX,-FLT_MAX) to denote that there is no mouse available
-CIMGUI_API bool             ImGui_IsAnyMouseDown(void);                                                          // [WILL OBSOLETE] is any mouse button held? This was designed for backends, but prefer having backend maintain a mask of held mouse buttons, because upcoming input queue system will make this invalid.
-CIMGUI_API ImVec2           ImGui_GetMousePos(void);                                                             // shortcut to ImGui::GetIO().MousePos provided by user, to be consistent with other calls
-CIMGUI_API ImVec2           ImGui_GetMousePosOnOpeningCurrentPopup(void);                                        // retrieve mouse position at the time of opening popup we have BeginPopup() into (helper to avoid user backing that value themselves)
-CIMGUI_API bool             ImGui_IsMouseDragging(ImGuiMouseButton button, float lock_threshold /* = -1.0f */);  // is mouse dragging? (uses io.MouseDraggingThreshold if lock_threshold < 0.0f)
-CIMGUI_API ImVec2           ImGui_GetMouseDragDelta(ImGuiMouseButton button /* = 0 */, float lock_threshold /* = -1.0f */); // return the delta from the initial clicking position while the mouse button is pressed or was just released. This is locked and return 0.0f until the mouse moves past a distance threshold at least once (uses io.MouseDraggingThreshold if lock_threshold < 0.0f)
-CIMGUI_API void             ImGui_ResetMouseDragDelta(void);                                                     // Implied button = 0
-CIMGUI_API void             ImGui_ResetMouseDragDeltaEx(ImGuiMouseButton button /* = 0 */);                      //
-CIMGUI_API ImGuiMouseCursor ImGui_GetMouseCursor(void);                                                          // get desired mouse cursor shape. Important: reset in ImGui::NewFrame(), this is updated during the frame. valid before Render(). If you use software rendering by setting io.MouseDrawCursor ImGui will render those for you
-CIMGUI_API void             ImGui_SetMouseCursor(ImGuiMouseCursor cursor_type);                                  // set desired mouse cursor shape
-CIMGUI_API void             ImGui_SetNextFrameWantCaptureMouse(bool want_capture_mouse);                         // Override io.WantCaptureMouse flag next frame (said flag is left for your application to handle, typical when true it instructs your app to ignore inputs). This is equivalent to setting "io.WantCaptureMouse = want_capture_mouse;" after the next NewFrame() call.
+CIMGUI_API bool             ImGui_IsMouseDown(ImGuiMouseButton button);                                                      // is mouse button held?
+CIMGUI_API bool             ImGui_IsMouseClicked(ImGuiMouseButton button);                                                   // Implied repeat = false
+CIMGUI_API bool             ImGui_IsMouseClickedEx(ImGuiMouseButton button, bool repeat /* = false */);                      // did mouse button clicked? (went from !Down to Down). Same as GetMouseClickedCount() == 1.
+CIMGUI_API bool             ImGui_IsMouseReleased(ImGuiMouseButton button);                                                  // did mouse button released? (went from Down to !Down)
+CIMGUI_API bool             ImGui_IsMouseDoubleClicked(ImGuiMouseButton button);                                             // did mouse button double-clicked? Same as GetMouseClickedCount() == 2. (note that a double-click will also report IsMouseClicked() == true)
+CIMGUI_API bool             ImGui_IsMouseReleasedWithDelay(ImGuiMouseButton button);                                         // Implied delay = -1.f
+CIMGUI_API bool             ImGui_IsMouseReleasedWithDelayEx(ImGuiMouseButton button, float delay /* = -1.f */);             // delayed mouse release. Use sparingly. Prefer higher-level helper GetItemClickedCountWithSingleClickDelay(). Generally used with 'delay >= io.MouseDoubleClickTime' + combined with a 'io.MouseClickedLastCount==1' test.
+CIMGUI_API int              ImGui_GetMouseClickedCount(ImGuiMouseButton button);                                             // return the number of successive mouse-clicks at the time where a click happen (otherwise 0).
+CIMGUI_API bool             ImGui_IsMouseHoveringRect(ImVec2 r_min, ImVec2 r_max);                                           // Implied clip = true
+CIMGUI_API bool             ImGui_IsMouseHoveringRectEx(ImVec2 r_min, ImVec2 r_max, bool clip /* = true */);                 // is mouse hovering given bounding rect (in screen space). clipped by current clipping settings, but disregarding of other consideration of focus/window ordering/popup-block.
+CIMGUI_API bool             ImGui_IsMousePosValid(const ImVec2* mouse_pos /* = NULL */);                                     // by convention we use (-FLT_MAX,-FLT_MAX) to denote that there is no mouse available
+CIMGUI_API bool             ImGui_IsAnyMouseDown(void);                                                                      // [WILL OBSOLETE] is any mouse button held? This was designed for backends, but prefer having backend maintain a mask of held mouse buttons, because upcoming input queue system will make this invalid.
+CIMGUI_API ImVec2           ImGui_GetMousePos(void);                                                                         // shortcut to ImGui::GetIO().MousePos provided by user, to be consistent with other calls
+CIMGUI_API ImVec2           ImGui_GetMousePosOnOpeningCurrentPopup(void);                                                    // retrieve mouse position at the time of opening popup we have BeginPopup() into (helper to avoid user backing that value themselves)
+CIMGUI_API bool             ImGui_IsMouseDragging(ImGuiMouseButton button, float lock_threshold /* = -1.0f */);              // is mouse dragging? (uses io.MouseDraggingThreshold if lock_threshold < 0.0f)
+CIMGUI_API ImVec2           ImGui_GetMouseDragDelta(ImGuiMouseButton button /* = 0 */, float lock_threshold /* = -1.0f */);  // return the delta from the initial clicking position while the mouse button is pressed or was just released. This is locked and return 0.0f until the mouse moves past a distance threshold at least once (uses io.MouseDraggingThreshold if lock_threshold < 0.0f)
+CIMGUI_API void             ImGui_ResetMouseDragDelta(void);                                                                 // Implied button = 0
+CIMGUI_API void             ImGui_ResetMouseDragDeltaEx(ImGuiMouseButton button /* = 0 */);                                  //
+CIMGUI_API ImGuiMouseCursor ImGui_GetMouseCursor(void);                                                                      // get desired mouse cursor shape. Important: reset in ImGui::NewFrame(), this is updated during the frame. valid before Render(). If you use software rendering by setting io.MouseDrawCursor ImGui will render those for you
+CIMGUI_API void             ImGui_SetMouseCursor(ImGuiMouseCursor cursor_type);                                              // set desired mouse cursor shape
+CIMGUI_API void             ImGui_SetNextFrameWantCaptureMouse(bool want_capture_mouse);                                     // Override io.WantCaptureMouse flag next frame (said flag is left for your application to handle, typical when true it instructs your app to ignore inputs). This is equivalent to setting "io.WantCaptureMouse = want_capture_mouse;" after the next NewFrame() call.
 
 // Clipboard Utilities
 // - Also see the LogToClipboard() function to capture GUI into clipboard, or easily output text data to the clipboard.
@@ -2672,6 +2675,11 @@ struct ImGuiIO_t
     bool              ConfigDpiScaleFonts;                            // = false          // [EXPERIMENTAL] Automatically overwrite style.FontScaleDpi when Monitor DPI changes. This will scale fonts but _NOT_ scale sizes/padding for now.
     bool              ConfigDpiScaleViewports;                        // = false          // [EXPERIMENTAL] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
 
+    // Ini Settings
+    bool              ConfigIniSettingsSaveLastUsedDate;              // = true         // Enable loading/saving last used day (YYYYMMDD) in some .ini struct, making things easier to audit and allowing custom tools to cleanup old data.
+    int               ConfigIniSettingsAutoDiscardMonths;             // = 0          // [BETA] Set number of months after which unused .ini entries are discarded on load. Require platform_io.Platform_SessionDate to be set. For systems supporting the feature, .ini entries without a LastUsed field will always be discarded! Please report if you are using this.
+    bool              ConfigDebugIniSettings;                         // = false          // Save .ini data with extra comments (particularly helpful for Docking, but makes saving slower)
+
     // Miscellaneous options
     // (you can visualize and interact with all options in 'Demo->Configuration')
     bool              MouseDrawCursor;                                // = false          // Request ImGui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). Cannot be easily renamed to 'io.ConfigXXX' because this is frequently used by backend implementations.
@@ -2688,8 +2696,9 @@ struct ImGuiIO_t
 
     // Inputs Behaviors
     // (other variables, ones which are expected to be tweaked within UI code, are exposed in ImGuiStyle)
-    float             MouseDoubleClickTime;                           // = 0.30f          // Time for a double-click, in seconds.
-    float             MouseDoubleClickMaxDist;                        // = 6.0f           // Distance threshold to stay in to validate a double-click, in pixels.
+    float             MouseDoubleClickTime;                           // = 0.30f          // Time for consecutive clicks to account as a double-click, in seconds.
+    float             MouseDoubleClickMaxDist;                        // = 6.0f           // Distance threshold to stay in to validate a double-click or multiple clicks, in pixels.
+    float             MouseSingleClickDelay;                          // = 0.60f          // Time for a delayed click when using GetItemClickedCountWithSingleClickDelay() or IsMouseReleasedWithDelay(), in seconds. Must be > io.MouseDoubleClickTime.
     float             MouseDragThreshold;                             // = 6.0f           // Distance threshold before considering we are dragging.
     float             KeyRepeatDelay;                                 // = 0.275f         // When holding a key/button, time before it starts repeating, in seconds (for buttons in Repeat mode, etc.).
     float             KeyRepeatRate;                                  // = 0.050f         // When holding a key/button, rate at which it repeats, in seconds.
@@ -2741,9 +2750,6 @@ struct ImGuiIO_t
     // - May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
     // - Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
     bool              ConfigDebugIgnoreFocusLoss;                     // = false          // Ignore io.AddFocusEvent(false), consequently not calling io.ClearInputKeys()/io.ClearInputMouse() in input processing.
-
-    // Option to audit .ini data
-    bool              ConfigDebugIniSettings;                         // = false          // Save .ini data with extra comments (particularly helpful for Docking, but makes saving slower)
 
     //------------------------------------------------------------------
     // Platform Identifiers
@@ -4190,40 +4196,44 @@ struct ImGuiPlatformIO_t
 
     // Optional: Access OS clipboard
     // (default to use native Win32 clipboard on Windows, otherwise uses a private clipboard. Override to access OS clipboard on other architectures)
-    const char* (*Platform_GetClipboardTextFn)(ImGuiContext* ctx);                                     // Should return NULL on failure (e.g. clipboard data is not text).
+    const char* (*Platform_GetClipboardTextFn)(ImGuiContext* ctx);                                   // Should return NULL on failure (e.g. clipboard data is not text).
     void (*Platform_SetClipboardTextFn)(ImGuiContext* ctx, const char* text);
-    void*                                                             Platform_ClipboardUserData;
+    void*                                                           Platform_ClipboardUserData;
 
     // Optional: Open link/folder/file in OS Shell
     // (default to use ShellExecuteW() on Windows, system() on Linux/Mac. expected to return false on failure, but some platforms may always return true)
     bool (*Platform_OpenInShellFn)(ImGuiContext* ctx, const char* path);
-    void*                                                             Platform_OpenInShellUserData;
+    void*                                                           Platform_OpenInShellUserData;
 
     // Optional: Notify OS Input Method Editor of the screen position of your cursor for text input position (e.g. when using Japanese/Chinese IME on Windows)
     // (default to use native imm32 api on Windows)
     void (*Platform_SetImeDataFn)(ImGuiContext* ctx, ImGuiViewport* viewport, ImGuiPlatformImeData* data);
-    void*                                                             Platform_ImeUserData;
+    void*                                                           Platform_ImeUserData;
     //void      (*SetPlatformImeDataFn)(ImGuiViewport* viewport, ImGuiPlatformImeData* data); // [Renamed to platform_io.PlatformSetImeDataFn in 1.91.1]
 
     // Optional: Platform locale
     // [Experimental] Configure decimal point e.g. '.' or ',' useful for some languages (e.g. German), generally pulled from *localeconv()->decimal_point
-    ImWchar                                                           Platform_LocaleDecimalPoint;     // '.'
+    ImWchar                                                         Platform_LocaleDecimalPoint;     // '.'
+
+    // Optional: Platform time/date
+    // This is automatically filled on startup. Used to store a "last used date" in some .ini structures. Facilitate creating tools to clean up old/unused data.
+    int                                                             Platform_SessionDate;            // Integer storing YYYYMMDD e.g. 20261231 corresponding to the beginning of application session.
 
     //------------------------------------------------------------------
     // Input - Interface with Renderer Backend
     //------------------------------------------------------------------
 
     // Optional: Maximum texture size supported by renderer (used to adjust how we size textures). 0 if not known.
-    int                                                               Renderer_TextureMaxWidth;
-    int                                                               Renderer_TextureMaxHeight;
+    int                                                             Renderer_TextureMaxWidth;
+    int                                                             Renderer_TextureMaxHeight;
 
     // Written by some backends during ImGui_ImplXXXX_RenderDrawData() call to point backend_specific ImGui_ImplXXXX_RenderState* structure.
-    void*                                                             Renderer_RenderState;
+    void*                                                           Renderer_RenderState;
 
     // Standard draw callbacks provided by renderer backend.
-    ImDrawCallback                                                    DrawCallback_ResetRenderState;   // Request to reset the graphics/render state.
-    ImDrawCallback                                                    DrawCallback_SetSamplerLinear;   // Request backend to set texture sampling to Linear.
-    ImDrawCallback                                                    DrawCallback_SetSamplerNearest;  // Request backend to set texture sampling to Nearest/Point.
+    ImDrawCallback                                                  DrawCallback_ResetRenderState;   // Request to reset the graphics/render state.
+    ImDrawCallback                                                  DrawCallback_SetSamplerLinear;   // Request backend to set texture sampling to Linear.
+    ImDrawCallback                                                  DrawCallback_SetSamplerNearest;  // Request backend to set texture sampling to Nearest/Point.
     //ImDrawCallback  DrawCallback_SetSamplerCustom;    // Request backend to set texture sampling using Backend Specific data.
 
     //------------------------------------------------------------------
@@ -4243,38 +4253,38 @@ struct ImGuiPlatformIO_t
     // Platform functions are typically called _before_ their Renderer counterpart, apart from Destroy which are called the other way.
 
     // Platform Backend functions (e.g. Win32, GLFW, SDL) ------------------- Called by -----
-    void (*Platform_CreateWindow)(ImGuiViewport* vp);                                                  // . . U . .  // Create a new platform window for the given viewport
-    void (*Platform_DestroyWindow)(ImGuiViewport* vp);                                                 // N . U . D  //
-    void (*Platform_ShowWindow)(ImGuiViewport* vp);                                                    // . . U . .  // Newly created windows are initially hidden so SetWindowPos/Size/Title can be called on them before showing the window
-    void (*Platform_SetWindowPos)(ImGuiViewport* vp, ImVec2 pos);                                      // . . U . .  // Set platform window position (given the upper-left corner of client area)
-    ImVec2 (*Platform_GetWindowPos)(ImGuiViewport* vp);                                                // N . . . .  // (Use ImGuiPlatformIO_SetPlatform_GetWindowPos() to set this from C, otherwise you will likely encounter stack corruption)
-    void (*Platform_SetWindowSize)(ImGuiViewport* vp, ImVec2 size);                                    // . . U . .  // Set platform window client area size (ignoring OS decorations such as OS title bar etc.)
-    ImVec2 (*Platform_GetWindowSize)(ImGuiViewport* vp);                                               // N . . . .  // Get platform window client area size (Use ImGuiPlatformIO_SetPlatform_GetWindowSize() to set this from C, otherwise you will likely encounter stack corruption)
-    ImVec2 (*Platform_GetWindowFramebufferScale)(ImGuiViewport* vp);                                   // N . . . .  // Return viewport density. Always 1,1 on Windows, often 2,2 on Retina display on macOS/iOS. MUST BE INTEGER VALUES. (Use ImGuiPlatformIO_SetPlatform_GetWindowFramebufferScale() to set this from C, otherwise you will likely encounter stack corruption)
-    void (*Platform_SetWindowFocus)(ImGuiViewport* vp);                                                // N . . . .  // Move window to front and set input focus
-    bool (*Platform_GetWindowFocus)(ImGuiViewport* vp);                                                // . . U . .  //
-    bool (*Platform_GetWindowMinimized)(ImGuiViewport* vp);                                            // N . . . .  // Get platform window minimized state. When minimized, we generally won't attempt to get/set size and contents will be culled more easily
-    void (*Platform_SetWindowTitle)(ImGuiViewport* vp, const char* str);                               // . . U . .  // Set platform window title (given an UTF-8 string)
-    void (*Platform_SetWindowAlpha)(ImGuiViewport* vp, float alpha);                                   // . . U . .  // (Optional) Setup global transparency (not per-pixel transparency)
-    void (*Platform_UpdateWindow)(ImGuiViewport* vp);                                                  // . . U . .  // (Optional) Called by UpdatePlatformWindows(). Optional hook to allow the platform backend from doing general book-keeping every frame.
-    void (*Platform_RenderWindow)(ImGuiViewport* vp, void* render_arg);                                // . . . R .  // (Optional) Main rendering (platform side! This is often unused, or just setting a "current" context for OpenGL bindings). 'render_arg' is the value passed to RenderPlatformWindowsDefault().
-    void (*Platform_SwapBuffers)(ImGuiViewport* vp, void* render_arg);                                 // . . . R .  // (Optional) Call Present/SwapBuffers (platform side! This is often unused!). 'render_arg' is the value passed to RenderPlatformWindowsDefault().
-    float (*Platform_GetWindowDpiScale)(ImGuiViewport* vp);                                            // N . . . .  // (Optional) [BETA] FIXME-DPI: DPI handling: Return DPI scale for this viewport. 1.0f = 96 DPI.
-    void (*Platform_OnChangedViewport)(ImGuiViewport* vp);                                             // . F . . .  // (Optional) [BETA] FIXME-DPI: DPI handling: Called during Begin() every time the viewport we are outputting into changes, so backend has a chance to swap fonts to adjust style.
-    ImVec4 (*Platform_GetWindowWorkAreaInsets)(ImGuiViewport* vp);                                     // N . . . .  // (Optional) [BETA] Get initial work area inset for the viewport (won't be covered by main menu bar, dockspace over viewport etc.). Default to (0,0),(0,0). 'safeAreaInsets' in iOS land, 'DisplayCutout' in Android land. (Use ImGuiPlatformIO_SetPlatform_GetWindowWorkAreaInsets() to set this from C, otherwise you will likely encounter stack corruption)
+    void (*Platform_CreateWindow)(ImGuiViewport* vp);                                                // . . U . .  // Create a new platform window for the given viewport
+    void (*Platform_DestroyWindow)(ImGuiViewport* vp);                                               // N . U . D  //
+    void (*Platform_ShowWindow)(ImGuiViewport* vp);                                                  // . . U . .  // Newly created windows are initially hidden so SetWindowPos/Size/Title can be called on them before showing the window
+    void (*Platform_SetWindowPos)(ImGuiViewport* vp, ImVec2 pos);                                    // . . U . .  // Set platform window position (given the upper-left corner of client area)
+    ImVec2 (*Platform_GetWindowPos)(ImGuiViewport* vp);                                              // N . . . .  // (Use ImGuiPlatformIO_SetPlatform_GetWindowPos() to set this from C, otherwise you will likely encounter stack corruption)
+    void (*Platform_SetWindowSize)(ImGuiViewport* vp, ImVec2 size);                                  // . . U . .  // Set platform window client area size (ignoring OS decorations such as OS title bar etc.)
+    ImVec2 (*Platform_GetWindowSize)(ImGuiViewport* vp);                                             // N . . . .  // Get platform window client area size (Use ImGuiPlatformIO_SetPlatform_GetWindowSize() to set this from C, otherwise you will likely encounter stack corruption)
+    ImVec2 (*Platform_GetWindowFramebufferScale)(ImGuiViewport* vp);                                 // N . . . .  // Return viewport density. Always 1,1 on Windows, often 2,2 on Retina display on macOS/iOS. MUST BE INTEGER VALUES. (Use ImGuiPlatformIO_SetPlatform_GetWindowFramebufferScale() to set this from C, otherwise you will likely encounter stack corruption)
+    void (*Platform_SetWindowFocus)(ImGuiViewport* vp);                                              // N . . . .  // Move window to front and set input focus
+    bool (*Platform_GetWindowFocus)(ImGuiViewport* vp);                                              // . . U . .  //
+    bool (*Platform_GetWindowMinimized)(ImGuiViewport* vp);                                          // N . . . .  // Get platform window minimized state. When minimized, we generally won't attempt to get/set size and contents will be culled more easily
+    void (*Platform_SetWindowTitle)(ImGuiViewport* vp, const char* str);                             // . . U . .  // Set platform window title (given an UTF-8 string)
+    void (*Platform_SetWindowAlpha)(ImGuiViewport* vp, float alpha);                                 // . . U . .  // (Optional) Setup global transparency (not per-pixel transparency)
+    void (*Platform_UpdateWindow)(ImGuiViewport* vp);                                                // . . U . .  // (Optional) Called by UpdatePlatformWindows(). Optional hook to allow the platform backend from doing general book-keeping every frame.
+    void (*Platform_RenderWindow)(ImGuiViewport* vp, void* render_arg);                              // . . . R .  // (Optional) Main rendering (platform side! This is often unused, or just setting a "current" context for OpenGL bindings). 'render_arg' is the value passed to RenderPlatformWindowsDefault().
+    void (*Platform_SwapBuffers)(ImGuiViewport* vp, void* render_arg);                               // . . . R .  // (Optional) Call Present/SwapBuffers (platform side! This is often unused!). 'render_arg' is the value passed to RenderPlatformWindowsDefault().
+    float (*Platform_GetWindowDpiScale)(ImGuiViewport* vp);                                          // N . . . .  // (Optional) [BETA] FIXME-DPI: DPI handling: Return DPI scale for this viewport. 1.0f = 96 DPI.
+    void (*Platform_OnChangedViewport)(ImGuiViewport* vp);                                           // . F . . .  // (Optional) [BETA] FIXME-DPI: DPI handling: Called during Begin() every time the viewport we are outputting into changes, so backend has a chance to swap fonts to adjust style.
+    ImVec4 (*Platform_GetWindowWorkAreaInsets)(ImGuiViewport* vp);                                   // N . . . .  // (Optional) [BETA] Get initial work area inset for the viewport (won't be covered by main menu bar, dockspace over viewport etc.). Default to (0,0),(0,0). 'safeAreaInsets' in iOS land, 'DisplayCutout' in Android land. (Use ImGuiPlatformIO_SetPlatform_GetWindowWorkAreaInsets() to set this from C, otherwise you will likely encounter stack corruption)
     int (*Platform_CreateVkSurface)(ImGuiViewport* vp, ImU64 vk_inst, const void* vk_allocators, ImU64* out_vk_surface); // (Optional) For a Vulkan Renderer to call into Platform code (since the surface creation needs to tie them both).
 
     // Renderer Backend functions (e.g. DirectX, OpenGL, Vulkan) ------------ Called by -----
-    void (*Renderer_CreateWindow)(ImGuiViewport* vp);                                                  // . . U . .  // Create swap chain, frame buffers etc. (called after Platform_CreateWindow)
-    void (*Renderer_DestroyWindow)(ImGuiViewport* vp);                                                 // N . U . D  // Destroy swap chain, frame buffers etc. (called before Platform_DestroyWindow)
-    void (*Renderer_SetWindowSize)(ImGuiViewport* vp, ImVec2 size);                                    // . . U . .  // Resize swap chain, frame buffers etc. (called after Platform_SetWindowSize)
-    void (*Renderer_RenderWindow)(ImGuiViewport* vp, void* render_arg);                                // . . . R .  // (Optional) Clear framebuffer, setup render target, then render the viewport->DrawData. 'render_arg' is the value passed to RenderPlatformWindowsDefault().
-    void (*Renderer_SwapBuffers)(ImGuiViewport* vp, void* render_arg);                                 // . . . R .  // (Optional) Call Present/SwapBuffers. 'render_arg' is the value passed to RenderPlatformWindowsDefault().
+    void (*Renderer_CreateWindow)(ImGuiViewport* vp);                                                // . . U . .  // Create swap chain, frame buffers etc. (called after Platform_CreateWindow)
+    void (*Renderer_DestroyWindow)(ImGuiViewport* vp);                                               // N . U . D  // Destroy swap chain, frame buffers etc. (called before Platform_DestroyWindow)
+    void (*Renderer_SetWindowSize)(ImGuiViewport* vp, ImVec2 size);                                  // . . U . .  // Resize swap chain, frame buffers etc. (called after Platform_SetWindowSize)
+    void (*Renderer_RenderWindow)(ImGuiViewport* vp, void* render_arg);                              // . . . R .  // (Optional) Clear framebuffer, setup render target, then render the viewport->DrawData. 'render_arg' is the value passed to RenderPlatformWindowsDefault().
+    void (*Renderer_SwapBuffers)(ImGuiViewport* vp, void* render_arg);                               // . . . R .  // (Optional) Call Present/SwapBuffers. 'render_arg' is the value passed to RenderPlatformWindowsDefault().
 
     // (Optional) Monitor list
     // - Updated by: app/backend. Update every frame to dynamically support changing monitor or DPI configuration.
     // - Used by: dear imgui to query DPI info, clamp popups/tooltips within same monitor and not have them straddle monitors.
-    ImVector_ImGuiPlatformMonitor                                     Monitors;
+    ImVector_ImGuiPlatformMonitor                                   Monitors;
 
     //------------------------------------------------------------------
     // Output
@@ -4282,11 +4292,11 @@ struct ImGuiPlatformIO_t
 
     // Textures list (the list is updated by calling ImGui::EndFrame or ImGui::Render)
     // The ImGui_ImplXXXX_RenderDrawData() function of each backend generally access this via ImDrawData::Textures which points to this. The array is available here mostly because backends will want to destroy textures on shutdown.
-    ImVector_ImTextureDataPtr                                         Textures;                        // List of textures used by Dear ImGui (most often 1) + contents of external texture list is automatically appended into this.
+    ImVector_ImTextureDataPtr                                       Textures;                        // List of textures used by Dear ImGui (most often 1) + contents of external texture list is automatically appended into this.
 
     // Viewports list (the list is updated by calling ImGui::EndFrame or ImGui::Render)
     // (in the future we will attempt to organize this feature to remove the need for a "main viewport")
-    ImVector_ImGuiViewportPtr                                         Viewports;                       // Main viewports, followed by all secondary viewports.
+    ImVector_ImGuiViewportPtr                                       Viewports;                       // Main viewports, followed by all secondary viewports.
 
     //------------------------------------------------------------------
     // Functions
