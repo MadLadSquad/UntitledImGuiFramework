@@ -2464,6 +2464,16 @@ CIMGUI_API ImGuiItemFlags cimgui::ImGui_GetItemFlags(void)
     return ::ImGui::GetItemFlags();
 }
 
+CIMGUI_API int            cimgui::ImGui_GetItemClickedCountWithSingleClickDelay(void)
+{
+    return ::ImGui::GetItemClickedCountWithSingleClickDelay();
+}
+
+CIMGUI_API int            cimgui::ImGui_GetItemClickedCountWithSingleClickDelayEx(ImGuiMouseButton mouse_button, float delay)
+{
+    return ::ImGui::GetItemClickedCountWithSingleClickDelay(mouse_button, delay);
+}
+
 CIMGUI_API cimgui::ImGuiViewport* cimgui::ImGui_GetMainViewport(void)
 {
     return reinterpret_cast<::cimgui::ImGuiViewport*>(::ImGui::GetMainViewport());
@@ -2639,7 +2649,12 @@ CIMGUI_API bool             cimgui::ImGui_IsMouseDoubleClicked(ImGuiMouseButton 
     return ::ImGui::IsMouseDoubleClicked(button);
 }
 
-CIMGUI_API bool             cimgui::ImGui_IsMouseReleasedWithDelay(ImGuiMouseButton button, float delay)
+CIMGUI_API bool             cimgui::ImGui_IsMouseReleasedWithDelay(ImGuiMouseButton button)
+{
+    return ::ImGui::IsMouseReleasedWithDelay(button);
+}
+
+CIMGUI_API bool             cimgui::ImGui_IsMouseReleasedWithDelayEx(ImGuiMouseButton button, float delay)
 {
     return ::ImGui::IsMouseReleasedWithDelay(button, delay);
 }
