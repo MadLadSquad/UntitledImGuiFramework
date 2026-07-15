@@ -1639,11 +1639,6 @@ CIMGUI_API bool cimgui::ImGui_ColorButtonEx(const char* desc_id, cimgui::ImVec4 
     return ::ImGui::ColorButton(desc_id, ConvertToCPP_ImVec4(col), flags, ConvertToCPP_ImVec2(size));
 }
 
-CIMGUI_API void cimgui::ImGui_SetColorEditOptions(ImGuiColorEditFlags flags)
-{
-    ::ImGui::SetColorEditOptions(flags);
-}
-
 CIMGUI_API bool  cimgui::ImGui_TreeNode(const char* label)
 {
     return ::ImGui::TreeNode(label);
@@ -4170,6 +4165,11 @@ CIMGUI_API void cimgui::ImGuiPlatformIO_ClearRendererHandlers(cimgui::ImGuiPlatf
 }
 
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+
+CIMGUI_API void   cimgui::ImGui_SetColorEditOptions(ImGuiColorEditFlags flags)
+{
+    ::ImGui::SetColorEditOptions(flags);
+}
 
 CIMGUI_API void   cimgui::ImGui_PushFont(cimgui::ImFont* font)
 {
