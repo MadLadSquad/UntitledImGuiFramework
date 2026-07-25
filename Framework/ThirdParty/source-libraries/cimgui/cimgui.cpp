@@ -1966,19 +1966,19 @@ CIMGUI_API void cimgui::ImGui_EndPopup(void)
     ::ImGui::EndPopup();
 }
 
-CIMGUI_API void cimgui::ImGui_OpenPopup(const char* str_id, ImGuiPopupFlags popup_flags)
+CIMGUI_API bool cimgui::ImGui_OpenPopup(const char* str_id, ImGuiPopupFlags popup_flags)
 {
-    ::ImGui::OpenPopup(str_id, popup_flags);
+    return ::ImGui::OpenPopup(str_id, popup_flags);
 }
 
-CIMGUI_API void cimgui::ImGui_OpenPopupID(ImGuiID id, ImGuiPopupFlags popup_flags)
+CIMGUI_API bool cimgui::ImGui_OpenPopupID(ImGuiID id, ImGuiPopupFlags popup_flags)
 {
-    ::ImGui::OpenPopup(id, popup_flags);
+    return ::ImGui::OpenPopup(id, popup_flags);
 }
 
-CIMGUI_API void cimgui::ImGui_OpenPopupOnItemClick(const char* str_id, ImGuiPopupFlags popup_flags)
+CIMGUI_API bool cimgui::ImGui_OpenPopupOnItemClick(const char* str_id, ImGuiPopupFlags popup_flags)
 {
-    ::ImGui::OpenPopupOnItemClick(str_id, popup_flags);
+    return ::ImGui::OpenPopupOnItemClick(str_id, popup_flags);
 }
 
 CIMGUI_API void cimgui::ImGui_CloseCurrentPopup(void)
