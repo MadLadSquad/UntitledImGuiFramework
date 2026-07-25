@@ -37,7 +37,7 @@
 #define IMGUI_VERSION       "1.92.9 WIP"
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
-#define IMGUI_VERSION_NUM   19286
+#define IMGUI_VERSION_NUM   19287
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
@@ -1386,18 +1386,16 @@ typedef enum
     ImGuiItemFlags_Disabled              = 1<<6,  // false    // [Internal] Disable interactions. DOES NOT affect visuals. This is used by BeginDisabled()/EndDisabled() and only provided here so you can read back via GetItemFlags().
 
     //---------------------------------------------------------------------------------
-    // LiveEdit refers to applying edits to backing variables _while_ typing.
+    // LiveEdit refers to applying edits to backing variables _while_ typing a value using the keyboard.
     // Widget:                          | Input:   | w/ LiveEdit:    | Output:
     //   InputText()                    |   "123"  |   on(default)   |  "1" then "12" then "123"
     //   InputText()                    |   "123"  |   off           |  "123" after validating or tabbing out or losing focus.
-    //   DragFloat(), SliderInt(), etc. |   "123"  |   on(default)*  |  1 then 12 then 123
-    //   DragFloat(), SliderInt(), etc. |   "123"  |   off*          |  123 after validation or tabbing out or losing focus.
-    //---------------------------------------------------------------------------------
-    // (*) The feature is currently being evaluated, and the aim is to change ImGuiItemFlags_LiveEditOnInputScalar to OFF by default.
-    //     The legacy behavior until July 2026 was that LiveEdit was always ON for everything.
+    //   DragFloat(), SliderInt(), etc. |   "123"  |   on*           |  1 then 12 then 123
+    //   DragFloat(), SliderInt(), etc. |   "123"  |   off(default)* |  123 after validation or tabbing out or losing focus.
+    // (*) Since 1.92.9 (July 2026), ImGuiItemFlags_LiveEditOnInputScalar is OFF by default. In prior version it was ON for everything.
     //---------------------------------------------------------------------------------
     ImGuiItemFlags_LiveEditOnInputText   = 1<<7,  // true     // InputText: apply keyboard edits to backing value while typing. Otherwise, edits are applied when validating, tabbing out or losing focus.
-    ImGuiItemFlags_LiveEditOnInputScalar = 1<<8,  // true*    // DragXXX, SliderXXX, InputScalar: apply keyboard edits to backing value while typing. Otherwise, edits are applied when validating, tabbing out or losing focus.
+    ImGuiItemFlags_LiveEditOnInputScalar = 1<<8,  // false    // DragXXX, SliderXXX, InputScalar: apply keyboard edits to backing value while typing. Otherwise, edits are applied when validating, tabbing out or losing focus.
     ImGuiItemFlags_LiveEditOnInput       = ImGuiItemFlags_LiveEditOnInputText | ImGuiItemFlags_LiveEditOnInputScalar,
 } ImGuiItemFlags_;
 
@@ -3639,7 +3637,7 @@ CIMGUI_API void        ImDrawList__PathArcToN(ImDrawList* self, ImVec2 center, f
 struct ImDrawData_t
 {
     bool                       Valid;             // Only valid after Render() is called and before the next NewFrame() is called.
-    int                        CmdListsCount;     // == CmdLists.Size. (OBSOLETE: exists for legacy reasons). Number of ImDrawList* to render.
+    int                        FrameCount;        // Frame counter of the emitter context. For debugging purpose.
     int                        TotalIdxCount;     // For convenience, sum of all ImDrawList's IdxBuffer.Size
     int                        TotalVtxCount;     // For convenience, sum of all ImDrawList's VtxBuffer.Size
     ImVector_ImDrawListPtr     CmdLists;          // Array of ImDrawList* to render. The ImDrawLists are owned by ImGuiContext and only pointed to from here.
@@ -3648,6 +3646,10 @@ struct ImDrawData_t
     ImVec2                     FramebufferScale;  // Amount of pixels for each unit of DisplaySize. Copied from viewport->FramebufferScale (== io.DisplayFramebufferScale for main viewport). Generally (1,1) on normal display, (2,2) on OSX with Retina display.
     ImGuiViewport*             OwnerViewport;     // Viewport carrying the ImDrawData instance, might be of use to the renderer (generally not).
     ImVector_ImTextureDataPtr* Textures;          // List of textures to update. Most of the times the list is shared by all ImDrawData, has only 1 texture and it doesn't need any update. This almost always points to ImGui::GetPlatformIO().Textures[]. May be overridden or set to NULL if you want to manually update textures.
+
+#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+    int                        CmdListsCount;     // Use CmdLists.Size instead. Number of ImDrawList* to render.
+#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 };
 CIMGUI_API void ImDrawData_Clear(ImDrawData* self);
 CIMGUI_API void ImDrawData_AddDrawList(ImDrawData* self, ImDrawList* draw_list);  // Helper to add an external draw list into an existing ImDrawData.
@@ -3702,6 +3704,7 @@ struct ImTextureData_t
     int                    UniqueID;              // w    -   // [DEBUG] Sequential index to facilitate identifying a texture when debugging/printing. Unique per atlas.
     ImTextureStatus        Status;                // rw   rw  // ImTextureStatus_OK/_WantCreate/_WantUpdates/_WantDestroy. Always use SetStatus() to modify!
     void*                  BackendUserData;       // -    rw  // Convenience storage for backend. Some backends may have enough with TexID.
+    void*                  QueueUserData;         // r    -   // Convenience storage for a staged/multi-threaded rendering texture queue (e.g. imgui_threaded_rendering.h. See #8597). When != NULL, core assumes the texture is referenced by the queue.
     ImTextureID            TexID;                 // r    w   // Backend-specific texture identifier. Always use SetTexID() to modify! The identifier will stored in ImDrawCmd::GetTexID() and passed to backend's RenderDrawData function.
     ImTextureFormat        Format;                // w    r   // ImTextureFormat_RGBA32 (default) or ImTextureFormat_Alpha8
     int                    Width;                 // w    r   // Texture width
