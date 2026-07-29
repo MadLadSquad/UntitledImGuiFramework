@@ -5,6 +5,8 @@
 extern "C"
 {
 #endif
+    // Returns true for as long as the main loop should keep rendering, and false once the window has been asked to
+    // close
     // Event safety - post-begin
     UIMGUI_PUBLIC_API bool UImGui_WindowUtils_shouldRender();
 

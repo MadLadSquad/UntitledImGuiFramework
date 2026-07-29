@@ -61,7 +61,7 @@ typedef enum UImGui_ComponentState
  * @brief An enum that defines component types to be used by various functions
  * @var UIMGUI_COMPONENT_TYPE_INLINE - Defines an inline component
  * @var UIMGUI_COMPONENT_TYPE_TITLEBAR - Defines a titlebar component
- * @var UIMGUI_COMPONENT_PYE_WINDOW - Defines a window component
+ * @var UIMGUI_COMPONENT_TYPE_WINDOW - Defines a window component
  */
 typedef enum [[maybe_unused]] UImGui_ComponentType
 {

@@ -64,7 +64,12 @@ namespace UImGui
         ~Plugins() noexcept;
     private:
         friend class ModulesManager;
+        friend class Instance;
         static Plugins& get() noexcept;
+
+        // Detaches every loaded plugin and closes its shared library handle. Called once from ~Instance - the handles
+        // would otherwise stay open for the lifetime of the process
+        static void unloadAll() noexcept;
 
         TVector<Plugin> plugins{};
         TVector<FString> standardPlugins{};

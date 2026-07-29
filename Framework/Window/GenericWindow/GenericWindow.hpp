@@ -63,6 +63,9 @@ namespace UImGui
         virtual void ImGuiNewFrame() noexcept = 0;
         virtual void ImGuiShutdown() noexcept = 0;
 
+        // Returns true for as long as the main loop should keep rendering, and false once the window has been asked to
+        // close. Note this is the inverse of the "should close" predicate most windowing libraries expose(GLFW's
+        // glfwWindowShouldClose, SDL's quit event, etc.), so remember to negate it in your implementation.
         virtual bool shouldRender() noexcept = 0;
         virtual void pollEvents(double& now, double& deltaTime, double& lastTime) noexcept = 0;
         virtual void waitEventsTimeout(double timeout) noexcept = 0;

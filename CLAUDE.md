@@ -177,12 +177,16 @@ enabled-modules:
   text-utils: true  # UntitledImGuiTextUtils
   i18n: false       # UntitledI18N
   theming: false    # UntitledImGuiTheme
-  os: false         # UntitledOpen, UntitledExec
+  os: false         # Master switch for the OS module and its submodules below
+  open: false       # UntitledOpen    (OS submodule, requires os: true)
+  uexec: false      # UntitledExec    (OS submodule, requires os: true)
   dbus: false       # UntitledDBusUtils (Linux only)
   xdg: false        # UntitledXDGBasedir (Linux only)
   undo-redo: false  # Undo/Redo support
   cli-parser: false # UntitledCLIParser
 ```
+
+`open` and `uexec` are separate keys from `os` — enabling `os` alone does not pull in either library. `undo-redo`, `text-utils` and `cli-parser` are additionally accepted in their underscore forms (`undo_redo`, `text_utils`, `cli_parser`); every other key is read under the exact name shown above.
 
 Some modules ("shared modules": OS/Exec, OS/Open, OS/Unix DBus + XDG, CLIParser) are libraries that don't need to be statically compiled into the framework. When `build-mode-vendor: false`, those libraries must be available system-wide.
 
@@ -198,6 +202,11 @@ All runtime configuration is YAML, located in `Config/Core/`:
 - **`DefaultLayout.ini`** / **`FallbackLayout.ini`** – ImGui docking layouts (do not edit by hand)
 
 The `uvproj.yaml` file in each project additionally controls: metadata (`name`, `version`, `engine-version`), enabled modules, plugins to auto-load (`plugins:` keyed by platform), production export settings (`production:`), install-prefix overrides (`install-override:`), additional install directives (`additional-installs:`), and build mode (`build-mode-static`, `build-mode-vendor`, `system-wide`, `install-framework`).
+
+**Reading YAML safely:** rapidyaml reports errors by calling its error callback, which aborts — it does not throw, so a malformed config file cannot be recovered from after the fact. Every read must be guarded *before* it happens:
+
+- Guard with the repo's `c4::yml::keyValid(node)` helper (`Framework/Core/Types.cpp`) before `.load()`, and check `.is_seq()` / `.num_children()` before indexing a sequence.
+- Use **`find_child("key")`, not `operator[]`**, when the child may be absent. The *const* `operator[]` asserts internally (`RYML_ASSERT_VISIT_CB_(..., ch != NONE, ...)`) and aborts before any guard you write after it can run; `find_child` returns an invalid ref that `keyValid` rejects. `Framework/Window/GenericWindow/GenericWindow.cpp`'s keybinding loop is the reference example.
 
 ### Renderer Backends
 Set `renderer:` in `Config/Core/Renderer.yaml`. Built-in options: `opengl` (aliases: `gl`, `ogl`, `legacy`), `vulkan` (aliases: `vk`), `webgpu` (aliases: `wgpu`). For a custom renderer, set `renderer: custom` and assign a `GenericRenderer*` subclass to `initInfo.customRenderer` (and optionally `customTexture`).
@@ -250,9 +259,35 @@ Then call `UImGui::Plugins::loadStandard()` in `Instance::begin()`.
 
 Plugin support is unavailable on WASM (Emscripten requires static linking) and effectively requires the shared-library build variant. Plugins must be recompiled per-platform and may need to match the framework version exactly.
 
+## Error Handling — no exceptions
+
+**Never use `throw`, `try`/`catch`, or any API whose error path is an exception.** Emscripten builds without exception support, so a throw does not unwind — it calls `abort()` and takes the process down. A `catch` block written against it is dead code that silently does nothing. Most of the framework's public API is additionally marked `noexcept`, where an escaping exception is `std::terminate` on every platform, WASM or not.
+
+Report errors by return value instead — `bool`, an empty/`nullptr` result, or an out-parameter — and log with `Logger::log(..., ULOG_LOG_TYPE_ERROR)`. Where no return channel exists (e.g. `GenericWindow::createWindow()` returns `void` and is pure-virtual, so the signature cannot change without breaking every custom backend), log and `exit(EXIT_FAILURE)` rather than continuing into a null dereference.
+
+Standard-library APIs to avoid, with the replacement used in-tree:
+
+- **`std::locale`** — the `std::locale("")` constructor throws when the environment names a locale the runtime doesn't know. Use `std::setlocale(LC_CTYPE, "")` (returns `nullptr` on failure) plus `std::towlower`/`std::towupper` from `<cwctype>`, as `Framework/Core/Utilities.cpp` does. Set `LC_CTYPE` only — `LC_ALL`/`LC_NUMERIC` change the decimal separator `strtod` uses and break YAML float parsing.
+- **`std::stoi` / `std::stof` / `std::stod`** — use `std::from_chars` or the `strtol`/`strtod` family.
+- **`.at()` on containers** — use `operator[]` after checking bounds, or `find()`.
+- **`dynamic_cast` to a reference type** — throws `std::bad_cast`; cast to a pointer and null-check. Note `std::tolower(ch, loc)` for a `char32_t` hits this internally via `use_facet<ctype<char32_t>>`, since no standard locale installs that facet.
+
+Known remaining throw sites, all in third-party headers rather than framework code: `utf8::utf8to32` and friends throw `utf8::invalid_utf8` on malformed input (the `utf8::unchecked` namespace and `utf8::replace_invalid` are the non-throwing alternatives), and rapidyaml aborts through its error callback rather than throwing — see the `keyValid` / `find_child` notes under "Configuration Files".
+
 ## Memory Management
 
 The framework ships a custom allocator (`UImGui::Allocator`) used to make plugin support on Windows work. Use the framework's custom container typedefs (see "Custom Types" below) instead of raw STL containers when plugin support matters. For simple apps that don't need plugins on Windows, the standard allocator is largely compatible.
+
+### Stack-allocated backends (deliberate, do not "optimise")
+
+The framework aims to keep as much data as possible on the stack rather than the heap. Two places look like wasted space but are intentional:
+
+- **`Texture` (`Framework/Renderer/Texture.hpp`)** embeds a complete `OpenGLTexture` *and* `VulkanTexture` in every instance, plus a small dispatch table, instead of holding one heap-allocated `GenericTexture*` chosen at runtime.
+- **`RendererInternal` (`Framework/Renderer/Renderer.hpp`)** embeds `OpenGLRenderer` and `VulkanRenderer`/`WebGPURenderer` as by-value members and exposes them through a `renderers[UIMGUI_RENDERER_TYPE_COUNT]` array of pointers into itself.
+
+Both trade a larger object for zero allocations and no indirection on construction. Replacing either with a single dynamically-dispatched pointer, or shrinking the union of backends, is a **regression against this design goal** — leave them alone.
+
+One consequence worth knowing when editing `RendererInternal`: the `renderers` array is a member initialiser, so its `custom` slot captures `custom` while it is still `nullptr`. `loadConfig` patches `renderers[UIMGUI_RENDERER_TYPE_CUSTOM]` after resolving the custom renderer from the init info. Any new renderer type needs the same treatment.
 
 ## Build Customisation
 
@@ -291,17 +326,17 @@ Containers (allocator-aware wrappers; prefer these for plugin-safe code):
 - `TMultiset`, `TSTDMultiset`, `TSTDUnorderedMultiset`
 
 Enums:
-- `ComponentState` – `RUNNING`, `PAUSED`, `OFF`
+- `ComponentState` – `UIMGUI_COMPONENT_STATE_PAUSED` (= 0), `UIMGUI_COMPONENT_STATE_RUNNING`, `UIMGUI_COMPONENT_STATE_OFF`. Note the declaration order: `PAUSED` is the zero value, but components default to `RUNNING`
 - `ComponentType` – `UIMGUI_COMPONENT_TYPE_INLINE/TITLEBAR/WINDOW`
 - `RendererType` – `OPENGL`, `VULKAN_WEBGPU`, `CUSTOM` (+ `COUNT`, `ALT_NAMES_COUNT`)
 
 ## Logging
 
-The framework uses [UntitledLog](https://github.com/MadLadSquad/UntitledLog) (`using namespace UVKLog;` is applied by `Types.cpp`). Common helpers:
+The framework uses [UntitledLog](https://github.com/MadLadSquad/UntitledLog) (`using namespace ULog;` is applied by `Types.hpp`). Common helpers:
 ```cpp
 Logger::log("message", ULOG_LOG_TYPE_NOTE, extraArg1, extraArg2);
 Logger::setCurrentLogFile("log.txt");
-Logger::setLogOperation(UVK_LOG_OPERATION_FILE_AND_TERMINAL);
+Logger::setLogOperation(ULOG_LOG_OPERATION_FILE_AND_TERMINAL);
 Logger::setCrashOnError(false);   // call in Instance ctor to disable crash-on-error before renderer start
 ```
 In production builds, the framework crashes on error by default unless `production.crash-on-error: false` is set in `uvproj.yaml`.

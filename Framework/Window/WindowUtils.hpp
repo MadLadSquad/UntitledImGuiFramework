@@ -10,6 +10,8 @@ namespace UImGui
         WindowUtils(const WindowUtils&) = delete;
         void operator=(WindowUtils const&) = delete;
 
+        // Returns true for as long as the main loop should keep rendering, and false once the window has been asked to
+        // close
         // Event safety - post-begin
         static bool shouldRender() noexcept;
 

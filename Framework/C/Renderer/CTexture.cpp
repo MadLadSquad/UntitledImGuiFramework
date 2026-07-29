@@ -13,8 +13,18 @@ void UImGui_Texture_defaultFreeFunc(void* data)
 
 UImGui_CTexture* UImGui_Texture_init(const UImGui_String file, const bool bFiltered)
 {
-    UImGui::Texture tex(file);
-    return tex.init(file, bFiltered) ? &UImGui::Global::get().deallocationStruct.textures.emplace_back(tex) : nullptr;
+    // Constructed in place. This used to build a local Texture(which already initialised it), call init() on it a second
+    // time, copy it into the list, and then let the local's destructor clear() the GPU texture that the stored copy was
+    // still pointing at - so every handle returned from here referred to an already-destroyed texture
+    auto& textures = UImGui::Global::get().deallocationStruct.textures;
+    auto& tex = textures.emplace_back();
+
+    if (!tex.init(file, bFiltered))
+    {
+        textures.pop_back();
+        return nullptr;
+    }
+    return &tex;
 }
 
 void UImGui_Texture_load(UImGui_CTexture* texture, void* data, const UImGui_FVector2 size, const uint32_t depth,
@@ -52,11 +62,11 @@ void UImGui_Texture_release(const UImGui_CTexture* texture)
 {
     // Could use pointer arithmetic but that would be really unsafe
     auto& textures = UImGui::Global::get().deallocationStruct.textures;
-    for (size_t i = 0; i < textures.size(); i++)
+    for (auto it = textures.begin(); it != textures.end(); ++it)
     {
-        if (texture == &textures[i])
+        if (texture == &*it)
         {
-            textures.erase(textures.begin() + static_cast<decltype(UImGui::Global::get().deallocationStruct.textures)::difference_type>(i));
+            textures.erase(it);
             return;
         }
     }

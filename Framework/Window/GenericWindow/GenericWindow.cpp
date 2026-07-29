@@ -196,8 +196,18 @@ skip_window_config:
         for (const auto& a : binds.children())
         {
             InputAction action;
-            a["key"].load(&action.name);
-            a["val"].load(&action.keyCodes);
+            // find_child, not operator[] - the const operator[] aborts through the rapidyaml callback when the child
+            // doesn't exist, so it cannot be guarded after the fact. find_child returns an invalid ref instead, which
+            // is what keyValid is able to reject.
+            const auto key = a.find_child("key");
+            const auto val = a.find_child("val");
+            if (!keyValid(key) || !keyValid(val))
+            {
+                Logger::log("Skipping a malformed entry in the Keybindings.yaml config file - every binding needs both a 'key' and a 'val' field!", ULOG_LOG_TYPE_WARNING);
+                continue;
+            }
+            key.load(&action.name);
+            val.load(&action.keyCodes);
 
             // Sanitise keys that vary in function between platforms
             for (auto& f : action.keyCodes)

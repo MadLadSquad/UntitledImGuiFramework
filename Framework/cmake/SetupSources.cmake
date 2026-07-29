@@ -151,10 +151,16 @@ if (USE_I18N_MODULE)
     )
 endif()
 
-if (BUILD_MODE_VENDOR)
+if (BUILD_VARIANT_VENDOR)
     foreach(f IN ITEMS ${ENABLED_LIBRARIES})
-        get_target_property(INCLUDE_DIRS ${f} INCLUDE_DIRECTORIES)
-        list(APPEND LM_INCLUDE_DIRS ${INCLUDE_DIRS})
+        # Vendored libraries are real targets(added with add_subdirectory), so we can read their include dirs directly.
+        # An unset INCLUDE_DIRECTORIES property evaluates to "<var>-NOTFOUND", which must not be appended verbatim.
+        if (TARGET ${f})
+            get_target_property(INCLUDE_DIRS ${f} INCLUDE_DIRECTORIES)
+            if (INCLUDE_DIRS)
+                list(APPEND LM_INCLUDE_DIRS ${INCLUDE_DIRS})
+            endif()
+        endif()
     endforeach()
 endif()
 

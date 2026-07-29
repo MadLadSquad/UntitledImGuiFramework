@@ -93,7 +93,7 @@ namespace UImGui
          */
         virtual void onEventConfigureStyle(ImGuiStyle& style, ImGuiIO& io) = 0;
         /**
-         * @brief Returns the global void* defined in the beginInfo struct
+         * @brief Returns the global void* defined in the initInfo struct
          * @note Event Safety - Any time
          */
         static void* getGlobal() noexcept;

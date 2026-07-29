@@ -1,11 +1,13 @@
 #include "WindowInterface.hpp"
 #include <Global.hpp>
 
-#define window(x, ...) get()->x
+// Delegates a call to the active GenericWindow backend. Exists purely to keep the ~80 one-line forwarders below
+// readable; #undef'd at the bottom of the file so it cannot leak into anything else.
+#define window(x) get()->x
 
 void UImGui::Window::setTitle(const String name) noexcept
 {
-    return window(setTitle(name));
+    window(setTitle(name));
 }
 
 UImGui::String UImGui::Window::getTitle() noexcept
@@ -50,17 +52,17 @@ bool& UImGui::Window::getWindowFullscreenSetting() noexcept
 
 void UImGui::Window::setWindowFullscreen(const bool bFullscreen) noexcept
 {
-    return window(setWindowFullscreen(bFullscreen));
+    window(setWindowFullscreen(bFullscreen));
 }
 
 void UImGui::Window::saveSettings(const bool bSaveKeybinds) noexcept
 {
-    return window(saveSettings(bSaveKeybinds));
+    window(saveSettings(bSaveKeybinds));
 }
 
 void UImGui::Window::close() noexcept
 {
-    return window(close());
+    window(close());
 }
 
 UImGui::FVector2 UImGui::Window::getCurrentWindowPosition() noexcept
@@ -80,12 +82,12 @@ UImGui::FVector2 UImGui::Window::getWindowPositionChange() noexcept
 
 void UImGui::Window::refreshSettings() noexcept
 {
-    return window(refreshSettings());
+    window(refreshSettings());
 }
 
 void UImGui::Window::setIcon(const String name) noexcept
 {
-    return window(setIcon(name));
+    window(setIcon(name));
 }
 
 UImGui::String UImGui::Window::getIconLocation() noexcept
@@ -105,7 +107,7 @@ void UImGui::Window::setIconLocationSetting(const String location) noexcept
 
 void UImGui::Window::setCurrentWindowPosition(const FVector2 pos) noexcept
 {
-    return window(setCurrentWindowPosition(pos));
+    window(setCurrentWindowPosition(pos));
 }
 
 UImGui::FVector2 UImGui::Window::getWindowSizeInScreenCoords() noexcept
@@ -115,7 +117,7 @@ UImGui::FVector2 UImGui::Window::getWindowSizeInScreenCoords() noexcept
 
 void UImGui::Window::setWindowSizeInScreenCoords(const FVector2 sz) noexcept
 {
-    return window(setWindowSizeInScreenCoords(sz));
+    window(setWindowSizeInScreenCoords(sz));
 }
 
 UImGui::FVector4 UImGui::Window::getWindowDecorationFrameDistances() noexcept
@@ -125,32 +127,32 @@ UImGui::FVector4 UImGui::Window::getWindowDecorationFrameDistances() noexcept
 
 void UImGui::Window::pushWindowResizedInScreenCoordsCallback(const TFunction<void(int, int)>& f) noexcept
 {
-    return window(pushWindowResizedInScreenCoordsCallback(f));
+    window(pushWindowResizedInScreenCoordsCallback(f));
 }
 
 void UImGui::Window::pushWindowResizeCallback(const TFunction<void(int, int)>& f) noexcept
 {
-    return window(pushWindowResizeCallback(f));
+    window(pushWindowResizeCallback(f));
 }
 
 void UImGui::Window::pushWindowCloseCallback(const TFunction<void(void)>& f) noexcept
 {
-    return window(pushWindowCloseCallback(f));
+    window(pushWindowCloseCallback(f));
 }
 
 void UImGui::Window::requestWindowAttention() noexcept
 {
-    return window(requestWindowAttention());
+    window(requestWindowAttention());
 }
 
 void UImGui::Window::hideWindow() noexcept
 {
-    return window(hideWindow());
+    window(hideWindow());
 }
 
 void UImGui::Window::showWindow() noexcept
 {
-    return window(showWindow());
+    window(showWindow());
 }
 
 bool& UImGui::Window::getWindowHiddenSetting() noexcept
@@ -175,7 +177,7 @@ bool& UImGui::Window::getWindowSurfaceTransparentSetting() noexcept
 
 void UImGui::Window::focusWindow() noexcept
 {
-    return window(focusWindow());
+    window(focusWindow());
 }
 
 bool& UImGui::Window::getWindowFocusedSetting() noexcept
@@ -185,7 +187,7 @@ bool& UImGui::Window::getWindowFocusedSetting() noexcept
 
 void UImGui::Window::pushWindowFocusCallback(const TFunction<void(bool)>& f) noexcept
 {
-    return window(pushWindowFocusCallback(f));
+    window(pushWindowFocusCallback(f));
 }
 
 bool UImGui::Window::getWindowCurrentlyHidden() noexcept
@@ -200,17 +202,17 @@ bool UImGui::Window::getWindowCurrentlyFocused() noexcept
 
 void UImGui::Window::iconifyWindow() noexcept
 {
-    return window(iconifyWindow());
+    window(iconifyWindow());
 }
 
 void UImGui::Window::restoreWindowState() noexcept
 {
-    return window(restoreWindowState());
+    window(restoreWindowState());
 }
 
 void UImGui::Window::pushWindowIconifyCallback(const TFunction<void(bool)>& f) noexcept
 {
-    return window(pushWindowIconifyCallback(f));
+    window(pushWindowIconifyCallback(f));
 }
 
 bool UImGui::Window::getWindowIconified() noexcept
@@ -220,7 +222,7 @@ bool UImGui::Window::getWindowIconified() noexcept
 
 void UImGui::Window::pushWindowPositionChangeCallback(const TFunction<void(FVector2)>& f) noexcept
 {
-    return window(pushWindowPositionChangeCallback(f));
+    window(pushWindowPositionChangeCallback(f));
 }
 
 UImGui::FVector2 UImGui::Window::getWindowContentScale() noexcept
@@ -230,17 +232,17 @@ UImGui::FVector2 UImGui::Window::getWindowContentScale() noexcept
 
 void UImGui::Window::pushWindowContentScaleCallback(const TFunction<void(FVector2)>& f) noexcept
 {
-    return window(pushWindowContentScaleCallback(f));
+    window(pushWindowContentScaleCallback(f));
 }
 
 void UImGui::Window::setSizeLimits(const FVector2 min, const FVector2 max) noexcept
 {
-    return window(setSizeLimits(min, max));
+    window(setSizeLimits(min, max));
 }
 
 void UImGui::Window::setSizeLimitByAspectRatio(const FVector2 ratio) noexcept
 {
-    return window(setSizeLimitByAspectRatio(ratio));
+    window(setSizeLimitByAspectRatio(ratio));
 }
 
 UImGui::FVector4& UImGui::Window::getSizeLimits() noexcept
@@ -255,7 +257,7 @@ UImGui::FVector2& UImGui::Window::getAspectRatioSizeLimits() noexcept
 
 void UImGui::Window::setWindowResizeable(const bool bResizeable) noexcept
 {
-    return window(setWindowResizeable(bResizeable));
+    window(setWindowResizeable(bResizeable));
 }
 
 bool& UImGui::Window::getWindowResizeableSetting() noexcept
@@ -280,17 +282,17 @@ bool& UImGui::Window::getWindowDecoratedSetting() noexcept
 
 void UImGui::Window::setWindowDecorated(const bool bDecorated) noexcept
 {
-    return window(setWindowDecorated(bDecorated));
+    window(setWindowDecorated(bDecorated));
 }
 
 void UImGui::Window::pushWindowRefreshCallback(const TFunction<void(void)>& f) noexcept
 {
-    return window(pushWindowRefreshCallback(f));
+    window(pushWindowRefreshCallback(f));
 }
 
 void UImGui::Window::maximiseWindow() noexcept
 {
-    return window(maximiseWindow());
+    window(maximiseWindow());
 }
 
 bool UImGui::Window::getWindowCurrentlyMaximised() noexcept
@@ -300,7 +302,7 @@ bool UImGui::Window::getWindowCurrentlyMaximised() noexcept
 
 void UImGui::Window::pushWindowMaximiseCallback(const TFunction<void(bool)>& f) noexcept
 {
-    return window(pushWindowMaximiseCallback(f));
+    window(pushWindowMaximiseCallback(f));
 }
 
 bool& UImGui::Window::getWindowMaximisedSetting() noexcept
@@ -325,22 +327,22 @@ UImGui::Monitor UImGui::Window::getPrimaryMonitor() noexcept
 
 void UImGui::Window::pushWindowOSDragDropCallback(const std::function<void(const FString&)>& f) noexcept
 {
-    return window(pushWindowOSDragDropCallback(f));
+    window(pushWindowOSDragDropCallback(f));
 }
 
 void UImGui::Window::Platform::setWindowAlwaysOnTop() noexcept
 {
-    return window(Platform_setWindowAlwaysOnTop());
+    window(Platform_setWindowAlwaysOnTop());
 }
 
 void UImGui::Window::Platform::setWindowAlwaysOnBottom() noexcept
 {
-    return window(Platform_setWindowAlwaysOnBottom());
+    window(Platform_setWindowAlwaysOnBottom());
 }
 
 void UImGui::Window::Platform::setWindowShowingOnPager(const bool bShowInPager) noexcept
 {
-    return window(Platform_setWindowShowingOnPager(bShowInPager));
+    window(Platform_setWindowShowingOnPager(bShowInPager));
 }
 
 bool UImGui::Window::Platform::getWindowShowingOnPager() noexcept
@@ -350,7 +352,7 @@ bool UImGui::Window::Platform::getWindowShowingOnPager() noexcept
 
 void UImGui::Window::Platform::setWindowShowingOnTaskbar(const bool bShowOnTaskbar) noexcept
 {
-    return window(Platform_setWindowShowingOnTaskbar(bShowOnTaskbar));
+    window(Platform_setWindowShowingOnTaskbar(bShowOnTaskbar));
 }
 
 bool UImGui::Window::Platform::getWindowShowingOnTaskbar() noexcept
@@ -360,7 +362,7 @@ bool UImGui::Window::Platform::getWindowShowingOnTaskbar() noexcept
 
 void UImGui::Window::Platform::setWindowType(const String type) noexcept
 {
-    return window(Platform_setWindowType(type));
+    window(Platform_setWindowType(type));
 }
 
 size_t UImGui::Window::Platform::getWindowID() noexcept
@@ -392,3 +394,5 @@ UImGui::GenericWindow* UImGui::Window::get() noexcept
 {
     return Global::get().window.window;
 }
+
+#undef window

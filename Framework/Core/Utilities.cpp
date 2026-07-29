@@ -2,7 +2,11 @@
 #include <Global.hpp>
 #include <Components/Instance.hpp>
 #include <thread>
-#include <locale>
+#include <clocale>
+#include <cstdlib>
+#include <cstring>
+#include <cwchar>
+#include <cwctype>
 #ifdef _WIN32
     #include <windows.h>
 #elif !__EMSCRIPTEN__
@@ -17,21 +21,27 @@
 
 UImGui::FString UImGui::Utility::loadFileToString(const FString& location) noexcept
 {
-    std::ifstream f(location.c_str());
+    // std::ios::binary is required, not cosmetic. In text mode Windows collapses every CRLF into a single LF, so read()
+    // consumes the whole file but stores fewer bytes than tellg() reported, and the tail of the string stays filled with
+    // the NULs it was constructed with. Every config file read through here ended up with trailing garbage.
+    std::ifstream f(location.c_str(), std::ios::binary);
     if (!f.is_open())
         return {};
 
     f.seekg(0, std::ios::end);
 
-    const size_t size = f.tellg();
+    // Checked as a pos_type before narrowing - tellg() reports failure as (pos_type)-1, which becomes a huge but perfectly
+    // valid size_t if the conversion happens first
+    const std::ifstream::pos_type size = f.tellg();
     if (size == std::ifstream::pos_type(-1))
         return {};
 
-    FString buffer(size, '\0');
+    FString buffer(static_cast<size_t>(size), '\0');
 
-    f.seekg(0);
+    f.seekg(0, std::ios::beg);
     f.read(buffer.data(), static_cast<std::streamsize>(size));
-    f.close();
+    // Trim to what was actually extracted, so a short read truncates the string instead of padding it with NULs
+    buffer.resize(static_cast<size_t>(f.gcount()));
 
     return buffer;
 }
@@ -64,60 +74,66 @@ void UImGui::Utility::removeConsole() noexcept
 #endif
 }
 
+// Case conversion goes through the C locale(std::towlower/std::towupper) instead of a std::locale object. std::locale("")
+// throws when the environment names a locale the runtime doesn't know about, and the framework has to build without
+// exception support because of emscripten, so that throw would abort the process rather than be catchable. setlocale
+// reports the same condition by returning nullptr, which is simply ignored - the C locale stays in effect and case
+// conversion falls back to ASCII rules.
+//
+// Only LC_CTYPE is set, never LC_ALL: LC_NUMERIC changes the decimal separator used by strtod, which would break float
+// parsing in every YAML config file. The current value is queried first so that an application which deliberately picked
+// its own LC_CTYPE before calling into the framework keeps it - only the default "C" startup value gets replaced.
+static void ensureCTypeLocale() noexcept
+{
+    static const bool bInitialised = []() -> bool
+    {
+        const char* current = std::setlocale(LC_CTYPE, nullptr);
+        if (current == nullptr || std::strcmp(current, "C") == 0)
+            std::setlocale(LC_CTYPE, "");
+        return true;
+    }();
+    static_cast<void>(bInitialised);
+}
+
+// towlower/towupper take a wint_t, so on Windows, where wchar_t is 16 bits, codepoints outside the BMP cannot be
+// represented and are left untouched. Those planes carry almost no case mappings, and the std::locale based code this
+// replaced handled them no better - on Windows it asked for a ctype<char32_t> facet, which no standard locale installs.
+static UImGui::FString convertCase(const UImGui::FString& str, const bool bUpper) noexcept
+{
+    ensureCTypeLocale();
+
+    std::u32string tmp = utf8::utf8to32(str);
+    for (auto& a : tmp)
+    {
+        if (a > static_cast<char32_t>(WCHAR_MAX))
+            continue;
+        const auto wide = static_cast<wint_t>(a);
+        a = static_cast<char32_t>(bUpper ? std::towupper(wide) : std::towlower(wide));
+    }
+
+    UImGui::FString result;
+    result.assign(utf8::utf32to8(tmp));
+    return result;
+}
+
 UImGui::FString UImGui::Utility::toLower(const String str) noexcept
 {
-    std::u32string tmp = utf8::utf8to32(FString(str));
-
-    for (auto& a : tmp)
-#ifdef _WIN32
-        a = std::tolower(a, std::locale(""));
-#else
-        a = std::tolower<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
-#endif
-    const auto tmp2 = utf8::utf32to8(tmp);
-    FString result;
-    result.assign(tmp2);
-    return result;
+    return convertCase(FString(str), false);
 }
 
 void UImGui::Utility::toLower(FString& str) noexcept
 {
-    std::u32string tmp = utf8::utf8to32(str);
-    for (auto& a : tmp)
-#ifdef _WIN32
-        a = std::tolower(a, std::locale(""));
-#else
-        a = std::tolower<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
-#endif
-    str = utf8::utf32to8(tmp);
+    str = convertCase(str, false);
 }
 
 UImGui::FString UImGui::Utility::toUpper(const String str) noexcept
 {
-    std::u32string tmp = utf8::utf8to32(FString(str));
-
-    for (auto& a : tmp)
-#ifdef _WIN32
-        a = std::toupper(a, std::locale(""));
-#else
-        a = std::toupper<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
-#endif
-    const auto tmp2 = utf8::utf32to8(tmp);
-    FString res;
-    res.assign(tmp2);
-    return res;
+    return convertCase(FString(str), true);
 }
 
 void UImGui::Utility::toUpper(FString& str) noexcept
 {
-    std::u32string tmp = utf8::utf8to32(str);
-    for (auto& a : tmp)
-#ifdef _WIN32
-        a = std::toupper(a, std::locale(""));
-#else
-        a = std::toupper<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
-#endif
-    str = utf8::utf32to8(tmp);
+    str = convertCase(str, true);
 }
 
 void UImGui::Utility::loadContext(void* context) noexcept
@@ -194,9 +210,9 @@ void UImGui::Utility::initializeKeyStrings(KeyStringsArrType& keyStrings) noexce
     keyStrings[Keys_Y] = { "Y", "Y" };
     keyStrings[Keys_Z] = { "Z", "Z" };
 
-    keyStrings[Keys_LeftBracket] = { "Left Bracket", "]" };
+    keyStrings[Keys_LeftBracket] = { "Left Bracket", "[" };
     keyStrings[Keys_Backslash] = { "Backslash", "\\" };
-    keyStrings[Keys_RightBracket] = { "Left Bracket", "[" };
+    keyStrings[Keys_RightBracket] = { "Right Bracket", "]" };
     keyStrings[Keys_GraveAccent] = { "Grave Accent", "`" };
     keyStrings[Keys_WorldOne] = { "World One", "Wld1" };
     keyStrings[Keys_WorldTwo] = { "World Two", "Wld2" };
@@ -313,9 +329,19 @@ void UImGui::Utility::initializeKeyStrings(KeyStringsArrType& keyStrings) noexce
 
 void UImGui::Utility::keyToText(FString& text, const InputAction& action, const bool bLong) noexcept
 {
+    // The separator is written between elements rather than after each one, so there is nothing to trim afterwards. This
+    // used to append a trailing '+' per key and then pop_back() unconditionally, which for an empty keyCodes list either
+    // ate a character the caller had already put in text, or - if text was empty too - popped an empty string, which is
+    // undefined behaviour. Note this appends to text rather than replacing it; the returning overload relies on that.
+    bool bFirst = true;
     for (const auto& a : action.keyCodes)
-        text += keyToText(static_cast<CKeys>(a), bLong) + "+";
-    text.pop_back();
+    {
+        if (!bFirst)
+            text += "+";
+        bFirst = false;
+
+        text += keyToText(static_cast<CKeys>(a), bLong);
+    }
 }
 
 UImGui::FString UImGui::Utility::keyToText(const InputAction& action, const bool bLong) noexcept
@@ -334,31 +360,30 @@ void UImGui::Utility::sleep(const uint64_t milliseconds) noexcept
     #define SIGTERM 15
 #endif
 
+#ifndef __EMSCRIPTEN__
+// Interrupt state, only ever written by the interrupt handler and processPendingInterrupt:
+//   0 = no interrupt, 1 = interrupt raised but not yet handled, 2 = shutdown already requested.
+// Anything non-zero means a second interrupt should terminate immediately, which is what preserves the "press CTRL+C
+// again to forcefully terminate" behaviour now that the handler no longer shuts down inline.
+static volatile sig_atomic_t interruptState = 0;
+#endif
+
 void UImGui::Utility::interruptSignalHandler() noexcept
 {
 #ifndef __EMSCRIPTEN__
+    // The handler runs in a signal context(a separate thread on Windows), where almost nothing is legal to call - not
+    // Logger::log, not Instance::shutdown() and its GLFW calls, not even exit(), because exit() runs atexit handlers and
+    // static destructors on top of whatever the interrupted code was in the middle of. So the handler does the only two
+    // things it may: set an atomic flag, and, on a repeat interrupt, terminate through std::_Exit, which POSIX lists as
+    // async-signal-safe and which the C standard guarantees on every platform. Everything else is deferred to
+    // processPendingInterrupt, which the render loop calls once per frame.
 #ifdef _WIN32
     if (!SetConsoleCtrlHandler([](DWORD signal) -> BOOL WINAPI {
         if (signal == CTRL_C_EVENT)
         {
-#else
-    struct sigaction data{ .sa_flags = SA_SIGINFO };
-    data.sa_sigaction = [](int, siginfo_t*, void*) -> void {
-#endif
-            static bool bFirst = true;
-            if (bFirst)
-            {
-                Logger::log("SIGINT interrupted. Press CTRL+C again to forcefully terminate it!", ULOG_LOG_TYPE_WARNING);
-                Instance::shutdown();
-                bFirst = false;
-#ifdef _WIN32
-                return TRUE;
-#else
-                return;
-#endif
-            }
-            exit(SIGTERM);
-#ifdef _WIN32
+            if (interruptState != 0)
+                std::_Exit(128 + SIGINT);
+            interruptState = 1;
             return TRUE;
         }
         return FALSE;
@@ -367,11 +392,29 @@ void UImGui::Utility::interruptSignalHandler() noexcept
         Logger::log("Couldn't setup the Windows interrupt handler!", ULOG_LOG_TYPE_WARNING);
     }
 #else
-    },
+    struct sigaction data{ .sa_flags = SA_SIGINFO };
+    data.sa_sigaction = [](int, siginfo_t*, void*) -> void {
+        if (interruptState != 0)
+            std::_Exit(128 + SIGINT);
+        interruptState = 1;
+    };
 
     sigaction(SIGINT, &data, nullptr);
     sigaction(SIGTERM, &data, nullptr);
 #endif
+#endif
+}
+
+void UImGui::Utility::processPendingInterrupt() noexcept
+{
+#ifndef __EMSCRIPTEN__
+    if (interruptState != 1)
+        return;
+    // Left non-zero on purpose, so a second interrupt still hits the _exit path in the handler
+    interruptState = 2;
+
+    Logger::log("SIGINT interrupted. Press CTRL+C again to forcefully terminate it!", ULOG_LOG_TYPE_WARNING);
+    Instance::shutdown();
 #endif
 }
 
@@ -391,6 +434,15 @@ UImGui::TVector<UImGui::FString> UImGui::Utility::splitString(const FString& str
 {
     TVector<FString> result;
 
+    // An empty(or null) separator has no sensible split: find() matches it at every position, which would produce a run
+    // of empty strings. Return the input unsplit instead.
+    const size_t tokenLength = token == nullptr ? 0 : strlen(token);
+    if (tokenLength == 0)
+    {
+        result.emplace_back(str);
+        return result;
+    }
+
     size_t i = 0;
     size_t last = 0;
     while (true)
@@ -398,12 +450,14 @@ UImGui::TVector<UImGui::FString> UImGui::Utility::splitString(const FString& str
         i = str.find(token, i);
         if (i == FString::npos)
         {
-            result.emplace_back(str.substr(last, str.length() - last));
+            result.emplace_back(str.substr(last));
             break;
         }
 
         result.emplace_back(str.substr(last, i - last));
-        i++;
+        // Skip the whole separator, not a single character. Advancing by one left the trailing tokenLength - 1
+        // characters at the head of the next segment, so "a::b" split on "::" came back as { "a", ":b" }
+        i += tokenLength;
         last = i;
     }
     return result;

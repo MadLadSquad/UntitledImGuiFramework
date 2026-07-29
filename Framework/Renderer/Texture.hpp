@@ -17,6 +17,24 @@ namespace UImGui
         Texture() noexcept = default;
         // Event Safety - Post-begin
         Texture(String location, bool bFiltered = true) noexcept;
+
+        /**
+         * @brief Textures are neither copyable nor movable.
+         *
+         * A Texture owns GPU state that its destructor releases through clear(), so any copy would destroy a GPU texture
+         * that the other instance still refers to. On top of that, the textures[] dispatch table below is a member
+         * initialiser holding pointers to this object's own embedded backend members - a copy or move would carry those
+         * pointers over unchanged and leave the new object dispatching into the old one.
+         *
+         * Refcounting was rejected deliberately: it would put an atomic on a type the framework otherwise keeps free of
+         * indirection. Pass Textures by reference, hold them in a node-based container(the C API uses TList for exactly
+         * this reason, since it never relocates its elements), or store them as members of a longer-lived object.
+         */
+        Texture(const Texture&) = delete;
+        Texture& operator=(const Texture&) = delete;
+        Texture(Texture&&) = delete;
+        Texture& operator=(Texture&&) = delete;
+
         // Event Safety - Post-begin
         bool init(String location, bool bFiltered = true) noexcept;
 

@@ -11,7 +11,11 @@ namespace UImGui
     {
         TVector<FString> keyStrings;
         TVector<UImGui_MonitorData> monitors;
-        TVector<Texture> textures;
+        // TList, not TVector: Texture is non-copyable and non-movable(it owns GPU state and an internal dispatch table
+        // pointing at its own members), and a list never relocates its elements. That also makes the UImGui_CTexture*
+        // handles handed out to C callers stable - with a vector, every texture created after one was handed out could
+        // reallocate the storage and dangle it
+        TList<Texture> textures;
         TVector<UImGui_CPlugin> plugins;
     };
 }

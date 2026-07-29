@@ -34,6 +34,9 @@ extern "C"
         void(*ImGuiNewFrame)(struct UImGui_CGenericWindowInitInfo*);
         void(*ImGuiShutdown)(struct UImGui_CGenericWindowInitInfo*);
 
+        // Returns true for as long as the main loop should keep rendering, and false once the window has been asked to
+        // close. Note this is the inverse of the "should close" predicate most windowing libraries expose(GLFW's
+        // glfwWindowShouldClose, SDL's quit event, etc.), so remember to negate it in your implementation.
         bool(*shouldRender)(struct UImGui_CGenericWindowInitInfo*);
         void(*pollEvents)(struct UImGui_CGenericWindowInitInfo*, double*, double*, double*);
         void(*waitEventsTimeout)(struct UImGui_CGenericWindowInitInfo*, double);

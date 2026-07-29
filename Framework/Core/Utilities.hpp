@@ -65,7 +65,13 @@ namespace UImGui
         static KeyStringsArrType& getKeyStrings() noexcept;
     private:
         friend class Global;
+        friend class RendererInternal;
         static void interruptSignalHandler() noexcept;
+
+        // Runs the deferred half of the interrupt handling installed by interruptSignalHandler. The handler itself may
+        // only touch a sig_atomic_t flag, so the actual logging and shutdown happen here, from the render loop, where
+        // calling arbitrary code is safe. A no-op unless an interrupt was raised since the last call.
+        static void processPendingInterrupt() noexcept;
 
         static void initializeKeyStrings(KeyStringsArrType& keyStrings) noexcept;
     };

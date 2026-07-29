@@ -45,8 +45,12 @@ void UImGui::RendererInternal::start()
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop_arg(tick, this, 0, true);
 #else
-    while (!WindowUtils::shouldRender())
+    while (WindowUtils::shouldRender())
+    {
+        // Runs the part of interrupt handling that isn't legal inside a signal handler
+        Utility::processPendingInterrupt();
         tick(this);
+    }
 #endif
 }
 

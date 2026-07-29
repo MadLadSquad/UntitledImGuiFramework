@@ -63,7 +63,6 @@ void UImGui::OpenGLRenderer::setupPostWindowCreation() noexcept
 #endif
 
     glEnable(GL_MULTISAMPLE);
-    glEnable(GL_DEPTH_TEST);
 
     const auto size = Window::getWindowSize();
 

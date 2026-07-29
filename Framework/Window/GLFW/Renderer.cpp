@@ -39,7 +39,7 @@ void UImGui::WindowGLFW::ImGuiShutdown() noexcept
 
 bool UImGui::WindowGLFW::shouldRender() noexcept
 {
-    return glfwWindowShouldClose(window);
+    return !glfwWindowShouldClose(window);
 }
 
 void UImGui::WindowGLFW::pollEvents(double& now, double& deltaTime, double& lastTime) noexcept

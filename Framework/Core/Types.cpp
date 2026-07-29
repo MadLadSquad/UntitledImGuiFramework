@@ -9,6 +9,9 @@ void c4::yml::write<UImGui::FString>(NodeRef* ref, UImGui::FString const& t)
 
 bool c4::yml::read(ConstNodeRef const& ref, UImGui::FString* t)
 {
+    // Guarded like the vector overloads below - ref.val() asserts inside rapidyaml on a node that carries no value
+    if (!keyValid(ref) || !ref.has_val())
+        return false;
     const auto val = ref.val();
     t->resize(val.len);
     memcpy(t->data(), val.data(), val.size());
@@ -24,6 +27,9 @@ void c4::yml::write<UImGui::FString16>(NodeRef* ref, UImGui::FString16 const& t)
 
 bool c4::yml::read(ConstNodeRef const& ref, UImGui::FString16* t)
 {
+    if (!keyValid(ref) || !ref.has_val())
+        return false;
+
     std::string str;
     const auto val = ref.val();
     str.resize(val.len);
@@ -42,6 +48,9 @@ void c4::yml::write<UImGui::FString32>(NodeRef* ref, UImGui::FString32 const& t)
 
 bool c4::yml::read(ConstNodeRef const& ref, UImGui::FString32* t)
 {
+    if (!keyValid(ref) || !ref.has_val())
+        return false;
+
     std::string str;
     const auto val = ref.val();
     str.resize(val.len);

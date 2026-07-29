@@ -22,9 +22,12 @@ void UImGui::WindowGLFW::createWindow() noexcept
     // Init GLFW
     if (!glfwInit())
     {
+        // createWindow() returns void(changing that would break every custom GenericWindow backend), so there is no way
+        // to report the failure to the caller. Returning here would let RendererInternal::start() carry on into
+        // renderer->init() with a null window, which segfaults - so bail out loudly instead of crashing later.
         Logger::log("GLFW initialisation failed!", ULOG_LOG_TYPE_ERROR);
         glfwTerminate();
-        return;
+        exit(EXIT_FAILURE);
     }
     Logger::log("Setting up the window", ULOG_LOG_TYPE_NOTE);
 
@@ -41,9 +44,10 @@ void UImGui::WindowGLFW::createWindow() noexcept
     window = glfwCreateWindow(static_cast<int>(windowSizeS.x), static_cast<int>(windowSizeS.y), windowData.name.c_str(), monitor, nullptr);
     if (!window)
     {
+        // See the glfwInit failure above - continuing without a window is a guaranteed segfault further down
         Logger::log("GLFW window creation failed!", ULOG_LOG_TYPE_ERROR);
         glfwTerminate();
-        return;
+        exit(EXIT_FAILURE);
     }
     Logger::log("Created window", ULOG_LOG_TYPE_NOTE);
 

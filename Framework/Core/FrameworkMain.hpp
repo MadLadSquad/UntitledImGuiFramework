@@ -13,7 +13,7 @@ namespace UImGui
 
         // Shares the important global context pointers between the executable and the shared library
         static void setupGlobal(Global* global, AllocatorFuncs* funcs, LoggerInternal* logger) noexcept;
-        // Parser CLI arguments
+        // Parses CLI arguments
         static void parseArguments(Instance* instance, int argc, char** argv) noexcept;
     };
 }

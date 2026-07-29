@@ -79,7 +79,9 @@ static WGPUAdapter requestAdapter(wgpu::Instance& instance, UImGui::FString& gpu
     WGPUAdapterInfo info = {};
     wgpuAdapterGetInfo(c_adapter, &info);
 
-    gpuName.resize(info.description.length);
+    // info.device is the GPU name. The length used to come from info.description while the bytes came from info.device,
+    // so the copy either overran the string(description is usually the longer of the two) or truncated the name
+    gpuName.resize(info.device.length);
     memcpy(gpuName.data(), info.device.data, info.device.length);
 
     vendorString.resize(info.vendor.length);
@@ -218,7 +220,7 @@ void UImGui::WebGPURenderer::setupPostWindowCreation() noexcept
     wgpuSurfaceConfigure(surface, &surfaceConfiguration);
     queue = wgpuDeviceGetQueue(device);
 
-    Logger::log("Successfully stated the WebGPU renderer!", ULOG_LOG_TYPE_SUCCESS);
+    Logger::log("Successfully started the WebGPU renderer!", ULOG_LOG_TYPE_SUCCESS);
 #endif
 }
 
@@ -250,6 +252,11 @@ void UImGui::WebGPURenderer::renderStart(double deltaTime) noexcept
 void UImGui::WebGPURenderer::renderEnd(double deltaTime) noexcept
 {
 #ifdef __EMSCRIPTEN__
+    // renderStart only logs when the surface is in an error state, so the texture can legitimately be null here. Creating
+    // a view from it would be a null dereference inside Dawn
+    if (surfaceTexture.texture == nullptr)
+        return;
+
     auto clear = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
 
     const WGPUTextureViewDescriptor viewDescriptor
@@ -300,6 +307,11 @@ void UImGui::WebGPURenderer::renderEnd(double deltaTime) noexcept
     wgpuRenderPassEncoderRelease(pass);
     wgpuCommandEncoderRelease(encoder);
     wgpuCommandBufferRelease(commandBuffer);
+
+    // wgpuSurfaceGetCurrentTexture in renderStart hands back an owning reference, so it has to be dropped once the frame
+    // has been submitted. Without this the surface leaks one texture per frame
+    wgpuTextureRelease(surfaceTexture.texture);
+    surfaceTexture.texture = nullptr;
 #endif
 }
 

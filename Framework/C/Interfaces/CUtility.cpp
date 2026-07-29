@@ -3,9 +3,7 @@
 #include <Interfaces/Input.hpp>
 #include <cstring>
 #include <Core/Global.hpp>
-#include <utfcpp/source/utf8.h>
 #include <Core/Types.hpp>
-#include <locale>
 
 UImGui_String UImGui_Utility_sanitiseFilepath(const UImGui_String str)
 {
@@ -68,16 +66,9 @@ UImGui_CGlobal* UImGui_Global_get(UImGui_CGlobal* parent)
 
 UImGui_String UImGui_Utility_toLower(char* str)
 {
-    UImGui::FString u8tmp = str;
-    std::u32string tmp = utf8::utf8to32(u8tmp);
-
-    for (auto& a : tmp)
-#ifdef _WIN32
-        a = std::tolower(a, std::locale(""));
-#else
-        a = std::tolower<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
-#endif
-    u8tmp = utf8::utf32to8(tmp);
+    // Delegated instead of duplicated - the C++ side sets up LC_CTYPE once and uses towlower, where this used to build a
+    // std::locale("") per character, which is both slow and a throw site in a build without exception support
+    const UImGui::FString u8tmp = UImGui::Utility::toLower(str);
 
     auto tmpRealloc = static_cast<char*>(realloc(str, u8tmp.size()));
     if (tmpRealloc == nullptr)
@@ -90,16 +81,7 @@ UImGui_String UImGui_Utility_toLower(char* str)
 
 UImGui_String UImGui_Utility_toUpper(char* str)
 {
-    UImGui::FString u8tmp = str;
-    std::u32string tmp = utf8::utf8to32(u8tmp);
-
-    for (auto& a : tmp)
-#ifdef _WIN32
-        a = std::toupper(a, std::locale(""));
-#else
-        a = std::toupper<wchar_t>(static_cast<wchar_t>(a), std::locale(""));
-#endif
-    u8tmp = utf8::utf32to8(tmp);
+    const UImGui::FString u8tmp = UImGui::Utility::toUpper(str);
 
     auto tmpRealloc = static_cast<char*>(realloc(str, u8tmp.size()));
     if (tmpRealloc == nullptr)

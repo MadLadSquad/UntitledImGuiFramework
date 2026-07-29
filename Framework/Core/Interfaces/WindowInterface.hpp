@@ -6,6 +6,21 @@
 
 namespace UImGui
 {
+    /**
+     * @brief The static interface to the window system. Most window properties exist in two independent forms - the
+     * live state of the window right now, and the persisted setting that lives in Config/Core/Window.yaml. The naming
+     * convention distinguishes the three kinds of accessor:
+     *
+     * - `doSomethingWindow()` / `setWindowX(...)` - acts on the live window immediately. It does NOT touch the setting,
+     *   so the change is lost on the next run unless the matching setting is updated too.
+     * - `getWindowXSetting()` - returns a *reference* to the persisted setting, so it doubles as the setter: assign
+     *   through it (e.g. `Window::getWindowHiddenSetting() = true;`). This does NOT touch the live window. Settings are
+     *   pushed to the window by `refreshSettings()` and written to disk by `saveSettings()`.
+     * - `getWindowCurrentlyX()` - queries the live window state, not the setting.
+     *
+     * So to change something permanently, assign through the `...Setting()` reference and then call `refreshSettings()`
+     * (to apply it now) and/or `saveSettings()` (to persist it).
+     */
     class UIMGUI_PUBLIC_API Window
     {
     public:
@@ -155,10 +170,10 @@ namespace UImGui
         static void requestWindowAttention() noexcept;
 
         // Event safety - begin, style, post-begin
-        // This doesn't change the "hidden" setting, use the `getWindowHidden` function to change it
+        // This doesn't change the "hidden" setting, assign through `getWindowHiddenSetting` to change it
         static void hideWindow() noexcept;
         // Event safety - begin, style, post-begin
-        // This doesn't change the "hidden" setting, use the `getWindowHidden` function to change it
+        // This doesn't change the "hidden" setting, assign through `getWindowHiddenSetting` to change it
         static void showWindow() noexcept;
         // Event safety - begin, style, post-begin
         // Used to change the "hidden" setting, doesn't modify the current hidden state
@@ -175,7 +190,7 @@ namespace UImGui
         static bool& getWindowSurfaceTransparentSetting() noexcept;
 
         // Event safety - begin, style, post-begin
-        // This doesn't change the "focused" setting, use the `getWindowFocused` function
+        // This doesn't change the "focused" setting, assign through `getWindowFocusedSetting` to change it
         static void focusWindow() noexcept;
         // Event safety - begin, style, post-begin
         // Used to change the "focused" setting, doesn't modify the current focused state
@@ -207,10 +222,10 @@ namespace UImGui
         // Event safety - begin, style, post-begin
         // Calling without an argument resets to the default state
         static void setSizeLimitByAspectRatio(FVector2 ratio = { -1, -1 }) noexcept;
-        // Event safety = begin, style, post-begin
+        // Event safety - begin, style, post-begin
         // Returns the settings value for the size limits, doesn't edit them
         static FVector4& getSizeLimits() noexcept;
-        // Event safety = begin, style, post-begin
+        // Event safety - begin, style, post-begin
         // Returns the settings value for the aspect ratio size limits, doesn't edit them
         static FVector2& getAspectRatioSizeLimits() noexcept;
 
