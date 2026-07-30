@@ -40,9 +40,23 @@ void UImGui::ModulesManager::init(const FString& configDir)
 
     auto root = tree.rootref();
 
-    auto maxTransactions = root["max-transactions"];
+    // The key is "undo-max-transactions", which is what the shipped Config/Core/Modules.yaml actually contains. This
+    // read used to look for "max-transactions" while save() wrote "undo-max-transations"(missing the 'c'), so all three
+    // spellings disagreed and the value could never survive a save/load cycle.
+    auto maxTransactions = root["undo-max-transactions"];
     if (keyValid(maxTransactions))
         maxTransactions.load(&settings.maxTransactions);
+
+    // themeLocation was written by save() nowhere and read here nowhere, yet applyCustomisations() consumes it - so the
+    // theming module always saw the empty default and never loaded a theme. The string is owned by themeLocationStorage
+    // because ModuleSettings is a C struct holding a plain const char*; the manager lives inside Global for the whole
+    // process, so the pointer stays valid. Do not reassign themeLocationStorage after this point.
+    auto themeLocation = root["theme-location"];
+    if (keyValid(themeLocation))
+    {
+        themeLocation.load(&themeLocationStorage);
+        settings.themeLocation = themeLocationStorage.c_str();
+    }
 
     initModules(UImGui_InitInfo_getProjectDir());
 }
@@ -53,7 +67,10 @@ void UImGui::ModulesManager::save(const FString& configDir) const noexcept
     ryml::NodeRef root = tree.rootref();
     root.set_map();
 
-    root["undo-max-transations"].save(settings.maxTransactions);
+    // Key names must match what init() reads and what the shipped Modules.yaml contains. "undo-max-transations" was a
+    // typo that nothing ever read back.
+    root["undo-max-transactions"].save(settings.maxTransactions);
+    root["theme-location"].save(settings.themeLocation != nullptr ? settings.themeLocation : "");
 
     std::ofstream fout((configDir + "Core/Modules.yaml").c_str());
     fout << tree;
@@ -149,8 +166,11 @@ void UImGui::ModulesManager::initModules(const FString& projectDir)
         stateTracker.init();
 #endif
 #ifdef UIMGUI_I18N_MODULE_ENABLED
+    // The condition is split with an init-statement so that result holds the init code. Written as
+    // "const auto result = init(...) != SUCCESS", != binds tighter than =, so result was the comparison's bool and the
+    // log below always printed "Error code: 1" regardless of what actually went wrong.
     if (settings.i18n)
-        if (const auto result = translationEngine.init((Instance::get()->initInfo.configDir + "Translations").c_str()) != UI18N_INIT_RESULT_SUCCESS)
+        if (const auto result = translationEngine.init((Instance::get()->initInfo.configDir + "Translations").c_str()); result != UI18N_INIT_RESULT_SUCCESS)
             Logger::log("I18N module: There was an issue with loading or processing the translations. Error code: ", ULOG_LOG_TYPE_WARNING, CAST(int, result));
 #endif
 #ifdef UIMGUI_OS_MODULE_ENABLED

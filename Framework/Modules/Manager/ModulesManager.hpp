@@ -94,6 +94,10 @@ namespace UImGui
             .xdg = false,
             .open = false,
         };
+
+        // Backing storage for settings.themeLocation. ModuleSettings is a C struct, so it can only hold a const char*;
+        // this owns the characters that pointer refers to for as long as the manager(and therefore Global) lives.
+        FString themeLocationStorage{};
 #ifdef UIMGUI_I18N_MODULE_ENABLED
         UI18N::TranslationEngine translationEngine{};
 #endif

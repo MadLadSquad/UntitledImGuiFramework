@@ -88,7 +88,6 @@ void UImGui::GUIRenderer::beginUI(const float deltaTime, GenericRenderer* render
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse;
-    window_flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
     if (opt_fullscreen)
     {
         const ImGuiViewport* viewport = ImGui::GetMainViewport();

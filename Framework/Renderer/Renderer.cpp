@@ -225,7 +225,9 @@ void UImGui::RendererInternal::loadConfig() noexcept
             if (keyValid(enabled))
                 enabled.load(&data.bEnablePowerSavingMode);
 
-            auto idleFrames = node["idle-frames"];
+            // Read from powerSaving, not the root: saveConfig writes this nested under "power-saving", so looking it up
+            // at the top level meant a saved idle frame rate could never be read back
+            auto idleFrames = powerSaving["idle-frames"];
             if (keyValid(idleFrames))
                 idleFrames.load(&data.idleFrameRate);
         }
@@ -278,9 +280,16 @@ void UImGui::RendererInternal::saveConfig() const noexcept
     emscripten.set_map();
     emscripten["canvas-selector"].save(data.emscriptenCanvas);
 
-    auto customConfig = root["custom-renderer"];
-    if (keyValid(customConfig))
+    // Seeded as a map before handing it over, exactly like power-saving and emscripten above. The old code guarded this
+    // with keyValid(), but on a freshly built tree root["custom-renderer"] is a seed node that keyValid() rejects, so
+    // saveCustomConfig() was never reached and the custom-renderer block that parseCustomConfig reads back could never
+    // be written. renderer is null until loadConfig has run, hence the null check.
+    if (renderer != nullptr)
+    {
+        auto customConfig = root["custom-renderer"];
+        customConfig.set_map();
         renderer->saveCustomConfig(customConfig);
+    }
 
     std::ofstream fout((Instance::get()->initInfo.configDir + "Core/Renderer.yaml").c_str());
     fout << tree;
