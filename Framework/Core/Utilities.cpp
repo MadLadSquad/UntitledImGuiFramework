@@ -9,7 +9,11 @@
 #include <cwctype>
 #ifdef _WIN32
     #include <windows.h>
-#elif !__EMSCRIPTEN__
+#endif
+#ifndef __EMSCRIPTEN__
+    // Included on every non-Emscripten platform, Windows included: the interrupt state below is a sig_atomic_t and the
+    // forced-termination path uses SIGINT, both of which the Windows CRT declares here just like every Unix libc does.
+    // Only the sigaction-based registration further down is POSIX-only
     #include <signal.h>
 #endif
 #include <utfcpp/source/utf8.h>
@@ -356,10 +360,6 @@ void UImGui::Utility::sleep(const uint64_t milliseconds) noexcept
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
 }
 
-#ifdef _WIN32
-    #define SIGTERM 15
-#endif
-
 #ifndef __EMSCRIPTEN__
 // Interrupt state, only ever written by the interrupt handler and processPendingInterrupt:
 //   0 = no interrupt, 1 = interrupt raised but not yet handled, 2 = shutdown already requested.
@@ -378,7 +378,10 @@ void UImGui::Utility::interruptSignalHandler() noexcept
     // async-signal-safe and which the C standard guarantees on every platform. Everything else is deferred to
     // processPendingInterrupt, which the render loop calls once per frame.
 #ifdef _WIN32
-    if (!SetConsoleCtrlHandler([](DWORD signal) -> BOOL WINAPI {
+    // No WINAPI on the trailing return type - a calling convention there is ignored and MSVC warns about it(C4229). It
+    // isn't needed either: a captureless lambda converts to a function pointer of any of the platform's calling
+    // conventions, so the conversion to PHANDLER_ROUTINE picks the __stdcall one on its own
+    if (!SetConsoleCtrlHandler([](DWORD signal) -> BOOL {
         if (signal == CTRL_C_EVENT)
         {
             if (interruptState != 0)
