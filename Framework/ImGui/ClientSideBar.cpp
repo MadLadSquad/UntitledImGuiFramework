@@ -324,8 +324,10 @@ void UImGui::ClientSideBar::renderMaximiseButton(float& width, const ImGuiStyle&
 
 void UImGui::ClientSideBar::renderCloseButton(float& width, const ImGuiStyle& style, FVector4 destructiveColour, FVector4 destructiveColourActive) noexcept
 {
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::ColorConvertFloat4ToU32({ destructiveColour.x, destructiveColour.y, destructiveColour.z, destructiveColour.w }));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::ColorConvertFloat4ToU32({ destructiveColourActive.x, destructiveColourActive.y, destructiveColourActive.z, destructiveColourActive.w }));
+    // The two were swapped: destructiveColour went to ButtonActive and destructiveColourActive to ButtonHovered, so with the
+    // default palette hovering the close button turned it the dark pressed red and pressing it turned it the light one
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::ColorConvertFloat4ToU32({ destructiveColour.x, destructiveColour.y, destructiveColour.z, destructiveColour.w }));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::ColorConvertFloat4ToU32({ destructiveColourActive.x, destructiveColourActive.y, destructiveColourActive.z, destructiveColourActive.w }));
 
     if (ImGui::SmallButton(" ##uimgui_internal_invisible_close_button"))
         Instance::shutdown();

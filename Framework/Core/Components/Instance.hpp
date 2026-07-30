@@ -109,28 +109,38 @@ namespace UImGui
         template<ComponentType cmpType>
         static auto* getComponentByIDs(const FString& name, const uint64_t id) noexcept
         {
+            // Every branch needs a trailing return: without one, a search that found nothing fell off the end of a
+            // non-void function, which is undefined behaviour and in practice hands back whatever happened to be in the
+            // return register - not the nullptr the documentation promises. The nulls are cast because auto* cannot be
+            // deduced from a bare nullptr(std::nullptr_t is not a pointer type), which is also why the else branch below
+            // never compiled
             if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_INLINE)
             {
                 for (auto& a : get()->initInfo.inlineComponents)
                     if (a->name == name && a->id == id)
                         return a;
+                return CAST(InlineComponent*, nullptr);
             }
             else if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_TITLEBAR)
             {
                 for (auto& a : get()->initInfo.titlebarComponents)
                     if (a->name == name && a->id == id)
                         return a;
+                return CAST(TitlebarComponent*, nullptr);
             }
             else if constexpr (cmpType == UIMGUI_COMPONENT_TYPE_WINDOW)
             {
                 for (auto& a : get()->initInfo.windowComponents)
                     if (a->name == name && a->id == id)
                         return a;
+                return CAST(WindowComponent*, nullptr);
             }
             else
             {
+                // Unreachable for any of the three ComponentType values; cmpType is a template argument, so anything else
+                // is a programming error rather than something that can happen at runtime
                 Logger::log("Invalid UI component type provided for the getComponentByIDs function!", ULOG_LOG_TYPE_ERROR);
-                return nullptr;
+                return CAST(InlineComponent*, nullptr);
             }
         }
 

@@ -231,7 +231,9 @@ void UImGui::GUIRenderer::shutdown(GenericRenderer* renderer) noexcept
         }
     }
 
-    if (Layouts::getLoadLayout() && !Layouts::layoutLocation().empty())
+    // getSaveLayout, not getLoadLayout: saving was gated on the loading flag, which made save-layout dead - it could never
+    // stop a save, and turning off load-layout silently turned off saving too
+    if (Layouts::getSaveLayout() && !Layouts::layoutLocation().empty())
         ImGui::SaveIniSettingsToDisk((Instance::get()->initInfo.configDir + "Core/" + Layouts::layoutLocation() + ".ini").c_str());
     renderer->ImGuiShutdown();
     Window::get()->ImGuiShutdown();

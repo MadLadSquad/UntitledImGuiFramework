@@ -207,10 +207,14 @@ void UImGui::TitlebarBuilder::renderInline() const noexcept
         return;
 #endif
     size_t depth = 0;
+    // Declared outside the loop: it used to be a per-iteration local, so the value BEGIN_RADIO stored was gone by the time
+    // the RADIO_BUTTON case ran one iteration later. RadioButton() then received the button's absolute index in the event
+    // list instead of its index within the group, and only a radio group that happened to begin at event 0 could ever show
+    // the right selection. END_RADIO resets it back to 0
+    int radioBegin = 0;
     for (size_t i = 0; i < events.size(); i++)
     {
         const TitlebarMenuItem& a = events[i];
-        int radioBegin = 0;
 
         switch (a.type)
         {
