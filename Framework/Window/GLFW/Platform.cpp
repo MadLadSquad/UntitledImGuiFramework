@@ -10,6 +10,7 @@
     #if __has_include(<X11/Xatom.h>)
         #define GLFW_EXPOSE_NATIVE_X11
         #include <X11/Xatom.h>
+        #define _NET_WM_STATE_REMOVE 0
         #define _NET_WM_STATE_ADD 1
     #endif
 #endif
@@ -148,7 +149,10 @@ void UImGui::WindowGLFW::Platform_setWindowShowingOnPager(const bool bShowInPage
 {
     this->bShowOnPager = bShowInPager;
 #ifdef GLFW_EXPOSE_NATIVE_X11
-    if (glfwGetPlatform() == GLFW_PLATFORM_X11 && !bShowOnPager)
+    // The X11 branch used to be gated on !bShowOnPager, so it could only ever hide the window from the pager - asking for
+    // it back was silently dropped, unlike the Win32 branch below which handles both directions. _NET_WM_STATE_SKIP_PAGER
+    // is toggled with the ADD/REMOVE action in data.l[0], so the same message serves both.
+    if (glfwGetPlatform() == GLFW_PLATFORM_X11)
     {
         Display* display = glfwGetX11Display();
         const ::Window win = glfwGetX11Window(window);
@@ -173,7 +177,7 @@ void UImGui::WindowGLFW::Platform_setWindowShowingOnPager(const bool bShowInPage
         xclient.window = win;
         xclient.message_type = wmNetWmState;
         xclient.format = 32;
-        xclient.data.l[0] = _NET_WM_STATE_ADD;
+        xclient.data.l[0] = bShowInPager ? _NET_WM_STATE_REMOVE : _NET_WM_STATE_ADD;
         xclient.data.l[1] = static_cast<long>(wmStateSkipPager);
 
         XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, reinterpret_cast<XEvent*>(&xclient));
@@ -182,18 +186,15 @@ void UImGui::WindowGLFW::Platform_setWindowShowingOnPager(const bool bShowInPage
     }
 #endif
 #ifdef GLFW_EXPOSE_NATIVE_WIN32
-    if (!bShowOnPager)
-    {
-        auto win = glfwGetWin32Window(window);
-        LONG_PTR style = GetWindowLongPtr(win, GWL_EXSTYLE);
+    auto win = glfwGetWin32Window(window);
+    const LONG_PTR style = GetWindowLongPtr(win, GWL_EXSTYLE);
+    if (!bShowInPager)
         SetWindowLongPtr(win, GWL_EXSTYLE, (style & ~WS_EX_APPWINDOW) | WS_EX_TOOLWINDOW);
-    }
     else
-    {
-        auto win = glfwGetWin32Window(window);
-        LONG_PTR style = GetWindowLongPtr(win, GWL_EXSTYLE);
-        SetWindowLongPtr(win, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
-    }
+        // Restoring used to be (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW, which ANDs the style down to a single bit
+        // and then ORs in the complement of WS_EX_TOOLWINDOW - i.e. sets nearly every extended style bit there is,
+        // WS_EX_TOOLWINDOW being the only one it reliably cleared. The operators belong the other way round.
+        SetWindowLongPtr(win, GWL_EXSTYLE, (style | WS_EX_APPWINDOW) & ~WS_EX_TOOLWINDOW);
 #endif
 }
 
@@ -206,7 +207,8 @@ void UImGui::WindowGLFW::Platform_setWindowShowingOnTaskbar(const bool bShowOnTa
 {
     this->bShowOnTaskbar = bShowOnTaskbar;
 #ifdef GLFW_EXPOSE_NATIVE_X11
-    if (glfwGetPlatform() == GLFW_PLATFORM_X11 && !bShowOnTaskbar)
+    // See the pager equivalent above - this could only ever hide the window from the taskbar, never put it back
+    if (glfwGetPlatform() == GLFW_PLATFORM_X11)
     {
         Display* display = glfwGetX11Display();
         const ::Window win = glfwGetX11Window(window);
@@ -232,7 +234,7 @@ void UImGui::WindowGLFW::Platform_setWindowShowingOnTaskbar(const bool bShowOnTa
         xclient.window = win;
         xclient.message_type = wmNetWmState;
         xclient.format = 32;
-        xclient.data.l[0] = _NET_WM_STATE_ADD;
+        xclient.data.l[0] = bShowOnTaskbar ? _NET_WM_STATE_REMOVE : _NET_WM_STATE_ADD;
         xclient.data.l[1] = static_cast<long>(wmStateSkipTaskbar);
 
         XSendEvent(display, root, False, SubstructureRedirectMask | SubstructureNotifyMask, reinterpret_cast<XEvent*>(&xclient));
@@ -241,24 +243,22 @@ void UImGui::WindowGLFW::Platform_setWindowShowingOnTaskbar(const bool bShowOnTa
     }
 #endif
 #ifdef GLFW_EXPOSE_NATIVE_WIN32
-    if (!bShowOnPager)
-    {
-        auto win = glfwGetWin32Window(window);
-        LONG_PTR style = GetWindowLongPtr(win, GWL_EXSTYLE);
+    auto win = glfwGetWin32Window(window);
+    const LONG_PTR style = GetWindowLongPtr(win, GWL_EXSTYLE);
+    // bShowOnTaskbar, not bShowOnPager: this branch tested the pager flag, so hiding the window from the taskbar depended
+    // on whatever the unrelated pager setting happened to be, and setting one silently rewrote the styles for the other
+    if (!bShowOnTaskbar)
         SetWindowLongPtr(win, GWL_EXSTYLE, (style & ~WS_EX_APPWINDOW) | WS_EX_TOOLWINDOW);
-    }
     else
-    {
-        auto win = glfwGetWin32Window(window);
-        LONG_PTR style = GetWindowLongPtr(win, GWL_EXSTYLE);
-        SetWindowLongPtr(win, GWL_EXSTYLE, (style & WS_EX_APPWINDOW) | ~WS_EX_TOOLWINDOW);
-    }
+        // See the pager equivalent above for the operator swap
+        SetWindowLongPtr(win, GWL_EXSTYLE, (style | WS_EX_APPWINDOW) & ~WS_EX_TOOLWINDOW);
 #endif
 }
 
 bool UImGui::WindowGLFW::Platform_getWindowShowingOnTaskbar() noexcept
 {
-    return bShowOnPager;
+    // Returned bShowOnPager, so this reported the pager state instead of the taskbar state
+    return bShowOnTaskbar;
 }
 
 void UImGui::WindowGLFW::Platform_setWindowType(String type) noexcept

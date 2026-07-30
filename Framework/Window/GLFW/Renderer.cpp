@@ -44,6 +44,22 @@ bool UImGui::WindowGLFW::shouldRender() noexcept
 
 void UImGui::WindowGLFW::pollEvents(double& now, double& deltaTime, double& lastTime) noexcept
 {
+    // A scroll wheel has no "released" event: GLFW only ever reports a non-zero offset, so keys[Keys_ScrollUp] and
+    // friends stayed KeyStatePressed forever once scrolled, until the user happened to scroll the opposite way. They are
+    // per-frame state and have to be cleared here, before this frame's events are pumped.
+    //
+    // The clear is conditional because RendererInternal::tick calls waitEventsTimeout() before this in power saving
+    // mode, and callbacks fire from there too. bScrollEventReceived being set means the state below arrived during that
+    // wait and has not been visible to a single frame of user code yet, so it must survive this pass.
+    if (!bScrollEventReceived)
+    {
+        keys[Keys_ScrollUp] = KeyStateReleased;
+        keys[Keys_ScrollDown] = KeyStateReleased;
+        keys[Keys_ScrollLeft] = KeyStateReleased;
+        keys[Keys_ScrollRight] = KeyStateReleased;
+    }
+    bScrollEventReceived = false;
+
     glfwPollEvents();
 
     now = glfwGetTime();

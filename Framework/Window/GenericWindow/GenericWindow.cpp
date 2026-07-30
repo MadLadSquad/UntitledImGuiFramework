@@ -83,38 +83,44 @@ void UImGui::GenericWindow::saveSettings(bool bSaveKeybinds) noexcept
             auto val = child["val"];
             val.set_seq(ryml::FLOW_SL);
 
-            for (auto& f : a.keyCodes)
+            for (const auto& f : a.keyCodes)
             {
                 // Sanitise keys that vary in function between platforms
                 // Defines are needed to prevent compilation errors
+                //
+                // The converted value goes into a local instead of back through the reference: this loop used to write the
+                // internal representations straight into the live inputActionList, so a single saveSettings(true) left the
+                // running application matching bindings against codes that the callbacks never produce - every affected
+                // binding silently stopped responding until the next start, where openConfig() converts them back.
+                uint64_t out = f;
                 switch (f)
                 {
 #ifdef __APPLE__
                 case Keys_LeftControl:
-                        f = Keys_LeftControl_InternalRepr;
+                        out = Keys_LeftControl_InternalRepr;
                         break;
                 case Keys_RightControl:
-                        f = Keys_RightControl_InternalRepr;
+                        out = Keys_RightControl_InternalRepr;
                         break;
                 case Keys_LeftControlCmd:
-                        f = Keys_LeftControlCommand_InternalRepr;
+                        out = Keys_LeftControlCommand_InternalRepr;
                         break;
                 case Keys_RightControlCmd:
-                        f = Keys_RightControlCommand_InternalRepr;
+                        out = Keys_RightControlCommand_InternalRepr;
                         break;
 #endif
 #ifndef __APPLE__
                 case Keys_LeftSuper:
-                        f = Keys_LeftSuper_InternalRepr;
+                        out = Keys_LeftSuper_InternalRepr;
                         break;
                 case Keys_RightSuper:
-                        f = Keys_RightSuper_InternalRepr;
+                        out = Keys_RightSuper_InternalRepr;
                         break;
 #endif
                 default:
                         break;
                 }
-                val.append_child().save(f);
+                val.append_child().save(out);
             }
         }
 

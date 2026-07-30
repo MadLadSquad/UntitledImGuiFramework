@@ -19,28 +19,45 @@ bool& UImGui::WindowGLFW::getWindowFullscreenSetting() noexcept
 
 void UImGui::WindowGLFW::setWindowFullscreen(const bool bFullscreen) noexcept
 {
-    GLFWwindow* old = window;
-    const FString title = getTitle();
-    Monitor monitor = getWindowMonitor();
-
-    window = glfwCreateWindow(
-        CAST(int, windowSizeS.x),
-        CAST(int, windowSizeS.y),
-        title.c_str(),
-        bFullscreen ? reinterpret_cast<GLFWmonitor*>(monitor.get().id) : nullptr,
-        old
-    );
-
-    if (window == nullptr)
-    {
-        Logger::log("Failed to recreate window for switching between fullscreen modes!", ULOG_LOG_TYPE_ERROR);
-        glfwTerminate();
-        close();
+    GLFWmonitor* current = glfwGetWindowMonitor(window);
+    if (bFullscreen == (current != nullptr))
         return;
-    }
-    glfwDestroyWindow(old);
 
-    framebufferSizeCallback(window, CAST(int, windowSizeS.x), CAST(int, windowSizeS.y));
+    if (bFullscreen)
+    {
+        // Remembered in screen coordinates, which is what glfwSetWindowMonitor expects back. windowSizeS is the
+        // framebuffer size and is not interchangeable with it on a scaled display.
+        glfwGetWindowPos(window, &windowedRect[0], &windowedRect[1]);
+        glfwGetWindowSize(window, &windowedRect[2], &windowedRect[3]);
+
+        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        if (monitor == nullptr)
+        {
+            Logger::log("Couldn't switch to fullscreen because no monitor was found!", ULOG_LOG_TYPE_WARNING);
+            return;
+        }
+
+        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+        if (mode == nullptr)
+        {
+            Logger::log("Couldn't switch to fullscreen because the monitor's video mode couldn't be queried!", ULOG_LOG_TYPE_WARNING);
+            return;
+        }
+
+        glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+    }
+    else
+    {
+        // A window created fullscreen has no windowed geometry to go back to, so fall back to the configured size and
+        // let the window manager place it
+        if (windowedRect[2] <= 0 || windowedRect[3] <= 0)
+        {
+            windowedRect[2] = CAST(int, windowSizeS.x);
+            windowedRect[3] = CAST(int, windowSizeS.y);
+        }
+
+        glfwSetWindowMonitor(window, nullptr, windowedRect[0], windowedRect[1], windowedRect[2], windowedRect[3], GLFW_DONT_CARE);
+    }
 }
 
 bool& UImGui::WindowGLFW::getWindowFocusedSetting() noexcept
@@ -196,12 +213,15 @@ void UImGui::WindowGLFW::pushWindowCloseCallback(const std::function<void()>& f)
 
 bool UImGui::WindowGLFW::getWindowSurfaceTransparent() noexcept
 {
+    // The real state of the framebuffer, which is decided at creation time and cannot change afterwards. It is deliberately
+    // not the same thing as getWindowSurfaceTransparentSetting(), which is the requested value that gets saved to config
     return glfwGetWindowAttrib(window, GLFW_TRANSPARENT_FRAMEBUFFER);
 }
 
 void UImGui::WindowGLFW::setWindowSurfaceTransparent(const bool bTransparent) noexcept
 {
-    glfwSetWindowAttrib(window, GLFW_TRANSPARENT_FRAMEBUFFER, bTransparent);
+    // Setting the surface transparency settings is only possible during the window creation
+    // phase and is controlled by the Window.yaml setting
 }
 
 bool& UImGui::WindowGLFW::getWindowSurfaceTransparentSetting() noexcept

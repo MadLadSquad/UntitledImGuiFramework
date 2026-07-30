@@ -43,7 +43,10 @@ const UImGui::TVector<UImGui::Monitor>& UImGui::WindowGLFW::getMonitors() noexce
     monitors.clear();
     for (int i = 0; i < count; i++)
     {
-        auto m = monitors.emplace_back();
+        // auto&, not auto: emplace_back returns a reference to the new element, and copying it meant the id was written
+        // to a temporary that was thrown away, leaving every monitor in the list with id == 0 - a null GLFWmonitor* that
+        // every MonitorGLFW method then dereferenced
+        auto& m = monitors.emplace_back();
         m.get().id = reinterpret_cast<uintptr_t>(glfwMonitors[i]);
     }
 #endif
@@ -65,7 +68,12 @@ double UImGui::MonitorGLFW::getContentScale(MonitorData& data) noexcept
 #ifndef __EMSCRIPTEN__
     glfwGetMonitorContentScale(reinterpret_cast<GLFWmonitor*>(data.id), &x, &y);
 #endif
-    return x / y;
+    // x / y, which this used to return, is the ratio between the two axes and not a scale at all - it is ~1.0 on every
+    // monitor in existence, including a 2x HiDPI one, so the function reported "no scaling" precisely when scaling
+    // mattered. The interface hands back a single double(mirrored in the C API and implemented by every custom backend),
+    // so it cannot return both axes; x is the axis dear imgui and GLFW's own examples scale by, and the per-axis pair is
+    // available through Window::getWindowContentScale().
+    return x;
 }
 
 UImGui::String UImGui::MonitorGLFW::getName(MonitorData& data) noexcept

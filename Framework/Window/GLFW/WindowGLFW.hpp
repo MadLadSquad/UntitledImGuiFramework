@@ -189,8 +189,22 @@ namespace UImGui
         GenericWindow* get() noexcept override;
     private:
         GLFWwindow* window = nullptr;
-        TArray<CKeyState, 350> keys{};
+        // Sized with Keys_COUNT(356) rather than a hardcoded 350. The keybinding files store the platform-independent
+        // internal representations Keys_LeftControl_InternalRepr..Keys_RightSuper_InternalRepr, which are 350-355, so a
+        // 350-element array was indexed out of bounds by pollEvents() the moment such a binding was loaded, and by
+        // getKey() for any caller passing one of those values.
+        TArray<CKeyState, Keys_COUNT> keys{};
         TVector<Monitor> monitors{};
+
+        // Set by scrollInputCallback, consumed by pollEvents. GLFW never reports a scroll event with a 0 offset, so the
+        // scroll "keys" have no release event of their own and have to be cleared once per frame instead. The flag
+        // exists because events are also pumped by waitEventsTimeout()(power saving mode) before pollEvents() runs, so
+        // clearing unconditionally would throw away a scroll that arrived during the wait.
+        bool bScrollEventReceived = false;
+
+        // Windowed position and size in screen coordinates, remembered while the window is fullscreen so
+        // setWindowFullscreen(false) can put it back. Zero width means "nothing saved yet".
+        int windowedRect[4] = { 0, 0, 0, 0 };
 
         MonitorGLFW monitorGLFW{};
 

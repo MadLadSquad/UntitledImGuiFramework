@@ -35,12 +35,21 @@ void UImGui::WindowGLFW::framebufferSizeCallback(GLFWwindow* window, const int w
 void UImGui::WindowGLFW::keyboardInputCallback(GLFWwindow* window, const int key, const int, const int action, int) noexcept
 {
     auto* wind = CAST(WindowGLFW*, glfwGetWindowUserPointer(window));
-    wind->keys[key] = static_cast<CKeyState>(action);
+
+    // GLFW reports GLFW_KEY_UNKNOWN(-1) for any physical key it has no keycode for - a media key, a vendor key, an
+    // unusual layout - which used to be written straight into keys[-1]. Those all funnel into the Keys_UnknownKey slot
+    // the enum already reserves for them instead. The upper bound is checked too, because GLFW's keycode space is not
+    // the framework's and nothing else guarantees the two stay in step.
+    const int index = key < 0 || key >= Keys_COUNT ? Keys_UnknownKey : key;
+    wind->keys[index] = static_cast<CKeyState>(action);
 }
 
 void UImGui::WindowGLFW::mouseKeyInputCallback(GLFWwindow* window, const int button, const int action, int) noexcept
 {
     auto* wind = CAST(WindowGLFW*, glfwGetWindowUserPointer(window));
+    if (button < 0 || button >= Keys_COUNT)
+        return;
+
     wind->keys[button] = static_cast<CKeyState>(action);
 }
 
@@ -51,21 +60,27 @@ void UImGui::WindowGLFW::mouseCursorPositionCallback(GLFWwindow* window, const d
     static bool bFirst = true;
     if (bFirst)
     {
-        windowInst->mouseLastPos.x = static_cast<float>(xpos);
-        windowInst->mouseLastPos.y = static_cast<float>(ypos);
+        windowInst->mouseLastPos = { static_cast<float>(xpos), static_cast<float>(ypos) };
+        windowInst->mousePos = windowInst->mouseLastPos;
         bFirst = false;
     }
 
-    windowInst->mouseOffset.x = static_cast<float>(xpos) - windowInst->mouseLastPos.x;
-    windowInst->mouseOffset.y = windowInst->mouseLastPos.y - static_cast<float>(ypos);
+    // mousePos holds the previous position until it is rotated below, which is what mouseLastPos used to be doing here -
+    // so the offset comes out identical. The difference is that the two fields now mean what their names say:
+    // getCurrentMousePosition() reads mousePos, which nothing in the codebase ever wrote, so it always returned {0,0};
+    // getLastMousePosition() reads mouseLastPos, which was being overwritten with the current position and therefore
+    // always agreed with it.
+    windowInst->mouseOffset.x = static_cast<float>(xpos) - windowInst->mousePos.x;
+    windowInst->mouseOffset.y = windowInst->mousePos.y - static_cast<float>(ypos);
 
-    windowInst->mouseLastPos.x = static_cast<float>(xpos);
-    windowInst->mouseLastPos.y = static_cast<float>(ypos);
+    windowInst->mouseLastPos = windowInst->mousePos;
+    windowInst->mousePos = { static_cast<float>(xpos), static_cast<float>(ypos) };
 }
 
 void UImGui::WindowGLFW::scrollInputCallback(GLFWwindow* window, const double xoffset, const double yoffset) noexcept
 {
     auto* windowInst = static_cast<WindowGLFW*>(glfwGetWindowUserPointer(window));
+    windowInst->bScrollEventReceived = true;
 
     if (xoffset == 0)
     {

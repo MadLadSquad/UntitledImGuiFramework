@@ -3,6 +3,10 @@
 
 CKeyState UImGui::WindowGLFW::getKey(const CKeys key) noexcept
 {
+    // CKeys is a plain C enum, so nothing stops a caller from passing an arbitrary int through here
+    if (key < 0 || key >= Keys_COUNT)
+        return KeyStateReleased;
+
     return keys[key];
 }
 
