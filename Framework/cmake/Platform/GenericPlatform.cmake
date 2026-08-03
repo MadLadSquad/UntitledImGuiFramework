@@ -43,7 +43,6 @@ macro(setup_yaml_vendored)
     endif()
     set(RYML_INCLUDE_DIRS_T
             "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/rapidyaml/src/"
-            "${UIMGUI_SRC_PREFIX}/Framework/ThirdParty/rapidyaml/ext/c4core/src"
     )
 endmacro()
 
