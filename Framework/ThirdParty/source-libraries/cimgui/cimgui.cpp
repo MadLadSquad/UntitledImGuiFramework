@@ -3678,6 +3678,11 @@ CIMGUI_API void        cimgui::ImDrawList__ResetForNewFrame(cimgui::ImDrawList* 
     reinterpret_cast<::ImDrawList*>(self)->_ResetForNewFrame();
 }
 
+CIMGUI_API void        cimgui::ImDrawList__SetPixelDensity(cimgui::ImDrawList* self, float pixel_density)
+{
+    reinterpret_cast<::ImDrawList*>(self)->_SetPixelDensity(pixel_density);
+}
+
 CIMGUI_API void        cimgui::ImDrawList__ClearFreeMemory(cimgui::ImDrawList* self)
 {
     reinterpret_cast<::ImDrawList*>(self)->_ClearFreeMemory();
