@@ -37,7 +37,7 @@
 #define IMGUI_VERSION       "1.93.0 WIP"
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
-#define IMGUI_VERSION_NUM   19293
+#define IMGUI_VERSION_NUM   19295
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
@@ -141,6 +141,17 @@ extern "C"
 #define IM_MSVC_RUNTIME_CHECKS_OFF
 #define IM_MSVC_RUNTIME_CHECKS_RESTORE
 #endif // #if defined(_MSC_VER)&&!defined(__clang__)&&!defined(__INTEL_COMPILER)&&!defined(IMGUI_DEBUG_PARANOID)
+// Alternative to using a .natstepfilter file or other scripts in misc/debuggers/ to skip debug-stepping selected trivial functions.
+// If you get a compiler error or warning related to use, please report it to us!
+#if (defined(__clang__)&&(__clang_major__ >= 7))||(defined(__GNUC__)&&(__GNUC__>4 ||(__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))
+#define IM_NODEBUGSTEP      [[gnu::artificial]]
+#else
+#if defined(_MSC_VER)&&(_MSC_VER >= 1915)
+#define IM_NODEBUGSTEP      __declspec(non_user_code)
+#else
+#define IM_NODEBUGSTEP
+#endif // #if defined(_MSC_VER)&&(_MSC_VER >= 1915)
+#endif // #if (defined(__clang__)&&(__clang_major__ >= 7))||(defined(__GNUC__)&&(__GNUC__>4 ||(__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))
 // Warnings
 #ifdef _MSC_VER
 #pragma warning (push)
@@ -2452,7 +2463,7 @@ CIMGUI_API void ImGuiPlatformIO_SetPlatform_GetWindowSize(void (*getWindowSizeFu
 
 #if defined(IMGUI_HAS_IMSTR)
 #if IMGUI_HAS_IMSTR
-CIMGUI_API ImStr ImStr_FromCharStr(const char* b);  // Build an ImStr from a regular const char* (no data is copied, so you need to make sure the original char* isn't altered as long as you are using the ImStr).
+CIMGUI_API ImStrv ImStrv_FromCharStr(const char* b);  // Build an ImStrv from a regular const char* (no data is copied, so you need to make sure the original char* isn't altered as long as you are using the ImStrv).
 #endif // #if IMGUI_HAS_IMSTR
 #endif // #if defined(IMGUI_HAS_IMSTR)
 
