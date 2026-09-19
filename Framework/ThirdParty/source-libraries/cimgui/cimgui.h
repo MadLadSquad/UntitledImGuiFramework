@@ -183,7 +183,7 @@ extern "C"
 typedef struct ImVec2_t ImVec2;
 typedef struct ImVec4_t ImVec4;
 typedef struct ImTextureRef_t ImTextureRef;
-typedef struct ImVector_ImGuiTextRange_t ImVector_ImGuiTextRange;
+typedef struct ImVector_ImGuiTextFilterItem_t ImVector_ImGuiTextFilterItem;
 typedef struct ImVector_char_t ImVector_char;
 typedef struct ImVector_ImGuiStoragePair_t ImVector_ImGuiStoragePair;
 typedef struct ImVector_ImGuiSelectionRequest_t ImVector_ImGuiSelectionRequest;
@@ -209,7 +209,7 @@ typedef struct ImVector_ImFontConfigPtr_t ImVector_ImFontConfigPtr;
 typedef struct ImVector_ImGuiPlatformMonitor_t ImVector_ImGuiPlatformMonitor;
 typedef struct ImVector_ImTextureDataPtr_t ImVector_ImTextureDataPtr;
 typedef struct ImVector_ImGuiViewportPtr_t ImVector_ImGuiViewportPtr;
-typedef struct ImGuiTextFilter_ImGuiTextRange_t ImGuiTextFilter_ImGuiTextRange;
+typedef struct ImGuiTextFilter_ImGuiTextFilterItem_t ImGuiTextFilter_ImGuiTextFilterItem;
 typedef struct ImDrawCmdHeader_t ImDrawCmdHeader;
 // ImDrawIdx: vertex index. [Compile-time configurable type]
 // - To use 16-bit indices + allow large meshes: backend need to set 'io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset' and handle ImDrawCmd::VtxOffset (recommended).
@@ -2512,7 +2512,7 @@ CIMGUI_API ImStrv ImStrv_FromCharStr(const char* b);  // Build an ImStrv from a 
 //-----------------------------------------------------------------------------
 
 IM_MSVC_RUNTIME_CHECKS_OFF
-struct ImVector_ImGuiTextRange_t { int Size; int Capacity; ImGuiTextFilter_ImGuiTextRange* Data; };  // Instantiation of ImVector<ImGuiTextRange>
+struct ImVector_ImGuiTextFilterItem_t { int Size; int Capacity; ImGuiTextFilter_ImGuiTextFilterItem* Data; };  // Instantiation of ImVector<ImGuiTextFilterItem>
 struct ImVector_char_t { int Size; int Capacity; char* Data; };  // Instantiation of ImVector<char>
 struct ImVector_ImGuiStoragePair_t { int Size; int Capacity; ImGuiStoragePair* Data; };  // Instantiation of ImVector<ImGuiStoragePair>
 struct ImVector_ImGuiSelectionRequest_t { int Size; int Capacity; ImGuiSelectionRequest* Data; };  // Instantiation of ImVector<ImGuiSelectionRequest>
@@ -3032,26 +3032,34 @@ CIMGUI_API bool ImGuiPayload_IsDelivery(const ImGuiPayload* self);
 #define IM_UNICODE_CODEPOINT_MAX     0xFFFF      // Maximum Unicode code point supported by this build.
 #endif // #ifdef IMGUI_USE_WCHAR32
 
-// [Internal]
-struct ImGuiTextFilter_ImGuiTextRange_t
+// [Internal] Don't use! Will be replaced with ImStrv.
+struct ImGuiTextFilter_ImGuiTextFilterItem_t
 {
-    const char* b;
-    const char* e;
+    const char* Begin;
+    const char* End;
 };
-CIMGUI_API bool ImGuiTextFilter_ImGuiTextRange_empty(const ImGuiTextFilter_ImGuiTextRange* self);
-CIMGUI_API void ImGuiTextFilter_ImGuiTextRange_split(const ImGuiTextFilter_ImGuiTextRange* self, char separator, ImVector_ImGuiTextRange* out);
-// Helper: Parse and apply text filters. In format "aaaaa[,bbbb][,ccccc]"
+// Helper: Parse and apply text filters e.g. 'aaa bbb -ccc'.
 struct ImGuiTextFilter_t
 {
-    char                    InputBuf[256];
-    ImVector_ImGuiTextRange Filters;
-    int                     CountGrep;
+    // [Internal] Members
+    char InputBuf[256];                   // User input buffer
+    char FilterOp;                        // == '|' (any) pr '&' (all)
+    ImU8 MinWordSize;                     // == 1
+    int  _CountExclude;                   // >= 0
+    int  _CountInclude;                   // >= 0
+    ImVector_ImGuiTextFilterItem _Items;  // Pre-parsed, trimmed, reordered items
 };
-CIMGUI_API bool ImGuiTextFilter_Draw(ImGuiTextFilter* self, const char* label /* = "Filter (inc,-exc)" */, float width /* = 0.0f */); // Helper calling InputText+Build
 CIMGUI_API bool ImGuiTextFilter_PassFilter(const ImGuiTextFilter* self, const char* text, const char* text_end /* = NULL */);
-CIMGUI_API void ImGuiTextFilter_Build(ImGuiTextFilter* self);
-CIMGUI_API void ImGuiTextFilter_Clear(ImGuiTextFilter* self);
-CIMGUI_API bool ImGuiTextFilter_IsActive(const ImGuiTextFilter* self);
+CIMGUI_API void ImGuiTextFilter_Build(ImGuiTextFilter* self);                                      // Update internal data when filter changes
+CIMGUI_API void ImGuiTextFilter_Clear(ImGuiTextFilter* self);                                      // Clear filter
+CIMGUI_API bool ImGuiTextFilter_IsActive(const ImGuiTextFilter* self);                             // Useful if you need e.g. an alternative code-path when there are no filters
+// Helper to call InputText() + Build() when buffer is changed.
+CIMGUI_API bool ImGuiTextFilter_Draw(ImGuiTextFilter* self, const char* label /* = "Filter" */);
+CIMGUI_API bool ImGuiTextFilter_DrawWithHint(ImGuiTextFilter* self);                               // Implied label = "Filter", hint = "incl -excl"
+CIMGUI_API bool ImGuiTextFilter_DrawWithHintEx(ImGuiTextFilter* self, const char* label /* = "Filter" */, const char* hint /* = "incl -excl" */);
+#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+CIMGUI_API bool ImGuiTextFilter_DrawFloat(ImGuiTextFilter* self, const char* label, float width);
+#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
 // Helper: Growable text buffer for logging/accumulating text
 // (this could be called 'ImGuiTextBuilder' / 'ImGuiStringBuilder')
@@ -4290,6 +4298,7 @@ struct ImGuiPlatformIO_t
     ImDrawCallback                                                  DrawCallback_ResetRenderState;   // Request to reset the graphics/render state.
     ImDrawCallback                                                  DrawCallback_SetSamplerLinear;   // Request backend to set texture sampling to Linear.
     ImDrawCallback                                                  DrawCallback_SetSamplerNearest;  // Request backend to set texture sampling to Nearest/Point.
+    ImDrawCallback                                                  DrawCallback_SetSamplerFromTex;  // Request backend to use sampler associated to texture - only available in some backends: OpenGL2/3 and SDLRenderer3.
     //ImDrawCallback  DrawCallback_SetSamplerCustom;    // Request backend to set texture sampling using Backend Specific data.
 
     //------------------------------------------------------------------
