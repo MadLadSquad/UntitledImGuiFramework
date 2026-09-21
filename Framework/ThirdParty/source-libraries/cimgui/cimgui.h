@@ -2,6 +2,16 @@
 // **DO NOT EDIT DIRECTLY**
 // https://github.com/dearimgui/dear_bindings
 
+// Dear Bindings version as a string
+#ifndef DEAR_BINDINGS_VERSION
+#define DEAR_BINDINGS_VERSION "0.23"
+#endif
+
+// Dear Bindings version as an integer
+#ifndef DEAR_BINDINGS_VERSION_NUMBER
+#define DEAR_BINDINGS_VERSION_NUMBER 23
+#endif
+
 // dear imgui, v1.93.0 WIP
 // (headers)
 
@@ -183,7 +193,7 @@ extern "C"
 typedef struct ImVec2_t ImVec2;
 typedef struct ImVec4_t ImVec4;
 typedef struct ImTextureRef_t ImTextureRef;
-typedef struct ImVector_ImGuiTextRange_t ImVector_ImGuiTextRange;
+typedef struct ImVector_ImGuiTextFilterItem_t ImVector_ImGuiTextFilterItem;
 typedef struct ImVector_char_t ImVector_char;
 typedef struct ImVector_ImGuiStoragePair_t ImVector_ImGuiStoragePair;
 typedef struct ImVector_ImGuiSelectionRequest_t ImVector_ImGuiSelectionRequest;
@@ -209,7 +219,7 @@ typedef struct ImVector_ImFontConfigPtr_t ImVector_ImFontConfigPtr;
 typedef struct ImVector_ImGuiPlatformMonitor_t ImVector_ImGuiPlatformMonitor;
 typedef struct ImVector_ImTextureDataPtr_t ImVector_ImTextureDataPtr;
 typedef struct ImVector_ImGuiViewportPtr_t ImVector_ImGuiViewportPtr;
-typedef struct ImGuiTextFilter_ImGuiTextRange_t ImGuiTextFilter_ImGuiTextRange;
+typedef struct ImGuiTextFilter_ImGuiTextFilterItem_t ImGuiTextFilter_ImGuiTextFilterItem;
 typedef struct ImDrawCmdHeader_t ImDrawCmdHeader;
 // ImDrawIdx: vertex index. [Compile-time configurable type]
 // - To use 16-bit indices + allow large meshes: backend need to set 'io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset' and handle ImDrawCmd::VtxOffset (recommended).
@@ -724,8 +734,8 @@ CIMGUI_API bool ImGui_ComboChar(const char* label, int* current_item, const char
 CIMGUI_API bool ImGui_ComboCharEx(const char* label, int* current_item, const char*const items[], int items_count, int popup_max_height_in_items /* = -1 */);
 CIMGUI_API bool ImGui_Combo(const char* label, int* current_item, const char* items_separated_by_zeros);                                                       // Implied popup_max_height_in_items = -1
 CIMGUI_API bool ImGui_ComboEx(const char* label, int* current_item, const char* items_separated_by_zeros, int popup_max_height_in_items /* = -1 */);           // Separate items with \0 within a string, end item-list with \0\0. e.g. "One\0Two\0Three\0"
-CIMGUI_API bool ImGui_ComboCallback(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count);  // Implied popup_max_height_in_items = -1
-CIMGUI_API bool ImGui_ComboCallbackEx(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count, int popup_max_height_in_items /* = -1 */);
+CIMGUI_API bool ImGui_ComboObsolete(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count);  // Implied popup_max_height_in_items = -1
+CIMGUI_API bool ImGui_ComboObsoleteEx(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count, int popup_max_height_in_items /* = -1 */);
 
 // Widgets: Drag Sliders
 // - Ctrl+Click on any drag box to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
@@ -891,8 +901,8 @@ CIMGUI_API bool                ImGui_IsItemToggledSelection(void);              
 CIMGUI_API bool ImGui_BeginListBox(const char* label, ImVec2 size /* = ImVec2(0, 0) */);                                                                         // open a framed scrolling region
 CIMGUI_API void ImGui_EndListBox(void);                                                                                                                          // only call EndListBox() if BeginListBox() returned true!
 CIMGUI_API bool ImGui_ListBox(const char* label, int* current_item, const char*const items[], int items_count, int height_in_items /* = -1 */);
-CIMGUI_API bool ImGui_ListBoxCallback(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count);  // Implied height_in_items = -1
-CIMGUI_API bool ImGui_ListBoxCallbackEx(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count, int height_in_items /* = -1 */);
+CIMGUI_API bool ImGui_ListBoxObsolete(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count);  // Implied height_in_items = -1
+CIMGUI_API bool ImGui_ListBoxObsoleteEx(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count, int height_in_items /* = -1 */);
 
 // Widgets: Data Plotting
 // - Consider using ImPlot (https://github.com/epezent/implot) which is much better!
@@ -2472,10 +2482,11 @@ CIMGUI_API void ImGuiPlatformIO_SetPlatform_GetWindowFramebufferScale(void (*get
 CIMGUI_API void ImGuiPlatformIO_SetPlatform_GetWindowPos(void (*getWindowPosFunc)(ImGuiViewport* vp, ImVec2* result));    // Set ImGuiPlatformIO::Platform_GetWindowPos in a C-compatible mannner
 CIMGUI_API void ImGuiPlatformIO_SetPlatform_GetWindowSize(void (*getWindowSizeFunc)(ImGuiViewport* vp, ImVec2* result));  // Set ImGuiPlatformIO::Platform_GetWindowSize in a C-compatible mannner
 
+CIMGUI_API const char* DearBindings_GetVersion(void);        // Get the Dear Bindings version which generated these bindings as a string.
+CIMGUI_API int         DearBindings_GetVersionNumber(void);  // Get the Dear Bindings version which generated these bindings as an integer.
+
 #if defined(IMGUI_HAS_IMSTR)
-#if IMGUI_HAS_IMSTR
 CIMGUI_API ImStrv ImStrv_FromCharStr(const char* b);  // Build an ImStrv from a regular const char* (no data is copied, so you need to make sure the original char* isn't altered as long as you are using the ImStrv).
-#endif // #if IMGUI_HAS_IMSTR
 #endif // #if defined(IMGUI_HAS_IMSTR)
 
 //-----------------------------------------------------------------------------
@@ -2512,7 +2523,7 @@ CIMGUI_API ImStrv ImStrv_FromCharStr(const char* b);  // Build an ImStrv from a 
 //-----------------------------------------------------------------------------
 
 IM_MSVC_RUNTIME_CHECKS_OFF
-struct ImVector_ImGuiTextRange_t { int Size; int Capacity; ImGuiTextFilter_ImGuiTextRange* Data; };  // Instantiation of ImVector<ImGuiTextRange>
+struct ImVector_ImGuiTextFilterItem_t { int Size; int Capacity; ImGuiTextFilter_ImGuiTextFilterItem* Data; };  // Instantiation of ImVector<ImGuiTextFilterItem>
 struct ImVector_char_t { int Size; int Capacity; char* Data; };  // Instantiation of ImVector<char>
 struct ImVector_ImGuiStoragePair_t { int Size; int Capacity; ImGuiStoragePair* Data; };  // Instantiation of ImVector<ImGuiStoragePair>
 struct ImVector_ImGuiSelectionRequest_t { int Size; int Capacity; ImGuiSelectionRequest* Data; };  // Instantiation of ImVector<ImGuiSelectionRequest>
@@ -3032,26 +3043,34 @@ CIMGUI_API bool ImGuiPayload_IsDelivery(const ImGuiPayload* self);
 #define IM_UNICODE_CODEPOINT_MAX     0xFFFF      // Maximum Unicode code point supported by this build.
 #endif // #ifdef IMGUI_USE_WCHAR32
 
-// [Internal]
-struct ImGuiTextFilter_ImGuiTextRange_t
+// [Internal] Don't use! Will be replaced with ImStrv.
+struct ImGuiTextFilter_ImGuiTextFilterItem_t
 {
-    const char* b;
-    const char* e;
+    const char* Begin;
+    const char* End;
 };
-CIMGUI_API bool ImGuiTextFilter_ImGuiTextRange_empty(const ImGuiTextFilter_ImGuiTextRange* self);
-CIMGUI_API void ImGuiTextFilter_ImGuiTextRange_split(const ImGuiTextFilter_ImGuiTextRange* self, char separator, ImVector_ImGuiTextRange* out);
-// Helper: Parse and apply text filters. In format "aaaaa[,bbbb][,ccccc]"
+// Helper: Parse and apply text filters e.g. 'aaa bbb -ccc'.
 struct ImGuiTextFilter_t
 {
-    char                    InputBuf[256];
-    ImVector_ImGuiTextRange Filters;
-    int                     CountGrep;
+    // [Internal] Members
+    char InputBuf[256];                   // User input buffer
+    char FilterOp;                        // == '|' (any) pr '&' (all)
+    ImU8 MinWordSize;                     // == 1
+    int  _CountExclude;                   // >= 0
+    int  _CountInclude;                   // >= 0
+    ImVector_ImGuiTextFilterItem _Items;  // Pre-parsed, trimmed, reordered items
 };
-CIMGUI_API bool ImGuiTextFilter_Draw(ImGuiTextFilter* self, const char* label /* = "Filter (inc,-exc)" */, float width /* = 0.0f */); // Helper calling InputText+Build
 CIMGUI_API bool ImGuiTextFilter_PassFilter(const ImGuiTextFilter* self, const char* text, const char* text_end /* = NULL */);
-CIMGUI_API void ImGuiTextFilter_Build(ImGuiTextFilter* self);
-CIMGUI_API void ImGuiTextFilter_Clear(ImGuiTextFilter* self);
-CIMGUI_API bool ImGuiTextFilter_IsActive(const ImGuiTextFilter* self);
+CIMGUI_API void ImGuiTextFilter_Build(ImGuiTextFilter* self);                                      // Update internal data when filter changes
+CIMGUI_API void ImGuiTextFilter_Clear(ImGuiTextFilter* self);                                      // Clear filter
+CIMGUI_API bool ImGuiTextFilter_IsActive(const ImGuiTextFilter* self);                             // Useful if you need e.g. an alternative code-path when there are no filters
+// Helper to call InputText() + Build() when buffer is changed.
+CIMGUI_API bool ImGuiTextFilter_Draw(ImGuiTextFilter* self, const char* label /* = "Filter" */);
+CIMGUI_API bool ImGuiTextFilter_DrawWithHint(ImGuiTextFilter* self);                               // Implied label = "Filter", hint = "incl -excl"
+CIMGUI_API bool ImGuiTextFilter_DrawWithHintEx(ImGuiTextFilter* self, const char* label /* = "Filter" */, const char* hint /* = "incl -excl" */);
+#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+CIMGUI_API bool ImGuiTextFilter_DrawFloat(ImGuiTextFilter* self, const char* label, float width);
+#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
 // Helper: Growable text buffer for logging/accumulating text
 // (this could be called 'ImGuiTextBuilder' / 'ImGuiStringBuilder')
@@ -4290,6 +4309,7 @@ struct ImGuiPlatformIO_t
     ImDrawCallback                                                  DrawCallback_ResetRenderState;   // Request to reset the graphics/render state.
     ImDrawCallback                                                  DrawCallback_SetSamplerLinear;   // Request backend to set texture sampling to Linear.
     ImDrawCallback                                                  DrawCallback_SetSamplerNearest;  // Request backend to set texture sampling to Nearest/Point.
+    ImDrawCallback                                                  DrawCallback_SetSamplerFromTex;  // Request backend to use sampler associated to texture - only available in some backends: OpenGL2/3 and SDLRenderer3.
     //ImDrawCallback  DrawCallback_SetSamplerCustom;    // Request backend to set texture sampling using Backend Specific data.
 
     //------------------------------------------------------------------
