@@ -219,7 +219,6 @@ typedef struct ImVector_ImFontConfigPtr_t ImVector_ImFontConfigPtr;
 typedef struct ImVector_ImGuiPlatformMonitor_t ImVector_ImGuiPlatformMonitor;
 typedef struct ImVector_ImTextureDataPtr_t ImVector_ImTextureDataPtr;
 typedef struct ImVector_ImGuiViewportPtr_t ImVector_ImGuiViewportPtr;
-typedef struct ImGuiTextFilter_ImGuiTextFilterItem_t ImGuiTextFilter_ImGuiTextFilterItem;
 typedef struct ImDrawCmdHeader_t ImDrawCmdHeader;
 // ImDrawIdx: vertex index. [Compile-time configurable type]
 // - To use 16-bit indices + allow large meshes: backend need to set 'io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset' and handle ImDrawCmd::VtxOffset (recommended).
@@ -2523,7 +2522,7 @@ CIMGUI_API ImStrv ImStrv_FromCharStr(const char* b);  // Build an ImStrv from a 
 //-----------------------------------------------------------------------------
 
 IM_MSVC_RUNTIME_CHECKS_OFF
-struct ImVector_ImGuiTextFilterItem_t { int Size; int Capacity; ImGuiTextFilter_ImGuiTextFilterItem* Data; };  // Instantiation of ImVector<ImGuiTextFilterItem>
+struct ImVector_ImGuiTextFilterItem_t { int Size; int Capacity; ImGuiTextFilterItem* Data; };  // Instantiation of ImVector<ImGuiTextFilterItem>
 struct ImVector_char_t { int Size; int Capacity; char* Data; };  // Instantiation of ImVector<char>
 struct ImVector_ImGuiStoragePair_t { int Size; int Capacity; ImGuiStoragePair* Data; };  // Instantiation of ImVector<ImGuiStoragePair>
 struct ImVector_ImGuiSelectionRequest_t { int Size; int Capacity; ImGuiSelectionRequest* Data; };  // Instantiation of ImVector<ImGuiSelectionRequest>
@@ -3043,22 +3042,14 @@ CIMGUI_API bool ImGuiPayload_IsDelivery(const ImGuiPayload* self);
 #define IM_UNICODE_CODEPOINT_MAX     0xFFFF      // Maximum Unicode code point supported by this build.
 #endif // #ifdef IMGUI_USE_WCHAR32
 
-// [Internal] Don't use! Will be replaced with ImStrv.
-struct ImGuiTextFilter_ImGuiTextFilterItem_t
-{
-    const char* Begin;
-    const char* End;
-};
-// Helper: Parse and apply text filters e.g. 'aaa bbb -ccc'.
+// Helper: Parse and apply text filters e.g. 'aaa bbb' (all), 'aaa,bbb' (any), '-aaa' (exclude), '"Hello, world"' (exact sequence)
+typedef struct ImGuiTextFilterItem_t ImGuiTextFilterItem;
 struct ImGuiTextFilter_t
 {
-    // [Internal] Members
-    char InputBuf[256];                   // User input buffer
-    char FilterOp;                        // == '|' (any) pr '&' (all)
-    ImU8 MinWordSize;                     // == 1
-    int  _CountExclude;                   // >= 0
-    int  _CountInclude;                   // >= 0
-    ImVector_ImGuiTextFilterItem _Items;  // Pre-parsed, trimmed, reordered items
+    // Members
+    char                         InputBuf[256];  // User input buffer
+    int                          _CountExclude;  // [Internal] >= 0 count of leading exclude
+    ImVector_ImGuiTextFilterItem _Items;         // [Internal] Pre-parsed, trimmed, reordered items
 };
 CIMGUI_API bool ImGuiTextFilter_PassFilter(const ImGuiTextFilter* self, const char* text, const char* text_end /* = NULL */);
 CIMGUI_API void ImGuiTextFilter_Build(ImGuiTextFilter* self);                                      // Update internal data when filter changes
