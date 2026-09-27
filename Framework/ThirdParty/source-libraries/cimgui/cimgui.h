@@ -4,12 +4,12 @@
 
 // Dear Bindings version as a string
 #ifndef DEAR_BINDINGS_VERSION
-#define DEAR_BINDINGS_VERSION "0.23"
+#define DEAR_BINDINGS_VERSION "0.24"
 #endif
 
 // Dear Bindings version as an integer
 #ifndef DEAR_BINDINGS_VERSION_NUMBER
-#define DEAR_BINDINGS_VERSION_NUMBER 23
+#define DEAR_BINDINGS_VERSION_NUMBER 24
 #endif
 
 // dear imgui, v1.93.0 WIP
@@ -219,6 +219,7 @@ typedef struct ImVector_ImFontConfigPtr_t ImVector_ImFontConfigPtr;
 typedef struct ImVector_ImGuiPlatformMonitor_t ImVector_ImGuiPlatformMonitor;
 typedef struct ImVector_ImTextureDataPtr_t ImVector_ImTextureDataPtr;
 typedef struct ImVector_ImGuiViewportPtr_t ImVector_ImGuiViewportPtr;
+typedef struct ImGuiTextFilterItem_t ImGuiTextFilterItem;
 typedef struct ImDrawCmdHeader_t ImDrawCmdHeader;
 // ImDrawIdx: vertex index. [Compile-time configurable type]
 // - To use 16-bit indices + allow large meshes: backend need to set 'io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset' and handle ImDrawCmd::VtxOffset (recommended).
