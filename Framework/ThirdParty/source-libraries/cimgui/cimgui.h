@@ -12,7 +12,7 @@
 #define DEAR_BINDINGS_VERSION_NUMBER 24
 #endif
 
-// dear imgui, v1.93.0 WIP
+// dear imgui, v1.93.0
 // (headers)
 
 // Help:
@@ -44,10 +44,10 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
-#define IMGUI_VERSION       "1.93.0 WIP"
+#define IMGUI_VERSION       "1.93.0"
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
-#define IMGUI_VERSION_NUM   19298
+#define IMGUI_VERSION_NUM   19300
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
@@ -1133,7 +1133,7 @@ CIMGUI_API const ImGuiPayload* ImGui_AcceptDragDropPayload(const char* type, ImG
 CIMGUI_API void                ImGui_EndDragDropTarget(void);                                                      // only call EndDragDropTarget() if BeginDragDropTarget() returns true!
 CIMGUI_API const ImGuiPayload* ImGui_GetDragDropPayload(void);                                                     // peek directly into the current payload from anywhere. returns NULL when drag and drop is finished or inactive. use ImGuiPayload::IsDataType() to test for the payload type.
 
-// Disabling [BETA API]
+// Disabling
 // - Disable all user interactions and dim items visuals (applying style.DisabledAlpha over current colors)
 // - Those can be nested but it cannot be used to enable an already disabled section (a single BeginDisabled(true) in the stack is enough to keep everything disabled)
 // - Tooltips windows are automatically opted out of disabling. Note that IsItemHovered() by default returns false on disabled items, unless using ImGuiHoveredFlags_AllowWhenDisabled.
@@ -2813,9 +2813,10 @@ struct ImGuiIO_t
     bool                ConfigDebugIgnoreFocusLoss;                     // = false          // Ignore io.AddFocusEvent(false), consequently not calling io.ClearInputKeys()/io.ClearInputMouse() in input processing.
 
     // Option to compare < 1.93.0 rendering details vs 1.93.0 rendering details. (#9504)
-    // - Equivalent to calling PushDrawFlag(ImDrawList_StrokeLegacy,true) on every draw list instances.
+    // - Equivalent to calling PushDrawFlag(ImDrawFlags_StrokeLegacy,true) on every draw list instances.
     // - Suggested use, e.g. io.ConfigDebugDrawListDefaultsToStrokeLegacy = io.KeyShift; // Map to SHIFT modifier
-    bool                ConfigDebugDrawListDefaultsToStrokeLegacy;      // false // Default all ImDrawList to ImDrawList_StrokeLegacy mode, mimicking pre-1.93.0 rendering.
+    // - Also see our interactive testbed: https://www.dearimgui.com/docs/drawlist_v193
+    bool                ConfigDebugDrawListDefaultsToStrokeLegacy;      // false // Default all ImDrawList to ImDrawFlags_StrokeLegacy mode, mimicking pre-1.93.0 rendering.
 
     //------------------------------------------------------------------
     // Platform Identifiers
