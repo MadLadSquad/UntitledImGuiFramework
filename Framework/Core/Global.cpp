@@ -1,6 +1,10 @@
 #include "Global.hpp"
 #include <Utilities.hpp>
 
+#ifdef _WIN32
+    #include <windows.h>
+#endif
+
 UImGui::Global::Global() noexcept
 {
     Utility::interruptSignalHandler();

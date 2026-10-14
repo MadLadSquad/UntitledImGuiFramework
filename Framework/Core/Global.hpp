@@ -3,9 +3,6 @@
 #include <Modules/Manager/ModulesManager.hpp>
 #include <Core/CDeallocation.hpp>
 #include <Interfaces/PluginInterface.hpp>
-#ifdef _WIN32
-    #include <windows.h>
-#endif
 
 namespace UImGui
 {
