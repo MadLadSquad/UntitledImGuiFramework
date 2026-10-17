@@ -4260,26 +4260,6 @@ CIMGUI_API void   cimgui::ImGui_ImageImVec4(cimgui::ImTextureRef tex_ref, cimgui
     ::ImGui::Image(ConvertToCPP_ImTextureRef(tex_ref), ConvertToCPP_ImVec2(image_size), ConvertToCPP_ImVec2(uv0), ConvertToCPP_ImVec2(uv1), ConvertToCPP_ImVec4(tint_col), ConvertToCPP_ImVec4(border_col));
 }
 
-CIMGUI_API void   cimgui::ImGui_PushButtonRepeat(bool repeat)
-{
-    ::ImGui::PushButtonRepeat(repeat);
-}
-
-CIMGUI_API void   cimgui::ImGui_PopButtonRepeat(void)
-{
-    ::ImGui::PopButtonRepeat();
-}
-
-CIMGUI_API void   cimgui::ImGui_PushTabStop(bool tab_stop)
-{
-    ::ImGui::PushTabStop(tab_stop);
-}
-
-CIMGUI_API void   cimgui::ImGui_PopTabStop(void)
-{
-    ::ImGui::PopTabStop();
-}
-
 CIMGUI_API cimgui::ImVec2 cimgui::ImGui_GetContentRegionMax(void)
 {
     return ConvertFromCPP_ImVec2(::ImGui::GetContentRegionMax());

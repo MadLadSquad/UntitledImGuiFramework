@@ -12,7 +12,7 @@
 #define DEAR_BINDINGS_VERSION_NUMBER 25
 #endif
 
-// dear imgui, v1.93.0
+// dear imgui, v1.93.1 WIP
 // (headers)
 
 // Help:
@@ -44,10 +44,10 @@
 // Library Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals, e.g. '#if IMGUI_VERSION_NUM >= 12345')
 #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
-#define IMGUI_VERSION       "1.93.0"
+#define IMGUI_VERSION       "1.93.1 WIP"
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
-#define IMGUI_VERSION_NUM   19300
+#define IMGUI_VERSION_NUM   19301
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
@@ -153,6 +153,7 @@ extern "C"
 #endif // #if defined(_MSC_VER)&&!defined(__clang__)&&!defined(__INTEL_COMPILER)&&!defined(IMGUI_DEBUG_PARANOID)
 // Alternative to using a .natstepfilter file or other scripts in misc/debuggers/ to skip debug-stepping selected trivial functions.
 // If you get a compiler error or warning related to use, please report it to us!
+#ifndef IM_NODEBUGSTEP
 #if (defined(__clang__)&&(__clang_major__ >= 7))||(defined(__GNUC__)&&(__GNUC__>4 ||(__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))
 #define IM_NODEBUGSTEP      [[gnu::artificial]]
 #else
@@ -162,6 +163,7 @@ extern "C"
 #define IM_NODEBUGSTEP
 #endif // #if defined(_MSC_VER)&&(_MSC_VER >= 1915)
 #endif // #if (defined(__clang__)&&(__clang_major__ >= 7))||(defined(__GNUC__)&&(__GNUC__>4 ||(__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))
+#endif // #ifndef IM_NODEBUGSTEP
 // Warnings
 #ifdef _MSC_VER
 #pragma warning (push)
@@ -1548,18 +1550,13 @@ typedef enum
 typedef enum
 {
     ImGuiSelectableFlags_None              = 0,
-    ImGuiSelectableFlags_NoAutoClosePopups = 1<<0,                                    // Clicking this doesn't close parent popup window (overrides ImGuiItemFlags_AutoClosePopups)
-    ImGuiSelectableFlags_SpanAllColumns    = 1<<1,                                    // Frame will span all columns of its container table (text will still fit in current column)
-    ImGuiSelectableFlags_AllowDoubleClick  = 1<<2,                                    // Generate press events on double clicks too
-    ImGuiSelectableFlags_Disabled          = 1<<3,                                    // Cannot be selected, display grayed out text
-    ImGuiSelectableFlags_AllowOverlap      = 1<<4,                                    // Hit testing will allow subsequent widgets to overlap this one. Require previous frame HoveredId to match before being usable. Shortcut to calling SetNextItemAllowOverlap().
-    ImGuiSelectableFlags_Highlight         = 1<<5,                                    // Make the item be displayed as if it is hovered
-    ImGuiSelectableFlags_SelectOnNav       = 1<<6,                                    // Auto-select when moved into, unless Ctrl is held. Automatic when in a BeginMultiSelect() block.
-
-#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-    ImGuiSelectableFlags_DontClosePopups   = ImGuiSelectableFlags_NoAutoClosePopups,  // Renamed in 1.91.0
-    //ImGuiSelectableFlags_AllowItemOverlap = ImGuiSelectableFlags_AllowOverlap,        // Renamed in 1.89.7
-#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+    ImGuiSelectableFlags_NoAutoClosePopups = 1<<0,  // Clicking this doesn't close parent popup window (overrides ImGuiItemFlags_AutoClosePopups)
+    ImGuiSelectableFlags_SpanAllColumns    = 1<<1,  // Frame will span all columns of its container table (text will still fit in current column)
+    ImGuiSelectableFlags_AllowDoubleClick  = 1<<2,  // Generate press events on double clicks too
+    ImGuiSelectableFlags_Disabled          = 1<<3,  // Cannot be selected, display grayed out text
+    ImGuiSelectableFlags_AllowOverlap      = 1<<4,  // Hit testing will allow subsequent widgets to overlap this one. Require previous frame HoveredId to match before being usable. Shortcut to calling SetNextItemAllowOverlap().
+    ImGuiSelectableFlags_Highlight         = 1<<5,  // Make the item be displayed as if it is hovered
+    ImGuiSelectableFlags_SelectOnNav       = 1<<6,  // Auto-select when moved into, unless Ctrl is held. Automatic when in a BeginMultiSelect() block.
 } ImGuiSelectableFlags_;
 
 // Flags for ImGui::BeginCombo()
@@ -1952,7 +1949,7 @@ enum                                                   // Forward declared enum 
 
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
     ImGuiKey_COUNT               = ImGuiKey_NamedKey_END,  // Obsoleted in 1.91.5 because it was misleading (since named keys don't start at 0 anymore)
-    ImGuiMod_Shortcut            = ImGuiMod_Ctrl,          // Removed in 1.90.7, you can now simply use ImGuiMod_Ctrl
+    //ImGuiMod_Shortcut             = ImGuiMod_Ctrl,            // Removed in 1.90.7, you can now simply use ImGuiMod_Ctrl (will auto map to Cmd on Mac)
     //ImGuiKey_ModCtrl = ImGuiMod_Ctrl, ImGuiKey_ModShift = ImGuiMod_Shift, ImGuiKey_ModAlt = ImGuiMod_Alt, ImGuiKey_ModSuper = ImGuiMod_Super, // Renamed in 1.89
     //ImGuiKey_KeyPadEnter = ImGuiKey_KeypadEnter,              // Renamed in 1.87
 #endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
@@ -2034,74 +2031,74 @@ typedef enum
 {
     ImGuiCol_Text,
     ImGuiCol_TextDisabled,
-    ImGuiCol_WindowBg,                                                // Background of normal windows
-    ImGuiCol_ChildBg,                                                 // Background of child windows
-    ImGuiCol_PopupBg,                                                 // Background of popups, menus, tooltips windows
+    ImGuiCol_WindowBg,                                        // Background of normal windows
+    ImGuiCol_ChildBg,                                         // Background of child windows
+    ImGuiCol_PopupBg,                                         // Background of popups, menus, tooltips windows
     ImGuiCol_Border,
     ImGuiCol_BorderShadow,
-    ImGuiCol_FrameBg,                                                 // Background of checkbox, radio button, plot, slider, text input
+    ImGuiCol_FrameBg,                                         // Background of checkbox, radio button, plot, slider, text input
     ImGuiCol_FrameBgHovered,
     ImGuiCol_FrameBgActive,
-    ImGuiCol_TitleBg,                                                 // Title bar
-    ImGuiCol_TitleBgActive,                                           // Title bar when focused
-    ImGuiCol_TitleBgCollapsed,                                        // Title bar when collapsed
+    ImGuiCol_TitleBg,                                         // Title bar
+    ImGuiCol_TitleBgActive,                                   // Title bar when focused
+    ImGuiCol_TitleBgCollapsed,                                // Title bar when collapsed
     ImGuiCol_MenuBarBg,
     ImGuiCol_ScrollbarBg,
     ImGuiCol_ScrollbarGrab,
     ImGuiCol_ScrollbarGrabHovered,
     ImGuiCol_ScrollbarGrabActive,
-    ImGuiCol_CheckMark,                                               // Checkbox tick and RadioButton circle
-    ImGuiCol_CheckboxSelectedBg,                                      // Checkbox background when Selected, otherwise use FrameBg
+    ImGuiCol_CheckMark,                                       // Checkbox tick and RadioButton circle
+    ImGuiCol_CheckboxSelectedBg,                              // Checkbox background when Selected, otherwise use FrameBg
     ImGuiCol_SliderGrab,
     ImGuiCol_SliderGrabActive,
     ImGuiCol_Button,
     ImGuiCol_ButtonHovered,
     ImGuiCol_ButtonActive,
-    ImGuiCol_Header,                                                  // Header* colors are used for CollapsingHeader, TreeNode, Selectable, MenuItem
+    ImGuiCol_Header,                                          // Header* colors are used for CollapsingHeader, TreeNode, Selectable, MenuItem
     ImGuiCol_HeaderHovered,
     ImGuiCol_HeaderActive,
     ImGuiCol_Separator,
     ImGuiCol_SeparatorHovered,
     ImGuiCol_SeparatorActive,
-    ImGuiCol_ResizeGrip,                                              // Resize grip in lower-right and lower-left corners of windows.
+    ImGuiCol_ResizeGrip,                                      // Resize grip in lower-right and lower-left corners of windows.
     ImGuiCol_ResizeGripHovered,
     ImGuiCol_ResizeGripActive,
-    ImGuiCol_InputTextCursor,                                         // InputText cursor/caret
-    ImGuiCol_TabHovered,                                              // Tab background, when hovered
-    ImGuiCol_Tab,                                                     // Tab background, when tab-bar is focused & tab is unselected
-    ImGuiCol_TabSelected,                                             // Tab background, when tab-bar is focused & tab is selected
-    ImGuiCol_TabSelectedOverline,                                     // Tab horizontal overline, when tab-bar is focused & tab is selected
-    ImGuiCol_TabDimmed,                                               // Tab background, when tab-bar is unfocused & tab is unselected
-    ImGuiCol_TabDimmedSelected,                                       // Tab background, when tab-bar is unfocused & tab is selected
-    ImGuiCol_TabDimmedSelectedOverline,                               //..horizontal overline, when tab-bar is unfocused & tab is selected
-    ImGuiCol_DockingPreview,                                          // Preview overlay color when about to docking something
-    ImGuiCol_DockingEmptyBg,                                          // Background color for empty node (e.g. CentralNode with no window docked into it)
+    ImGuiCol_InputTextCursor,                                 // InputText cursor/caret
+    ImGuiCol_TabHovered,                                      // Tab background, when hovered
+    ImGuiCol_Tab,                                             // Tab background, when tab-bar is focused & tab is unselected
+    ImGuiCol_TabSelected,                                     // Tab background, when tab-bar is focused & tab is selected
+    ImGuiCol_TabSelectedOverline,                             // Tab horizontal overline, when tab-bar is focused & tab is selected
+    ImGuiCol_TabDimmed,                                       // Tab background, when tab-bar is unfocused & tab is unselected
+    ImGuiCol_TabDimmedSelected,                               // Tab background, when tab-bar is unfocused & tab is selected
+    ImGuiCol_TabDimmedSelectedOverline,                       //..horizontal overline, when tab-bar is unfocused & tab is selected
+    ImGuiCol_DockingPreview,                                  // Preview overlay color when about to docking something
+    ImGuiCol_DockingEmptyBg,                                  // Background color for empty node (e.g. CentralNode with no window docked into it)
     ImGuiCol_PlotLines,
     ImGuiCol_PlotLinesHovered,
     ImGuiCol_PlotHistogram,
     ImGuiCol_PlotHistogramHovered,
-    ImGuiCol_TableHeaderBg,                                           // Table header background
-    ImGuiCol_TableBorderStrong,                                       // Table outer and header borders (prefer using Alpha=1.0 here)
-    ImGuiCol_TableBorderLight,                                        // Table inner borders (prefer using Alpha=1.0 here)
-    ImGuiCol_TableRowBg,                                              // Table row background (even rows)
-    ImGuiCol_TableRowBgAlt,                                           // Table row background (odd rows)
-    ImGuiCol_TextLink,                                                // Hyperlink color
-    ImGuiCol_TextSelectedBg,                                          // Selected text inside an InputText
-    ImGuiCol_TreeLines,                                               // Tree node hierarchy outlines when using ImGuiTreeNodeFlags_DrawLines
-    ImGuiCol_DragDropTarget,                                          // Rectangle border highlighting a drop target
-    ImGuiCol_DragDropTargetBg,                                        // Rectangle background highlighting a drop target
-    ImGuiCol_UnsavedMarker,                                           // Unsaved Document marker (in window title and tabs)
-    ImGuiCol_NavCursor,                                               // Color of keyboard/gamepad navigation cursor/rectangle, when visible
-    ImGuiCol_NavWindowingHighlight,                                   // Highlight window when using Ctrl+Tab
-    ImGuiCol_NavWindowingDimBg,                                       // Darken/colorize entire screen behind the Ctrl+Tab window list, when active
-    ImGuiCol_ModalWindowDimBg,                                        // Darken/colorize entire screen behind a modal window, when one is active
+    ImGuiCol_TableHeaderBg,                                   // Table header background
+    ImGuiCol_TableBorderStrong,                               // Table outer and header borders (prefer using Alpha=1.0 here)
+    ImGuiCol_TableBorderLight,                                // Table inner borders (prefer using Alpha=1.0 here)
+    ImGuiCol_TableRowBg,                                      // Table row background (even rows)
+    ImGuiCol_TableRowBgAlt,                                   // Table row background (odd rows)
+    ImGuiCol_TextLink,                                        // Hyperlink color
+    ImGuiCol_TextSelectedBg,                                  // Selected text inside an InputText
+    ImGuiCol_TreeLines,                                       // Tree node hierarchy outlines when using ImGuiTreeNodeFlags_DrawLines
+    ImGuiCol_DragDropTarget,                                  // Rectangle border highlighting a drop target
+    ImGuiCol_DragDropTargetBg,                                // Rectangle background highlighting a drop target
+    ImGuiCol_UnsavedMarker,                                   // Unsaved Document marker (in window title and tabs)
+    ImGuiCol_NavCursor,                                       // Color of keyboard/gamepad navigation cursor/rectangle, when visible
+    ImGuiCol_NavWindowingHighlight,                           // Highlight window when using Ctrl+Tab
+    ImGuiCol_NavWindowingDimBg,                               // Darken/colorize entire screen behind the Ctrl+Tab window list, when active
+    ImGuiCol_ModalWindowDimBg,                                // Darken/colorize entire screen behind a modal window, when one is active
     ImGuiCol_COUNT,
 
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-    ImGuiCol_TabActive                 = ImGuiCol_TabSelected,        // [renamed in 1.90.9]
-    ImGuiCol_TabUnfocused              = ImGuiCol_TabDimmed,          // [renamed in 1.90.9]
-    ImGuiCol_TabUnfocusedActive        = ImGuiCol_TabDimmedSelected,  // [renamed in 1.90.9]
-    ImGuiCol_NavHighlight              = ImGuiCol_NavCursor,          // [renamed in 1.91.4]
+    ImGuiCol_NavHighlight              = ImGuiCol_NavCursor,  // [renamed in 1.91.4]
+    //ImGuiCol_TabActive          = ImGuiCol_TabSelected,       // [renamed in 1.90.9]
+    //ImGuiCol_TabUnfocused       = ImGuiCol_TabDimmed,         // [renamed in 1.90.9]
+    //ImGuiCol_TabUnfocusedActive = ImGuiCol_TabDimmedSelected, // [renamed in 1.90.9]
 #endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 } ImGuiCol_;
 
@@ -2915,11 +2912,11 @@ struct ImGuiIO_t
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
     float               FontGlobalScale;                                // Moved io.FontGlobalScale to style.FontScaleMain in 1.92.0 (June 2025)
 
-    // Legacy: before 1.91.1, clipboard functions were stored in ImGuiIO instead of ImGuiPlatformIO.
+    // [Moved in 1.91.1] Clipboard functions were stored in ImGuiIO instead of ImGuiPlatformIO.
     // As this is will affect all users of custom engines/backends, we are providing proper legacy redirection (will obsolete).
-    const char* (*GetClipboardTextFn)(void* user_data);
-    void (*SetClipboardTextFn)(void* user_data, const char* text);
-    void*               ClipboardUserData;
+    //const char* (*GetClipboardTextFn)(void* user_data);                   // --> `platform_io.Platform_GetClipboardTextFn`
+    //void        (*SetClipboardTextFn)(void* user_data, const char* text); // --> `platform_io.Platform_SetClipboardTextFn`
+    //void*       ClipboardUserData;                                        // --> `platform_io.Platform_ClipboardUserData`
 
     //void ClearInputCharacters() { InputQueueCharacters.resize(0); } // [Obsoleted in 1.89.8] Clear the current frame text input buffer. Now included within ClearInputKeys(). Removed this as it is ambiguous/misleading and generally incorrect to use with the existence of a higher-level input queue.
 #endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
@@ -3756,7 +3753,7 @@ struct ImDrawData_t
     ImVector_ImTextureDataPtr* Textures;          // List of textures to update. Most of the times the list is shared by all ImDrawData, has only 1 texture and it doesn't need any update. This almost always points to ImGui::GetPlatformIO().Textures[]. May be overridden or set to NULL if you want to manually update textures.
 
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-    int                        CmdListsCount;     // Use CmdLists.Size instead. Number of ImDrawList* to render.
+    int                        CmdListsCount;     // [OBSOLETED in 1.92.9] Use CmdLists.Size instead. Number of ImDrawList* to render.
 #endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 };
 CIMGUI_API void ImDrawData_Clear(ImDrawData* self);
@@ -4474,16 +4471,17 @@ CIMGUI_API void   ImGui_SetWindowFontScale(float scale);                 // Set 
 // OBSOLETED in 1.91.9 (from February 2025)
 CIMGUI_API void   ImGui_ImageImVec4(ImTextureRef tex_ref, ImVec2 image_size, ImVec2 uv0, ImVec2 uv1, ImVec4 tint_col, ImVec4 border_col); // <-- 'border_col' was removed in favor of ImGuiCol_ImageBorder. If you use 'tint_col', use ImageWithBg() instead.
 // OBSOLETED in 1.91.0 (from July 2024)
-CIMGUI_API void   ImGui_PushButtonRepeat(bool repeat);
-CIMGUI_API void   ImGui_PopButtonRepeat(void);
-CIMGUI_API void   ImGui_PushTabStop(bool tab_stop);
-CIMGUI_API void   ImGui_PopTabStop(void);
 // You do not need those functions! See #7838 on GitHub for more info.
 CIMGUI_API ImVec2 ImGui_GetContentRegionMax(void);                       // Content boundaries max (e.g. window boundaries including scrolling, or current column boundaries). You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
 CIMGUI_API ImVec2 ImGui_GetWindowContentRegionMin(void);                 // Content boundaries min for the window (roughly (0,0)-Scroll), in window-local coordinates. You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
 CIMGUI_API ImVec2 ImGui_GetWindowContentRegionMax(void);                 // Content boundaries max for the window (roughly (0,0)+Size-Scroll), in window-local coordinates. You should never need this. Always use GetCursorScreenPos() and GetContentRegionAvail()!
 
 // Some of the older obsolete names along with their replacement (commented out so they are not reported in IDE)
+// OBSOLETED in 1.91.0 (from July 2024)
+//inline void         PushButtonRepeat(bool repeat)                         { PushItemFlag(ImGuiItemFlags_ButtonRepeat, repeat); }
+//inline void         PopButtonRepeat()                                     { PopItemFlag(); }
+//inline void         PushTabStop(bool tab_stop)                            { PushItemFlag(ImGuiItemFlags_NoTabStop, !tab_stop); }
+//inline void         PopTabStop()                                          { PopItemFlag(); }
 // OBSOLETED in 1.90.0 (from September 2023)
 //IMGUI_API bool      Combo(const char* label, int* current_item, bool (*old_callback)(void* user_data, int idx, const char** out_text), void* user_data, int items_count, int popup_max_height_in_items = -1); // Getter signature changed. See 2023/09/15 and 2026/02/27 commits.
 //IMGUI_API bool      ListBox(const char* label, int* current_item, bool (*old_callback)(void* user_data, int idx, const char** out_text), void* user_data, int items_count, int height_in_items = -1);         // Getter signature changed. See 2023/09/15 and 2026/02/27 commits.
