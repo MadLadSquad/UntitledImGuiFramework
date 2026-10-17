@@ -4,12 +4,12 @@
 
 // Dear Bindings version as a string
 #ifndef DEAR_BINDINGS_VERSION
-#define DEAR_BINDINGS_VERSION "0.24"
+#define DEAR_BINDINGS_VERSION "0.25"
 #endif
 
 // Dear Bindings version as an integer
 #ifndef DEAR_BINDINGS_VERSION_NUMBER
-#define DEAR_BINDINGS_VERSION_NUMBER 24
+#define DEAR_BINDINGS_VERSION_NUMBER 25
 #endif
 
 // dear imgui, v1.93.0
@@ -220,7 +220,7 @@ typedef struct ImVector_ImGuiPlatformMonitor_t ImVector_ImGuiPlatformMonitor;
 typedef struct ImVector_ImTextureDataPtr_t ImVector_ImTextureDataPtr;
 typedef struct ImVector_ImGuiViewportPtr_t ImVector_ImGuiViewportPtr;
 typedef struct ImGuiTextFilterItem_t ImGuiTextFilterItem;
-typedef struct ImSmallStack__ImDrawFlags_3____t ImSmallStack__ImDrawFlags_3___;
+typedef struct ImSmallStack__ImDrawFlags_3_ImU16_t ImSmallStack__ImDrawFlags_3_ImU16;
 typedef struct ImDrawCmdHeader_t ImDrawCmdHeader;
 // ImDrawIdx: vertex index. [Compile-time configurable type]
 // - To use 16-bit indices + allow large meshes: backend need to set 'io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset' and handle ImDrawCmd::VtxOffset (recommended).
@@ -3139,17 +3139,12 @@ CIMGUI_API void   ImGuiStorage_BuildSortByKey(ImGuiStorage* self);
 // Obsolete: use on your own storage if you know only integer are being stored (open/close all tree nodes)
 CIMGUI_API void   ImGuiStorage_SetAllInt(ImGuiStorage* self, int val);
 
-// Instantiation of ImSmallStack_<ImDrawFlags, 3, , , >
-struct ImSmallStack__ImDrawFlags_3____t
+// Instantiation of ImSmallStack_<ImDrawFlags, 3, ImU16>
+struct ImSmallStack__ImDrawFlags_3_ImU16_t
 {
-    ImDrawFlags LocalData[Capacity];  // FIXME: should evolve into using heap, e.g union {} with T* HeapData + add SZ_T Capacity.
-                Size /* = 0 */;
+    ImDrawFlags LocalData[3];  // FIXME: should evolve into using heap, e.g union {} with T* HeapData + add SZ_T Capacity.
+    ImU16       Size /* = 0 */;
 };
-CIMGUI_API void         ImSmallStack__ImDrawFlags_3____clear(ImSmallStack__ImDrawFlags_3___* self);
-CIMGUI_API ImDrawFlags* ImSmallStack__ImDrawFlags_3____back(ImSmallStack__ImDrawFlags_3___* self);
-CIMGUI_API void         ImSmallStack__ImDrawFlags_3____push_back(ImSmallStack__ImDrawFlags_3___* self, ImDrawFlags v);
-CIMGUI_API void         ImSmallStack__ImDrawFlags_3____pop_back(ImSmallStack__ImDrawFlags_3___* self);
-CIMGUI_API int          ImSmallStack__ImDrawFlags_3____capacity(const ImSmallStack__ImDrawFlags_3___* self);
 
 // Flags for ImGuiListClipper (currently not fully exposed in function calls: a future refactor will likely add this to ImGuiListClipper::Begin function equivalent)
 typedef enum
@@ -3571,27 +3566,27 @@ typedef enum
 struct ImDrawList_t
 {
     // This is what you have to render
-    ImVector_ImDrawCmd             CmdBuffer;              // Draw commands. Typically 1 command = 1 GPU draw call, unless the command is a callback.
-    ImVector_ImDrawIdx             IdxBuffer;              // Index buffer. Each command consume ImDrawCmd::ElemCount of those
-    ImVector_ImDrawVert            VtxBuffer;              // Vertex buffer.
-    ImDrawFlags                    Flags;                  // Current flags for drawing primitives.  Alter with PushDrawFlag()/PopDrawFlags() to adjust defaults to a given scope.
+    ImVector_ImDrawCmd                CmdBuffer;              // Draw commands. Typically 1 command = 1 GPU draw call, unless the command is a callback.
+    ImVector_ImDrawIdx                IdxBuffer;              // Index buffer. Each command consume ImDrawCmd::ElemCount of those
+    ImVector_ImDrawVert               VtxBuffer;              // Vertex buffer.
+    ImDrawFlags                       Flags;                  // Current flags for drawing primitives.  Alter with PushDrawFlag()/PopDrawFlags() to adjust defaults to a given scope.
 
     // [Internal, used while building lists]
-    unsigned int                   _VtxCurrentIdx;         // [Internal] generally == VtxBuffer.Size unless we are past 64K vertices, in which case this gets reset to 0.
-    ImDrawListSharedData*          _Data;                  // Pointer to shared draw data (you can use ImGui::GetDrawListSharedData() to get the one from current ImGui context)
-    ImDrawVert*                    _VtxWritePtr;           // [Internal] point within VtxBuffer.Data after each add command (to avoid using the ImVector<> operators too much)
-    ImDrawIdx*                     _IdxWritePtr;           // [Internal] point within IdxBuffer.Data after each add command (to avoid using the ImVector<> operators too much)
-    ImVector_ImVec2                _Path;                  // [Internal] current path building
-    ImDrawCmdHeader                _CmdHeader;             // [Internal] template of active commands. Fields should match those of CmdBuffer.back().
-    ImDrawListSplitter             _Splitter;              // [Internal] for channels api (note: prefer using your own persistent instance of ImDrawListSplitter!)
-    ImVector_ImVec4                _ClipRectStack;         // [Internal]
-    ImVector_ImTextureRef          _TextureStack;          // [Internal]
-    ImVector_ImU8                  _CallbacksDataBuf;      // [Internal]
-    ImSmallStack__ImDrawFlags_3___ _DrawFlagsStack;        // [Internal]
-    float                          _FringeScale;           // [Internal] anti-alias fringe is scaled by this value, this helps to keep things sharp while zooming at vertex buffer content
-    float                          _InvFringeScale;        // [internal] 1.0 / _FringeScale // FIXME: Consider renaming to _PixelDensity.
-    bool                           _FringeScaleIsInteger;  // [Internal] true if 1/_FringeScale is a whole number, used to select fast path for rendering
-    const char*                    _OwnerName;             // Pointer to owner window's name for debugging
+    unsigned int                      _VtxCurrentIdx;         // [Internal] generally == VtxBuffer.Size unless we are past 64K vertices, in which case this gets reset to 0.
+    ImDrawListSharedData*             _Data;                  // Pointer to shared draw data (you can use ImGui::GetDrawListSharedData() to get the one from current ImGui context)
+    ImDrawVert*                       _VtxWritePtr;           // [Internal] point within VtxBuffer.Data after each add command (to avoid using the ImVector<> operators too much)
+    ImDrawIdx*                        _IdxWritePtr;           // [Internal] point within IdxBuffer.Data after each add command (to avoid using the ImVector<> operators too much)
+    ImVector_ImVec2                   _Path;                  // [Internal] current path building
+    ImDrawCmdHeader                   _CmdHeader;             // [Internal] template of active commands. Fields should match those of CmdBuffer.back().
+    ImDrawListSplitter                _Splitter;              // [Internal] for channels api (note: prefer using your own persistent instance of ImDrawListSplitter!)
+    ImVector_ImVec4                   _ClipRectStack;         // [Internal]
+    ImVector_ImTextureRef             _TextureStack;          // [Internal]
+    ImVector_ImU8                     _CallbacksDataBuf;      // [Internal]
+    ImSmallStack__ImDrawFlags_3_ImU16 _DrawFlagsStack;        // [Internal]
+    float                             _FringeScale;           // [Internal] anti-alias fringe is scaled by this value, this helps to keep things sharp while zooming at vertex buffer content
+    float                             _InvFringeScale;        // [internal] 1.0 / _FringeScale // FIXME: Consider renaming to _PixelDensity.
+    bool                              _FringeScaleIsInteger;  // [Internal] true if 1/_FringeScale is a whole number, used to select fast path for rendering
+    const char*                       _OwnerName;             // Pointer to owner window's name for debugging
 
     //inline  void  AddEllipse(const ImVec2& center, float radius_x, float radius_y, ImU32 col, float rot = 0.0f, int num_segments = 0, float thickness = 1.0f) { AddEllipse(center, ImVec2(radius_x, radius_y), col, rot, num_segments, thickness); } // OBSOLETED in 1.90.5 (Mar 2024)
     //inline  void  AddEllipseFilled(const ImVec2& center, float radius_x, float radius_y, ImU32 col, float rot = 0.0f, int num_segments = 0) { AddEllipseFilled(center, ImVec2(radius_x, radius_y), col, rot, num_segments); }                        // OBSOLETED in 1.90.5 (Mar 2024)

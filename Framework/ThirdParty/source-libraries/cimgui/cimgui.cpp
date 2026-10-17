@@ -21,12 +21,12 @@ namespace cimgui
 // Dear Bindings version retrieval functionality
 CIMGUI_API const char* cimgui::DearBindings_GetVersion()
 {
-    return "0.24";
+    return "0.25";
 }
 
 CIMGUI_API int cimgui::DearBindings_GetVersionNumber()
 {
-    return 24;
+    return 25;
 }
 
 // Manual helpers
@@ -3166,31 +3166,6 @@ CIMGUI_API void   cimgui::ImGuiStorage_BuildSortByKey(cimgui::ImGuiStorage* self
 CIMGUI_API void   cimgui::ImGuiStorage_SetAllInt(cimgui::ImGuiStorage* self, int val)
 {
     reinterpret_cast<::ImGuiStorage*>(self)->SetAllInt(val);
-}
-
-CIMGUI_API void         cimgui::ImSmallStack__ImDrawFlags_3____clear(cimgui::ImSmallStack__ImDrawFlags_3___* self)
-{
-    reinterpret_cast<ImSmallStack_<ImDrawFlags, 3, , , >*>(self)->clear();
-}
-
-CIMGUI_API ImDrawFlags* cimgui::ImSmallStack__ImDrawFlags_3____back(cimgui::ImSmallStack__ImDrawFlags_3___* self)
-{
-    return reinterpret_cast<::ImDrawFlags*>(reinterpret_cast<ImSmallStack_<ImDrawFlags, 3, , , >*>(self)->&back());
-}
-
-CIMGUI_API void         cimgui::ImSmallStack__ImDrawFlags_3____push_back(cimgui::ImSmallStack__ImDrawFlags_3___* self, ImDrawFlags v)
-{
-    reinterpret_cast<ImSmallStack_<ImDrawFlags, 3, , , >*>(self)->push_back(reinterpret_cast<const ::T&>(v));
-}
-
-CIMGUI_API void         cimgui::ImSmallStack__ImDrawFlags_3____pop_back(cimgui::ImSmallStack__ImDrawFlags_3___* self)
-{
-    reinterpret_cast<ImSmallStack_<ImDrawFlags, 3, , , >*>(self)->pop_back();
-}
-
-CIMGUI_API int          cimgui::ImSmallStack__ImDrawFlags_3____capacity(const cimgui::ImSmallStack__ImDrawFlags_3___* self)
-{
-    return reinterpret_cast<const ImSmallStack_<ImDrawFlags, 3, , , >*>(self)->capacity();
 }
 
 CIMGUI_API void cimgui::ImGuiListClipper_Begin(cimgui::ImGuiListClipper* self, int items_count, float items_height)
