@@ -5,6 +5,7 @@
 #include "Generated/BuildDef.hpp"
 #include <Core/Interfaces/WindowInterface.hpp>
 #include <cstring>
+#include <exception>
 
 #define VK_LAYER_KHRONOS_VALIDATION "VK_LAYER_KHRONOS_validation"
 #define VK_DESTROY_DEBUG_REPORT_CALLBACK_EXT_NAME "vkDestroyDebugReportCallbackEXT"
