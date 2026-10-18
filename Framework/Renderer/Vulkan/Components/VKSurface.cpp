@@ -2,6 +2,7 @@
 #ifndef __EMSCRIPTEN__
 #include <Types.hpp>
 #include <Interfaces/WindowInterface.hpp>
+#include <exception>
 
 void UImGui::VKSurface::create(VKInstance& instance) noexcept
 {

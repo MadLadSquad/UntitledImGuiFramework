@@ -4,6 +4,7 @@
 #include <Interfaces/RendererInterface.hpp>
 #include <Window/WindowUtils.hpp>
 #include <Defines.hpp>
+#include <exception>
 
 UImGui::VKDraw::VKDraw(VKInstance& inst, VKDevice& dev) noexcept
 {
