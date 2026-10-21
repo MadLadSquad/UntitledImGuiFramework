@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: 'UntitledImGuiFramework'
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Stanislav
+    family-names: Lyubomirov Vasilev
+    email: stanislav.vasilev@heapforge.com
+    orcid: 'https://orcid.org/0009-0005-8379-6124'
+  - name: Heapforge Ltd.
+    address: 82A James Carter Road
+    city: Mildenhall
+    country: GB
+    region: Suffolk
+    email: contact@heapforge.com
+    website: 'https://heapforge.com'
+    post-code: IP28 7DE
+repository-code: 'https://github.com/MadLadSquad/UntitledImGuiFramework'
+abstract: 'A cross-platform desktop application development framework that uses dear imgui as its UI and rendering library.'
+license: MIT
