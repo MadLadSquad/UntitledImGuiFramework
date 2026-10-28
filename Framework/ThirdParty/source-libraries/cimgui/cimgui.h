@@ -853,8 +853,8 @@ CIMGUI_API bool ImGui_ColorButtonEx(const char* desc_id, ImVec4 col, ImGuiColorE
 // Widgets: Trees
 // - TreeNode functions return true when the node is open, in which case you need to also call TreePop() when you are finished displaying the tree node contents.
 CIMGUI_API bool  ImGui_TreeNode(const char* label);
-CIMGUI_API bool  ImGui_TreeNodeStr(const char* str_id, const char* fmt, ...) IM_FMTARGS(2);                                     // helper variation to easily decorrelate the id from the displayed string. Read the FAQ about why and how to use ID. to align arbitrary text at the same level as a TreeNode() you can use Bullet().
-CIMGUI_API bool  ImGui_TreeNodePtr(const void* ptr_id, const char* fmt, ...) IM_FMTARGS(2);                                     // "
+CIMGUI_API bool  ImGui_TreeNodeStr(const char* str_id, const char* fmt, ...) IM_FMTARGS(2);                                        // helper variation to easily decorrelate the id from the displayed string. Read the FAQ about why and how to use ID. to align arbitrary text at the same level as a TreeNode() you can use Bullet().
+CIMGUI_API bool  ImGui_TreeNodePtr(const void* ptr_id, const char* fmt, ...) IM_FMTARGS(2);                                        // "
 CIMGUI_API bool  ImGui_TreeNodeV(const char* str_id, const char* fmt, va_list args) IM_FMTLIST(2);
 CIMGUI_API bool  ImGui_TreeNodeVPtr(const void* ptr_id, const char* fmt, va_list args) IM_FMTLIST(2);
 CIMGUI_API bool  ImGui_TreeNodeEx(const char* label, ImGuiTreeNodeFlags flags /* = 0 */);
@@ -862,15 +862,15 @@ CIMGUI_API bool  ImGui_TreeNodeExStr(const char* str_id, ImGuiTreeNodeFlags flag
 CIMGUI_API bool  ImGui_TreeNodeExPtr(const void* ptr_id, ImGuiTreeNodeFlags flags, const char* fmt, ...) IM_FMTARGS(3);
 CIMGUI_API bool  ImGui_TreeNodeExV(const char* str_id, ImGuiTreeNodeFlags flags, const char* fmt, va_list args) IM_FMTLIST(3);
 CIMGUI_API bool  ImGui_TreeNodeExVPtr(const void* ptr_id, ImGuiTreeNodeFlags flags, const char* fmt, va_list args) IM_FMTLIST(3);
-CIMGUI_API void  ImGui_TreePush(const char* str_id);                                                                            // ~ Indent()+PushID(). Already called by TreeNode() when returning true, but you can call TreePush/TreePop yourself if desired.
-CIMGUI_API void  ImGui_TreePushPtr(const void* ptr_id);                                                                         // "
-CIMGUI_API void  ImGui_TreePop(void);                                                                                           // ~ Unindent()+PopID()
-CIMGUI_API float ImGui_GetTreeNodeToLabelSpacing(void);                                                                         // horizontal distance preceding label when using TreeNode*() or Bullet() == (g.FontSize + style.FramePadding.x*2) for a regular unframed TreeNode
-CIMGUI_API bool  ImGui_CollapsingHeader(const char* label, ImGuiTreeNodeFlags flags /* = 0 */);                                 // if returning 'true' the header is open. doesn't indent nor push on ID stack. user doesn't have to call TreePop().
-CIMGUI_API bool  ImGui_CollapsingHeaderBoolPtr(const char* label, bool* p_visible, ImGuiTreeNodeFlags flags /* = 0 */);         // when 'p_visible != NULL': if '*p_visible==true' display an additional small close button on upper right of the header which will set the bool to false when clicked, if '*p_visible==false' don't display the header.
-CIMGUI_API void  ImGui_SetNextItemOpen(bool is_open, ImGuiCond cond /* = 0 */);                                                 // set next TreeNode/CollapsingHeader open state.
-CIMGUI_API void  ImGui_SetNextItemStorageID(ImGuiID storage_id);                                                                // set id to use for open/close storage (default to same as item id).
-CIMGUI_API bool  ImGui_TreeNodeGetOpen(ImGuiID storage_id);                                                                     // retrieve tree node open/close state.
+CIMGUI_API void  ImGui_TreePush(const char* str_id);                                                                               // ~ Indent()+PushID(). Already called by TreeNode() when returning true, but you can call TreePush/TreePop yourself if desired.
+CIMGUI_API void  ImGui_TreePushPtr(const void* ptr_id);                                                                            // "
+CIMGUI_API void  ImGui_TreePop(void);                                                                                              // ~ Unindent()+PopID()
+CIMGUI_API float ImGui_GetTreeNodeToLabelSpacing(void);                                                                            // horizontal distance preceding label when using TreeNode*() or Bullet() == (g.FontSize + style.FramePadding.x*2) for a regular unframed TreeNode
+CIMGUI_API bool  ImGui_CollapsingHeader(const char* label, ImGuiTreeNodeFlags flags /* = 0 */);                                    // if returning 'true' the header is open. doesn't indent nor push on ID stack. user doesn't have to call TreePop().
+CIMGUI_API bool  ImGui_CollapsingHeaderBoolPtr(const char* label, bool* p_visible, ImGuiTreeNodeFlags flags /* = 0 */);            // when 'p_visible != NULL': if '*p_visible==true' display an additional small close button on upper right of the header which will set the bool to false when clicked, if '*p_visible==false' don't display the header.
+CIMGUI_API void  ImGui_SetNextItemOpen(bool is_open, ImGuiCond cond /* = 0 */);                                                    // set next TreeNode/CollapsingHeader open state.
+CIMGUI_API void  ImGui_SetNextItemStorageID(ImGuiID storage_id);                                                                   // set id to use for open/close storage (default to same as item id).
+CIMGUI_API bool  ImGui_TreeNodeGetOpen(ImGuiID storage_id, ImGuiTreeNodeFlags flags /* = 0 */);                                    // retrieve tree node open/close state.
 
 // Widgets: Selectables
 // - A selectable highlights when hovered, and can display another color when selected.
@@ -2627,6 +2627,10 @@ struct ImGuiStyle_t
     float              DockingSeparatorSize;              // Thickness of resizing border between docked windows
     float              MouseCursorScale;                  // Scale software rendered mouse cursor (when io.MouseDrawCursor is enabled). We apply per-monitor DPI scaling over this scale. May be removed later.
 
+    // Symbols
+    ImVec2             SymbolArrowSizeFactor;             // Width/height factor of arrows (0.0f..1.0f).
+    float              SymbolArrowThicknessFactor;        // Thickness factor of arrows (0.0f..0.5f). 0.0f=Fill. >0.0f=Stroke.
+
     // Rendering & Tessellation
     bool               AntiAliasedLines;                  // Enable anti-aliased lines/borders. Used at the beginning of the frame to set ImDrawFlags_AALines in all draw-lists.
     bool               AntiAliasedLineEnds;               // Enable anti-aliased lines/borders ends. Nicer for thick lines but more expensive. Used at the beginning of the frame to set ImDrawFlags_AALineEnds in all draw-lists.
@@ -3548,6 +3552,7 @@ typedef enum
     ImDrawFlags_RoundCornersBottom       = ImDrawFlags_RoundBottom,
     ImDrawFlags_RoundCornersLeft         = ImDrawFlags_RoundLeft,
     ImDrawFlags_RoundCornersRight        = ImDrawFlags_RoundRight,
+    ImDrawFlags_RoundCornersMask_        = ImDrawFlags_RoundMask_,
 #endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 } ImDrawFlags_;
 
