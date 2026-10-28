@@ -1755,9 +1755,9 @@ CIMGUI_API void  cimgui::ImGui_SetNextItemStorageID(ImGuiID storage_id)
     ::ImGui::SetNextItemStorageID(storage_id);
 }
 
-CIMGUI_API bool  cimgui::ImGui_TreeNodeGetOpen(ImGuiID storage_id)
+CIMGUI_API bool  cimgui::ImGui_TreeNodeGetOpen(ImGuiID storage_id, ImGuiTreeNodeFlags flags)
 {
-    return ::ImGui::TreeNodeGetOpen(storage_id);
+    return ::ImGui::TreeNodeGetOpen(storage_id, flags);
 }
 
 CIMGUI_API bool cimgui::ImGui_Selectable(const char* label)
