@@ -4,12 +4,12 @@
 
 // Dear Bindings version as a string
 #ifndef DEAR_BINDINGS_VERSION
-#define DEAR_BINDINGS_VERSION "0.27"
+#define DEAR_BINDINGS_VERSION "0.28"
 #endif
 
 // Dear Bindings version as an integer
 #ifndef DEAR_BINDINGS_VERSION_NUMBER
-#define DEAR_BINDINGS_VERSION_NUMBER 27
+#define DEAR_BINDINGS_VERSION_NUMBER 28
 #endif
 
 // dear imgui, v1.93.1 WIP
