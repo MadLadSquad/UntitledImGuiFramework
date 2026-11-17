@@ -47,7 +47,7 @@
 #define IMGUI_VERSION       "1.93.1 WIP"
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
-#define IMGUI_VERSION_NUM   19302
+#define IMGUI_VERSION_NUM   19303
 #endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #define IMGUI_HAS_TABLE              // Added BeginTable() - from IMGUI_VERSION_NUM >= 18000
 #define IMGUI_HAS_TEXTURES           // Added ImGuiBackendFlags_RendererHasTextures - from IMGUI_VERSION_NUM >= 19198
